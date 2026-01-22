@@ -1,52 +1,16 @@
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { useAuth } from '@/composables/auth/useAuth'
 
 const username = ref('')
 const password = ref('')
-const errorMessage = ref('')
-const isLoading = ref(false)
 
-const loginUrl = import.meta.env.VITE_API_AUTH_URL + '/v1/auth/login'
-const login = async () => {
-    isLoading.value = true
-    errorMessage.value = ''
+const { login, isLoading, errorMessage } = useAuth()
 
-    try {
-        const response = await axios.post(loginUrl, {
-            username: username.value,
-            password: password.value,
-        })
-        //console.log(response)
-        const { access_token, token_type } = response.data
-        localStorage.setItem('token', access_token)
-        localStorage.setItem('token_type', token_type)
-        //console.log(access_token, token_type)
-
+const submit = async () => {
+    const ok = await login(username.value, password.value)
+    if (ok) {
         window.location.href = '/home'
-    } catch (error) {
-        if (error.response) {
-            const data = error.response.data
-
-            // Si es error de validación (422)
-            if (error.response.status === 422 && data.errors) {
-                // Tomamos el primer error del primer campo
-                const firstField = Object.keys(data.errors)[0]
-                errorMessage.value = data.errors[firstField][0]
-            }
-            // Si viene un message simple
-            else if (data.message) {
-                errorMessage.value = data.message
-            } else {
-                errorMessage.value = 'Error en el inicio de sesión'
-            }
-        } else {
-            errorMessage.value = 'Error en la conexión con el servidor'
-        }
-
-        //console.error(error)
-    } finally {
-        isLoading.value = false
     }
 }
 </script>
@@ -54,7 +18,7 @@ const login = async () => {
 <template>
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="login-form-container">
-            <form @submit.prevent="login" class="login-form" autocomplete="off">
+            <form @submit.prevent="submit" class="login-form" autocomplete="off">
                 <div class="text-center mb-4">
                     <img src="../assets/logo.png" alt="Logo" class="img-fluid" style="max-width: 200px" />
                 </div>
