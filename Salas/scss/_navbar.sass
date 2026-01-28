@@ -1,0 +1,79 @@
+@use 'colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+/* .login-form-container 
+ */
+.navbar 
+    background-color: #fff
+    box-shadow: 0 1px 1px $verdeSalas
+
+.navbar-dropdown-submenu 
+    position: relative
+    font-size: 13px
+    
+    
+.navbar-dropdown-submenu-content 
+    position: absolute
+    top: 0
+    left: 100%
+    margin-top: -1px
+    display: none
+    min-width: 20px
+    background-color: #ffffff
+    border: 1px solid rgba(0, 0, 0, 0.15)
+    border-radius: 0.375rem
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)
+    z-index: 1000
+
+.navbar-dropdown-submenu-content.show 
+    display: block
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 991.98px) 
+    .navbar-dropdown-submenu-content
+        position: static
+        left: auto
+        margin-top: 0
+        border: none
+        box-shadow: none
+        background-color: #f8f9fa
+    
+
+    .navbar-dropdown-submenu-content .dropdown-item 
+        padding-left: 2rem
+
+        
+    
+
+.navbar-dropdown-arrow 
+    margin-left: 0.5rem
+    transform: rotate(0deg)
+    transition: transform 0.2s
+    color: red
+
+.navbar-dropdown-submenu:hover .navbar-dropdown-arrow,
+.dropdown-toggle[aria-expanded='true']+.navbar-dropdown-arrow 
+    transform: rotate(90deg)
+
+.navbar-item_menu 
+    font-weight: 500
+    font-size: 14px
+    color: $azulSalas
+    //padding: 0.5rem 1rem
+    
+
+#navbar_contenedor_logo 
+    padding: 0
+
+#navbar_logo_nav 
+    height: 40px
+    width: auto
+
+.dropdown-toggle::after 
+    display: none !important
+
+.navbar-admin
+    font-size: 13px
+    color: $verdeSalas
+.navbar-admin_dropdown
+    font-size: 13px

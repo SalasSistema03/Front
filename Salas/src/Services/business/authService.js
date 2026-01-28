@@ -1,4 +1,4 @@
-import { loginRequest } from '../api/authApi'
+import { loginRequest } from '../api/Auth/authApi'
 
 export const loginService = async (username, password) => {
     const response = await loginRequest({ username, password })
