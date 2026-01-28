@@ -7,9 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+node_modules/
 .DS_Store
-dist
+dist/
 dist-ssr
 coverage
 *.local
@@ -17,7 +17,7 @@ coverage
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
@@ -34,3 +34,8 @@ coverage
 
 # Vitest
 __screenshots__/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
