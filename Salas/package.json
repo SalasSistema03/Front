@@ -8,8 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "vite build && del ..\\..\\backend\\resources\\views\\app.blade.php /Q && ren ..\\..\\backend\\public\\index.html app.blade.php && move ..\\..\\backend\\public\\app.blade.php ..\\..\\backend\\resources\\views\\",    "preview": "vite preview",
     "lint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/"
   },
