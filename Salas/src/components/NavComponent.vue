@@ -2,7 +2,9 @@
     <nav class="navbar navbar-expand-lg sticky-top mb-3 px-3">
         <!-- Logo -->
         <router-link class="navbar-brand" id="navbar_contenedor_logo" :to="{ name: 'home' }">
-            <img src="../assets/Escudo_Colon_Campeon.png" alt="Logo" class="img-fluid" style="max-width: 40px" />
+            <!-- trae el logo segun lo definido en el js -->
+
+            <img :src="logo" alt="Logo" class="img-fluid" style="max-width: 11vh" />
         </router-link>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -92,9 +94,17 @@ const error = ref(null)
 const username = ref('')
 const user = ref(null)
 const isUserAdmin = ref(false)
+const logo = ref('')
 
 
+//funcion para seleccionar el logo del navegador
+const selectLogo = async () => {
+    //mes actual
+    const month = new Date().getMonth() + 1 // Los meses en JavaScript
+    logo.value = new URL(`../assets/logo${month}.png`, import.meta.url).href
+}
 
+// Función para verificar si el usuario es admin
 const verifyAdmin = async () => {
     isUserAdmin.value = await isAdmin()
    
@@ -252,9 +262,11 @@ onMounted(async () => {
     await Promise.all([
         fetchMenuData(),
         getUsername(),
-        verifyAdmin()
+        verifyAdmin(),
+        selectLogo()
     ])
 })
+
 </script>
 
 

@@ -1,4 +1,37 @@
 @use 'colorSalas'
-.turnero_card_header
-    background-color: colorSalas.$azulSalas !important
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+
+.turnero_card_header_green
+    background-color: $verdeSalas !important
     color: white !important
+.turnero_card_header_blue
+    background-color: $azulSalas !important
+    color: white !important
+
+.turnero_table_turnos
+    height: 30vh
+    overflow-y: auto
+    overflow-x: hidden
+    font-size: 12px
+    border: 1px solid $azulSalas
+    border-radius: 3px
+/* .turnero_table_scroll
+    overflow-y: auto
+    overflow-x: hidden
+    font-size: 12px */
+    
+.turnero_head_table
+    //quiero dejarlo fijo
+    position: sticky
+    top: 0
+
+    z-index: 10
+    tr
+        th
+            background-color:$azulSalas !important
+            color: white !important
+.turnero_select_option
+    color: $verdeSalas
+    font-size: 12px
+    border: 1px solid $azulSalas
