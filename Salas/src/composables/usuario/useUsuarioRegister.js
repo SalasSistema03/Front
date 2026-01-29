@@ -48,12 +48,12 @@ export const useUserRegister = () => {
     success.value = null
     loading.value = true
 
-    console.log('📤 Datos a enviar:', prepareUserDataForSubmit(form))
+   
 
     try {
       const response = await registerUser(form)
       showSuccess('Usuario registrado correctamente')
-      console.log('✅ Respuesta API:', response.data)
+     
       
       resetFormData(form)
     } catch (e) {

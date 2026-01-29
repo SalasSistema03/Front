@@ -31,10 +31,10 @@ export async function isAdmin() {
 
     try {
         const user = await getUser(token)
-        /* console.log(user.data.admin) */
+      
 
         if (user.data.admin === 1) {
-            /* console.log('Usuario es admin:', user.data.admin) */
+          
             return user.data.admin === 1
         }
         return false

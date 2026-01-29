@@ -97,7 +97,7 @@ const isUserAdmin = ref(false)
 
 const verifyAdmin = async () => {
     isUserAdmin.value = await isAdmin()
-    //console.log('Usuario es admin:', isUserAdmin.value)
+   
 }
 
 // Función para obtener el nombre de usuario
