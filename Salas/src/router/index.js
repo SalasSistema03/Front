@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-
 import Turnero from '../router/turnero'
 import Usuario from '../router/usuario'
-import { isAuthenticated, isAdmin } from '../Services/business/auth'
+import { useAuthStore } from '@/stores/auth'
+import { alertas } from '../utils/alertas'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,18 +31,39 @@ const router = createRouter({
  * Guard global
  */
 router.beforeEach(async (to) => {
-  // Auth
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    return { name: 'login' }
+  const authStore = useAuthStore();
+
+  // Si la ruta no requiere auth, pasa directo
+  if (!to.meta.requiresAuth) return;
+
+  // Si no hay token, al login
+  if (!localStorage.getItem('token')) return { name: 'login' };
+
+  // Si no hemos cargado permisos, cargarlos (F5 o entrada directa)
+  if (!authStore.isLoaded) {
+    await authStore.fetchPermissions();
   }
 
-  // Admin (si lo necesitás)
+
+  // --- NUEVO: CANDADO DE ADMINISTRADOR ---
   if (to.meta.requiresAdmin) {
-    const adminCheck = await isAdmin()
-    if (!adminCheck) {
-      return { name: 'home' }
+    // Agregamos un log extra para ver qué llegó ahora
+    console.log("Revisando admin en router:", authStore.user);
+
+    // Usa el nombre exacto que veas en la consola (admin o is_admin)
+    if (Number(authStore.user?.admin) !== 1) {
+      alertas.error("Acceso Restringido", "Solo administradores.");
+      return { name: 'home' };
     }
   }
-})
+
+  // EL CANDADO:
+  if (to.meta.vistaId) {
+    if (!authStore.canView(to.meta.vistaId)) {
+      alertas.error("No tienes permiso para acceder a esta sección");
+      return { name: 'home' };
+    }
+  }
+});
 
 export default router

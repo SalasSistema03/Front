@@ -11,7 +11,7 @@ export const getUser = (token) => {
 }
 
 export const registerUser = (user) =>{
-    console.log(user)
+   
     return axios.post(`${API_URL}/v1/auth/register`, user)
            
 }
