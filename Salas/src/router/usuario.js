@@ -1,5 +1,6 @@
 import ResgisterView from '../views/Usuarios/ResgisterView.vue'
 import UpDateUserView from '../views/Usuarios/UpDateUserView.vue'
+import { isAdmin } from '../Services/business/auth'
 
 
 const routesUsuario = [
