@@ -43,9 +43,7 @@
                         </div>
                         <div class="col-6 p-0 m-0">
                             <div class="card">
-                                <div class=" ">
-                                    <label class="form-label small fw-semibold">Pendientes del Sector</label>
-                                </div>
+                               
                                 <div class="card-body turnero_table_turnos_sm turnero_table_scroll p-0 m-0">
                                     <!-- Indicador de carga -->
                                     <div v-if="loadingTurnos" class="text-center py-3">
@@ -119,142 +117,39 @@
 </template>
 <script setup>
 import NavComponent from '../../components/NavComponent.vue'
-import { getTurnosPendientes, putFinalizarTurno, putLlamarTurno } from '@/Services/api/Turnero/turneroApi'
-import { ref, onMounted } from 'vue'
-import { useToast } from '@/composables/useToast'
-import { getSector } from '@/Services/api/Turnero/turneroApi'
-import { getUser } from '@/Services/api/Usuario/userApi'
+import { onMounted, onUnmounted } from 'vue'
+import { useSectores } from '@/composables/turnero/useSectores'
+import { useTomaTurno } from '@/composables/turnero/useTomaTurno'
 
+const { sectores, loadSectores } = useSectores()
+const {
+    turnoLlamado,
+    loadingTurnos,
+    selectedSector,
+    sectorSeleccionado,
+    turnosFiltrados,
+    turnosPendientes,
+    setsectorSeleccionado,
+    submitForm,
+    actualizarTurnosPendientes
+} = useTomaTurno()
 
-
-let sectores = ref([])
-let sectoresfiltrados = ref([])
-let sectorestotales = ref([])
-let selectedSector = ref('')
-let sectorSeleccionado = ref('')
-let turnosFiltrados = ref([])
-let turnoLlamado = ref(null)
-let loadingTurnos = ref(false)
-let usuarioId = ref(null) // Para almacenar el ID del usuario
-
-const { handleApiError, showError, showSuccess } = useToast()
-
-// Función para mostrar el sector seleccionado
-const setsectorSeleccionado = async () => {
-    sectorSeleccionado.value = selectedSector.value
-    if (sectorSeleccionado.value) {
-        // Activar indicador de carga
-        loadingTurnos.value = true
-        
-        try {
-            //console.log('Sector seleccionado:', sectorSeleccionado.value)
-            await loadSectores()
-            sectoresfiltrados.value = sectorestotales.value.filter(sector => sector.id === sectorSeleccionado.value)
-            
-            await loadTurnosPendientes()
-            turnosFiltrados.value = turnosPendientes.value.filter(turno => turno.sector.id === sectorSeleccionado.value)
-            turnosFiltrados.value.sort((a, b) => new Date(a.fecha_carga) - new Date(b.fecha_carga))
-            //console.log('Turnos filtrados:', turnosFiltrados.value)
-        } catch (error) {
-            handleApiError(error)
-        } finally {
-            // Desactivar indicador de carga
-            loadingTurnos.value = false
-        }
-    } else {
-        // Si no hay sector seleccionado, limpiar turnos filtrados
-        turnosFiltrados.value = []
-        loadingTurnos.value = false
-    }
-}
-
-
-const loadSectores = async () => {
-    try {
-        const response = await getSector()
-        sectores.value = response.data
-        sectorestotales.value = response.data  // Cargar todos los sectores aquí
-        //console.log('Sectores cargados:', sectores.value)
-        //console.log('Sectores totales:', sectorestotales.value)
-    } catch (error) {
-        // Manejar el error - puedes mostrar un mensaje al usuario
-    }
-}
-
-
-let turnosPendientes = ref([])
-const loadTurnosPendientes = async () => {
-    try {
-        const response = await getTurnosPendientes()
-        turnosPendientes.value = response.data
-        //console.log('Turnos pendientes cargados:', turnosPendientes.value)
-    } catch (error) {
-        /* handleApiError(error) */
-    }
-}
-
-const submitForm = async () => {
-    // Si ya hay un turno llamado, lo finalizamos
-    if (turnoLlamado.value) {
-        try {
-           
-            await putFinalizarTurno(turnoLlamado.value.id)
-            showSuccess(`Turno ${turnoLlamado.value.tipo_identificador}: ${turnoLlamado.value.numero_identificador} finalizado correctamente`)
-            
-            // Limpiar el turno llamado
-            turnoLlamado.value = null
-            
-            //console.log('Turno finalizado')
-        } catch (error) {
-            handleApiError(error)
-            //console.error('Error finalizando turno:', error)
-        }
-        return
-    }
-    
-    // Si no hay turno llamado, tomamos uno nuevo
-    loadingTurnos.value = true // Activar indicador de carga
-    
-    try {
-        // Tomar el primer turno de los filtrados (ya están ordenados por fecha)
-        if (!turnosFiltrados.value || turnosFiltrados.value.length === 0) {
-            showError('No hay turnos pendientes para el sector seleccionado')
-            return
-        }
-        
-        const primerTurno = turnosFiltrados.value[0]
-        
-        // Obtener el ID del usuario usando getUser
-        const idUsuario = (await getUser(localStorage.getItem('token'))).data.id
-        
-        if (!idUsuario) {
-            showError('No se pudo obtener el ID del usuario')
-            return
-        }
-        
-        // Llamar a la API para llamar el turno
-        await putLlamarTurno(primerTurno.id)
-        
-        // Asignar el turno llamado
-        turnoLlamado.value = primerTurno
-        
-        // Mostrar mensaje de éxito
-        showSuccess(`Turno ${primerTurno.tipo_identificador}: ${primerTurno.numero_identificador} llamado correctamente`)
-        
-        // Remover el turno de la lista de pendientes
-        turnosFiltrados.value = turnosFiltrados.value.filter(turno => turno.id !== primerTurno.id)
-        
-    } catch (error) {
-        handleApiError(error)
-    } finally {
-        loadingTurnos.value = false // Desactivar indicador de carga
-    }
-}
+let intervalId = null
 
 onMounted(() => {
-    loadTurnosPendientes()
     loadSectores()
     setsectorSeleccionado()
     submitForm()
+    
+    // Actualizar turnos pendientes cada 5 segundos
+    intervalId = setInterval(() => {
+        actualizarTurnosPendientes()
+    }, 5000)
+})
+
+onUnmounted(() => {
+    if (intervalId) {
+        clearInterval(intervalId)
+    }
 })
 </script>

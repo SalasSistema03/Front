@@ -136,138 +136,42 @@
 </template>
 <script setup>
 import NavComponent from '../../components/NavComponent.vue'
-import { getSector, getTurnosPendientes, getTurnosLlamados, getTurnosCompletados } from '@/Services/api/Turnero/turneroApi'
-import { ref, onMounted } from 'vue'
-import { getUser } from '@/Services/api/Usuario/userApi'
-import { postTurnoNuevo } from '@/Services/api/Turnero/turneroApi'
-import { useToast } from '@/composables/useToast'
+import { onMounted, onUnmounted } from 'vue'
+import { useSectores } from '@/composables/turnero/useSectores'
+import { useTurnos } from '@/composables/turnero/useTurnos'
+import { useCargaTurno } from '@/composables/turnero/useCargaTurno'
 
-let sectores = ref([])
-let selectedSector = ref('')
-let numeroSeleccionado = ref('')
-let tipoSeleccionado = ref('')
-let usuario = ref('')
-let isLoading = ref(false)
-const { handleApiError, showSuccess } = useToast()
-const submitForm = async (sector, numero, tipo) => {
-    //poner cargando en el boton 
-    isLoading.value = true
+const { sectores, loadSectores } = useSectores()
+const { 
+    turnosPendientes, 
+    turnosLlamados, 
+    turnosCompletados,
+    loadAllTurnos 
+} = useTurnos()
 
-    
-    const usuario = (await getUser(localStorage.getItem('token'))).data.id
-    /* console.log('Sector:', selectedSector.value)
-    console.log('Numero:', numeroSeleccionado.value)
-    console.log('Tipo:', tipoSeleccionado.value)
-    console.log('Usuario:', usuario) */
-    const turnoData = {
-        sector_id: selectedSector.value,
-        numero_identificador: numeroSeleccionado.value,
-        tipo_identificador: tipoSeleccionado.value,
-        usuario: usuario
-    }
+const {
+    selectedSector,
+    numeroSeleccionado,
+    tipoSeleccionado,
+    isLoading,
+    submitForm
+} = useCargaTurno()
 
-    if (!selectedSector.value || !numeroSeleccionado.value || !tipoSeleccionado.value || !usuario) {
-        handleApiError('Todos los campos son requeridos')
-        setTimeout(() => {
-        isLoading.value = false
-    })
-        return
-    }
-    
-    const token = localStorage.getItem('token')
-    if (!token) {
-        /* handleApiError('No hay token de autenticación') */
-        setTimeout(() => {
-        isLoading.value = false
-    })
-        return
-    }
-    
-    
-
-    try{
-        const response = await postTurnoNuevo(turnoData)
-        showSuccess('Turno cargado correctamente')
-        /* console.log('Turno cargado:', response.data) */
-    }catch(error){
-        handleApiError(error)
-        setTimeout(() => {
-        isLoading.value = false
-    })
-    }
-    
-    // boorar datos al cargar 
-    selectedSector.value = ''
-    numeroSeleccionado.value = ''
-    tipoSeleccionado.value = ''
-
-    setTimeout(() => {
-        isLoading.value = false
-    }, 500)
-
-    
-    
-}
-
-
-const loadSectores = async () => {
-    try {
-        const response = await getSector()
-        sectores.value = response.data
-        //console.log('Sectores cargados:', sectores.value)
-    } catch (error) {
-        /* handleApiError(error) */
-        // Manejar el error - puedes mostrar un mensaje al usuario
-    }
-}
-
-let turnosPendientes = ref([])
-const loadTurnosPendientes = async() =>{
-    try{
-        const response = await getTurnosPendientes()
-        turnosPendientes.value = response.data
-        //console.log('Turnos pendientes cargados:', turnosPendientes.value)
-    }catch(error){
-        /* handleApiError(error) */
-    }
-}
-
-let turnosLlamados = ref([])
-const loadTurnosLlamados = async() =>{
-    try{
-        const response = await getTurnosLlamados()
-        turnosLlamados.value = response.data
-        //console.log('Turnos llamados cargados:', turnosLlamados.value)
-    }catch(error){
-        /* handleApiError(error) */
-    }
-}
-
-let turnosCompletados = ref([])
-const loadTurnosCompletados = async() =>{
-    try {
-        const response = await getTurnosCompletados()
-        turnosCompletados.value = response.data
-        //console.log('Turnos completados cargados:', turnosCompletados.value)
-    }catch(error){
-        /* handleApiError(error) */
-    }
-}
-
-//obtener los valores del form
-
-
+let intervalId = null
 
 onMounted(() => {
     loadSectores()
-    loadTurnosPendientes()
-    loadTurnosLlamados()
-    loadTurnosCompletados()
-
-    setInterval(() => {
-        loadTurnosPendientes()
-        loadTurnosLlamados()
-        loadTurnosCompletados()
+    loadAllTurnos()
+    
+    // Actualizar datos cada 5 segundos
+    intervalId = setInterval(() => {
+        loadAllTurnos()
     }, 5000)
+})
+
+onUnmounted(() => {
+    if (intervalId) {
+        clearInterval(intervalId)
+    }
 })
 </script>
