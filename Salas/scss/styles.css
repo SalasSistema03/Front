@@ -160,6 +160,15 @@
  *  overflow-y: auto
  *  overflow-x: hidden
  *  font-size: 12px */
+.turnero_table_turnos_sm {
+  font-size: 11px;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 3px;
+  height: 19.6vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .turnero_head_table {
   position: sticky;
   top: 0;
@@ -174,6 +183,15 @@
   color: rgba(0, 175, 154, 0.96);
   font-size: 12px;
   border: 1px solid rgb(0, 85, 185);
+}
+
+.turnero_resaltado {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
+}
+.turnero_resaltado:hover {
+  color: rgb(0, 85, 185) !important;
 }
 
 .btn-primary {
