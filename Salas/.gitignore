@@ -37,6 +37,7 @@ __screenshots__/
 
 # Variables de entorno
 .env
+/.env
 .env.local
 .env.*.local
 .htaccess

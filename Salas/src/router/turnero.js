@@ -1,26 +1,30 @@
-import CargaTurnoView from '../views/Turnero/CargaTurnoView.vue'
 import MuestraTurnoView from '../views/Turnero/MuestraTurnoView.vue'
-import TomaTurnoView from '../views/Turnero/TomaTurnoView.vue'
-import { isAuthenticated } from '../Services/business/auth'
+
 
 const rotasTurnero = [
     {
         path : '/carga-turno',
         name : 'carga-turno',
-        component : CargaTurnoView,
-        meta: { requiresAuth: true },
+        component : () => import('../views/Turnero/CargaTurnoView.vue'), // Se importa solo cuando se necesita
+        meta: { requiresAuth: true,
+            vistaId:28
+         },
     },
     {
         path : '/toma-turno',
         name : 'toma-turno',
-        component : TomaTurnoView,
-        meta: { requiresAuth: true },
+        component : () => import('../views/Turnero/TomaTurnoView.vue'), // Se importa solo cuando se necesita
+        meta: { requiresAuth: true 
+            ,vistaId:29
+        },
     },
     {
         path : '/muestra-turno',
         name : 'muestra-turno',
-        component : MuestraTurnoView,
-        meta: { requiresAuth: true },
+        component : () => import('../views/Turnero/MuestraTurnoView.vue'), // Se importa solo cuando se necesita
+        meta: { requiresAuth: true,
+            vistaId:27
+        },
     }
 ]
 

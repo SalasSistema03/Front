@@ -8,13 +8,15 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && del ..\\..\\backend\\resources\\views\\app.blade.php /Q && ren ..\\..\\backend\\public\\index.html app.blade.php && move ..\\..\\backend\\public\\app.blade.php ..\\..\\backend\\resources\\views\\",    "preview": "vite preview",
+    "build": "vite build && del ..\\..\\backEnd\\resources\\views\\app.blade.php /Q & ren ..\\..\\backEnd\\public\\index.html app.blade.php & move ..\\..\\backEnd\\public\\app.blade.php ..\\..\\backEnd\\resources\\views\\",
     "lint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
     "axios": "^1.13.2",
     "bootstrap-icons": "^1.13.1",
+    "pinia": "^3.0.4",
+    "sweetalert2": "^11.26.17",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
