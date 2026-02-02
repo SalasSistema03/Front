@@ -197,4 +197,24 @@
 .btn-primary {
   background-color: rgb(0, 85, 185) !important;
   border-color: rgb(0, 85, 185) !important;
+}
+
+.btn-secondary {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  border-color: rgba(0, 175, 154, 0.96) !important;
+}
+
+.form-group {
+  text-align: center;
+}
+.form-group label {
+  color: rgb(0, 85, 185);
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.form-group input, .form-group select, .form-group textarea {
+  /* border: 2px solid $azulSalas !important */
+  border-radius: 5px;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.75rem;
 }/*# sourceMappingURL=styles.css.map */
