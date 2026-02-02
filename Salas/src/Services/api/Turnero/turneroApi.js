@@ -47,19 +47,24 @@ export const postTurnoNuevo = (turnoData) => {
     })
 }
 
-export const putFinalizarTurno = (id) => {
+export const putFinalizarTurno = (id, idUsuario) => {
     //console.log('Turno finalizado:', id)
     const token = localStorage.getItem('token')
-    return axios.put(`${API_URL}/v1/auth/turnos/finalizar/${id}`, {}, {
+    return axios.put(`${API_URL}/v1/auth/turnos/finalizar/${id}`, {
+        id_usuario: idUsuario
+    }, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     })
 }
 
-export const putLlamarTurno = (id) => {
+export const putLlamarTurno = (id, idUsuario) => {
     const token = localStorage.getItem('token')
-    return axios.put(`${API_URL}/v1/auth/turnos/llamar/${id}`, {}, {
+    //console.log('Turno llamado:', id, 'por usuario:', idUsuario)
+    return axios.put(`${API_URL}/v1/auth/turnos/llamar/${id}`, {
+        id_usuario: idUsuario
+    }, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
