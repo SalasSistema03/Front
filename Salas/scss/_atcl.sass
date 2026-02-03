@@ -1,0 +1,76 @@
+@use 'colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+
+.atcl_contenedor_busqueda_propiedad
+    border: 1px solid $azulSalas
+    border-radius: 8px
+    
+.atcl_contenedor_tabla
+    width: 100%
+    max-height: 58vh
+    overflow-y: auto
+    overflow-x: auto
+    -webkit-overflow-scrolling: touch
+
+.atcl_tabla_busqueda_propiedad
+    width: 100%
+    table-layout: fixed
+    border-collapse: collapse
+    min-width: 100%
+
+    thead
+        tr
+            th
+                background-color: $azulSalas
+                color: white
+                position: sticky
+                top: 0
+                z-index: 10
+                font-size: 0.8rem
+                text-align: center
+                white-space: nowrap
+    tbody
+        tr
+            td
+                font-size: 0.8rem
+                text-align: center
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+
+/* Mobile-specific: force horizontal scroll instead of squeezing columns */
+@media (max-width: 767px)
+    .atcl_contenedor_tabla
+        overflow-x: auto
+        -webkit-overflow-scrolling: touch
+        -ms-overflow-style: -ms-autohiding-scrollbar
+
+    .atcl_tabla_busqueda_propiedad
+        min-width: 1200px
+        table-layout: auto
+        font-size: 0.9rem
+
+    .atcl_tabla_busqueda_propiedad thead th,
+    .atcl_tabla_busqueda_propiedad tbody td
+        white-space: nowrap
+        min-width: 120px
+        overflow: hidden
+        text-overflow: ellipsis
+
+/* Optional: make the scrollbar slightly larger/visible on webkit browsers */
+.atcl_contenedor_tabla::-webkit-scrollbar
+    height: 10px
+
+.atcl_contenedor_tabla::-webkit-scrollbar-thumb
+    background: rgba(0,0,0,0.18)
+    border-radius: 6px
+               
+                
+
+
+    
+
+
+
+    
