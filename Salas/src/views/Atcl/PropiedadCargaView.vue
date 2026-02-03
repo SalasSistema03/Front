@@ -5,7 +5,21 @@
             <div class="col-md-6 row">
                 <div class="form-group col-md-4 px-1">
                     <label for="input-calle" class="form-label">Calle</label>
-                    <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle">
+                    <div class="position-relative">
+                        <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
+                            v-model="calleSeleccionada" @input="filtrarCalles" @focus="mostrarSugerencias = true"
+                            @blur="ocultarSugerencias">
+
+                        <!-- Lista de sugerencias -->
+                        <ul v-if="mostrarSugerencias && callesFiltradas.length"
+                            class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm"
+                            style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+                            <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalle(calle)"
+                                class="px-3 py-2 cursor-pointer hover:bg-light">
+                                {{ calle.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class=" form-group col-md-2 px-1">
                     <label for="input-altura" class="form-label">Altura</label>
@@ -28,27 +42,31 @@
                         placeholder="Dto">
                 </div>
 
-                <div class="form-group col-md-4 px-1">
+                <div class="form-group col-md-3 px-1">
                     <label for="input-piso" class="form-label">Inmueble</label>
-                    <select name="inmueble" id="input-inmueble" class="form-select form-select-sm">
-                        <option value="0">No</option>
-                        <option value="1">Si</option>
+                    <select class="form-select form-select-sm">
+                        <option value="">Seleccione</option>
+                        <option v-for="inmueble in inmuebles" :key="inmueble.id" :value="inmueble.id">
+                            {{ inmueble.inmueble }}
+                        </option>
                     </select>
                 </div>
                 <div class="form-group col-md-4 px-1">
                     <label for="input-numero-propiedad" class="form-label">Zona</label>
                     <select class="form-select form-select-sm" id="input-zona" name="input-zona">
-                        <option value="0">Zona 1</option>
-                        <option value="1">Zona 2</option>
-                        <option value="2">Zona 3</option>
+                        <option value="">Seleccione</option>
+                        <option v-for="zona in zonas" :key="zona.id" :value="zona.id">
+                            {{ zona.name }}
+                        </option>
                     </select>
                 </div>
-                <div class="form-group col-md-4 px-1">
+                <div class="form-group col-md-5 px-1">
                     <label for="input-numero-propiedad" class="form-label">Provincia</label>
                     <select class="form-select form-select-sm" name="provincia" id="input-provincia">
-                        <option value="0">Buenos Aires</option>
-                        <option value="1">Córdoba</option>
-                        <option value="2">Santa Fe</option>
+                        <option value="">Seleccione</option>
+                        <option v-for="provincia in provincias" :key="provincia.id" :value="provincia.id">
+                            {{ provincia.name }}
+                        </option>
                     </select>
                 </div>
 
@@ -59,8 +77,7 @@
                 <div class="form-group col-md-9 px-1 pt-3">
                     <!-- <label for="input-observaciones" class="form-label"></label> -->
                     <textarea class="form-control form-control-sm" id="input-observaciones"
-                        placeholder="Observaciones de Llaves">
-                    </textarea>
+                        placeholder="Observaciones de Llaves"></textarea>
                 </div>
 
                 <div class="form-group col-md-3 px-1">
@@ -73,8 +90,7 @@
                 </div>
                 <div class="form-group col-md-9 px-1 pt-3">
                     <textarea class="form-control form-control-sm" id="input-observaciones-cartel"
-                        placeholder="Observaciones de Cartel">
-                    </textarea>
+                        placeholder="Observaciones de Cartel"></textarea>
                 </div>
                 <div class="form-group col-md-6 px-1 pt-2">
                     <!-- Button trigger modal -->
@@ -102,108 +118,201 @@
                         Alquiler
                     </button>
                 </div>
-
+                <div class="col-md-12 row mt-4 d-flex justify-content-center">
+                    <button class="btn btn-primary w-50">Cargar Propiedad</button>
+                </div>
             </div>
+
             <div class="col-md-6 row">
-                <!-- <div class="form-group col-md-12">
-                    <label for="input-calle" class="form-label">Subir Fotos y Documentacion</label>
-                    <input type="file" class="form-control form-select " id="fotos" name="fotos[]"
-                        accept="image/*,application/pdf,video/*" multiple="">
-                </div> -->
-
-
-                <!-- tengo que adaptar este codigo para que ande con vue3 y bootstrap5 -->
-
-                <div class="col-md-3 d-flex justify-content-center  ">
-                    <div class="row g-1">
-                        <!-- Campo para seleccionar múltiples fotos -->
-                        <div class="col-md-12">
-                            <label for="fotos" class="form-label ">Subir Fotos y Documentos</label>
-                            <input type="file" class="form-control form-select " id="fotos" name="fotos[]"
-                                accept="image/*,application/pdf,video/*" multiple @change="onFilesSelected">
-                        </div>
-                    </div>
+                <!-- INPUT -->
+                <div class="form-group col-md-12">
+                    <label class="form-label">Subir Archivos</label>
+                    <input
+                        type="file"
+                        multiple
+                        class="form-control form-control-sm"
+                        accept="image/*,video/*,application/pdf"
+                        @change="handleFiles"
+                    />
                 </div>
 
-                <!-- esto no se muestra -->
-
-                <div class="col-md-3">
-                    <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
-                    <div class="container col-md-12">
-
-                        <!-- Mensajes de depuración: indica si hay slides y miniaturas -->
-                        <div v-if="!slides.length" class="text-muted small mb-2">No hay archivos cargados</div>
-                        <div v-else class="mb-2 small">Archivos cargados: {{ slides.length }}</div>
-                        <div class="d-flex gap-2 mb-2" v-if="slides.length">
-                          <img v-for="(s,i) in slides" v-if="s.type==='image'" :key="i" :src="s.url" style="height:48px; width:auto; object-fit:cover; border:1px solid #ccc;" />
-                          <div v-for="(s,i) in slides" v-if="s.type==='pdf'" :key="'pdf-'+i" class="small text-muted">PDF</div>
-                          <div v-for="(s,i) in slides" v-if="s.type==='video'" :key="'vid-'+i" class="small text-muted">VIDEO</div>
+                <!-- PREVISUALIZACIÓN CON TABS -->
+                <div class="col-md-12 mt-2" v-if="hasFiles">
+                    <div class="card text-center ">
+                        <div class="card-header ">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a 
+                                        class="nav-link" 
+                                        :class="{ active: activeTab === 'images' }"
+                                        @click="activeTab = 'images'"
+                                        href="#"
+                                        v-if="images.length"
+                                    >
+                                        📷 Imágenes ({{ images.length }})
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a 
+                                        class="nav-link" 
+                                        :class="{ active: activeTab === 'videos' }"
+                                        @click="activeTab = 'videos'"
+                                        href="#"
+                                        v-if="videos.length"
+                                    >
+                                        🎥 Videos ({{ videos.length }})
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a 
+                                        class="nav-link" 
+                                        :class="{ active: activeTab === 'pdfs' }"
+                                        @click="activeTab = 'pdfs'"
+                                        href="#"
+                                        v-if="pdfs.length"
+                                    >
+                                        📄 PDFs ({{ pdfs.length }})
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-
-                        <!-- Contenedor del Carrusel (oculto si no hay archivos) -->
-                        <div id="fotosCarrusel" class="carousel slide h-50" data-bs-ride="carousel" v-if="slides.length">
-                            <div class="carousel-inner " id="fotosDetalles">
-                                <div class="carousel-item" :class="{ active: index === 0 }" v-for="(s, index) in slides" :key="index">
-                                    <template v-if="s.type === 'image'">
-                                        <img :src="s.url" class="d-block w-100" :alt="`Archivo ${index + 1}`" style="max-height:220px; object-fit:cover;" />
-                                    </template>
-                                    <template v-else-if="s.type === 'pdf'">
-                                        <iframe :src="s.url" width="100%" height="220" style="border:none;"></iframe>
-                                    </template>
-                                    <template v-else-if="s.type === 'video'">
-                                        <video class="d-block w-100" style="max-height:220px; object-fit:cover;" controls>
-                                            <source :src="s.url" :type="s.fileType" />
-                                            Tu navegador no soporta la etiqueta de video.
-                                        </video>
-                                    </template>
-
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <textarea class="form-control" v-model="s.descripcion" rows="2" placeholder="Condición"></textarea>
+                        <div class="card-body ">
+                            <!-- ===================== -->
+                            <!-- 📷 CARRUSEL IMÁGENES -->
+                            <!-- ===================== -->
+                            <div v-if="activeTab === 'images' && images.length">
+                                <div
+                                    id="carouselImages"
+                                    class="carousel slide"
+                                    data-bs-ride="carousel"
+                                >
+                                    <div class="carousel-inner">
+                                        <div
+                                            v-for="(img, index) in images"
+                                            :key="index"
+                                            class="carousel-item"
+                                            :class="{ active: index === 0 }"
+                                        >
+                                            <img :src="img.url" class="d-block w-100 preview-media" />
+                                            <!-- Comentario -->
+                                            <input
+                                                class="form-control mt-2"
+                                                placeholder="Comentario para esta imagen..."
+                                                v-model="img.comment"
+                                            />
+                                        </div>
                                     </div>
+                                    <!-- Controles -->
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#carouselImages" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#carouselImages" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
                                 </div>
                             </div>
-                            <!-- Controles del Carrusel -->
-                            <button class="carousel-control-prev" type="button" data-bs-target="#fotosCarrusel"
-                                data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#fotosCarrusel"
-                                data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
 
+                            <!-- ===================== -->
+                            <!-- 🎥 CARRUSEL VIDEOS -->
+                            <!-- ===================== -->
+                            <div v-if="activeTab === 'videos' && videos.length">
+                                <div
+                                    id="carouselVideos"
+                                    class="carousel slide"
+                                    data-bs-ride="carousel"
+                                >
+                                    <div class="carousel-inner">
+                                        <div
+                                            v-for="(vid, index) in videos"
+                                            :key="index"
+                                            class="carousel-item"
+                                            :class="{ active: index === 0 }"
+                                        >
+                                            <video controls class="d-block w-100 preview-media">
+                                                <source :src="vid.url" />
+                                            </video>
+                                            <!-- Comentario -->
+                                            <input
+                                                class="form-control mt-2"
+                                                placeholder="Comentario para este video..."
+                                                v-model="vid.comment"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- Controles -->
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#carouselVideos" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#carouselVideos" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ===================== -->
+                            <!-- 📄 CARRUSEL PDF -->
+                            <!-- ===================== -->
+                            <div v-if="activeTab === 'pdfs' && pdfs.length">
+                                <div
+                                    id="carouselPDF"
+                                    class="carousel slide"
+                                    data-bs-ride="carousel"
+                                >
+                                    <div class="carousel-inner">
+                                        <div
+                                            v-for="(pdf, index) in pdfs"
+                                            :key="index"
+                                            class="carousel-item"
+                                            :class="{ active: index === 0 }"
+                                        >
+                                            <iframe
+                                                :src="pdf.url"
+                                                class="w-100 preview-media"
+                                            ></iframe>
+                                            <!-- Comentario -->
+                                            <input
+                                                class="form-control mt-2"
+                                                placeholder="Comentario para este PDF..."
+                                                v-model="pdf.comment"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- Controles -->
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#carouselPDF" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#carouselPDF" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-
+                    <!-- ===================== -->
+                    <!-- BOTÓN VER DATOS -->
+                    <!-- ===================== -->
+                    <button
+                        class="btn btn-primary mt-3 w-100"
+                        @click="showData"
+                    >
+                        Ver archivos + comentarios en consola
+                    </button>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
-            <div class="col-md-12 row mt-4 d-flex justify-content-center">
-                <button class="btn btn-primary w-50">Cargar Propiedad</button>
-            </div>
+
         </form>
     </div>
-    <ModalPropiedadComodidades></ModalPropiedadComodidades>
+    <ModalPropiedadComodidades :estados-generales="estadosGenerales"></ModalPropiedadComodidades>
     <ModalPropiedadDescripcion></ModalPropiedadDescripcion>
-    <ModalPropiedadVenta></ModalPropiedadVenta>
-    <ModalPropiedadAlquiler></ModalPropiedadAlquiler>
+    <ModalPropiedadVenta :estados-venta="estadosVenta"></ModalPropiedadVenta>
+    <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler"></ModalPropiedadAlquiler>
 
 </template>
 
@@ -213,6 +322,9 @@ import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalProp
 import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
 import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
+import { getInmueble, getZonas, getProvincias, getEstadoGeneral, getEstadoVenta, getEstadoAlquiler, getCalles } from '../../Services/api/Atcl/AtclApi'
+import { onMounted, ref, computed } from 'vue'
+
 export default {
     components: {
         NavComponent,
@@ -223,10 +335,162 @@ export default {
     },
     data() {
         return {
-            slides: []
+            slides: [],
+            inmuebles: [],
+            zonas: [],
+            provincias: [],
+            estadosGenerales: [],
+            estadosVenta: [],
+            estadosAlquiler: [],
+            calles: [],
+            // Variables para autocompletado de calles
+            calleSeleccionada: '',
+            callesFiltradas: [],
+            mostrarSugerencias: false,
+            // Variables para archivos
+            images: [],
+            videos: [],
+            pdfs: [],
+            // Variable para controlar el tab activo
+            activeTab: 'images'
+            
+        }
+    },
+    computed: {
+        hasFiles() {
+            return this.images.length || this.videos.length || this.pdfs.length
         }
     },
     methods: {
+        async cargarInmuebles() {
+            try {
+                const response = await getInmueble();
+                this.inmuebles = response.data;
+                //console.log('Inmuebles cargados:', this.inmuebles);
+            } catch (error) {
+                //console.error('Error cargando inmuebles:', error);
+            }
+        },
+        async cargarZonas() {
+            try {
+                const response = await getZonas();
+                this.zonas = response.data;
+                //console.log('Zonas cargadas:', this.zonas);
+            } catch (error) {
+                //console.error('Error cargando zonas:', error);
+            }
+        },
+        async cargarProvincias() {
+            try {
+                const response = await getProvincias();
+                this.provincias = response.data;
+                //console.log('Provincias cargadas:', this.provincias);
+            } catch (error) {
+                //console.error('Error cargando provincias:', error);
+            }
+        },
+        async cargarEstadosGenerales() {
+            try {
+                const response = await getEstadoGeneral();
+                this.estadosGenerales = response.data;
+                //console.log('Estados generales cargados:', this.estadosGenerales);
+            } catch (error) {
+                //console.error('Error cargando estados generales:', error);
+            }
+        },
+        async cargarEstadosVenta() {
+            try {
+                const response = await getEstadoVenta();
+                this.estadosVenta = response.data;
+                //console.log('Estados venta cargados:', this.estadosVenta);
+            } catch (error) {
+                //console.error('Error cargando estados venta:', error);
+            }
+        },
+        async cargarEstadosAlquiler() {
+            try {
+                const response = await getEstadoAlquiler();
+                this.estadosAlquiler = response.data;
+                //console.log('Estados alquiler cargados:', this.estadosAlquiler);
+            } catch (error) {
+                //console.error('Error cargando estados alquiler:', error);
+            }
+        },
+        async cargarCalles() {
+            try {
+                const response = await getCalles();
+                this.calles = response.data;
+                console.log('Calles cargadas:', this.calles);
+            } catch (error) {
+                console.error('Error cargando calles:', error);
+            }
+        },
+        // Métodos para autocompletado de calles
+        filtrarCalles() {
+            const texto = this.calleSeleccionada.toLowerCase();
+            if (texto.length === 0) {
+                this.callesFiltradas = [];
+                return;
+            }
+
+            this.callesFiltradas = this.calles.filter(calle =>
+                calle.name.toLowerCase().includes(texto)
+            ).slice(0, 10); // Limitar a 10 resultados
+        },
+        seleccionarCalle(calle) {
+            this.calleSeleccionada = calle.name;
+            this.mostrarSugerencias = false;
+            this.callesFiltradas = [];
+        },
+        ocultarSugerencias() {
+            // Pequeño delay para permitir el click en la sugerencia
+            setTimeout(() => {
+                this.mostrarSugerencias = false;
+            }, 200);
+        },
+        // Método para manejar archivos
+        handleFiles(event) {
+            const files = Array.from(event.target.files)
+
+            // limpiar previews anteriores
+            this.images = []
+            this.videos = []
+            this.pdfs = []
+
+            files.forEach((file) => {
+                const url = URL.createObjectURL(file)
+
+                const item = {
+                    file,
+                    url,
+                    comment: ""
+                }
+
+                if (file.type.startsWith("image/")) {
+                    this.images.push(item)
+                }
+                else if (file.type.startsWith("video/")) {
+                    this.videos.push(item)
+                }
+                else if (file.type === "application/pdf") {
+                    this.pdfs.push(item)
+                }
+            })
+
+            // Establecer el tab activo según los archivos cargados
+            if (this.images.length > 0) {
+                this.activeTab = 'images'
+            } else if (this.videos.length > 0) {
+                this.activeTab = 'videos'
+            } else if (this.pdfs.length > 0) {
+                this.activeTab = 'pdfs'
+            }
+        },
+        showData() {
+            console.log("IMÁGENES:", this.images)
+            console.log("VIDEOS:", this.videos)
+            console.log("PDFs:", this.pdfs)
+        },
         onFilesSelected(event) {
             const archivos = Array.from(event.target.files || []);
             console.log('onFilesSelected', { total: archivos.length });
@@ -281,8 +545,32 @@ export default {
                 reader.readAsDataURL(file);
             });
         }
+    },
+    mounted() {
+        this.cargarInmuebles();
+        this.cargarZonas();
+        this.cargarProvincias();
+        this.cargarEstadosGenerales();
+        this.cargarEstadosVenta();
+        this.cargarEstadosAlquiler();
+        this.cargarCalles();
     }
 }
-
-
 </script>
+
+<style scoped>
+.preview-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.preview-media {
+    height: 350px;
+    object-fit: contain;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+</style>
