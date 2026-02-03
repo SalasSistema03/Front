@@ -34,9 +34,9 @@ export const useAuthStore = defineStore('auth', {
 
                 this.isLoaded = true;
 
-                console.log("Usuario cargado con éxito:", this.user);
+                
             } catch (error) {
-                console.error('Error cargando datos iniciales:', error);
+                
                 this.logout();
             }
         },

@@ -9,20 +9,35 @@ $verdeSalas: colorSalas.$verdeSalas
 
 .navbar-dropdown-submenu 
     position: relative
-    font-size: 13px
+    font-size: 14px
+      
     
+    
+.navbar-dropdown-menu
+    min-width: 20px
+    padding: 0.1rem 0
+    border: 1px solid $azulSalas
+    
+    a 
+        color: $azulSalas !important
+        background-color: #ffffff00
+        &:hover
+            color: $verdeSalas !important
+            background-color: #00489100
+        
     
 .navbar-dropdown-submenu-content 
+    font-size: 12px
+    color: $azulSalas !important
     position: absolute
     top: 0
     left: 100%
     margin-top: -1px
     display: none
-    min-width: 20px
+    min-width: 10px
     background-color: #ffffff
-    border: 1px solid rgba(0, 0, 0, 0.15)
-    border-radius: 0.375rem
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)
+    border: 1px solid $azulSalas
+    /* box-shadow: 0 0rem 0.5rem $azulSalas */
     z-index: 1000
 
 .navbar-dropdown-submenu-content.show 
@@ -49,7 +64,7 @@ $verdeSalas: colorSalas.$verdeSalas
     margin-left: 0.5rem
     transform: rotate(0deg)
     transition: transform 0.2s
-    color: red
+    color: $azulSalas !important
 
 .navbar-dropdown-submenu:hover .navbar-dropdown-arrow,
 .dropdown-toggle[aria-expanded='true']+.navbar-dropdown-arrow 
@@ -65,7 +80,7 @@ $verdeSalas: colorSalas.$verdeSalas
 #navbar_contenedor_logo 
     padding: 0
 
-#navbar_logo_nav 
+#navbar_logo_nav
     height: 40px
     width: auto
 
@@ -73,7 +88,18 @@ $verdeSalas: colorSalas.$verdeSalas
     display: none !important
 
 .navbar-admin
-    font-size: 13px
-    color: $verdeSalas
+    font-size: 13px !important
+    color: $verdeSalas !important
+    font-weight: 800 !important
+    &:hover
+        color: white !important
+        background-color: $azulSalas !important
+        border-radius: 10px !important
+
+
 .navbar-admin_dropdown
-    font-size: 13px
+    position: relative
+    transform: translateY(-12%) translateX(-5%) 
+    font-size: 14px
+    padding: 0.5rem 1rem
+    

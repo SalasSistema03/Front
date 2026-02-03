@@ -15,33 +15,6 @@
                     <li class="nav-item"><a class="nav-link">Cargando...</a></li>
                 </template>
 
-                <template v-else>
-                    <li v-for="nav in authStore.menuData" :key="nav.id" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle navbar-item_menu" href="#" data-bs-toggle="dropdown">
-                            {{ nav.nombre }}
-                        </a>
-
-                        <ul class="dropdown-menu navbar-dropdown-menu">
-                            <li v-for="seccion in nav.secciones" :key="seccion.nombre" 
-                                class="dropdown navbar-dropdown-submenu">
-                                
-                                <a class="dropdown-item dropdown-toggle d-flex justify-content-between align-items-center" 
-                                   href="#" @click.prevent="toggleSubmenuClick($event)">
-                                    {{ seccion.nombre }}
-                                    <span class="navbar-dropdown-arrow">›</span>
-                                </a>
-
-                                <ul class="dropdown-menu navbar-dropdown-submenu-content">
-                                    <li v-for="item in seccion.items" :key="item.id">
-                                        <router-link :to="getItemUrl(item)" class="dropdown-item">
-                                            {{ item.nombre }}
-                                        </router-link>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </template>
 
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle ms-3 navbar-admin navbar-admin_dropdown-toggle" href="#" data-bs-toggle="dropdown">

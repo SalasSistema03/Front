@@ -48,7 +48,7 @@ export const postTurnoNuevo = (turnoData) => {
 }
 
 export const putFinalizarTurno = (id, idUsuario) => {
-    //console.log('Turno finalizado:', id)
+    
     const token = localStorage.getItem('token')
     return axios.put(`${API_URL}/v1/auth/turnos/finalizar/${id}`, {
         id_usuario: idUsuario
@@ -61,7 +61,7 @@ export const putFinalizarTurno = (id, idUsuario) => {
 
 export const putLlamarTurno = (id, idUsuario) => {
     const token = localStorage.getItem('token')
-    //console.log('Turno llamado:', id, 'por usuario:', idUsuario)
+   
     return axios.put(`${API_URL}/v1/auth/turnos/llamar/${id}`, {
         id_usuario: idUsuario
     }, {

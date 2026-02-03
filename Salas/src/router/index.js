@@ -48,7 +48,7 @@ router.beforeEach(async (to) => {
   // --- NUEVO: CANDADO DE ADMINISTRADOR ---
   if (to.meta.requiresAdmin) {
     // Agregamos un log extra para ver qué llegó ahora
-    console.log("Revisando admin en router:", authStore.user);
+   
 
     // Usa el nombre exacto que veas en la consola (admin o is_admin)
     if (Number(authStore.user?.admin) !== 1) {

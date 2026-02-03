@@ -113,6 +113,7 @@ export const useToast = () => {
   
   // Manejar errores de API específicamente
   const handleApiError = (error) => {
+    
     // Manejar específicamente errores de autenticación
     if (error.response && error.response.status === 401) {
       // Limpiar token y redirigir al login

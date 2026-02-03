@@ -24,11 +24,9 @@ export function useCargaTurno() {
                 tipo_identificador: tipoSeleccionado.value,
                 usuario: usuario.id
             }
+            
 
-            if (!selectedSector.value || !numeroSeleccionado.value || !tipoSeleccionado.value || !usuario.id) {
-                handleApiError('Todos los campos son requeridos')
-                return
-            }
+          
             
             const token = localStorage.getItem('token')
             if (!token) {
