@@ -15,9 +15,8 @@ export default defineConfig({
   },
   // --- AGREGAMOS ESTO ---
   build: {
-    // Apunta a la carpeta public de tu repositorio de Backend
-    outDir: '../../backEnd/public', 
-    // Limpia los archivos viejos antes de generar el nuevo build
-    emptyOutDir: true, 
-  }
+  outDir: '../../backEnd/public',
+  // CAMBIA ESTO A FALSE:
+  emptyOutDir: false, 
+},
 })

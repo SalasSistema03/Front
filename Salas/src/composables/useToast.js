@@ -113,17 +113,45 @@ export const useToast = () => {
   
   // Manejar errores de API específicamente
   const handleApiError = (error) => {
+    // Manejar específicamente errores de autenticación
+    if (error.response && error.response.status === 401) {
+      // Limpiar token y redirigir al login
+      localStorage.removeItem('token')
+      showError('Sesión expirada. Por favor, inicie sesión nuevamente.')
+      
+      // Redirigir al login después de un breve tiempo
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 2000)
+      return
+    }
+    
     if (error.response && error.response.data) {
       const errorData = error.response.data
       
       // Si el error tiene el formato { error: { field: [messages] } }
       if (errorData.error) {
-        return showError(errorData.error)
+        // Si errorData.error es un string, mostrarlo directamente
+        if (typeof errorData.error === 'string') {
+          return showError(errorData.error)
+        }
+        // Si es un objeto, convertirlo a string
+        if (typeof errorData.error === 'object') {
+          return showError(JSON.stringify(errorData.error))
+        }
       }
       
       // Si el error es un objeto con campos de validación
       if (typeof errorData === 'object' && errorData !== null) {
-        return showError(errorData)
+        // Buscar mensajes comunes de error
+        if (errorData.message) {
+          return showError(errorData.message)
+        }
+        if (errorData.error) {
+          return showError(errorData.error)
+        }
+        // Si no hay mensajes claros, convertir el objeto a string
+        return showError(JSON.stringify(errorData))
       }
       
       // Si es un mensaje de error simple
