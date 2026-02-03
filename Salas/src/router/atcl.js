@@ -11,15 +11,24 @@ const routesAtcl = [
         },
     },
 
-    /* {
-        path: '/atcl/propiedad',
-        name: 'propiedad',
-        component: () => import('../views/Atcl/PropiedadView.vue'),
+    {
+        path: '/propiedad-busqueda',
+        alias: '/atcl/propiedad-busqueda',
+        name: 'propiedad-busqueda',
+        component: () => import('../views/Atcl/PropiedadBusquedaView.vue'),
         meta: {
             requiresAuth: true,
-            requiresAdmin: true, // opcional
         },
-    }, */
+    },
+    {
+        path: '/propiedad-detalle',
+        alias: '/atcl/propiedad-detalle',
+        name: 'propiedad-detalle',
+        component: () => import('../views/Atcl/PropiedadDetalleView.vue'),
+        meta: {
+            requiresAuth: true,
+        },
+    },
 ]
 
 export default routesAtcl

@@ -1,0 +1,13 @@
+@use '../colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+    
+.btn-light
+    border-color: $verdeSalas !important
+    color: $verdeSalas !important
+    
+
+    &:hover
+        
+        border: 1px solid $azulSalas !important
+        color: $azulSalas !important
