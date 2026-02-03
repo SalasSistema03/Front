@@ -1,7 +1,9 @@
 import MuestraTurnoView from '../views/Turnero/MuestraTurnoView.vue'
+import TomaTurnoView from '../views/Turnero/TomaTurnoView.vue'
+import CargaTurnoView from '../views/Turnero/CargaTurnoView.vue'
 
 
-const rotasTurnero = [
+const routesTurnero = [
     {
         path : '/carga-turno',
         name : 'carga-turno',
@@ -28,4 +30,4 @@ const rotasTurnero = [
     }
 ]
 
-export default rotasTurnero
+export default routesTurnero
