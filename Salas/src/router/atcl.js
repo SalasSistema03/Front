@@ -29,6 +29,15 @@ const routesAtcl = [
             requiresAuth: true,
         },
     },
+    {
+        path: '/propiedad-update',
+        alias: '/atcl/propiedad-update',
+        name: 'propiedad-update',
+        component: () => import('../views/Atcl/PropiedadUpdateView.vue'),
+        meta: {
+            requiresAuth: true,
+        },
+    }
 ]
 
 export default routesAtcl

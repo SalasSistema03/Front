@@ -1,7 +1,7 @@
 <template>
     <NavComponent titulo="Propiedad Carga"></NavComponent>
     <div class="px-3">
-        <form class="row" autocomplete="off">
+        <form class="row d-flex align-items-start px-3" autocomplete="off">
             <div class="col-md-6 row">
                 <div class="form-group col-md-4 px-1">
                     <label for="input-calle" class="form-label">Calle</label>
@@ -137,10 +137,10 @@
                 </div>
 
                 <!-- PREVISUALIZACIÓN CON TABS -->
-                <div class="col-md-12 mt-2" v-if="hasFiles">
+                <div class="col-md-12 mt-2 " v-if="hasFiles">
                     <div class="card text-center ">
-                        <div class="card-header ">
-                            <ul class="nav nav-tabs card-header-tabs">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs ">
                                 <li class="nav-item">
                                     <a 
                                         class="nav-link" 
@@ -183,7 +183,7 @@
                             <div v-if="activeTab === 'images' && images.length">
                                 <div
                                     id="carouselImages"
-                                    class="carousel slide"
+                                    class="carousel slide "
                                     data-bs-ride="carousel"
                                 >
                                     <div class="carousel-inner">
@@ -193,7 +193,7 @@
                                             class="carousel-item"
                                             :class="{ active: index === 0 }"
                                         >
-                                            <img :src="img.url" class="d-block w-100 preview-media" />
+                                            <img :src="img.url" class="d-block w-100 preview-media atcl_cargar_multimedia_tamaño" />
                                             <!-- Comentario -->
                                             <input
                                                 class="form-control mt-2"
@@ -230,7 +230,7 @@
                                             class="carousel-item"
                                             :class="{ active: index === 0 }"
                                         >
-                                            <video controls class="d-block w-100 preview-media">
+                                            <video controls class="d-block w-100 preview-media atcl_cargar_multimedia_tamaño">
                                                 <source :src="vid.url" />
                                             </video>
                                             <!-- Comentario -->
@@ -271,7 +271,7 @@
                                         >
                                             <iframe
                                                 :src="pdf.url"
-                                                class="w-100 preview-media"
+                                                class="w-100 preview-media atcl_cargar_multimedia_tamaño"
                                             ></iframe>
                                             <!-- Comentario -->
                                             <input
@@ -295,15 +295,7 @@
                         </div>
                     </div>
 
-                    <!-- ===================== -->
-                    <!-- BOTÓN VER DATOS -->
-                    <!-- ===================== -->
-                    <button
-                        class="btn btn-primary mt-3 w-100"
-                        @click="showData"
-                    >
-                        Ver archivos + comentarios en consola
-                    </button>
+                    
                 </div>
             </div>
 
@@ -311,7 +303,7 @@
     </div>
     <ModalPropiedadComodidades :estados-generales="estadosGenerales"></ModalPropiedadComodidades>
     <ModalPropiedadDescripcion></ModalPropiedadDescripcion>
-    <ModalPropiedadVenta :estados-venta="estadosVenta"></ModalPropiedadVenta>
+    <ModalPropiedadVenta :estados-venta="estadosVenta" :captadores-internos="captadoresInternos" :asesores="asesores"></ModalPropiedadVenta>
     <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler"></ModalPropiedadAlquiler>
 
 </template>
@@ -322,7 +314,8 @@ import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalProp
 import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
 import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
-import { getInmueble, getZonas, getProvincias, getEstadoGeneral, getEstadoVenta, getEstadoAlquiler, getCalles } from '../../Services/api/Atcl/AtclApi'
+import { getInmueble, getZonas, getProvincias, getEstadoGeneral, getEstadoVenta, getEstadoAlquiler,
+    getCalles, getAsesor, getCaptadorInterno } from '../../Services/api/Atcl/AtclApi'
 import { onMounted, ref, computed } from 'vue'
 
 export default {
@@ -343,6 +336,8 @@ export default {
             estadosVenta: [],
             estadosAlquiler: [],
             calles: [],
+            asesores: [],
+            captadoresInternos: [],
             // Variables para autocompletado de calles
             calleSeleccionada: '',
             callesFiltradas: [],
@@ -407,6 +402,24 @@ export default {
                 //console.error('Error cargando estados venta:', error);
             }
         },
+         async cargarAsesores() {
+             try {
+                 const response = await getAsesor();
+                 this.asesores = response.data.original || response.data;
+                 console.log('Asesores cargados:', this.asesores);
+             } catch (error) {
+                 console.error('Error cargando asesores:', error);
+             }
+         },
+        async cargarCaptadoresInternos() {
+            try {
+                const response = await getCaptadorInterno();
+                this.captadoresInternos = response.data.original || response.data;
+                //console.log('Captadores internos cargados:', this.captadoresInternos);
+            } catch (error) {
+                console.error('Error cargando captadores internos:', error);
+            }
+        },
         async cargarEstadosAlquiler() {
             try {
                 const response = await getEstadoAlquiler();
@@ -420,9 +433,9 @@ export default {
             try {
                 const response = await getCalles();
                 this.calles = response.data;
-                console.log('Calles cargadas:', this.calles);
+                //console.log('Calles cargadas:', this.calles);
             } catch (error) {
-                console.error('Error cargando calles:', error);
+                //console.error('Error cargando calles:', error);
             }
         },
         // Métodos para autocompletado de calles
@@ -544,6 +557,9 @@ export default {
                 };
                 reader.readAsDataURL(file);
             });
+        },
+        handleSubmit: async () =>{
+            console.log("borrar")
         }
     },
     mounted() {
@@ -554,8 +570,12 @@ export default {
         this.cargarEstadosVenta();
         this.cargarEstadosAlquiler();
         this.cargarCalles();
+         this.cargarAsesores();
+        this.cargarCaptadoresInternos();
     }
 }
+
+
 </script>
 
 <style scoped>

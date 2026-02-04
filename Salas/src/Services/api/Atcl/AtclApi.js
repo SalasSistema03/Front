@@ -63,3 +63,21 @@ export const getCalles = () => {
         },
     })
 }
+
+export const getAsesor = () => {
+    const token = localStorage.getItem('token')
+    return axios.get(`${API_URL}/v1/auth/asesor`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}
+
+export const getCaptadorInterno = () => {
+    const token = localStorage.getItem('token')
+    return axios.get(`${API_URL}/v1/auth/captador-interno`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}

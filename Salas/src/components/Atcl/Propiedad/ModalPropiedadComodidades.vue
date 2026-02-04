@@ -27,23 +27,23 @@
                         <div class="form-group  px-1 col-md-3">
                             <label class="text-center" id="basic-addon1">Dorm.</label>
                             <input name="dormitorios" type="number" class="form-control "
-                                value="{{ old('dormitorios', request('dormitorios')) }}" id="" min="0" max="100">
+                                value="" id="" min="0" max="100" placeholder="Ej: 2">
                         </div>
                         <div class="form-group  px-1 col-md-3">
                             <label class="text-center" id="basic-addon1">Baños</label>
                             <input name="banios" type="number" class="form-control "
-                                value="{{ old('banios', request('banios')) }}" id="" min="0" max="100">
+                                value="" id="" min="0" max="100" placeholder="Ej: 1">
                         </div>
 
                         <div class="form-group  px-1 col-md-3">
                             <label class="text-center" id="basic-addon1">m² Lote</label>
                             <input name="m_Lote" type="number" class="form-control "
-                                value="{{ old('m_Lote', request('m_Lote')) }}" id="" min="0">
+                                value="" id="" min="0" placeholder="Ej: 500">
                         </div>
                         <div class="form-group  px-1 col-md-3">
                             <label class="text-center" id="basic-addon1">m² Cub.</label>
                             <input name="m_Cubiertos" type="number" class="form-control "
-                                value="{{ old('m_Cubiertos', request('m_Cubiertos')) }}" id="">
+                                value="" id="" placeholder="Ej: 300">
                         </div>
                         <div class="form-group  px-1 col-md-3 ">
                             <label class="text-center" id="basic-addon1">Cochera</label>
@@ -58,7 +58,7 @@
                         <div class="form-group  px-1 col-md-3 ">
                             <label class="text-center" id="basic-addon1">N° Cochera</label>
                             <input name="numero_cochera" type="number" class="form-control "
-                                value="{{ old('numero_cochera', request('numero_cochera')) }}" id="">
+                                value="" id="" placeholder="Ej: 2">
                         </div>
 
                         <div class="form-group  px-1 col-md-3 ">

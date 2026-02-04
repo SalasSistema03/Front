@@ -18,26 +18,26 @@
                             <input type="number"
                                 class="form-control text-center small "
                                 value="{{ old('cod_alquiler', request('cod_alquiler')) }}" id="" name="cod_alquiler"
-                                min="0">
+                                min="0" placeholder="Ej: 3218">
                         </div>
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">F. Central</label>
                             <input type="number"
                                 class="form-control text-center "
-                                value="{{ old('FCentral', request('FCentral')) }}" id="" name="FCentral">
+                                value="{{ old('FCentral', request('FCentral')) }}" id="" name="FCentral" placeholder="Ej: 123">
                         </div>
 
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">F. Candioti</label>
                             <input type="number"
                                 class="form-control text-center "
-                                value="{{ old('FCandioti', request('FCandioti')) }}" id="" name="FCandioti">
+                                value="{{ old('FCandioti', request('FCandioti')) }}" id="" name="FCandioti" placeholder="Ej: 123">
                         </div>
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">F. Tribunales</label>
                             <input type="number"
                                 class="form-control text-center "
-                                value="{{ old('FTribunales', request('FTribunales')) }}" id="" name="FTribunales">
+                                value="{{ old('FTribunales', request('FTribunales')) }}" id="" name="FTribunales" placeholder="Ej: 123">
                         </div>
 
                         <div class="form-group  px-1 col-md-4">
@@ -64,7 +64,7 @@
                             <input type="number"
                                 class="form-control text-center "
                                 value="{{ old('monto_alquiler', request('monto_alquiler')) }}" id=""
-                                name="monto_alquiler" min="0">
+                                name="monto_alquiler" min="0" placeholder="Ej: 4000">
                         </div>
 
 
@@ -116,7 +116,7 @@
                             <input type="text"
                                 class="form-control text-center "
                                 value="" id=""
-                                name="tiempo_clausula">
+                                name="tiempo_clausula" placeholder="Ej: 3 meses">
                         </div>
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Fecha

@@ -15,7 +15,7 @@
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Codigo</label>
                             <input type="number" class="form-control text-center "
-                                value="{{ old('cod_venta', request('cod_venta')) }}" id="" name="cod_venta" min="0">
+                                value="{{ old('cod_venta', request('cod_venta')) }}" id="" name="cod_venta" min="0" placeholder="Ej: 3950">
                         </div>
                         <div class="form-group  px-1 col-md-3">
                             <label class="text-center form-label" for="">Estado de
@@ -42,7 +42,7 @@
                             <input type="number"
                                 class="form-control text-center "
                                 value="{{ old('monto_venta', request('monto_venta')) }}" name="monto_venta" id=""
-                                min="0">
+                                min="0" placeholder="Ej: 50000">
                         </div>
                         <div class="form-group  px-1 col-md-2">
                             <label class="text-center form-label" id="basic-addon1">Tasacion</label>
@@ -56,7 +56,7 @@
                             <input type="number"
                                 class="form-control text-center "
                                 value="{{ old('tasacion_venta', request('tasacion_venta')) }}" name="tasacion_venta"
-                                id="">
+                                id="" placeholder="Ej: 50000">
                         </div>
 
                         <div class="form-group  px-1 col-md-2">
@@ -155,11 +155,9 @@
                             <select class="form-select"
                                 aria-label="Default select example" name="captador_int">
                                 <option value="">-</option>
-
-                                <option value="1">
-
+                                <option v-for="captador in props.captadoresInternos" :key="captador.id" :value="captador.id">
+                                    {{ captador.username }}
                                 </option>
-
                             </select>
                         </div>
 
@@ -169,9 +167,9 @@
                                 aria-label="Default select example" name="asesor">
                                 <option value="">-</option>
 
-                                <option value="1">
-
-                                </option>
+                                 <option v-for="asesor in props.asesores" :key="asesor.id" :value="asesor.id">
+                                    {{ asesor.username }}
+                                </option> 
 
 
                             </select>
@@ -193,6 +191,16 @@ const props = defineProps({
     estadosVenta: {
         type: Array,
         default: () => []
+    },
+    captadoresInternos: {
+        type: Array,
+        default: () => []
     }
+     ,
+     asesores: {
+         type: Array,
+         default: () => []
+     }
+    
 })
 </script>
