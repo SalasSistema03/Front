@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import TotemTurnoView from '../views/Turnero/TotemTurnoView.vue'
 import Turnero from '../router/turnero'
 import Usuario from '../router/usuario'
+import Contable from '../router/contable'
 import Atcl from '../router/atcl'
 import { useAuthStore } from '@/stores/auth'
 import { alertas } from '../utils/alertas'
@@ -32,6 +33,7 @@ const router = createRouter({
     ...Turnero,
     ...Usuario,
     ...Atcl,
+    ...Contable
   ],
 })
 
