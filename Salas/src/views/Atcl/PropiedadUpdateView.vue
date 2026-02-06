@@ -92,6 +92,7 @@
                     <textarea class="form-control form-control-sm" id="input-observaciones-cartel"
                         placeholder="Observaciones de Cartel"></textarea>
                 </div>
+
                 <div class="form-group col-md-6 px-1 pt-2">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
@@ -118,145 +119,552 @@
                         Alquiler
                     </button>
                 </div>
-                <div class="col-md-12 row mt-4 d-flex justify-content-center">
-                    <button class="btn btn-primary w-50">Cargar Propiedad</button>
-                </div>
+
             </div>
 
-            <div class="col-md-6 row">
-                <!-- INPUT -->
-                <div class="form-group col-md-12">
-                    <label class="form-label">Subir Archivos</label>
-                    <input type="file" multiple class="form-control form-control-sm"
-                        accept="image/*,video/*,application/pdf" @change="handleFiles" />
+            <div class="col-md-6 row d-flex justify-content-center">
+                <div class="form-group col-md-12 mt-2">
+                    <label class="form-label">Editar Archivos</label>
                 </div>
 
-                <!-- PREVISUALIZACIÓN CON TABS -->
-                <div class="col-md-12 mt-2 " v-if="hasFiles">
-                    <div class="card text-center ">
-                        <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs ">
-                                <li class="nav-item">
-                                    <a class="nav-link" :class="{ active: activeTab === 'images' }"
-                                        @click="activeTab = 'images'" href="#" v-if="images.length">
-                                        📷 Imágenes ({{ images.length }})
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" :class="{ active: activeTab === 'videos' }"
-                                        @click="activeTab = 'videos'" href="#" v-if="videos.length">
-                                        🎥 Videos ({{ videos.length }})
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" :class="{ active: activeTab === 'pdfs' }"
-                                        @click="activeTab = 'pdfs'" href="#" v-if="pdfs.length">
-                                        📄 PDFs ({{ pdfs.length }})
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body ">
-                            <!-- ===================== -->
-                            <!-- 📷 CARRUSEL IMÁGENES -->
-                            <!-- ===================== -->
-                            <div v-if="activeTab === 'images' && images.length">
-                                <div id="carouselImages" class="carousel slide " data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <div v-for="(img, index) in images" :key="index" class="carousel-item"
-                                            :class="{ active: index === 0 }">
-                                            <img :src="img.url"
-                                                class="d-block w-100 preview-media atcl_cargar_multimedia_tamaño" />
-                                            <!-- Comentario -->
-                                            <input class="form-control mt-2"
-                                                placeholder="Comentario para esta imagen..." v-model="img.comment" />
-                                        </div>
-                                    </div>
-                                    <!-- Controles -->
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages"
-                                        data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselImages"
-                                        data-bs-slide="next">
-                                        <span class="carousel-control-next-icon"></span>
-                                    </button>
-                                </div>
-                            </div>
+                <div class="form-group col-md-6 mb-2">
+                    <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                        data-bs-target="#modalFotos">Fotos</button>
+                </div>
+                <div class="form-group col-md-6 mb-2">
+                    <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                        data-bs-target="#modalDocumentacion">Documentacion</button>
+                </div>
+                <div class="form-group col-md-6 mb-2">
+                    <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                        data-bs-target="#modalVideos">Videos</button>
+                </div>
 
-                            <!-- ===================== -->
-                            <!-- 🎥 CARRUSEL VIDEOS -->
-                            <!-- ===================== -->
-                            <div v-if="activeTab === 'videos' && videos.length">
-                                <div id="carouselVideos" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <div v-for="(vid, index) in videos" :key="index" class="carousel-item"
-                                            :class="{ active: index === 0 }">
-                                            <video controls
-                                                class="d-block w-100 preview-media atcl_cargar_multimedia_tamaño">
-                                                <source :src="vid.url" />
-                                            </video>
-                                            <!-- Comentario -->
-                                            <input class="form-control mt-2" placeholder="Comentario para este video..."
-                                                v-model="vid.comment" />
-                                        </div>
-                                    </div>
-                                    <!-- Controles -->
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselVideos"
-                                        data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselVideos"
-                                        data-bs-slide="next">
-                                        <span class="carousel-control-next-icon"></span>
-                                    </button>
-                                </div>
-                            </div>
+                <div class="form-group col-md-12 mt-2">
+                    <label class="form-label">Editar Propietarios</label>
+                </div>
 
-                            <!-- ===================== -->
-                            <!-- 📄 CARRUSEL PDF -->
-                            <!-- ===================== -->
-                            <div v-if="activeTab === 'pdfs' && pdfs.length">
-                                <div id="carouselPDF" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <div v-for="(pdf, index) in pdfs" :key="index" class="carousel-item"
-                                            :class="{ active: index === 0 }">
-                                            <iframe :src="pdf.url"
-                                                class="w-100 preview-media atcl_cargar_multimedia_tamaño"></iframe>
-                                            <!-- Comentario -->
-                                            <input class="form-control mt-2" placeholder="Comentario para este PDF..."
-                                                v-model="pdf.comment" />
-                                        </div>
-                                    </div>
-                                    <!-- Controles -->
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPDF"
-                                        data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPDF"
-                                        data-bs-slide="next">
-                                        <span class="carousel-control-next-icon"></span>
-                                    </button>
-                                </div>
-                            </div>
+                <div class="form-group col-md-6 col-lg-12 mb-2">
+                    <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
+                        data-bs-target="#modalPropietarios">Propietarios</button>
+                </div>
+
+            </div>
+            <div class="col-md-12 row mt-4 d-flex justify-content-center">
+                <button class="btn btn-primary w-50">Editar Propiedad</button>
+            </div>
+        </form>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- Modal Fotos-->
+    <div class="modal fade" id="modalFotos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalFotosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-xxl-down atcl_foto_modal_high px-3">
+            <div class=" modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalFotosLabel">Editar Fotos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center row">
+
+                    <form autocomplete="off" class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
+                        <div class="col-md-12 ">
+                            <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
+                            <label for="fotos" class="form-label ">Seleccionar Fotos</label>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <input type="file" class="form-control form-select " id="fotos" name="fotos[]"
+                                accept="image/*,application/pdf" multiple>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">Subir Foto</button>
+                        </div>
+                    </form>
+                    <hr>
+
+                    <div class="col-md-12 row atcl_contenedorfoto_tamaño form-group">
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                      
+
+
                     </div>
 
 
-                </div>
-            </div>
 
-        </form>
+
+
+
+
+
+
+
+
+
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div> -->
+            </div>
+        </div>
     </div>
+    <!-- Modal Documentacion-->
+    <div class="modal fade" id="modalDocumentacion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-xxl-down atcl_foto_modal_high px-3">
+            <div class=" modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalDocumentacionLabel">Editar Documentación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center row">
+
+                    <form autocomplete="off" class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
+                        <div class="col-md-12 ">
+                            <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
+                            <label for="fotos" class="form-label ">Seleccionar Documentacion</label>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <input type="file" class="form-control form-select " id="fotos" name="fotos[]"
+                                accept="image/*,application/pdf" multiple>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">Subir Foto</button>
+                        </div>
+                    </form>
+                    <hr>
+
+                    <div class="col-md-12 row atcl_contenedorfoto_tamaño form-group">
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                      
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <!-- Modal Videos-->
+    <div class="modal fade" id="modalVideos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalVideosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-xxl-down atcl_foto_modal_high px-3">
+            <div class=" modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalVideosLabel">Editar Videos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center row">
+
+                    <form autocomplete="off" class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
+                        <div class="col-md-12 ">
+                            <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
+                            <label for="fotos" class="form-label ">Seleccionar Videos</label>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <input type="file" class="form-control form-select " id="fotos" name="fotos[]"
+                                accept="image/*,application/pdf" multiple>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">Subir Foto</button>
+                        </div>
+                    </form>
+                    <hr>
+
+                    <div class="col-md-12 row atcl_contenedorfoto_tamaño form-group">
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                        <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
+                            <div
+                                class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
+                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <textarea name="notes" class="form-control text-center" rows="1"
+                                    placeholder="Escribe una nota..."></textarea>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label>Orden</label>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="number" name="orden" value="{{ $foto->orden }}" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label">Archivar</label>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <input type="checkbox" class="form-controL">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="file" name="nueva_foto" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Actualizar</button>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
+                            </div>
+                        </form>
+                      
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalPropietarios" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalVideosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-xxl-down atcl_foto_modal_high px-3">
+            <div class=" modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalVideosLabel">Editar Videos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center row">
+
+                    Listado de propietarios a editar
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+
+
+    <ModalPropiedadComodidades :estados-generales="estadosGenerales"></ModalPropiedadComodidades>
+    <ModalPropiedadDescripcion></ModalPropiedadDescripcion>
+    <ModalPropiedadVenta :estados-venta="estadosVenta" :captadores-internos="captadoresInternos" :asesores="asesores">
+    </ModalPropiedadVenta>
+    <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler"></ModalPropiedadAlquiler>
 </template>
 
 <script>
 import NavComponent from '@/components/NavComponent.vue'
+import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalPropiedadComodidades.vue'
+import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
+import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
+import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
+import {
+    getInmueble, getZonas, getProvincias, getEstadoGeneral, getEstadoVenta, getEstadoAlquiler,
+    getCalles, getAsesor, getCaptadorInterno
+} from '../../Services/api/Atcl/AtclApi'
 
 export default {
     name: 'PropiedadUpdateView',
     components: {
-        NavComponent
+        NavComponent,
+        ModalPropiedadComodidades,
+        ModalPropiedadDescripcion,
+        ModalPropiedadVenta,
+        ModalPropiedadAlquiler
+
     }
 }
 </script>

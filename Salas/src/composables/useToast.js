@@ -116,6 +116,7 @@ export const useToast = () => {
     
     // Manejar específicamente errores de autenticación
     if (error.response && error.response.status === 401) {
+      
       // Limpiar token y redirigir al login
       localStorage.removeItem('token')
       showError('Sesión expirada. Por favor, inicie sesión nuevamente.')
