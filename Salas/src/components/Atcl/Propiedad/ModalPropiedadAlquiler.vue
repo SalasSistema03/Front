@@ -175,7 +175,7 @@ const alquiler = reactive({
    FCandioti:'',
    FTribunales:'',
    estado_alquiler:'',
-   moneda_alquiler:'',
+   moneda_alquiler:'1',
    monto_alquiler:'',
    autorizacion_alquiler:'',
    fecha_autorizacion_alquiler:'',

@@ -1,7 +1,7 @@
 <template>
     <NavComponent titulo="Propiedad Carga"></NavComponent>
     <div class="px-3">
-        <form @submit.prevent="handleSubmit" class="row d-flex align-items-start px-3" autocomplete="off">
+        <form @submit.prevent="handleSubmit" class="row d-flex align-items-start px-3" autocomplete="off" novalidate>
             <div class="col-md-6 row">
                 <div class="form-group col-md-4 px-1">
                     <label for="input-calle" class="form-label">Calle</label>
@@ -300,6 +300,7 @@ import {
     guardarPropiedad
 } from '../../Services/api/Atcl/AtclApi'
 import Swal from 'sweetalert2'
+import { useToast } from '../../composables/useToast'
 
 export default {
     components: {
@@ -309,6 +310,10 @@ export default {
         ModalPropiedadVenta,
         ModalPropiedadAlquiler,
         ModalCondicionAlquiler
+    },
+    setup() {
+        const { showWarning, showError } = useToast()
+        return { showWarning, showError }
     },
     data() {
         return {
@@ -465,6 +470,15 @@ export default {
         // Manejo de archivos
         handleFiles(event) {
             const files = Array.from(event.target.files)
+            const allowedTypes = ["image/jpg", "image/jpeg", "application/pdf", "video/mp4", "video/mov"];
+            
+            const hasInvalidFiles = files.some(file => !allowedTypes.includes(file.type));
+
+            if (hasInvalidFiles) {
+                this.showWarning('Uno o más archivos no tienen un formato permitido (Solo JPG, JPEG, PDF, MP4 o MOV).');
+                event.target.value = '';
+                return;
+            }
 
             // Limpiar previews anteriores
             this.images = []
@@ -581,12 +595,16 @@ export default {
                     /* this.resetForm(); */
                 }
             } catch (error) {
-                console.error('Error al guardar propiedad:', error);
+                /* console.error('Error al guardar propiedad:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: error.response?.data?.message || 'Ocurrió un error al guardar la propiedad'
-                });
+                }); */
+               
+                 this.showError(error.response?.data?.message || 'Ocurrió un error al guardar la propiedad'); 
+                
+               
             } finally {
                 this.isSubmitting = false;
             }

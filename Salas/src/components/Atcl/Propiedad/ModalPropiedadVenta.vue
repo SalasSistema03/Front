@@ -31,7 +31,7 @@
                             <label class="text-center form-label" id="basic-addon1">
                             </label>
                             <select class="form-select" aria-label="Default select example" v-model="venta.moneda_venta">
-                                <option value="2">u$s</option>
+                                <option value="2" selected>u$s</option>
                                 <option value="1">$</option>
                             </select>
                         </div>
@@ -191,7 +191,7 @@ const venta = reactive(
         captador_inerno: '',
         cod_venta: '',
         estado_venta: '',
-        moneda_venta: '',
+        moneda_venta: '2',
         monto_venta: '',
         fecha_tasacion_venta: '',
         tasacion_venta: '',
