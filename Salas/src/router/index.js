@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import TotemTurnoView from '../views/Turnero/TotemTurnoView.vue'
 import Turnero from '../router/turnero'
 import Usuario from '../router/usuario'
 import Atcl from '../router/atcl'
@@ -21,6 +22,11 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/totem',
+      name: 'totem',
+      component: TotemTurnoView,
     },
 
     ...Turnero,

@@ -81,3 +81,15 @@ export const getCaptadorInterno = () => {
         },
     })
 }
+
+
+export const guardarPropiedad = (id, data) => {
+    
+    const token = localStorage.getItem('token')
+    return axios.post(`${API_URL}/v1/auth/propiedad/guardar/${id}`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data' // Para enviar archivos
+        },
+    })
+}
