@@ -45,6 +45,7 @@ router.beforeEach(async (to) => {
   if (!to.meta.requiresAuth) return;
 
   // Si no hay token, al login
+  /* alert('aca') */
   if (!localStorage.getItem('token')) return { name: 'login' };
 
   // Si no hemos cargado permisos, cargarlos (F5 o entrada directa)
