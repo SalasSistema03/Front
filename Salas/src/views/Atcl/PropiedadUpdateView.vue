@@ -159,10 +159,6 @@
 
 
 
-
-
-
-
     <!-- Modal Fotos-->
     <div class="modal fade" id="modalFotos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="modalFotosLabel" aria-hidden="true">
@@ -174,7 +170,8 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center row">
 
-                    <form autocomplete="off" class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
+                    <form autocomplete="off"
+                        class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
                         <div class="col-md-12 ">
                             <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
                             <label for="fotos" class="form-label ">Seleccionar Fotos</label>
@@ -193,7 +190,9 @@
                         <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
                             <div
                                 class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
-                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                                <a class="nav-link">
+                                    📷 Imágenes
+                                </a>
                             </div>
                             <div class="col-md-12 mb-2">
                                 <textarea name="notes" class="form-control text-center" rows="1"
@@ -286,27 +285,12 @@
                                 <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
                             </div>
                         </form>
-                      
+
 
 
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
-                </div> -->
             </div>
         </div>
     </div>
@@ -321,9 +305,9 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center row">
 
-                    <form autocomplete="off" class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
+                    <form autocomplete="off"
+                        class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
                         <div class="col-md-12 ">
-                            <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
                             <label for="fotos" class="form-label ">Seleccionar Documentacion</label>
                         </div>
                         <div class="col-md-12 mb-2">
@@ -331,7 +315,7 @@
                                 accept="image/*,application/pdf" multiple>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <button type="submit" class="btn btn-primary btn-sm w-100">Subir Foto</button>
+                            <button type="submit" class="btn btn-primary btn-sm w-100">Subir Documento</button>
                         </div>
                     </form>
                     <hr>
@@ -340,7 +324,9 @@
                         <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
                             <div
                                 class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
-                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                                <a class="nav-link">
+                                    📄 PDFs
+                                </a>
                             </div>
                             <div class="col-md-12 mb-2">
                                 <textarea name="notes" class="form-control text-center" rows="1"
@@ -433,27 +419,13 @@
                                 <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
                             </div>
                         </form>
-                      
+
 
 
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
-                </div> -->
+
             </div>
         </div>
     </div>
@@ -468,7 +440,8 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center row">
 
-                    <form autocomplete="off" class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
+                    <form autocomplete="off"
+                        class="col-md-12row rowd-flex justify-content-center align-items-center form-group">
                         <div class="col-md-12 ">
                             <!-- Formulario de carga de varias fotos con detalles y previsualización dentro de un carrusel -->
                             <label for="fotos" class="form-label ">Seleccionar Videos</label>
@@ -487,7 +460,9 @@
                         <form method="POST" class="col-md-6 row d-flex justify-content-between align-items-center">
                             <div
                                 class="col-md-12 mb-2 d-flex justify-content-center align-items-center  atcl_cargar_foto_tamaño">
-                                <img class="card-img-top img-thumbnail " alt="Imagen de propiedad">
+                                <a class="nav-link">
+                                    🎥 Videos
+                                </a>
                             </div>
                             <div class="col-md-12 mb-2">
                                 <textarea name="notes" class="form-control text-center" rows="1"
@@ -580,61 +555,18 @@
                                 <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar</button>
                             </div>
                         </form>
-                      
+
 
 
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
-                </div> -->
+
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalPropietarios" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="modalVideosLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen-xxl-down atcl_foto_modal_high px-3">
-            <div class=" modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalVideosLabel">Editar Videos</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex justify-content-center row">
-
-                    Listado de propietarios a editar
-
-
-
-
-
-
-
-
-
-
-
-
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
-                </div> -->
-            </div>
-        </div>
-    </div>
+    
+    
 
 
 
@@ -643,6 +575,8 @@
     <ModalPropiedadVenta :estados-venta="estadosVenta" :captadores-internos="captadoresInternos" :asesores="asesores">
     </ModalPropiedadVenta>
     <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler"></ModalPropiedadAlquiler>
+    <ModalPropiedadPropietario></ModalPropiedadPropietario>
+    
 </template>
 
 <script>
@@ -651,6 +585,7 @@ import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalProp
 import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
 import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
+import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
 import {
     getInmueble, getZonas, getProvincias, getEstadoGeneral, getEstadoVenta, getEstadoAlquiler,
     getCalles, getAsesor, getCaptadorInterno
@@ -663,7 +598,8 @@ export default {
         ModalPropiedadComodidades,
         ModalPropiedadDescripcion,
         ModalPropiedadVenta,
-        ModalPropiedadAlquiler
+        ModalPropiedadAlquiler,
+        ModalPropiedadPropietario
 
     }
 }

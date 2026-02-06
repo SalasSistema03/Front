@@ -81,7 +81,7 @@
 
             </form>
         </div>
-        <div class="table-responsive atcl_contenedor_tabla px-3">
+        <div class="table-responsive atcl_contenedor_tabla px-3 pt-1">
             <table class="table table-striped table-hover atcl_tabla_busqueda_propiedad">
                 <thead>
                     <tr>
@@ -93,6 +93,7 @@
                         <th>Dorm.</th>
                         <th>Baños</th>
                         <th>Cochera</th>
+                        <th>Mascotas</th>
                         <th>P. Alquiler</th>
                         <th>P. Venta</th>
                         <th>Detalle</th>
@@ -101,144 +102,20 @@
                 <tbody class="">
                     <tr>
                         <td>1</td>
-                        <td>Venta</td>
-                        <td>Calle Falsa</td>
-                        <td>1234</td>
-                        <td>No</td>
-                        <td>2</td>
-                        <td>Departamento</td>
-                        <td>Norte</td>
-                        <td>Buenos Aires</td>
-                        <td>Si</td>
-                        <td>Excelente ubicacion</td>
-
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Alquiler</td>
-                        <td>Avenida Siempreviva</td>
-                        <td>742</td>
-                        <td>Si</td>
-                        <td>1</td>
-                        <td>Casa</td>
-                        <td>Sur</td>
-                        <td>Cordoba</td>
-                        <td>No</td>
-                        <td>Amplio jardin</td>
-
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Venta</td>
-                        <td>Calle Falsa</td>
-                        <td>1234</td>
-                        <td>No</td>
-                        <td>2</td>
-                        <td>Departamento</td>
-                        <td>Norte</td>
-                        <td>Buenos Aires</td>
-                        <td>Si</td>
-                        <td>Excelente ubicacion</td>
-
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Alquiler</td>
-                        <td>Avenida Siempreviva</td>
-                        <td>742</td>
-                        <td>Si</td>
-                        <td>1</td>
-                        <td>Casa</td>
-                        <td>Sur</td>
-                        <td>Cordoba</td>
-                        <td>No</td>
-                        <td>Amplio jardin</td>
-
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Venta</td>
-                        <td>Calle Falsa</td>
-                        <td>1234</td>
-                        <td>No</td>
-                        <td>2</td>
-                        <td>Departamento</td>
-                        <td>Norte</td>
-                        <td>Buenos Aires</td>
-                        <td>Si</td>
-                        <td>Excelente ubicacion</td>
-
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>Alquiler</td>
-                        <td>Avenida Siempreviva</td>
-                        <td>742</td>
-                        <td>Si</td>
-                        <td>1</td>
-                        <td>Casa</td>
-                        <td>Sur</td>
-                        <td>Cordoba</td>
-                        <td>No</td>
-                        <td>Amplio jardin</td>
-
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>Venta</td>
-                        <td>Calle Falsa</td>
-                        <td>1234</td>
-                        <td>No</td>
-                        <td>2</td>
-                        <td>Departamento</td>
-                        <td>Norte</td>
-                        <td>Buenos Aires</td>
-                        <td>Si</td>
-                        <td>Excelente ubicacion</td>
-
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>Alquiler</td>
-                        <td>Avenida Siempreviva</td>
-                        <td>742</td>
-                        <td>Si</td>
-                        <td>1</td>
-                        <td>Casa</td>
-                        <td>Sur</td>
-                        <td>Cordoba</td>
-                        <td>No</td>
-                        <td>Amplio jardin</td>
-
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>Venta</td>
-                        <td>Calle Falsa</td>
-                        <td>1234</td>
-                        <td>No</td>
-                        <td>2</td>
-                        <td>Departamento</td>
-                        <td>Norte</td>
-                        <td>Buenos Aires</td>
-                        <td>Si</td>
-                        <td>Excelente ubicacion</td>
-
-                    </tr>
-                    <tr>
                         <td>10</td>
-                        <td>Alquiler</td>
-                        <td>Avenida Siempreviva</td>
-                        <td>742</td>
+                        <td>Calle Falsa</td>
+                        <td>Centro</td>
+                        <td>Departamento</td>
+                        <td>2</td>
+                        <td>1</td>
+                        <td>Si</td>
                         <td>Si</td>
                         <td>1</td>
-                        <td>Casa</td>
-                        <td>Sur</td>
-                        <td>Cordoba</td>
-                        <td>No</td>
-                        <td>Amplio jardin</td>
+                        <td>2</td>
+                        <td><button class = "btn btn-primary btn-sm w-100">Ver</button></td>
 
                     </tr>
+
                 </tbody>
             </table>
         </div>
