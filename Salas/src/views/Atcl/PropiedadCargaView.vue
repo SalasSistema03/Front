@@ -105,17 +105,23 @@
                         placeholder="Observaciones de Cartel" v-model="formData.observaciones_cartel"></textarea>
                 </div>
 
-                <div class="form-group col-md-6 px-1 pt-2">
+                <div class="form-group col-md-4 px-1 pt-2">
                     <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
                         data-bs-target="#modalComodidades">
                         Comodidades
                     </button>
                 </div>
 
-                <div class="form-group col-md-6 px-1 pt-2">
+                <div class="form-group col-md-4 px-1 pt-2">
                     <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
                         data-bs-target="#modalDescripcion">
                         Descripción
+                    </button>
+                </div>
+                <div class="form-group col-md-4 px-1 pt-2">
+                    <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                        data-bs-target="#modalPropietarios">
+                        Propietario
                     </button>
                 </div>
 
@@ -132,6 +138,7 @@
                         Alquiler
                     </button>
                 </div>
+                
 
                 <div class="col-md-12 row mt-4 d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary w-50" :disabled="isSubmitting">
@@ -269,6 +276,10 @@
             <ModalCondicionAlquiler @update:condicion_alquiler="formData.condicion_alquiler = $event">
             </ModalCondicionAlquiler>
 
+            <ModalPropiedadPropietario @update:propietario="formData.propietario = $event">
+
+            </ModalPropiedadPropietario>
+
 
 
 
@@ -287,6 +298,7 @@ import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalProp
 import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
+import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
 import {
     getInmueble,
     getZonas,
@@ -309,7 +321,8 @@ export default {
         ModalPropiedadDescripcion,
         ModalPropiedadVenta,
         ModalPropiedadAlquiler,
-        ModalCondicionAlquiler
+        ModalCondicionAlquiler,
+        ModalPropiedadPropietario
     },
     setup() {
         const { showWarning, showError } = useToast()
@@ -336,7 +349,8 @@ export default {
                 descripcion: {},
                 venta: {},
                 alquiler: {},
-                condicion_alquiler: {}
+                condicion_alquiler: {},
+                propietario: []
             },
 
             // Catálogos
@@ -517,24 +531,7 @@ export default {
 
         // Enviar formulario
         async handleSubmit() {
-          /*   // Validación básica
-            if (!this.formData.calleSeleccionada) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campo requerido',
-                    text: 'Por favor selecciona una calle'
-                });
-                return;
-            }
-
-            if (!this.formData.inmueble_id) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campo requerido',
-                    text: 'Por favor selecciona un tipo de inmueble'
-                });
-                return;
-            } */
+    
 
             this.isSubmitting = true;
 
