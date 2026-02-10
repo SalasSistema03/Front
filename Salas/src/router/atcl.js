@@ -21,8 +21,8 @@ const routesAtcl = [
         },
     },
     {
-        path: '/propiedad-detalle',
-        alias: '/atcl/propiedad-detalle',
+        path: '/propiedad-detalle/:id',
+        alias: '/atcl/propiedad-detalle/:id',
         name: 'propiedad-detalle',
         component: () => import('../views/Atcl/PropiedadDetalleView.vue'),
         meta: {
