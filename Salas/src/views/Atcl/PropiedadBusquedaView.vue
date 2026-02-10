@@ -168,7 +168,7 @@
                          <td>{{ propiedad.mascota || '-' }}</td>
                          <td>{{ propiedad.precio_alquiler || '-' }}</td>
                          <td>{{ propiedad.precio_venta || '-' }}</td>
-                        <td><button class="btn btn-primary btn-sm w-100">Ver</button></td>
+                        <td><button class="btn btn-primary btn-sm w-100" @click="verPropiedad(propiedad)">Ver</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -323,8 +323,10 @@ export default {
              const response = await buscarPropiedad(filtros)
              console.log("Respuesta recibida:", response)
              this.propiedades = response.data 
+        },
+        verPropiedad(propiedad) {
+            this.$router.push(`/propiedad-detalle/${propiedad.id}`)
         }
-        
     },
 }
 </script>
