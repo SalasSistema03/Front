@@ -106,11 +106,22 @@ export const buscaPersona = (params) => {
 
 export const cargarPadron = (data) => {
     const token = localStorage.getItem('token')
-    console.log(data)
+    
     return axios.post(`${API_URL}/v1/auth/padron/cargar`, data, {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
         },
     })
+}
+
+export const buscarPropiedad = (params) => {
+    const token = localStorage.getItem('token')
+    return axios.get(`${API_URL}/v1/auth/propiedad/buscar`, {
+        params: params,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })   
+
 }

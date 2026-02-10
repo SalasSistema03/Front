@@ -3,18 +3,27 @@
     <div class="px-3">
         <form @submit.prevent="handleSubmit" class="row d-flex align-items-start px-3" autocomplete="off" novalidate>
             <div class="col-md-6 row">
+                <!-- 🔥 INPUT DE CALLE - Ahora usa el composable -->
                 <div class="form-group col-md-4 px-1">
                     <label for="input-calle" class="form-label">Calle</label>
                     <div class="position-relative">
-                        <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
-                            v-model="formData.calleSeleccionada" @input="filtrarCalles"
-                            @focus="mostrarSugerencias = true" @blur="ocultarSugerencias">
+                        <input 
+                            type="text" 
+                            class="form-control form-control-sm" 
+                            id="input-calle" 
+                            placeholder="Calle"
+                            v-model="calleSeleccionada" 
+                            @input="filtrarCalles"
+                            @focus="mostrarLista" 
+                            @blur="ocultarSugerencias">
 
                         <!-- Lista de sugerencias -->
                         <ul v-if="mostrarSugerencias && callesFiltradas.length"
                             class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm"
                             style="z-index: 1000; max-height: 200px; overflow-y: auto;">
-                            <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalle(calle)"
+                            <li v-for="calle in callesFiltradas" 
+                                :key="calle.id" 
+                                @mousedown="seleccionarCalle(calle)"
                                 class="px-3 py-2 cursor-pointer hover:bg-light">
                                 {{ calle.name }}
                             </li>
@@ -138,7 +147,6 @@
                         Alquiler
                     </button>
                 </div>
-                
 
                 <div class="col-md-12 row mt-4 d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary w-50" :disabled="isSubmitting">
@@ -262,32 +270,37 @@
                     </div>
                 </div>
             </div>
-            <ModalPropiedadComodidades :estados-generales="estadosGenerales"
-                @update:comodidades="formData.comodidades = $event"></ModalPropiedadComodidades>
 
-            <ModalPropiedadDescripcion @update:descripcion="formData.descripcion = $event"></ModalPropiedadDescripcion>
+            <ModalPropiedadComodidades 
+                :estados-generales="estadosGenerales"
+                @update:comodidades="formData.comodidades = $event">
+            </ModalPropiedadComodidades>
 
-            <ModalPropiedadVenta :estados-venta="estadosVenta" :captadores-internos="captadoresInternos"
-                :asesores="asesores" @update:venta="formData.venta = $event"></ModalPropiedadVenta>
+            <ModalPropiedadDescripcion 
+                @update:descripcion="formData.descripcion = $event">
+            </ModalPropiedadDescripcion>
 
-            <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler" @update:alquiler="formData.alquiler = $event">
+            <ModalPropiedadVenta 
+                :estados-venta="estadosVenta" 
+                :captadores-internos="captadoresInternos"
+                :asesores="asesores" 
+                @update:venta="formData.venta = $event">
+            </ModalPropiedadVenta>
+
+            <ModalPropiedadAlquiler 
+                :estados-alquiler="estadosAlquiler" 
+                @update:alquiler="formData.alquiler = $event">
             </ModalPropiedadAlquiler>
 
-            <ModalCondicionAlquiler @update:condicion_alquiler="formData.condicion_alquiler = $event">
+            <ModalCondicionAlquiler 
+                @update:condicion_alquiler="formData.condicion_alquiler = $event">
             </ModalCondicionAlquiler>
 
-            <ModalPropiedadPropietario @update:propietario="formData.propietario = $event">
-
+            <ModalPropiedadPropietario 
+                @update:propietario="formData.propietario = $event">
             </ModalPropiedadPropietario>
-
-
-
-
-
         </form>
     </div>
-
-
 </template>
 
 <script>
@@ -306,13 +319,13 @@ import {
     getEstadoGeneral,
     getEstadoVenta,
     getEstadoAlquiler,
-    getCalles,
     getAsesor,
     getCaptadorInterno,
     guardarPropiedad
 } from '../../Services/api/Atcl/AtclApi'
 import Swal from 'sweetalert2'
 import { useToast } from '../../composables/useToast'
+import { useCalleAutocomplete } from '../../composables/atcl/useCalleAutocomplete' // 🔥 NUEVO IMPORT
 
 export default {
     components: {
@@ -326,14 +339,40 @@ export default {
     },
     setup() {
         const { showWarning, showError } = useToast()
-        return { showWarning, showError }
+        
+        // 🔥 COMPOSABLE DE CALLES
+        const {
+            callesFiltradas,
+            mostrarSugerencias,
+            calleSeleccionada,
+            calleId,
+            cargarCalles,
+            filtrarCalles,
+            seleccionarCalle,
+            ocultarSugerencias,
+            mostrarLista
+        } = useCalleAutocomplete()
+
+        return {
+            showWarning,
+            showError,
+            // 🔥 Exportar todo lo relacionado con calles
+            callesFiltradas,
+            mostrarSugerencias,
+            calleSeleccionada,
+            calleId,
+            cargarCalles,
+            filtrarCalles,
+            seleccionarCalle,
+            ocultarSugerencias,
+            mostrarLista
+        }
     },
     data() {
         return {
             // Datos del formulario principal
             formData: {
-                calleSeleccionada: '',
-                calle_id: null,
+                // ❌ ELIMINADO: calleSeleccionada y calle_id (ahora están en el composable)
                 altura: '',
                 ph: '0',
                 piso: '',
@@ -360,13 +399,9 @@ export default {
             estadosGenerales: [],
             estadosVenta: [],
             estadosAlquiler: [],
-            calles: [],
+            // ❌ ELIMINADO: calles, callesFiltradas, mostrarSugerencias (ahora en composable)
             asesores: [],
             captadoresInternos: [],
-
-            // Autocompletado de calles
-            callesFiltradas: [],
-            mostrarSugerencias: false,
 
             // Archivos multimedia
             images: [],
@@ -386,112 +421,83 @@ export default {
     methods: {
         async cargarInmuebles() {
             try {
-                const response = await getInmueble();
-                this.inmuebles = response.data;
+                const response = await getInmueble()
+                this.inmuebles = response.data
             } catch (error) {
-                console.error('Error cargando inmuebles:', error);
+                console.error('Error cargando inmuebles:', error)
             }
         },
         async cargarZonas() {
             try {
-                const response = await getZonas();
-                this.zonas = response.data;
+                const response = await getZonas()
+                this.zonas = response.data
             } catch (error) {
-                console.error('Error cargando zonas:', error);
+                console.error('Error cargando zonas:', error)
             }
         },
         async cargarProvincias() {
             try {
-                const response = await getProvincias();
-                this.provincias = response.data;
+                const response = await getProvincias()
+                this.provincias = response.data
             } catch (error) {
-                console.error('Error cargando provincias:', error);
+                console.error('Error cargando provincias:', error)
             }
         },
         async cargarEstadosGenerales() {
             try {
-                const response = await getEstadoGeneral();
-                this.estadosGenerales = response.data;
+                const response = await getEstadoGeneral()
+                this.estadosGenerales = response.data
             } catch (error) {
-                console.error('Error cargando estados generales:', error);
+                console.error('Error cargando estados generales:', error)
             }
         },
         async cargarEstadosVenta() {
             try {
-                const response = await getEstadoVenta();
-                this.estadosVenta = response.data;
+                const response = await getEstadoVenta()
+                this.estadosVenta = response.data
             } catch (error) {
-                console.error('Error cargando estados venta:', error);
+                console.error('Error cargando estados venta:', error)
             }
         },
         async cargarAsesores() {
             try {
-                const response = await getAsesor();
-                this.asesores = response.data.original || response.data;
+                const response = await getAsesor()
+                this.asesores = response.data.original || response.data
             } catch (error) {
-                console.error('Error cargando asesores:', error);
+                console.error('Error cargando asesores:', error)
             }
         },
         async cargarCaptadoresInternos() {
             try {
-                const response = await getCaptadorInterno();
-                this.captadoresInternos = response.data.original || response.data;
+                const response = await getCaptadorInterno()
+                this.captadoresInternos = response.data.original || response.data
             } catch (error) {
-                console.error('Error cargando captadores internos:', error);
+                console.error('Error cargando captadores internos:', error)
             }
         },
         async cargarEstadosAlquiler() {
             try {
-                const response = await getEstadoAlquiler();
-                this.estadosAlquiler = response.data;
+                const response = await getEstadoAlquiler()
+                this.estadosAlquiler = response.data
             } catch (error) {
-                console.error('Error cargando estados alquiler:', error);
-            }
-        },
-        async cargarCalles() {
-            try {
-                const response = await getCalles();
-                this.calles = response.data;
-            } catch (error) {
-                console.error('Error cargando calles:', error);
+                console.error('Error cargando estados alquiler:', error)
             }
         },
 
-        // Autocompletado de calles
-        filtrarCalles() {
-            const texto = this.formData.calleSeleccionada.toLowerCase();
-            if (texto.length === 0) {
-                this.callesFiltradas = [];
-                return;
-            }
-
-            this.callesFiltradas = this.calles.filter(calle =>
-                calle.name.toLowerCase().includes(texto)
-            ).slice(0, 10);
-        },
-        seleccionarCalle(calle) {
-            this.formData.calleSeleccionada = calle.name;
-            this.formData.calle_id = calle.id;
-            this.mostrarSugerencias = false;
-            this.callesFiltradas = [];
-        },
-        ocultarSugerencias() {
-            setTimeout(() => {
-                this.mostrarSugerencias = false;
-            }, 200);
-        },
+        // ❌ ELIMINADOS: cargarCalles(), filtrarCalles(), seleccionarCalle(), ocultarSugerencias()
+        // Ahora están en el composable
 
         // Manejo de archivos
         handleFiles(event) {
             const files = Array.from(event.target.files)
-            const allowedTypes = ["image/jpg", "image/jpeg", "application/pdf", "video/mp4", "video/mov"];
+            const allowedTypes = ["image/jpg", "image/jpeg", "application/pdf", "video/mp4", "video/mov"]
             
-            const hasInvalidFiles = files.some(file => !allowedTypes.includes(file.type));
+            const hasInvalidFiles = files.some(file => !allowedTypes.includes(file.type))
 
             if (hasInvalidFiles) {
-                this.showWarning('Uno o más archivos no tienen un formato permitido (Solo JPG, JPEG, PDF, MP4 o MOV).');
-                event.target.value = '';
-                return;
+                this.showWarning('Uno o más archivos no tienen un formato permitido (Solo JPG, JPEG, PDF, MP4 o MOV).')
+                event.target.value = ''
+                return
             }
 
             // Limpiar previews anteriores
@@ -531,54 +537,45 @@ export default {
 
         // Enviar formulario
         async handleSubmit() {
-    
-
-            this.isSubmitting = true;
+            this.isSubmitting = true
 
             try {
                 // Crear FormData para enviar archivos
-                const formDataToSend = new FormData();
+                const formDataToSend = new FormData()
                 
+                // 🔥 Agregar calle_id desde el composable
+                formDataToSend.append('calle_id', this.calleId || '')
 
-                // Agregar campos del formulario (excluyendo calleSeleccionada)
+                // Agregar campos del formulario
                 Object.keys(this.formData).forEach(key => {
-                    if (key === 'calleSeleccionada') {
-                        return; // No enviar este campo
-                    }
                     if (typeof this.formData[key] === 'object' && this.formData[key] !== null) {
                         // Para objetos (comodidades, descripcion, venta, alquiler)
-                        formDataToSend.append(key, JSON.stringify(this.formData[key]));
+                        formDataToSend.append(key, JSON.stringify(this.formData[key]))
                     } else {
-                        formDataToSend.append(key, this.formData[key] || '');
+                        formDataToSend.append(key, this.formData[key] || '')
                     }
-                });
+                })
 
                 // Agregar imágenes
                 this.images.forEach((img, index) => {
-                    formDataToSend.append(`images[${index}]`, img.file);
-                    formDataToSend.append(`images_comments[${index}]`, img.comment);
-                });
+                    formDataToSend.append(`images[${index}]`, img.file)
+                    formDataToSend.append(`images_comments[${index}]`, img.comment)
+                })
 
                 // Agregar videos
                 this.videos.forEach((vid, index) => {
-                    formDataToSend.append(`videos[${index}]`, vid.file);
-                    formDataToSend.append(`videos_comments[${index}]`, vid.comment);
-                });
+                    formDataToSend.append(`videos[${index}]`, vid.file)
+                    formDataToSend.append(`videos_comments[${index}]`, vid.comment)
+                })
 
                 // Agregar PDFs
                 this.pdfs.forEach((pdf, index) => {
-                    formDataToSend.append(`pdfs[${index}]`, pdf.file);
-                    formDataToSend.append(`pdfs_comments[${index}]`, pdf.comment);
-                });
+                    formDataToSend.append(`pdfs[${index}]`, pdf.file)
+                    formDataToSend.append(`pdfs_comments[${index}]`, pdf.comment)
+                })
 
-                // Enviar a la API
-                // El ID puede ser 0 para nueva propiedad o un ID específico para editar
-                //const propiedadId = this.$route.params.id || 0;
-
-
-                const id_usuario = await getUser( localStorage.getItem('token') )
-                /* console.log('aaaaaaaaaaaa',id_usuario.data.id); */
-                const response = await guardarPropiedad(id_usuario.data.id, formDataToSend);
+                const id_usuario = await getUser(localStorage.getItem('token'))
+                const response = await guardarPropiedad(id_usuario.data.id, formDataToSend)
 
                 if (response.data.success) {
                     await Swal.fire({
@@ -586,70 +583,25 @@ export default {
                         title: '¡Éxito!',
                         text: response.data.message,
                         timer: 2000
-                    });
-
-                    // Limpiar formulario
-                    /* this.resetForm(); */
+                    })
                 }
             } catch (error) {
-                /* console.error('Error al guardar propiedad:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.response?.data?.message || 'Ocurrió un error al guardar la propiedad'
-                }); */
-               
-                 this.showError(error.response?.data?.message || 'Ocurrió un error al guardar la propiedad'); 
-                
-               
+                this.showError(error.response?.data?.message || 'Ocurrió un error al guardar la propiedad')
             } finally {
-                this.isSubmitting = false;
+                this.isSubmitting = false
             }
-        },
-
-        // Resetear formulario
-        /* resetForm() {
-            this.formData = {
-                calleSeleccionada: '',
-                calle_id: null,
-                altura: '',
-                ph: '0',
-                piso: '',
-                dto: '',
-                inmueble_id: '',
-                zona_id: '',
-                provincia_id: '',
-                llave: '',
-                observaciones_llaves: '',
-                cartel: '1',
-                observaciones_cartel: '',
-                comodidades: {},
-                descripcion: {},
-                venta: {},
-                alquiler: {},
-                condicion_alquiler: {}
-            };
-
-            this.images = [];
-            this.videos = [];
-            this.pdfs = [];
-
-            // Limpiar input de archivos
-            if (this.$refs.fileInput) {
-                this.$refs.fileInput.value = '';
-            }
-        } */
+        }
     },
     mounted() {
-        this.cargarInmuebles();
-        this.cargarZonas();
-        this.cargarProvincias();
-        this.cargarEstadosGenerales();
-        this.cargarEstadosVenta();
-        this.cargarEstadosAlquiler();
-        this.cargarCalles();
-        this.cargarAsesores();
-        this.cargarCaptadoresInternos();
+        this.cargarInmuebles()
+        this.cargarZonas()
+        this.cargarProvincias()
+        this.cargarEstadosGenerales()
+        this.cargarEstadosVenta()
+        this.cargarEstadosAlquiler()
+        this.cargarCalles() // 🔥 Este método ahora viene del composable
+        this.cargarAsesores()
+        this.cargarCaptadoresInternos()
     }
 }
 </script>
