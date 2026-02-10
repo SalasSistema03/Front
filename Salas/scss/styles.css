@@ -121,13 +121,15 @@
 
 #navbar_contenedor_logo {
   padding: 0;
+  height: inherit;
 }
-
-#navbar_logo_nav {
-  height: 40px;
+#navbar_contenedor_logo img {
+  height: 55px;
   width: auto;
 }
 
+/* #navbar_logo_nav
+ *  height: 40px */
 .dropdown-toggle::after {
   display: none !important;
 }
@@ -361,6 +363,81 @@
   background-color: rgb(0, 85, 185) !important;
   color: red !important;
   /* ajustar el ancho maximo de las columnas */
+}
+
+.agenda_barra_lateral {
+  font-size: 1rem !important;
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 175, 154, 0.96) !important;
+  color: white;
+  border: none;
+}
+.agenda_barra_lateral input {
+  margin-top: 0.5rem;
+}
+.agenda_barra_lateral::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.agenda_tabla {
+  border-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.agenda_tabla h6 {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.agenda_tabla .tabla-scroll-container {
+  max-height: 28vh;
+  overflow-y: auto;
+}
+.agenda_tabla thead tr th {
+  background-color: rgb(0, 85, 185);
+  border: 1px solid rgb(0, 85, 185);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 0.8rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.agenda_tabla tbody tr td {
+  border-left: 1px solid rgb(0, 85, 185);
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.agenda_tabla tbody tr td button {
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem;
+}
+
+.agenda_modal {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.agenda_modal .form-control {
+  background-color: rgba(0, 72, 145, 0);
+  color: red;
+}
+.agenda_modal .form-select {
+  background-color: rgba(0, 72, 145, 0);
+  color: blue;
+}
+.agenda_modal .form-control:focus {
+  background-color: rgba(0, 72, 145, 0);
+  color: green;
+}
+.agenda_modal .form-select:focus {
+  background-color: rgba(0, 72, 145, 0);
+  color: orange;
 }
 
 .btn-primary {

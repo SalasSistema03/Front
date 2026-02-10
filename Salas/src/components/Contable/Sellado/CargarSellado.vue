@@ -157,13 +157,16 @@
                     type="submit"
                     class="btn btn-primary btn-sm"
                   >
-                    Calcular
+                    {{ loading ? 'Calculando...' : 'Calcular' }}
                   </button>
                 </div>
               </div>
 
             </form>
 
+            <div v-if="error" class="alert alert-danger mt-3 small">
+              {{ error }}
+            </div>
           </div>
         </div>
       </div>
@@ -172,7 +175,14 @@
       <div class="col-12 col-md-6 h-100 overflow-auto">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body p-2 text-muted d-flex align-items-center justify-content-center">
-            <ResultadoSellado />
+            <div v-if="resultado">
+  <ResultadoSellado :datos="resultado" />
+</div>
+
+<div v-else class="alert alert-light text-center">
+  Complete el formulario para ver los cálculos.
+</div>
+
           </div>
         </div>
       </div>
@@ -184,6 +194,9 @@
 <script setup>
 import { ref } from 'vue';
 import ResultadoSellado from './ResultadoSellado.vue';
+
+//Importar servicios
+import { calcularSelladoService } from '@/Services/api/Contable/SelladoApi';
 
 const form = ref({
   folio: '',
@@ -199,13 +212,50 @@ const form = ref({
   fecha_inicio: ''
 });
 
-const handleSubmit = () => {
-  console.log('Datos enviados:', form.value);
+const resultado = ref(null);
+const loading = ref(false);
+const error = ref(null);
+
+const handleSubmit = async () => {
+  loading.value = true;
+  error.value = null;
+  resultado.value = null;
+
+  // Mapeamos los datos para que coincidan EXACTAMENTE con lo que probaste en Postman
+  const payload = {
+    ...form.value,
+    // Convertimos "SI"/"NO" a 1 o 0 si tu API lo requiere así
+    informe: form.value.informe === 'SI' ? 1 : 0,
+    // Aseguramos que los montos sean números y no strings
+    monto_alquiler: Number(form.value.monto_alquiler),
+    monto_documento: Number(form.value.monto_documento),
+    monto_contrato: Number(form.value.monto_contrato),
+    cantidad_meses: Number(form.value.cantidad_meses),
+    hojas: Number(form.value.hojas),
+    cantidad_informes: Number(form.value.cantidad_informes),
+    // Agregamos campos que faltaban pero que Postman pide
+    inq_prop: 1, 
+    // Mapeo de tipo_contrato si es necesario (ejemplo: Vivienda = 1)
+    tipo_contrato: form.value.tipo_contrato === 'Vivienda' ? 1 : 2 
+  };
+
+ try {
+    const response = await calcularSelladoService(payload);
+    resultado.value = response.data; 
+  } catch (err) {
+    // Si el error es 500, ahora podremos ver el mensaje del servidor
+    error.value = err.response?.data?.message || "Error en el servidor";
+  } finally {
+    loading.value = false;
+  }
+
 };
 
 const resetForm = () => {
   Object.keys(form.value).forEach(k => {
     form.value[k] = k === 'informe' ? 'NO' : '';
   });
+  resultado.value = null;
+  error.value = null;
 };
 </script>
