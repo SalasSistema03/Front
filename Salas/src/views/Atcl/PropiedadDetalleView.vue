@@ -72,13 +72,13 @@
                 </div>
                 <div class="col-md-4 mt-3 text-center">
                     <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-                        data-bs-target="#modalComodidades">
+                        data-bs-target="#modalDescripcion">
                         Descripcion
                     </button>
                 </div>
                 <div class="col-md-4 mt-3 text-center">
                     <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-                        data-bs-target="#modalVentas">
+                        data-bs-target="#modalComodidades">
                         Comodidades
                     </button>
                 </div>
@@ -86,13 +86,13 @@
                 <div class="col-md-12 row mt-3 d-flex justify-content-center align-items-center">
                     <div class="col-md-6  text-center">
                         <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-                            data-bs-target="#modalAlquiler">
+                            data-bs-target="">
                             Descargar
                         </button>
                     </div>
                     <div class="col-md-6  text-center">
                         <button type="button" class="btn btn-light btn-sm w-100" data-bs-toggle="modal"
-                            data-bs-target="#modalAlquiler">
+                            data-bs-target="#">
                             Modificar
                         </button>
                     </div>
@@ -108,7 +108,7 @@
                     <div class="col-md-6  text-center">
 
                         <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-                            data-bs-target="#modalAlquiler">
+                            data-bs-target="#modalVentas">
                             Informacion Ventas
                         </button>
                     </div>
@@ -142,12 +142,30 @@
 
         </div>
     </div>
+    <ModalPropiedadComodidades />
+    <ModalPropiedadDescripcion />
+    <ModalPropiedadVenta />
+    <ModalPropiedadAlquiler />
+    <ModalCondicionAlquiler />
+    <ModalPropiedadPropietario />
 </template>
 <script>
 import NavComponent from '../../components/NavComponent.vue'
+import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalPropiedadComodidades.vue'
+import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
+import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
+import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
+import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
+import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
 export default {
     components: {
-        NavComponent
+        NavComponent, 
+        ModalPropiedadComodidades,
+        ModalPropiedadDescripcion,
+        ModalPropiedadVenta,
+        ModalPropiedadAlquiler,
+        ModalCondicionAlquiler,
+        ModalPropiedadPropietario
     }
 }
 </script>
