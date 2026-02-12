@@ -15,7 +15,9 @@
                 <div class="row g-3">
                     <div class="col-md-12">
                         <div class="mb-6">
-                            <textarea name="condicion" id="condicion" class="form-control form-control-atcl" rows="8" 
+                            <textarea v-if="propiedad" name="condicion" id="condicion" class="form-control form-control-atcl" rows="8" 
+                                v-model="propiedad.condicion" placeholder="Ingrese las condiciones de alquiler..."></textarea>
+                            <textarea v-else name="condicion" id="condicion" class="form-control form-control-atcl" rows="8" 
                                 v-model="condicionData.condicion" placeholder="Ingrese las condiciones de alquiler..."></textarea>
                         </div>
                     </div>
@@ -38,6 +40,13 @@ const emit = defineEmits(['update:condicion_alquiler'])
 // Datos reactivos del modal
 const condicionData = reactive({
     condicion: ''
+})
+const props = defineProps({
+    
+    propiedad: {
+        type: Object,
+        default: null
+    }
 })
 
 // Observar cambios y emitir automáticamente

@@ -125,3 +125,15 @@ export const buscarPropiedad = (params) => {
     })   
 
 }
+
+
+
+export const muestraPropiedad = (params) => {
+    const token = localStorage.getItem('token')
+    return axios.get(`${API_URL}/v1/auth/propiedad/muestra`, {
+        params: params,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}

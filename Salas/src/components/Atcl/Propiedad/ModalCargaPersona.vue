@@ -4,7 +4,8 @@
         <div class="modal-dialog modal-fullscreen-xxl-down atcl_foto_modal_high px-3">
             <div class=" modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalVideosLabel">Carga Persona</h1>
+                    <h1 v-if="personaData" class="modal-title fs-5" id="modalVideosLabel">Datos de la Persona</h1>
+                    <h1 v-else class="modal-title fs-5" id="modalVideosLabel">Carga Persona</h1>
                     <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalPropietarios"
                         aria-label="Close"></button>
                 </div>
@@ -71,30 +72,49 @@
                         <div class="col-md-5 ">
                             <div class="row g-1">
                                 <div class="col-md-12">
-                                    <div id="telefonos">
-                                        <div class="telefono d-flex gap-2">
+                                    <!-- Mostrar teléfonos existentes si hay personaData -->
+                                    <div v-if="personaData && personaData.telefonos && personaData.telefonos.length > 0" class="mb-3">
+                                        
+                                        <div v-for="(telefono, index) in personaData.telefonos" :key="'tel-' + index" 
+                                             class="telefono d-flex gap-2  p-2 ">
                                             <div class="mb-2 w-50">
-                                                <label for="" class="form-label">Teléfono</label>
-                                                <input class="form-control" type="text"
-                                                    name="telefonos[0][phone_number]" placeholder="Teléfono" required v-model="telefono">
+                                                <label class="form-label">Teléfono:</label>
+                                                <div class="form-control">{{ telefono.phone_number }}</div>
                                             </div>
                                             <div class="mb-2 w-50">
-                                                <label for="" class="form-label">Notas</label>
-                                                <input class="form-control" type="text" name="telefonos[0][notes]"
-                                                    placeholder="Notas" v-model="notas">
+                                                <label class="form-label">Notas:</label>
+                                                <div class="form-control">{{ telefono.notes || 'Sin notas' }}</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button class="btn btn-primary" type="button" @click="agregarTelefono">Agregar
-                                            Teléfono</button>
+                                    
+                                    <!-- Formulario para agregar nuevos teléfonos -->
+                                    <div v-if="!personaData">
+                                        <div id="telefonos">
+                                            <div class="telefono d-flex gap-2">
+                                                <div class="mb-2 w-50">
+                                                    <label for="" class="form-label">Teléfono</label>
+                                                    <input class="form-control" type="text"
+                                                        name="telefonos[0][phone_number]" placeholder="Teléfono" required v-model="telefono">
+                                                </div>
+                                                <div class="mb-2 w-50">
+                                                    <label for="" class="form-label">Notas</label>
+                                                    <input class="form-control" type="text" name="telefonos[0][notes]"
+                                                        placeholder="Notas" v-model="notas">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <button class="btn btn-primary" type="button" @click="agregarTelefono">Agregar
+                                                Teléfono</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-12 row mt-4 d-flex justify-content-center">
-                           <button type="submit" class="btn btn-primary w-50" :disabled="isSubmitting">
+                           <button v-if="!personaData" type="submit" class="btn btn-primary w-50" :disabled="isSubmitting">
                                 {{ isSubmitting ? 'Cargando...' : 'Cargar Propietario' }}
                             </button>    
                         </div>
@@ -110,6 +130,22 @@
 import { cargarPadron } from '../../../Services/api/Atcl/AtclApi.js'
 import { getUser } from '../../../Services/api/Usuario/userApi.js'
 export default {
+    props: {
+        personaData: {
+            type: Object,
+            default: null
+        }
+    },
+    watch: {
+        personaData: {
+            handler(newPersona) {
+                if (newPersona) {
+                    this.cargarDatosPersona(newPersona);
+                }
+            },
+            immediate: true
+        }
+    },
     async mounted() {
         try {
             const token = localStorage.getItem('token')
@@ -119,6 +155,11 @@ export default {
             this.usuario_id = data?.id ?? data?.user?.id ?? ''
         } catch (error) {
             console.error('Error al obtener usuario:', error)
+        }
+        
+        // Si hay datos de persona, cargarlos
+        if (this.personaData) {
+            this.cargarDatosPersona(this.personaData)
         }
     },
     data() {
@@ -136,10 +177,11 @@ export default {
             ciudad:'',
             provincia:'',
             comentarios:'',
+            telefonosExistentes: [],
             telefono: '',
-            notasInput: '',
-            telefonos:[],
-            notas:[],
+            notas: '',
+            notasInput: [],
+            isSubmitting: false,
             usuario_id: '',
         }
     },
@@ -212,10 +254,26 @@ export default {
             container.appendChild(div);
             this.contador++;
         },
-        
+        cargarDatosPersona(persona) {
+            this.nombre = persona.nombre || ''
+            this.apellido = persona.apellido || ''
+            this.dni = persona.documento || ''
+            this.fecha_nacimiento = persona.fecha_nacimiento || ''
+            this.calle = persona.calle || ''
+            this.numero_calle = persona.numero_calle || ''
+            this.piso = persona.piso_departamento || ''
+            this.ciudad = persona.ciudad || ''
+            this.provincia = persona.provincia || ''
+            this.comentarios = persona.notes || ''
+            
+            // Cargar teléfonos si existen
+            if (persona.telefonos && persona.telefonos.length > 0) {
+                this.telefonosExistentes = persona.telefonos
+            }
+        }
                 
-
       
     }
 }
+
 </script>

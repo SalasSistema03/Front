@@ -1,6 +1,6 @@
 <template>
 
-    <!-- Modal -->
+
     <div class="modal fade" id="modalAlquiler" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -15,35 +15,44 @@
 
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Codigo</label>
-                            <input type="number"
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                :value="propiedad.cod_alquiler" readonly>
+                            <input v-else type="number"
                                 class="form-control text-center small "
                                  id="" name="cod_alquiler"
                                 min="0" placeholder="Ej: 3218" v-model="alquiler.cod_alquiler">
                         </div>
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">F. Central</label>
-                            <input type="number"
-                                class="form-control text-center "
-                                id="" name="FCentral" placeholder="Ej: 123" v-model="alquiler.FCentral">
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="folioCentral" readonly>
+                            <input v-else type="number"
+                                class="form-control text-center small "
+                                 id="" name="FCentral" placeholder="Ej: 123" v-model="alquiler.FCentral">
                         </div>
-
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">F. Candioti</label>
-                            <input type="number"
-                                class="form-control text-center "
-                                id="" name="FCandioti" placeholder="Ej: 123" v-model="alquiler.FCandioti">
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="folioCandioti" readonly>
+                            <input v-else type="number"
+                                class="form-control text-center small "
+                                 id="" name="FCandioti" placeholder="Ej: 123" v-model="alquiler.FCandioti">
                         </div>
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">F. Tribunales</label>
-                            <input type="number"
-                                class="form-control text-center "
-                                id="" name="FTribunales" placeholder="Ej: 123" v-model="alquiler.FTribunales">
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="folioTribunales" readonly>
+                            <input v-else type="number"
+                                class="form-control text-center small "
+                                 id="" name="FTribunales" placeholder="Ej: 123" v-model="alquiler.FTribunales">
                         </div>
 
                         <div class="form-group  px-1 col-md-4">
                             <label class="text-center form-label" for="">Estado de
                                 Alquiler</label>
-                            <select class="form-select "
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="propiedad.estado_alquiler?.name" readonly>
+                            <select v-else class="form-select "
                                 aria-label="Default select example" name="estado_alquiler" v-model="alquiler.estado_alquiler">
                                 <option value="">Seleccione una estado</option>
                                 <option v-for="estado in props.estadosAlquiler" :key="estado.id" :value="estado.id">
@@ -53,7 +62,9 @@
                         </div>
                         <div class="form-group  px-1 col-md-2 pt-2">
                             <label class="text-center form-label" id="basic-addon1"></label>
-                            <select class="form-select" aria-label="Default select example" name="moneda_alquiler" v-model="alquiler.moneda_alquiler">
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="monedaAlquilerDisplay" readonly>
+                            <select v-else class="form-select" aria-label="Default select example" name="moneda_alquiler" v-model="alquiler.moneda_alquiler">
                                 <option value="1">$</option>
                                 <option value="2">u$s</option>
                             </select>
@@ -61,7 +72,9 @@
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Precio
                             </label>
-                            <input type="number"
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="precioAlquilerDisplay" readonly>
+                            <input v-else type="number"
                                 class="form-control text-center "
                                 id="" name="monto_alquiler" min="0" placeholder="Ej: 4000" v-model="alquiler.monto_alquiler">
                         </div>
@@ -69,7 +82,9 @@
 
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Autorizacion</label>
-                            <select class="form-select "
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="propiedad.autorizacion_alquiler" readonly>
+                            <select v-else class="form-select "
                                 aria-label="Default select example" name="autorizacion_alquiler" v-model="alquiler.autorizacion_alquiler">
                                 <option value="">-</option>
                                 <option value="SI">
@@ -81,13 +96,17 @@
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1"> Fecha
                                 Aut.</label>
-                            <input type="date"
+                            <input v-if="propiedad" type="date" class="form-control text-center"
+                                   :value="propiedad.fecha_autorizacion_alquiler" readonly>
+                            <input v-else type="date"
                                 class="form-control text-center "
                                 id="" name="fecha_autorizacion_alquiler" v-model="alquiler.fecha_autorizacion_alquiler">
                         </div>
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Exclusividad</label>
-                            <select class="form-select "
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="propiedad.exclusividad_alquiler" readonly>
+                            <select v-else class="form-select "
                                 aria-label="Default select example" name="exclusividad_alquiler" v-model="alquiler.exclusividad_alquiler">
                                 <option value="">-</option>
                                 <option value="SI">
@@ -99,7 +118,9 @@
                         <div class="form-group  px-1  col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">C.
                                 Venta</label>
-                            <select class="form-select "
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="propiedad.clausula_de_venta" readonly>
+                            <select v-else class="form-select "
                                 aria-label="Default select example" name="clausula_de_venta" v-model="alquiler.clausula_de_venta">
                                 <option value="">-</option>
                                 <option value="SI">
@@ -111,7 +132,9 @@
                         <div class="form-group  px-1 col-md-4 ">
                             <label class="text-center form-label" id="basic-addon1">T.
                                 Clausula</label>
-                            <input type="text"
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="propiedad.tiempo_clausula" readonly>
+                            <input v-else type="text"
                                 class="form-control text-center "
                                 id=""
                                 name="tiempo_clausula" placeholder="Ej: 3 meses" v-model="alquiler.tiempo_clausula">
@@ -119,7 +142,9 @@
                         <div class="form-group  px-1 col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Fecha
                                 Alta</label>
-                            <input type="date"
+                            <input v-if="propiedad" type="date" class="form-control text-center"
+                                   :value="propiedad.alquiler_fecha_alta" readonly>
+                            <input v-else type="date"
                                 class="form-control text-center "
                                 name="alquiler_fecha_alta"
                                 v-model="alquiler.alquiler_fecha_alta">
@@ -127,7 +152,9 @@
                         </div>
                         <div class="form-group  px-1  col-md-2 ">
                             <label class="text-center form-label" id="basic-addon1">Mascota</label>
-                            <select class="form-select "
+                            <input v-if="propiedad" type="text" class="form-control text-center"
+                                   :value="propiedad.mascota" readonly>
+                            <select v-else class="form-select "
                                 aria-label="Default select example"  v-model="alquiler.mascota">
                                 <option value="">-</option>
                                 <option value="SI">
@@ -160,13 +187,116 @@ const props = defineProps({
     estadosAlquiler: {
         type: Array,
         default: () => []
+    },
+    propiedad: {
+        type: Object,
+        default: null
     }
 })
 
-import { reactive, watch, defineEmits } from 'vue'
+import { reactive, watch, defineEmits, computed } from 'vue'
 
 // Definir los emits
 const emit = defineEmits(['update:alquiler'])
+
+// Computed property para determinar el folio según empresa
+const folioDisplay = computed(() => {
+    if (!props.propiedad?.folios || props.propiedad.folios.length === 0) {
+        return ''
+    }
+    
+    // Buscar folio según empresa_id
+    const folio = props.propiedad.folios.find(f => f.empresa_id === 1)
+    
+    if (!folio) return ''
+    
+    // Determinar el campo según empresa
+    switch (folio.empresa_id) {
+        case 1:
+            return folio.folio || ''  // Central
+        case 2:
+            return folio.folio || ''  // Candioti  
+        case 3:
+            return folio.folio || ''  // Tribunales
+        default:
+            return folio.folio || ''
+    }
+})
+
+// Computed properties separadas para cada tipo de folio
+const folioCentral = computed(() => {
+    const folio = props.propiedad?.folios?.find(f => f.empresa_id === 1)
+    return folio?.folio || ''
+})
+
+const folioCandioti = computed(() => {
+    const folio = props.propiedad?.folios?.find(f => f.empresa_id === 2)
+    return folio?.folio || ''
+})
+
+const folioTribunales = computed(() => {
+    const folio = props.propiedad?.folios?.find(f => f.empresa_id === 3)
+    return folio?.folio || ''
+})
+
+// Computed properties para moneda y precio de alquiler
+const monedaAlquilerDisplay = computed(() => {
+    if (!props.propiedad?.precio_actual) return '$'
+    
+    const precio = props.propiedad.precio_actual
+    
+    // Prioridad 1: Precio de alquiler en pesos
+    if (precio.moneda_alquiler_pesos) {
+        return '$'
+    }
+    
+    // Prioridad 2: Precio de alquiler en dólares
+    if (precio.moneda_alquiler_dolar) {
+        return 'u$s'
+    }
+    
+    // Prioridad 3: Precio de venta en pesos
+    if (precio.moneda_venta_pesos) {
+        return '$'
+    }
+    
+    // Prioridad 4: Precio de venta en dólares
+    if (precio.moneda_venta_dolar) {
+        return 'u$s'
+    }
+    
+    // Default
+    return '$'
+})
+
+const precioAlquilerDisplay = computed(() => {
+    if (!props.propiedad?.precio_actual) return ''
+    
+    const precio = props.propiedad.precio_actual
+    
+    // Prioridad 1: Precio de alquiler en pesos
+    if (precio.moneda_alquiler_pesos) {
+        return precio.moneda_alquiler_pesos
+    }
+    
+    // Prioridad 2: Precio de alquiler en dólares
+    if (precio.moneda_alquiler_dolar) {
+        return precio.moneda_alquiler_dolar
+    }
+    
+    // Prioridad 3: Precio de venta en pesos
+    if (precio.moneda_venta_pesos) {
+        return precio.moneda_venta_pesos
+    }
+    
+    // Prioridad 4: Precio de venta en dólares
+    if (precio.moneda_venta_dolar) {
+        return precio.moneda_venta_dolar
+    }
+    
+    // Default
+    return ''
+})
 
 // Datos reactivos del modal
 const alquiler = reactive({

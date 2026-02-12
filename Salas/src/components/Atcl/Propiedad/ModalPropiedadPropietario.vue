@@ -8,10 +8,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body ">
-                    <div class=" form-group atcl_tabla_propietarios row">
-                        <!-- <div class="col-md-12 ">
-                            <label for="" class="form-label ">Agregar Propietarios</label>
-                        </div> -->
+                    <div v-if="!propiedad" class=" form-group atcl_tabla_propietarios row">
+                        
                         <div class="col-md-6 p-1 position-relative">
                             <input type="text" class="form-control form-control-sm" id="input-propietarios"
                                 placeholder="Buscar por apellido o DNI..." v-model="busqueda" @input="buscar">
@@ -25,7 +23,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-md-3 pt-1">
+                        <div v-if="!propiedad?.id" class="col-md-3 pt-1">
                             <button type="button" class="btn btn-primary btn-sm w-100" @click="asignarPropietario">Asignar Propietario</button>
                         </div>
                         <div class="col-md-3 pt-1">
@@ -35,7 +33,7 @@
                             </button>
                         </div>
                     </div>
-                    <hr>
+                    <hr v-if="!propiedad">
 
                     <div class="table-responsive atcl_contenedor_tabla px-3 pt-3">
                         <table class="table table-striped table-hover atcl_tabla_busqueda_propiedad">
@@ -47,8 +45,21 @@
                                     <th>Fecha</th>
                                     <th>-</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                            </thead> 
+                            <tbody v-if="propiedad">
+                                <tr v-for="(item, index) in propiedad.propietarios" :key="index">
+                                    <td>{{ item.apellido }}, {{ item.nombre }}</td>
+                                    <td>{{ item.notes || '-' }}</td>
+                                    <td>{{ item.pivot.baja === 'si' ? 'Sí' : 'No' }}</td>
+                                    <td>{{ item.fecha_nacimiento || '-' }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info btn-sm w-50" @click="verPropietario(item)">
+                                            <i class="bi bi-eye">Ver</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
                                 <tr v-for="(item, index) in propietarios" :key="index">
                                     <td>{{ item.persona.apellido }}, {{ item.persona.nombre }}</td>
                                     <td>
@@ -69,14 +80,11 @@
                             </tbody>
                         </table>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
     </div>
-    <ModalCargaPersona></ModalCargaPersona>
+    <ModalCargaPersona ref="modalCargaPersona" :persona-data="personaParaVer"></ModalCargaPersona>
 </template>
 
 <script>
@@ -87,13 +95,20 @@ export default {
     components: {
         ModalCargaPersona
     },
+    props: {
+        propiedad: {
+            type: Object,
+            default: null
+        }
+    },
     data() {
         return {
             busqueda: '',
             sugerencias: [],
             personaSeleccionada: null,
             timeout: null,
-            propietarios: []
+            propietarios: [],
+            personaParaVer: null
         }
     },
     methods: {
@@ -157,6 +172,14 @@ export default {
         },
         emitirCambios() {
             this.$emit('update:propietario', [...this.propietarios]);
+        },
+        verPropietario(propietario) {
+            // Asignar la persona para mostrar
+            this.personaParaVer = propietario;
+            
+            // Abrir el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalCargaPersona'));
+            modal.show();
         }
     }
 }
