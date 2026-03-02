@@ -105,6 +105,7 @@ export const buscaPersona = (params) => {
 }
 
 export const cargarPadron = (data) => {
+  console.log(data)
   const token = localStorage.getItem('token')
 
   return axios.post(`${API_URL}/v1/auth/padron/cargar`, data, {
