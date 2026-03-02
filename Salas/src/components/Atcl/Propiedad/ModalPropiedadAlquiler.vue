@@ -1,197 +1,186 @@
 <template>
 
 
-    <div class="modal fade" id="modalAlquiler" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Alquiler</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="formularioComodidades" id="formulario" value="">
-                    <div class="row g-3">
-
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">Codigo</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                :value="propiedad.cod_alquiler" readonly>
-                            <input v-else type="number"
-                                class="form-control text-center small "
-                                 id="" name="cod_alquiler"
-                                min="0" placeholder="Ej: 3218" v-model="alquiler.cod_alquiler">
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">F. Central</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="folioCentral" readonly>
-                            <input v-else type="number"
-                                class="form-control text-center small "
-                                 id="" name="FCentral" placeholder="Ej: 123" v-model="alquiler.FCentral">
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">F. Candioti</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="folioCandioti" readonly>
-                            <input v-else type="number"
-                                class="form-control text-center small "
-                                 id="" name="FCandioti" placeholder="Ej: 123" v-model="alquiler.FCandioti">
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">F. Tribunales</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="folioTribunales" readonly>
-                            <input v-else type="number"
-                                class="form-control text-center small "
-                                 id="" name="FTribunales" placeholder="Ej: 123" v-model="alquiler.FTribunales">
-                        </div>
-
-                        <div class="form-group  px-1 col-md-4">
-                            <label class="text-center form-label" for="">Estado de
-                                Alquiler</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="propiedad.estado_alquiler?.name" readonly>
-                            <select v-else class="form-select "
-                                aria-label="Default select example" name="estado_alquiler" v-model="alquiler.estado_alquiler">
-                                <option value="">Seleccione una estado</option>
-                                <option v-for="estado in props.estadosAlquiler" :key="estado.id" :value="estado.id">
-                                    {{ estado.name }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group  px-1 col-md-2 pt-2">
-                            <label class="text-center form-label" id="basic-addon1"></label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="monedaAlquilerDisplay" readonly>
-                            <select v-else class="form-select" aria-label="Default select example" name="moneda_alquiler" v-model="alquiler.moneda_alquiler">
-                                <option value="1">$</option>
-                                <option value="2">u$s</option>
-                            </select>
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">Precio
-                            </label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="precioAlquilerDisplay" readonly>
-                            <input v-else type="number"
-                                class="form-control text-center "
-                                id="" name="monto_alquiler" min="0" placeholder="Ej: 4000" v-model="alquiler.monto_alquiler">
-                        </div>
-
-
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">Autorizacion</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="propiedad.autorizacion_alquiler" readonly>
-                            <select v-else class="form-select "
-                                aria-label="Default select example" name="autorizacion_alquiler" v-model="alquiler.autorizacion_alquiler">
-                                <option value="">-</option>
-                                <option value="SI">
-                                    SI</option>
-                                <option value="NO">
-                                    NO</option>
-                            </select>
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1"> Fecha
-                                Aut.</label>
-                            <input v-if="propiedad" type="date" class="form-control text-center"
-                                   :value="propiedad.fecha_autorizacion_alquiler" readonly>
-                            <input v-else type="date"
-                                class="form-control text-center "
-                                id="" name="fecha_autorizacion_alquiler" v-model="alquiler.fecha_autorizacion_alquiler">
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">Exclusividad</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="propiedad.exclusividad_alquiler" readonly>
-                            <select v-else class="form-select "
-                                aria-label="Default select example" name="exclusividad_alquiler" v-model="alquiler.exclusividad_alquiler">
-                                <option value="">-</option>
-                                <option value="SI">
-                                    SI</option>
-                                <option value="NO">
-                                    NO</option>
-                            </select>
-                        </div>
-                        <div class="form-group  px-1  col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">C.
-                                Venta</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="propiedad.clausula_de_venta" readonly>
-                            <select v-else class="form-select "
-                                aria-label="Default select example" name="clausula_de_venta" v-model="alquiler.clausula_de_venta">
-                                <option value="">-</option>
-                                <option value="SI">
-                                    SI</option>
-                                <option value="NO">
-                                    NO</option>
-                            </select>
-                        </div>
-                        <div class="form-group  px-1 col-md-4 ">
-                            <label class="text-center form-label" id="basic-addon1">T.
-                                Clausula</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="propiedad.tiempo_clausula" readonly>
-                            <input v-else type="text"
-                                class="form-control text-center "
-                                id=""
-                                name="tiempo_clausula" placeholder="Ej: 3 meses" v-model="alquiler.tiempo_clausula">
-                        </div>
-                        <div class="form-group  px-1 col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">Fecha
-                                Alta</label>
-                            <input v-if="propiedad" type="date" class="form-control text-center"
-                                   :value="propiedad.alquiler_fecha_alta" readonly>
-                            <input v-else type="date"
-                                class="form-control text-center "
-                                name="alquiler_fecha_alta"
-                                v-model="alquiler.alquiler_fecha_alta">
-
-                        </div>
-                        <div class="form-group  px-1  col-md-2 ">
-                            <label class="text-center form-label" id="basic-addon1">Mascota</label>
-                            <input v-if="propiedad" type="text" class="form-control text-center"
-                                   :value="propiedad.mascota" readonly>
-                            <select v-else class="form-select "
-                                aria-label="Default select example"  v-model="alquiler.mascota">
-                                <option value="">-</option>
-                                <option value="SI">
-                                    SI</option>
-                                <option value="NO">
-                                    NO</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group  px-1 col-md-2 pt-2">
-                            <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-                                data-bs-target="#condicionAlquilesPropiedad">
-                                Condición Alquiler
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer mt-2">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-
-                </div>
-            </div>
+  <div class="modal fade" id="modalAlquiler" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header atcl_modal_header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Alquiler</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <input type="hidden" name="formularioComodidades" id="formulario" value="">
+          <div class="row g-3">
+
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Codigo</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.cod_alquiler"
+                readonly>
+              <input v-else type="number" class="form-control text-center small " id="" name="cod_alquiler" min="0"
+                placeholder="Ej: 3218" v-model="alquiler.cod_alquiler">
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">F. Central</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="folioCentral" readonly>
+              <input v-else type="number" class="form-control text-center small " id="" name="FCentral"
+                placeholder="Ej: 123" v-model="alquiler.FCentral">
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">F. Candioti</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="folioCandioti" readonly>
+              <input v-else type="number" class="form-control text-center small " id="" name="FCandioti"
+                placeholder="Ej: 123" v-model="alquiler.FCandioti">
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">F. Tribunales</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="folioTribunales" readonly>
+              <input v-else type="number" class="form-control text-center small " id="" name="FTribunales"
+                placeholder="Ej: 123" v-model="alquiler.FTribunales">
+            </div>
+
+            <div class="form-group  px-1 col-md-4">
+              <label class="text-center form-label" for="">Estado de
+                Alquiler</label>
+              <input v-if="propiedad" type="text" class="form-control text-center"
+                :value="propiedad.estado_alquiler?.name" readonly>
+              <select v-else class="form-select " aria-label="Default select example" name="estado_alquiler"
+                v-model="alquiler.estado_alquiler">
+                <option value="">Seleccione una estado</option>
+                <option v-for="estado in props.estadosAlquiler" :key="estado.id" :value="estado.id">
+                  {{ estado.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group  px-1 col-md-2 pt-2">
+              <label class="text-center form-label" id="basic-addon1"></label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="monedaAlquilerDisplay"
+                readonly>
+              <select v-else class="form-select" aria-label="Default select example" name="moneda_alquiler"
+                v-model="alquiler.moneda_alquiler">
+                <option value="1">$</option>
+                <option value="2">u$s</option>
+              </select>
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Precio
+              </label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="precioAlquilerDisplay"
+                readonly>
+              <input v-else type="number" class="form-control text-center " id="" name="monto_alquiler" min="0"
+                placeholder="Ej: 4000" v-model="alquiler.monto_alquiler">
+            </div>
+
+
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Autorizacion</label>
+              <input v-if="propiedad" type="text" class="form-control text-center"
+                :value="propiedad.autorizacion_alquiler" readonly>
+              <select v-else class="form-select " aria-label="Default select example" name="autorizacion_alquiler"
+                v-model="alquiler.autorizacion_alquiler">
+                <option value="">-</option>
+                <option value="SI">
+                  SI</option>
+                <option value="NO">
+                  NO</option>
+              </select>
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1"> Fecha
+                Aut.</label>
+              <input v-if="propiedad" type="date" class="form-control text-center"
+                :value="propiedad.fecha_autorizacion_alquiler" readonly>
+              <input v-else type="date" class="form-control text-center " id="" name="fecha_autorizacion_alquiler"
+                v-model="alquiler.fecha_autorizacion_alquiler">
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Exclusividad</label>
+              <input v-if="propiedad" type="text" class="form-control text-center"
+                :value="propiedad.exclusividad_alquiler" readonly>
+              <select v-else class="form-select " aria-label="Default select example" name="exclusividad_alquiler"
+                v-model="alquiler.exclusividad_alquiler">
+                <option value="">-</option>
+                <option value="SI">
+                  SI</option>
+                <option value="NO">
+                  NO</option>
+              </select>
+            </div>
+            <div class="form-group  px-1  col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">C.
+                Venta</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.clausula_de_venta"
+                readonly>
+              <select v-else class="form-select " aria-label="Default select example" name="clausula_de_venta"
+                v-model="alquiler.clausula_de_venta">
+                <option value="">-</option>
+                <option value="SI">
+                  SI</option>
+                <option value="NO">
+                  NO</option>
+              </select>
+            </div>
+            <div class="form-group  px-1 col-md-4 ">
+              <label class="text-center form-label" id="basic-addon1">T.
+                Clausula</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.tiempo_clausula"
+                readonly>
+              <input v-else type="text" class="form-control text-center " id="" name="tiempo_clausula"
+                placeholder="Ej: 3 meses" v-model="alquiler.tiempo_clausula">
+            </div>
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Fecha
+                Alta</label>
+              <input v-if="propiedad" type="date" class="form-control text-center"
+                :value="propiedad.alquiler_fecha_alta" readonly>
+              <input v-else type="date" class="form-control text-center " name="alquiler_fecha_alta"
+                v-model="alquiler.alquiler_fecha_alta">
+
+            </div>
+            <div class="form-group  px-1  col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Mascota</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.mascota" readonly>
+              <select v-else class="form-select " aria-label="Default select example" v-model="alquiler.mascota">
+                <option value="">-</option>
+                <option value="SI">
+                  SI</option>
+                <option value="NO">
+                  NO</option>
+              </select>
+            </div>
+
+            <div class="form-group  px-1 col-md-2 pt-2">
+              <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                data-bs-target="#condicionAlquilesPropiedad">
+                Condición Alquiler
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script setup>
 // Recibir las props del componente padre
 const props = defineProps({
-    estadosAlquiler: {
-        type: Array,
-        default: () => []
-    },
-    propiedad: {
-        type: Object,
-        default: null
-    }
+  estadosAlquiler: {
+    type: Array,
+    default: () => []
+  },
+  propiedad: {
+    type: Object,
+    default: null
+  },
+  propiedadUpdate: {
+    type: Object,
+    default: null
+  }
 })
 
 import { reactive, watch, defineEmits, computed } from 'vue'
@@ -199,125 +188,148 @@ import { reactive, watch, defineEmits, computed } from 'vue'
 // Definir los emits
 const emit = defineEmits(['update:alquiler'])
 
+// Watch para precargar datos cuando llega propiedadUpdate (como en venta)
+watch(() => props.propiedadUpdate, (newValue) => {
+  if (newValue) {
+    //console.log('Cargando datos de alquiler:', newValue)
+    // Precargar los datos en el formulario
+    alquiler.cod_alquiler = newValue.cod_alquiler || ''
+    alquiler.estado_alquiler = newValue.id_estado_alquiler || ''
+    alquiler.moneda_alquiler = newValue.precio_actual?.moneda_alquiler_pesos ? '1' : '2'
+    alquiler.monto_alquiler = newValue.precio_actual?.moneda_alquiler_pesos || newValue.precio_actual?.moneda_alquiler_dolar || ''
+    alquiler.autorizacion_alquiler = newValue.autorizacion_alquiler || ''
+    alquiler.fecha_autorizacion_alquiler = newValue.fecha_autorizacion_alquiler || ''
+    alquiler.exclusividad_alquiler = newValue.exclusividad_alquiler || ''
+    alquiler.clausula_de_venta = newValue.clausula_de_venta || ''
+    alquiler.tiempo_clausula = newValue.tiempo_clausula || ''
+    alquiler.alquiler_fecha_alta = newValue.alquiler_fecha_alta || ''
+    alquiler.mascota = newValue.mascota || ''
+
+    // Precargar folios si existen
+    if (newValue.folios && newValue.folios.length > 0) {
+      const folioCentral = newValue.folios.find(f => f.empresa_id === 1)
+      const folioCandioti = newValue.folios.find(f => f.empresa_id === 2)
+      const folioTribunales = newValue.folios.find(f => f.empresa_id === 3)
+
+      alquiler.FCentral = folioCentral?.folio || ''
+      alquiler.FCandioti = folioCandioti?.folio || ''
+      alquiler.FTribunales = folioTribunales?.folio || ''
+    }
+  }
+}, { immediate: true })
+
 // Computed property para determinar el folio según empresa
 const folioDisplay = computed(() => {
-    if (!props.propiedad?.folios || props.propiedad.folios.length === 0) {
-        return ''
-    }
-    
-    // Buscar folio según empresa_id
-    const folio = props.propiedad.folios.find(f => f.empresa_id === 1)
-    
-    if (!folio) return ''
-    
-    // Determinar el campo según empresa
-    switch (folio.empresa_id) {
-        case 1:
-            return folio.folio || ''  // Central
-        case 2:
-            return folio.folio || ''  // Candioti  
-        case 3:
-            return folio.folio || ''  // Tribunales
-        default:
-            return folio.folio || ''
-    }
+  const propiedadActiva = props.propiedad || props.propiedadUpdate
+  if (!propiedadActiva?.folios || propiedadActiva.folios.length === 0) {
+    return ''
+  }
+
+  // Buscar folio según empresa_id
+  const folio = propiedadActiva.folios.find(f => f.empresa_id === 1)
+  return folio?.folio || ''
 })
 
 // Computed properties separadas para cada tipo de folio
 const folioCentral = computed(() => {
-    const folio = props.propiedad?.folios?.find(f => f.empresa_id === 1)
-    return folio?.folio || ''
+  const propiedadActiva = props.propiedad || props.propiedadUpdate
+  const folio = propiedadActiva?.folios?.find(f => f.empresa_id === 1)
+  return folio?.folio || ''
 })
 
 const folioCandioti = computed(() => {
-    const folio = props.propiedad?.folios?.find(f => f.empresa_id === 2)
-    return folio?.folio || ''
+  const propiedadActiva = props.propiedad || props.propiedadUpdate
+  const folio = propiedadActiva?.folios?.find(f => f.empresa_id === 2)
+  return folio?.folio || ''
 })
 
 const folioTribunales = computed(() => {
-    const folio = props.propiedad?.folios?.find(f => f.empresa_id === 3)
-    return folio?.folio || ''
+  const propiedadActiva = props.propiedad || props.propiedadUpdate
+  const folio = propiedadActiva?.folios?.find(f => f.empresa_id === 3)
+  return folio?.folio || ''
 })
 
 // Computed properties para moneda y precio de alquiler
 const monedaAlquilerDisplay = computed(() => {
-    if (!props.propiedad?.precio_actual) return '$'
-    
-    const precio = props.propiedad.precio_actual
-    
-    // Prioridad 1: Precio de alquiler en pesos
-    if (precio.moneda_alquiler_pesos) {
-        return '$'
-    }
-    
-    // Prioridad 2: Precio de alquiler en dólares
-    if (precio.moneda_alquiler_dolar) {
-        return 'u$s'
-    }
-    
-    // Prioridad 3: Precio de venta en pesos
-    if (precio.moneda_venta_pesos) {
-        return '$'
-    }
-    
-    // Prioridad 4: Precio de venta en dólares
-    if (precio.moneda_venta_dolar) {
-        return 'u$s'
-    }
-    
-    // Default
+  const propiedadActiva = props.propiedad || props.propiedadUpdate
+  if (!propiedadActiva?.precio_actual) return '$'
+
+  const precio = propiedadActiva.precio_actual
+
+  // Prioridad 1: Precio de alquiler en pesos
+  if (precio.moneda_alquiler_pesos) {
     return '$'
+  }
+
+  // Prioridad 2: Precio de alquiler en dólares
+  if (precio.moneda_alquiler_dolar) {
+    return 'u$s'
+  }
+
+  // Prioridad 3: Precio de venta en pesos
+  if (precio.moneda_venta_pesos) {
+    return '$'
+  }
+
+  // Prioridad 4: Precio de venta en dólares
+  if (precio.moneda_venta_dolar) {
+    return 'u$s'
+  }
+
+  // Default
+  return '$'
 })
 
 const precioAlquilerDisplay = computed(() => {
-    if (!props.propiedad?.precio_actual) return ''
-    
-    const precio = props.propiedad.precio_actual
-    
-    // Prioridad 1: Precio de alquiler en pesos
-    if (precio.moneda_alquiler_pesos) {
-        return precio.moneda_alquiler_pesos
-    }
-    
-    // Prioridad 2: Precio de alquiler en dólares
-    if (precio.moneda_alquiler_dolar) {
-        return precio.moneda_alquiler_dolar
-    }
-    
-    // Prioridad 3: Precio de venta en pesos
-    if (precio.moneda_venta_pesos) {
-        return precio.moneda_venta_pesos
-    }
-    
-    // Prioridad 4: Precio de venta en dólares
-    if (precio.moneda_venta_dolar) {
-        return precio.moneda_venta_dolar
-    }
-    
-    // Default
-    return ''
+  const propiedadActiva = props.propiedad || props.propiedadUpdate
+  if (!propiedadActiva?.precio_actual) return ''
+
+  const precio = propiedadActiva.precio_actual
+
+  // Prioridad 1: Precio de alquiler en pesos
+  if (precio.moneda_alquiler_pesos) {
+    return precio.moneda_alquiler_pesos
+  }
+
+  // Prioridad 2: Precio de alquiler en dólares
+  if (precio.moneda_alquiler_dolar) {
+    return precio.moneda_alquiler_dolar
+  }
+
+  // Prioridad 3: Precio de venta en pesos
+  if (precio.moneda_venta_pesos) {
+    return precio.moneda_venta_pesos
+  }
+
+  // Prioridad 4: Precio de venta en dólares
+  if (precio.moneda_venta_dolar) {
+    return precio.moneda_venta_dolar
+  }
+
+  // Default
+  return ''
 })
 
 // Datos reactivos del modal
 const alquiler = reactive({
-   cod_alquiler:'',
-   FCentral:'',
-   FCandioti:'',
-   FTribunales:'',
-   estado_alquiler:'',
-   moneda_alquiler:'1',
-   monto_alquiler:'',
-   autorizacion_alquiler:'',
-   fecha_autorizacion_alquiler:'',
-   exclusividad_alquiler:'',
-   clausula_de_venta:'',
-   tiempo_clausula:'',
-   alquiler_fecha_alta:'',
-   mascota:'',
+  cod_alquiler: '',
+  FCentral: '',
+  FCandioti: '',
+  FTribunales: '',
+  estado_alquiler: '',
+  moneda_alquiler: '1',
+  monto_alquiler: '',
+  autorizacion_alquiler: '',
+  fecha_autorizacion_alquiler: '',
+  exclusividad_alquiler: '',
+  clausula_de_venta: '',
+  tiempo_clausula: '',
+  alquiler_fecha_alta: '',
+  mascota: '',
 })
 
 // Observar cambios y emitir automáticamente
 watch(alquiler, (newValue) => {
-    emit('update:alquiler', { ...newValue })
+  emit('update:alquiler', { ...newValue })
 }, { deep: true })
 </script>
