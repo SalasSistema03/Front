@@ -76,9 +76,10 @@
                     </div>
 
                 </div>
-                <div >
-                    <table class="table table-striped agenda_tabla_general">
-                        <thead>
+                <div class="agenda_tabla_general" >
+                    <table class="table table-striped ">
+                        <!-- dejar fijo el encabezado de la tabla -->
+                        <thead >
                             <tr class="agenda_titulo_tabla_modal text-center">
                                 <th>Fecha</th>
                                 <th>Inmueble</th>

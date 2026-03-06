@@ -374,11 +374,13 @@
   border-radius: 8px;
   padding: 0.5rem;
   border: 1px solid rgba(0, 175, 154, 0.96) !important;
-  color: white;
-  border: none;
 }
 .agenda_barra_lateral input {
   margin-top: 0.5rem;
+}
+.agenda_barra_lateral {
+  color: white;
+  border: none;
 }
 .agenda_barra_lateral::-webkit-calendar-picker-indicator {
   filter: invert(1);
@@ -444,18 +446,24 @@
   color: orange;
 }
 
-.agenda_titulo_tabla_modal {
+.agenda_tabla_general {
+  height: 10vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-top: 1px solid rgb(0, 85, 185) !important;
-  font-size: 0.7rem !important;
+}
+
+.agenda_titulo_tabla_modal {
+  font-size: 0.6rem !important;
 }
 .agenda_titulo_tabla_modal th {
+  position: sticky !important;
+  top: 0;
   color: rgb(0, 85, 185) !important;
   padding: 0rem 0;
 }
 
 .agenda_cuerpo_tabla_modal {
-  height: 30vh;
-  overflow-y: auto;
   font-size: 0.7rem !important;
 }
 .agenda_cuerpo_tabla_modal td {

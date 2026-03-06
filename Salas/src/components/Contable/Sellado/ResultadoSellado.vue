@@ -1,63 +1,101 @@
 <template>
-  <div class="card border-0 shadow-sm h-100">
-    <div class="card-body p-2">
-      <table v-if="datos && datos.data" class="table table-bordered table-sm text-center align-middle mb-2">
-        
-        <thead class="table-info text-success small">
-          <tr>
-            <th>Total Contrato</th>
-            <th>Prop. Alquiler</th>
-            <th>Prop. Documento</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ datos.data.total_contrato }}</td>
-            <td>{{ datos.data.prop_alquiler }}</td>
-            <td>{{ datos.data.prop_doc }}</td>
-          </tr>
-        </tbody>
+  <div v-if="datos?.data">
+    <h6 class="text-center mb-3">Resultados</h6>
+    <form class="row g-3" >
 
-        <thead class="table-info text-success small">
-          <tr>
-            <th>Gasto Adm.</th>
-            <th>IVA Gasto Adm.</th>
-            <th>Sellado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ datos.data.gasto_administrativo }}</td>
-            <td>{{ datos.data.iva_gasto_adm }}</td>
-            <td>$ {{ datos.data.sellado }}</td>
-          </tr>
-        </tbody>
-
-        <thead class="table-info text-success small">
-          <tr>
-            <th colspan="3">Valor Informe</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colspan="3">$ {{ datos.data.valor_informe }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-      <div v-else class="text-center py-4 text-muted small">
-        Esperando cálculos...
+      <!-- Total Contrato / Prop. Alquiler / Prop. Doc -->
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Total Contrato</label>
+        <input type="text" class="form-control form-control-sm" :value="formatearMoneda(datos.data.total_contrato)"
+          disabled />
       </div>
-    </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Prop. Alquiler</label>
+        <input type="text" class="form-control form-control-sm text-center" :value="datos.data.prop_alquiler"
+          disabled />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Prop. Doc.</label>
+        <input type="text" class="form-control form-control-sm text-center" :value="datos.data.prop_doc" disabled />
+      </div>
+
+      <!-- Gasto Adm / IVA Gasto / Sellado -->
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Gasto Adm.</label>
+        <input type="text" class="form-control form-control-sm"
+          :value="formatearMoneda(datos.data.gasto_administrativo)" disabled />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">IVA Gasto</label>
+        <input type="text" class="form-control form-control-sm text-center"
+          :value="formatearMoneda(datos.data.iva_gasto_adm)" disabled />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Sellado</label>
+        <input type="text" class="form-control form-control-sm text-center" :value="formatearMoneda(datos.data.sellado)"
+          disabled />
+      </div>
+
+      <!-- Valor Informe -->
+      <div class="d-flex justify-content-between">
+        <div class="col-4 col-md-4">
+          <label class="form-label small fw-semibold">Valor Informe</label>
+          <input type="text" class="form-control form-control-sm text-center fw-semibold"
+            :value="formatearMoneda(datos.data.valor_informe)" disabled />
+        </div>
+
+        <div class="col-4 col-md-4 align-self-end">
+          <!-- Boton para guardar -->
+          <button type="button" class="btn btn-primary btn-sm w-100 h-100" @click="guardarRegistro"
+            :disabled="cargando">
+            <span v-if="cargando" class="spinner-border spinner-border-sm me-1"></span>
+            {{ cargando ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+
+
+    </form>
+  </div>
+
+  <div v-else class="d-flex flex-column align-items-center justify-content-center py-5">
+    <div class="spinner-border spinner-border-sm text-light-emphasis mb-3" role="status"></div>
+    <span class="small">Esperando cálculos...</span>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
 const props = defineProps({
   datos: {
     type: Object,
-    required: true
+    default: () => ({})
   }
 });
+// ESTA LÍNEA FALTA:
+const emit = defineEmits(['registroGuardado']);
+// Estado para manejar la carga o errores
+const cargando = ref(false);
+
+const guardarRegistro = async () => {
+  cargando.value = true;
+  emit('registroGuardado', props.datos.data); // avisamos al padre
+  cargando.value = false;
+}
+
+const formatearMoneda = (valor) => {
+  if (valor === undefined || valor === null) return '$ 0,00';
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+  }).format(valor);
+};
 </script>
+
+<style scoped>
+input[disabled] {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+</style>

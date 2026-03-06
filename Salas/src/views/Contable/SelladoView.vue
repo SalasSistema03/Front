@@ -1,7 +1,6 @@
 <template>
     <NavComponent />
     <CargarSellado />
-    <h1>Sellado</h1>
 </template>
 
 
