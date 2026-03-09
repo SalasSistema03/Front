@@ -158,3 +158,34 @@ export const updatePropiedad = (id, data) => {
     },
   })
 }
+
+
+// En tu servicio
+export const descargarFotos = (id) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/auth/propiedad/descargar-fotos/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob' // ¡Esto es lo que falta!
+  })
+}
+
+export const guardarNovedad = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/auth/propiedad/guardar-novedad`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const generarPdfPlantillaPropiedad = (id, tipoBTN) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/auth/propiedades/pdf/pdfPlantillaPropiedad/${id}/${tipoBTN}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob' // Necesario para recibir el PDF como archivo binario
+  })
+}

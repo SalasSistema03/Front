@@ -1,32 +1,32 @@
 @use 'colorSalas'
 $azulSalas: colorSalas.$azulSalas
 $verdeSalas: colorSalas.$verdeSalas
-/* .login-form-container 
+/* .login-form-container
  */
-.navbar 
+.navbar
     background-color: #fff
     box-shadow: 0 1px 1px $verdeSalas
 
-.navbar-dropdown-submenu 
+.navbar-dropdown-submenu
     position: relative
     font-size: 14px
-      
-    
-    
+
+
+
 .navbar-dropdown-menu
     min-width: 20px
     padding: 0.1rem 0
     border: 1px solid $azulSalas
-    
-    a 
+
+    a
         color: $azulSalas !important
         background-color: #ffffff00
         &:hover
             color: $verdeSalas !important
             background-color: #00489100
-        
-    
-.navbar-dropdown-submenu-content 
+
+
+.navbar-dropdown-submenu-content
     font-size: 12px
     color: $azulSalas !important
     position: absolute
@@ -40,11 +40,11 @@ $verdeSalas: colorSalas.$verdeSalas
     /* box-shadow: 0 0rem 0.5rem $azulSalas */
     z-index: 1000
 
-.navbar-dropdown-submenu-content.show 
+.navbar-dropdown-submenu-content.show
     display: block
 
 /* Ajustes para dispositivos móviles */
-@media (max-width: 991.98px) 
+@media (max-width: 991.98px)
     .navbar-dropdown-submenu-content
         position: static
         left: auto
@@ -52,42 +52,47 @@ $verdeSalas: colorSalas.$verdeSalas
         border: none
         box-shadow: none
         background-color: #f8f9fa
-    
 
-    .navbar-dropdown-submenu-content .dropdown-item 
+
+    .navbar-dropdown-submenu-content .dropdown-item
         padding-left: 2rem
 
-        
-    
 
-.navbar-dropdown-arrow 
+
+
+.navbar-dropdown-arrow
     margin-left: 0.5rem
     transform: rotate(0deg)
     transition: transform 0.2s
     color: $azulSalas !important
 
 .navbar-dropdown-submenu:hover .navbar-dropdown-arrow,
-.dropdown-toggle[aria-expanded='true']+.navbar-dropdown-arrow 
+.dropdown-toggle[aria-expanded='true']+.navbar-dropdown-arrow
     transform: rotate(90deg)
 
-.navbar-item_menu 
-    font-weight: 500
-    font-size: 14px
-    color: $azulSalas
+.navbar-item_menu
+    font-weight: 550 !important
+    font-size: 14px !important
+    color: $azulSalas !important
     //padding: 0.5rem 1rem
-    
+    &:hover
+        color: $verdeSalas !important
+    &:focus
+        color: $verdeSalas !important
 
-#navbar_contenedor_logo 
+
+
+#navbar_contenedor_logo
     padding: 0
     height: inherit
-    img 
+    img
         height: 55px
         width: auto
 
 /* #navbar_logo_nav
     height: 40px */
 
-.dropdown-toggle::after 
+.dropdown-toggle::after
     display: none !important
 
 .navbar-admin
@@ -102,7 +107,7 @@ $verdeSalas: colorSalas.$verdeSalas
 
 .navbar-admin_dropdown
     position: relative
-    transform: translateY(-12%) translateX(-5%) 
-    font-size: 14px
-    padding: 0.5rem 1rem
-    
+    transform: translateY(-12%) translateX(-5%) !important
+    font-size: 14px !important
+    padding: 0.5rem 1rem !important
+

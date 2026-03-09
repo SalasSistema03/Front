@@ -289,7 +289,6 @@ import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropied
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
 import { guardarPropiedad } from '../../Services/api/Atcl/AtclApi'
-import Swal from 'sweetalert2'
 import { useToast } from '../../composables/useToast'
 import { useCalleAutocomplete } from '../../composables/atcl/useCalleAutocomplete'
 import { useInmuebles } from '../../composables/atcl/useInmuebles'
@@ -312,7 +311,7 @@ export default {
     ModalPropiedadPropietario
   },
   setup() {
-    const { showWarning, showError } = useToast()
+    const { showWarning, showError, showSuccess } = useToast()
     const { callesFiltradas, mostrarSugerencias, calleSeleccionada, calleId, cargarCalles, filtrarCalles, seleccionarCalle, ocultarSugerencias, mostrarLista } = useCalleAutocomplete()
     const { inmuebles, error, cargarInmuebles } = useInmuebles()
     const { zonas, error: zonasError, cargarZonas } = useZona()
@@ -324,7 +323,7 @@ export default {
     const { estadosAlquiler, error: estadosAlquilerError, cargarEstadosAlquiler } = useEstadosAlquiler()
 
     return {
-      showWarning, showError,
+      showWarning, showError, showSuccess,
       callesFiltradas, mostrarSugerencias, calleSeleccionada, calleId, cargarCalles, filtrarCalles, seleccionarCalle, ocultarSugerencias, mostrarLista,
       inmuebles, error, cargarInmuebles,
       zonas, zonasError, cargarZonas,
@@ -379,9 +378,9 @@ export default {
     handleFiles(event) {
       const files = Array.from(event.target.files)
       const allowedTypes = ["image/jpg", "image/jpeg", "application/pdf", "video/mp4", "video/mov"]
-
       const hasInvalidFiles = files.some(file => !allowedTypes.includes(file.type))
 
+      //Si uno o mas archivos no son del formato correcto muestra un mensaje de error
       if (hasInvalidFiles) {
         this.showWarning('Uno o más archivos no tienen un formato permitido (Solo JPG, JPEG, PDF, MP4 o MOV).')
         event.target.value = ''
@@ -393,6 +392,7 @@ export default {
       this.videos = []
       this.pdfs = []
 
+      // Procesar cada archivo
       files.forEach((file) => {
         const url = URL.createObjectURL(file)
 
@@ -402,6 +402,7 @@ export default {
           comment: ""
         }
 
+        // Clasificar el archivo según su tipo
         if (file.type.startsWith("image/")) {
           this.images.push(item)
         }
@@ -462,18 +463,20 @@ export default {
           formDataToSend.append(`pdfs_comments[${index}]`, pdf.comment)
         })
 
-
-
+        //Obtenemos el id del usuario a travez del localStorage
         const id_usuario = await getUser(localStorage.getItem('token'))
+        //Mandamos los datos al backend
         const response = await guardarPropiedad(id_usuario.data.id, formDataToSend)
 
         if (response.data.success) {
-          await Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.data.message,
-            timer: 2000
-          })
+          this.showSuccess(response.data.message)
+          // Redirigir a la vista de detalle de la propiedad
+          if (response.data.data && response.data.data.id) {
+            this.$router.push(`/propiedad-detalle/${response.data.data.id}`)
+          } else {
+            // Si no hay ID, redirigir a una página por defecto o mostrar mensaje
+            this.showError('No se pudo obtener el ID de la propiedad para redirigir')
+          }
         }
       } catch (error) {
         this.showError(error.response?.data?.message || 'Ocurrió un error al guardar la propiedad')

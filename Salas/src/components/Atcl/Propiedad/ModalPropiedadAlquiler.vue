@@ -1,6 +1,4 @@
 <template>
-
-
   <div class="modal fade" id="modalAlquiler" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -12,7 +10,6 @@
         <div class="modal-body">
           <input type="hidden" name="formularioComodidades" id="formulario" value="">
           <div class="row g-3">
-
             <div class="form-group  px-1 col-md-2 ">
               <label class="text-center form-label" id="basic-addon1">Codigo</label>
               <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.cod_alquiler"
@@ -106,12 +103,10 @@
                   NO</option>
               </select>
             </div>
-            <div class="form-group  px-1  col-md-2 ">
+            <div class="form-group  px-1  col-md-2 " v-if="!propiedad">
               <label class="text-center form-label" id="basic-addon1">C.
                 Venta</label>
-              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.clausula_de_venta"
-                readonly>
-              <select v-else class="form-select " aria-label="Default select example" name="clausula_de_venta"
+              <select class="form-select " aria-label="Default select example" name="clausula_de_venta"
                 v-model="alquiler.clausula_de_venta">
                 <option value="">-</option>
                 <option value="SI">
@@ -120,12 +115,10 @@
                   NO</option>
               </select>
             </div>
-            <div class="form-group  px-1 col-md-4 ">
+            <div class="form-group  px-1 col-md-4 " v-if="!propiedad">
               <label class="text-center form-label" id="basic-addon1">T.
                 Clausula</label>
-              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.tiempo_clausula"
-                readonly>
-              <input v-else type="text" class="form-control text-center " id="" name="tiempo_clausula"
+              <input type="text" class="form-control text-center " id="" name="tiempo_clausula"
                 placeholder="Ej: 3 meses" v-model="alquiler.tiempo_clausula">
             </div>
             <div class="form-group  px-1 col-md-2 ">
@@ -133,12 +126,22 @@
                 Alta</label>
               <input v-if="propiedad" type="date" class="form-control text-center"
                 :value="propiedad.alquiler_fecha_alta" readonly>
-              <input v-else type="date" class="form-control text-center " name="alquiler_fecha_alta"
-                v-model="alquiler.alquiler_fecha_alta">
-
+              <input v-else type="date" class="form-control text-center " v-model="alquiler.alquiler_fecha_alta">
             </div>
-            <div class="form-group  px-1  col-md-2 ">
-              <label class="text-center form-label" id="basic-addon1">Mascota</label>
+
+
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Fecha Baja</label>
+              <input type="date" class="form-control text-center">
+            </div>
+            <!-- <div class="form-group px-1 col-md-2">
+              <label class="text-center form-label"> Fecha Pub.</label>
+              <input v-if="propiedad" type="date" class="form-control text-center"
+                :value="propiedad.alquiler_fecha_pub">
+              <input v-else type="date" class="form-control text-center" v-model="alquiler.alquiler_fecha_pub">
+            </div> -->
+            <div class=" form-group px-1 col-md-2 ">
+              <label class=" text-center form-label" id="basic-addon1">Mascota</label>
               <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.mascota" readonly>
               <select v-else class="form-select " aria-label="Default select example" v-model="alquiler.mascota">
                 <option value="">-</option>
@@ -149,12 +152,28 @@
               </select>
             </div>
 
-            <div class="form-group  px-1 col-md-2 pt-2">
+            <div class="form-group  px-1 col-md-3 pt-2">
               <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
                 data-bs-target="#condicionAlquilesPropiedad">
                 Condición Alquiler
               </button>
             </div>
+
+            <div v-if="propiedad" class="form-group  px-1 col-md-3 pt-2">
+              <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                data-bs-target="#novedadesAlquilerPropiedad">
+                Novedades Alquiler
+              </button>
+            </div>
+
+            <div v-if="propiedad" class="form-group px-1 col-md-3 pt-2">
+              <button type="button" class="btn btn-primary btn-sm w-100" @click="fichaPdfRef.generarPdf()">
+                Ficha PDF
+              </button>
+            </div>
+            <!-- Componente oculto con la plantilla -->
+            <FichaPropiedad ref="fichaPdfRef" :propiedad="propiedad" :ubicacion="'A'" />
+
           </div>
 
           <div class="modal-footer mt-2">
@@ -165,9 +184,24 @@
       </div>
     </div>
   </div>
+  <ModalNovedades :propiedad="propiedad" ubicacion="A" modalId="novedadesAlquilerPropiedad"
+    @update:novedad="emit('update:novedadAlquiler', $event)"
+    @update:observacionesModificadas="emit('update:observacionesModificadasAlquiler', $event)"
+    :propiedad-update="propiedadUpdate" />
 </template>
 <script setup>
 // Recibir las props del componente padre
+import ModalNovedades from './ModalNovedades.vue'
+import { reactive, watch, defineEmits, computed } from 'vue'
+import { generarPdfPlantillaPropiedad } from '@/Services/api/Atcl/AtclApi'
+import { ref } from 'vue'
+import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
+
+
+
+/* const components = {
+  ModalNovedades
+} */
 const props = defineProps({
   estadosAlquiler: {
     type: Array,
@@ -182,11 +216,11 @@ const props = defineProps({
     default: null
   }
 })
+const fichaPdfRef = ref(null)
 
-import { reactive, watch, defineEmits, computed } from 'vue'
 
 // Definir los emits
-const emit = defineEmits(['update:alquiler'])
+const emit = defineEmits(['update:alquiler', 'update:novedadAlquiler', 'update:observacionesModificadasAlquiler'])
 
 // Watch para precargar datos cuando llega propiedadUpdate (como en venta)
 watch(() => props.propiedadUpdate, (newValue) => {
@@ -217,6 +251,39 @@ watch(() => props.propiedadUpdate, (newValue) => {
     }
   }
 }, { immediate: true })
+
+
+
+
+
+
+const handleGenerarPdf = async (id, tipoBTN) => {
+  try {
+    console.log('Generando PDF para propiedad:', id, 'tipo:', tipoBTN)
+    const response = await generarPdfPlantillaPropiedad(id, tipoBTN)
+    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }))
+    window.open(url, '_blank') // ← Abre en nueva pestaña en vez de descargar
+  } catch (error) {
+    console.error('Error al generar PDF:', error)
+
+    // Mostrar más detalles del error
+    if (error.response) {
+      console.error('Status:', error.response.status)
+      console.error('Data:', error.response.data)
+      console.error('Headers:', error.response.headers)
+    } else if (error.request) {
+      console.error('Request:', error.request)
+    } else {
+      console.error('Error config:', error.config)
+    }
+  }
+}
+
+
+
+
+
+
 
 // Computed property para determinar el folio según empresa
 const folioDisplay = computed(() => {

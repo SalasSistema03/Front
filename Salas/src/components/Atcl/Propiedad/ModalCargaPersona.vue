@@ -91,7 +91,7 @@
 <script>
 import { cargarPadron } from '../../../Services/api/Atcl/AtclApi.js'
 import { getUser } from '../../../Services/api/Usuario/userApi.js'
-import * as bootstrap from 'bootstrap'
+import { Modal } from 'bootstrap'
 
 
 export default {
@@ -140,10 +140,10 @@ export default {
   },
   methods: {
     volverAModalPropietarios() {
-      const modalActual = bootstrap.Modal.getInstance(document.getElementById('modalCargaPersona'))
+      const modalActual = Modal.getInstance(document.getElementById('modalCargaPersona'))
       if (modalActual) modalActual.hide()
       setTimeout(() => {
-        const modalPadre = new bootstrap.Modal(document.getElementById('modalPropietarios'))
+        const modalPadre = new Modal(document.getElementById('modalPropietarios'))
         modalPadre.show()
       }, 400)
     },

@@ -723,12 +723,6 @@ export default {
       // Limpiar el input para poder volver a seleccionar los mismos archivos si se quiere
       event.target.value = ''
     },
-    /* confirmarFotosPendientes() {
-      // Solo feedback visual, las fotos ya están en fotosPendientes
-      if (this.fotosPendientes.length === 0) {
-        this.showWarning('Seleccioná al menos una foto primero.')
-      }
-    }, */
     quitarFotoPendiente(index) {
       URL.revokeObjectURL(this.fotosPendientes[index].preview) // liberar memoria
       this.fotosPendientes.splice(index, 1)
@@ -843,10 +837,6 @@ export default {
       console.log('Propietarios eliminados:', this.propietariosEliminados)
       console.log('Propietarios modificados:', this.propietariosModificados)
     },
-
-
-
-
     //metodo que recibe todos los datos del modal comodidades para mandarlo al backend
     actualizarComodidades(comodidades) {
       // Actualizar el objeto propiedad_update con las nuevas comodidades
@@ -892,10 +882,6 @@ export default {
       this.propiedad_update.condicion = condicion
       //console.log('Condicion actualizada:', this.propiedad_update.condicion)
     },
-
-
-
-
     async actualizarPropiedad() {
       try {
         // Validar que no haya números de orden duplicados

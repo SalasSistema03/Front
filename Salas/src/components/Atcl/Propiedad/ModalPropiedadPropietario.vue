@@ -42,9 +42,9 @@
                   <th>Motivo</th>
                   <th>Baja</th>
                   <th>Fecha Nacimiento</th>
-                  <th>Baja Propietario</th>
+                  <th v-if="propiedad && !ocultarBotones">Baja Propietario</th>
                   <th>-</th>
-                  <th>Editar</th>
+                  <th v-if="propiedad && !ocultarBotones">Editar</th>
                   <th v-if="mostrarQuitar">Quitar</th>
                 </tr>
               </thead>
@@ -55,7 +55,7 @@
                       @input="emitirCambiosPropietario"></textarea></td>
                   <td>{{ item.pivot?.baja === 'si' ? 'Sí' : 'No' }}</td>
                   <td>{{ formatFecha(item.fecha_nacimiento) }}</td>
-                  <td>
+                  <td v-if="propiedad && !ocultarBotones">
                     <button type="button" class="btn btn-primary btn-sm w-50" @click="toggleBajaPropietario(item)">
                       <i class="bi bi-pencil">{{ item.pivot?.baja === 'si' ? 'Alta' : 'Baja' }}</i>
                     </button>
@@ -65,11 +65,39 @@
                       <i class="bi bi-eye">Ver</i>
                     </button>
                   </td>
-                  <td>
+                  <td v-if="propiedad && !ocultarBotones">
                     <button type="button" class="btn btn-primary btn-sm w-50" @click="editarPropietario(item)">
                       <i class="bi bi-pencil">Editar</i>
                     </button>
                   </td>
+                  <td v-if="mostrarQuitar">
+                    <button type="button" class="btn btn-danger btn-sm w-50"
+                      @click="eliminarPropietario(index)">Quitar</button>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody v-else>
+                <tr v-for="(item, index) in propietarios" :key="index">
+                  <td>{{ item.apellido }}, {{ item.nombre }}</td>
+                  <td><textarea v-model="item.pivot.observaciones" rows="1" :disabled="propietarioEnEdicion !== item.id"
+                      @input="emitirCambiosPropietario"></textarea></td>
+                  <td>{{ item.pivot?.baja === 'si' ? 'Sí' : 'No' }}</td>
+                  <td>{{ formatFecha(item.fecha_nacimiento) }}</td>
+                  <!-- <td>
+                    <button type="button" class="btn btn-primary btn-sm w-50" @click="toggleBajaPropietario(item)">
+                      <i class="bi bi-pencil">{{ item.pivot?.baja === 'si' ? 'Alta' : 'Baja' }}</i>
+                    </button>
+                  </td> -->
+                  <td>
+                    <button type="button" class="btn btn-info btn-sm w-50" @click="verPropietario(item)">
+                      <i class="bi bi-eye">Ver</i>
+                    </button>
+                  </td>
+                  <!-- <td>
+                    <button type="button" class="btn btn-primary btn-sm w-50" @click="editarPropietario(item)">
+                      <i class="bi bi-pencil">Editar</i>
+                    </button>
+                  </td> -->
                   <td v-if="mostrarQuitar">
                     <button type="button" class="btn btn-danger btn-sm w-50"
                       @click="eliminarPropietario(index)">Quitar</button>
@@ -148,17 +176,29 @@ export default {
     },
     asignarPropietario() {
       if (!this.personaSeleccionada) return
+
       if (this.propiedad) {
         const existe = this.propiedad.propietarios.some(p => p.id === this.personaSeleccionada.id)
         if (existe) { alert('Ya está asignado'); return; }
         this.propiedad.propietarios.push({ ...this.personaSeleccionada, pivot: { observaciones: '', baja: 'no' } })
         this.$emit('propietarios-cambiados', this.propiedad.propietarios)
+      } else {
+        // Caso para nueva propiedad (sin propiedad existente)
+        const existe = this.propietarios.some(p => p.id === this.personaSeleccionada.id)
+        if (existe) { alert('Ya está asignado'); return; }
+        this.propietarios.push({ ...this.personaSeleccionada, pivot: { observaciones: '', baja: 'no' } })
+        this.$emit('propietarios-cambiados', this.propietarios)
       }
       this.personaSeleccionada = null; this.busqueda = ''; this.sugerencias = []
     },
     toggleBajaPropietario(persona) {
-      persona.pivot.baja = (persona.pivot.baja === 'si') ? 'no' : 'si'
-      this.$emit('propietarios-cambiados', this.propiedad.propietarios)
+      if (this.propiedad) {
+        persona.pivot.baja = (persona.pivot.baja === 'si') ? 'no' : 'si'
+        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
+      } else {
+        persona.pivot.baja = (persona.pivot.baja === 'si') ? 'no' : 'si'
+        this.$emit('propietarios-cambiados', this.propietarios)
+      }
     },
     async verPropietario(persona) {
       try {
@@ -197,13 +237,25 @@ export default {
       this.switchModals()
     },
     eliminarPropietario(index) {
-      this.propiedad.propietarios.splice(index, 1)
-      this.$emit('propietarios-cambiados', this.propiedad.propietarios)
+      if (this.propiedad) {
+        this.propiedad.propietarios.splice(index, 1)
+        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
+      } else {
+        this.propietarios.splice(index, 1)
+        this.$emit('propietarios-cambiados', this.propietarios)
+      }
     },
     formatFecha(fecha) {
       if (!fecha) return '-'
       const d = new Date(fecha)
       return isNaN(d) ? '-' : d.toLocaleDateString('es-AR')
+    },
+    emitirCambiosPropietario() {
+      if (this.propiedad) {
+        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
+      } else {
+        this.$emit('propietarios-cambiados', this.propietarios)
+      }
     }
   },
   mounted() {

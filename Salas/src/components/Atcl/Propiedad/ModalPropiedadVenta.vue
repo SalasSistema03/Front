@@ -14,9 +14,8 @@
             <div class="form-group  px-1 col-md-2 ">
               <label class="text-center form-label" id="basic-addon1">Codigo</label>
               <input v-if="propiedad" type="number" class="form-control text-center" :value="propiedad.cod_venta"
-                placeholder="Ej: 3950" readonly>
-              <input v-else type="number" class="form-control text-center " id="" min="0" v-model="venta.cod_venta"
-                placeholder="Ej: 3950">
+                readonly>
+              <input v-else type="number" class="form-control text-center " id="" min="0" v-model="venta.cod_venta">
             </div>
             <div class="form-group  px-1 col-md-3">
               <label class="text-center form-label" for="">Estado de Venta</label>
@@ -48,9 +47,9 @@
               <input v-if="propiedad" type="number" class="form-control text-center" :value="precioVentaDisplay"
                 readonly>
               <!-- Si no hay propiedad, mostrar input editable -->
-              <input v-else type="number" class="form-control text-center " id="" min="0" v-model="venta.monto_venta"
-                placeholder="Ej: 50000">
+              <input v-else type="number" class="form-control text-center " id="" min="0" v-model="venta.monto_venta">
             </div>
+
             <div class="form-group  px-1 col-md-2">
               <label class="text-center form-label" id="basic-addon1">Tasacion</label>
               <!-- Si hay propiedad, mostrar fecha de tasación más reciente -->
@@ -59,9 +58,14 @@
               <!-- Si no hay propiedad, mostrar input editable -->
               <input v-else type="date" class="form-control text-center" v-model="venta.fecha_tasacion_venta">
             </div>
+            <div class="col-md-2 form-group" style="padding-top: 6px;" v-if="propiedad">
+              <label class="text-center form-label" id="basic-addon1">
+              </label>
+              <!-- Si hay propiedad, mostrar moneda según prioridad -->
+              <input type="text" class="form-control text-center" readonly>
+            </div>
             <div class="form-group  px-1 col-md-2">
-              <label class="text-center form-label" id="basic-addon1">Valor
-                Tasacion</label>
+              <label class="text-center form-label" id="basic-addon1">Valor Tasacion</label>
               <input v-if="propiedad" type="number" class="form-control text-center" :value="montoTasacion" readonly>
               <input v-else type="number" class="form-control text-center " id="" placeholder="Ej: 50000"
                 v-model="venta.tasacion_venta">
@@ -103,12 +107,53 @@
                   NO</option>
               </select>
             </div>
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Clausula Venta</label>
+              <input type="text" class="form-control text-center">
+            </div>
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Tiempo Clausula</label>
+              <input type="text" class="form-control text-center">
+            </div>
+
+
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Folio</label>
+              <input type="text" class="form-control text-center" :value="propiedad.buscarContratoMasReciente?.carpeta">
+            </div>
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Inicio Contrato</label>
+              <input type="date" class="form-control text-center"
+                :value="propiedad.buscarContratoMasReciente?.comienza">
+            </div>
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Venc. Contrato</label>
+              <input type="date" class="form-control text-center"
+                :value="propiedad.buscarContratoMasReciente?.rescicion">
+            </div>
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Alquiler</label>
+              <input type="number" class="form-control text-center" :value="propiedad.detalleContrato?.monto_alquiler">
+            </div>
+
+
+
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label">Autorizacion</label>
+              <input type="text" class="form-control text-center">
+            </div>
             <div class="form-group  px-1 col-md-2">
               <label class="text-center form-label" id="basic-addon1">Fecha
                 Alta</label>
               <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.venta_fecha_alta"
                 readonly>
               <input v-else type="date" class="form-control text-center" v-model="venta.venta_fecha_alta">
+            </div>
+            <div class="form-group px-1 col-md-2" v-if="propiedad">
+              <label class="text-center form-label" id="basic-addon1">
+                Fecha Baja
+              </label>
+              <input type="date" class="form-control text-center" :value="propiedad.venta_fecha_baja">
             </div>
             <div class="form-group  px-1 col-md-2">
               <label class="text-center form-label" id="basic-addon1">Fecha
@@ -189,6 +234,19 @@
 
               </select>
             </div>
+            <div v-if="propiedad" class="form-group  px-1 col-md-3 pt-2">
+              <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                data-bs-target="#novedadesVentaPropiedad">
+                Novedades Venta
+              </button>
+            </div>
+            <div v-if="propiedad" class="form-group px-1 col-md-3 pt-2">
+              <button type="button" class="btn btn-primary btn-sm w-100" @click="fichaPdfRef.generarPdf()">
+                Ficha PDF
+              </button>
+            </div>
+            <!-- Componente oculto con la plantilla -->
+            <FichaPropiedad ref="fichaPdfRef" :propiedad="propiedad" :ubicacion="'V'" />
           </div>
 
           <div class="modal-footer mt-2">
@@ -198,9 +256,17 @@
       </div>
     </div>
   </div>
+  <ModalNovedades :propiedad="propiedad" ubicacion="V" modalId="novedadesVentaPropiedad"
+    @update:novedad="emit('update:novedadVenta', $event)"
+    @update:observacionesModificadas="emit('update:observacionesModificadasVenta', $event)"
+    :propiedad-update="propiedadUpdate" />
 </template>
 
 <script setup>
+import ModalNovedades from './ModalNovedades.vue'
+import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
+import { ref } from 'vue'
+
 // Recibir las props del componente padre
 const props = defineProps({
   estadosVenta: {
@@ -226,12 +292,13 @@ const props = defineProps({
 
 })
 
-console.log('props', props.captadoresInternos)
+//console.log('props', props.captadoresInternos)
 
 import { reactive, watch, defineEmits, computed } from 'vue'
 
 // Definir los emits
-const emit = defineEmits(['update:venta'])
+const emit = defineEmits(['update:venta', 'update:novedadVenta', 'update:observacionesModificadasVenta'])
+const fichaPdfRef = ref(null)
 
 // Watch para precargar datos cuando llega propiedadUpdate (como en comodidades)
 watch(() => props.propiedadUpdate, (newValue) => {

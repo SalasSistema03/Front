@@ -76,12 +76,6 @@
             <i class="bi bi-info-circle"></i> Llave - {{ llaveDisplay }}
           </button>
         </div>
-        <!-- <div class="col-md-4 mt-2 text-center">
-                    <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal">
-                        Cartel
-                    </button>
-                </div> -->
-
         <div class="col-md-4 mt-3 text-center">
           <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
             data-bs-target="#modalPropietarios">
@@ -103,7 +97,8 @@
 
         <div class="col-md-12 row mt-3 d-flex justify-content-center align-items-center">
           <div class="col-md-6  text-center">
-            <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="">
+            <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target=""
+              @click="descargarFotos">
               Descargar
             </button>
           </div>
@@ -147,11 +142,6 @@
             </button>
           </div>
         </div>
-
-
-
-
-
       </div>
       <div class="col-md-6">
         <div class="card">
@@ -302,6 +292,8 @@ import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadV
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
+import { Popover } from 'bootstrap'
+import { descargarFotos } from '../../Services/api/Atcl/AtclApi'
 
 export default {
   components: {
@@ -311,7 +303,7 @@ export default {
     ModalPropiedadVenta,
     ModalPropiedadAlquiler,
     ModalCondicionAlquiler,
-    ModalPropiedadPropietario
+    ModalPropiedadPropietario,
   },
   data() {
     return {
@@ -340,7 +332,7 @@ export default {
     this.$nextTick(() => {
       const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
       popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl)
+        return new Popover(popoverTriggerEl)
       })
     })
   },
@@ -355,7 +347,7 @@ export default {
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data
-        console.log('Propiedad encontrada:', this.propiedad)
+        //console.log('Propiedad encontrada:', this.propiedad)
       } catch (error) {
         console.error('Error cargando propiedad:', error)
         this.error = 'No se pudo cargar la propiedad'
@@ -367,7 +359,33 @@ export default {
       // Redirigir a la página de edición con el ID de la propiedad
       const id = this.$route.params.id
       this.$router.push(`/propiedad-update/${id}`)
+    },
+    async descargarFotos() {
+      const id = this.$route.params.id
+
+      try {
+        const response = await descargarFotos(id)
+
+        const blob = new Blob([response.data], { type: 'application/zip' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+
+        // Construir el nombre desde los datos que ya tenés en el componente
+        const fileName = `${this.propiedad.calle.name}-${this.propiedad.numero_calle}.zip`
+
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+
+        this.showSuccess('Descarga iniciada')
+      } catch (error) {
+        this.handleApiError(error)
+      }
     }
-  }
+  },
+
 }
 </script>
