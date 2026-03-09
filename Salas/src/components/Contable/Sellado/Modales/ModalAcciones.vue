@@ -162,7 +162,7 @@ const eliminarRegistro = async () => {
             // 3. Mostrás el éxito
            const resultado = await eliminarRegistroService();
            if (resultado.status === 200) {
-               alertas.success('¡Eliminado!', 'El registro fue borrado correctamente.');
+               alertas.success('¡Eliminado!', 'Los registros fueron eliminados correctamente.');
                obtenerRegistros();
                //estaAbierto = false;
                emit('cerrarModalAcciones');

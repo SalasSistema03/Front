@@ -1,123 +1,113 @@
 <template>
     <BaseModal :show="estaAbiertoDatosCalculos" size="xl" @close="$emit('cerrar')">
-        <template #title>Datos de cálculo</template>
+       <template #title>
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <span class="fs-6 fw-bold text-dark"><i class="bi bi-gear-fill me-2 text-primary"></i>Configuración de Cálculos</span>
+  </div>
+</template>
 
-        <template #body>
-            <div v-if="cargando" class="text-center p-5">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2">Cargando configuración...</p>
+<template #body>
+  <div v-if="cargando" class="text-center p-4">
+    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+    <p class="small mt-2 text-muted">Cargando datos...</p>
+  </div>
+
+  <div v-else class="container-fluid px-1">
+    <ul class="nav nav-pills nav-fill mb-2 bg-white p-1 rounded-3 shadow-sm border" id="configTabs" role="tablist" style="font-size: 0.85rem;">
+      <li class="nav-item">
+        <button class="nav-link active py-1" id="reg-tab" data-bs-toggle="tab" data-bs-target="#reg" type="button">
+          <i class="bi bi-list-columns-reverse me-1"></i>Registrales
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link py-1" id="adm-tab" data-bs-toggle="tab" data-bs-target="#adm" type="button">
+          <i class="bi bi-calculator me-1"></i>Admin/Hoja
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link py-1" id="sel-tab" data-bs-toggle="tab" data-bs-target="#sel" type="button">
+          <i class="bi bi-stamp me-1"></i>Sellado
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content pt-1">
+      
+      <div class="tab-pane fade show active" id="reg">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-body p-2 bg-light-subtle">
+            <div class="row g-2 align-items-end" v-if="configuracion.valores_datos_registrales">
+              <div class="col-4">
+                <label class="form-label mb-0 small fw-semibold text-muted">Límites</label>
+                <input v-for="item in configuracion.valores_datos_registrales" :key="'l-'+item.id" 
+                       type="number" class="form-control form-control-sm mb-1 border-primary-subtle shadow-none" v-model="item.valor_limite">
+              </div>
+              <div class="col-4">
+                <label class="form-label mb-0 small fw-semibold text-muted">Precios</label>
+                <input v-for="item in configuracion.valores_datos_registrales" :key="'p-'+item.id" 
+                       type="number" class="form-control form-control-sm mb-1 border-primary-subtle shadow-none" v-model="item.precio">
+              </div>
+              <div class="col-4">
+                <div class="bg-white p-2 rounded border mb-1">
+                   <label class="form-label mb-0 small fw-semibold">Extra</label>
+                   <input type="number" class="form-control form-control-sm mb-2 border-primary-subtle shadow-none" v-model="configuracion.valor_registro_extra">
+                   <button class="btn btn-primary btn-sm w-100 shadow-sm" @click="guardarRegistrales">Actualizar</button>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div v-else class="container-fluid d-flex justify-content-center">
-                <form class="row d-flex justify-content-center w-100" @submit.prevent>
-
-                    <div class="row modulosDatos contenedorSeccion" v-if="configuracion.valores_datos_registrales">
-                        <div class="col-md-12">
-                            <h2 class="form-label titulos_carga_datos text-center">Valores Registrales</h2>
-                        </div>
-
-                        <div class="col-4">
-                            <label class="form-label lables_carga_datos">Límite</label>
-                            <div v-for="item in configuracion.valores_datos_registrales"
-                                :key="'limite-' + item.id_valor_datos_registrales">
-                                <input type="number" class="form-control mb-2 inputDatos" v-model="item.valor_limite">
-                            </div>
-                        </div>
-
-                        <div class="col-4">
-                            <label class="form-label lables_carga_datos">Precio</label>
-                            <div v-for="item in configuracion.valores_datos_registrales"
-                                :key="'precio-' + item.id_valor_datos_registrales">
-                                <input type="number" class="form-control mb-2 inputDatos" v-model="item.precio">
-                            </div>
-                        </div>
-
-                        <div class="col-4 d-flex flex-column">
-                            <label class="form-label lables_carga_datos">Registro Extra</label>
-                            <input type="number" class="form-control inputDatos"
-                                v-model="configuracion.valor_registro_extra">
-                            <div class="mt-auto mb-2"> <button type="button" class="btn btn-primary btn-sm w-100"
-                                    @click="guardarRegistrales">
-                                    Guardar cambios
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row p-0 d-flex justify-content-between"
-                        v-if="configuracion.valores_gasto_administrativo && configuracion.valores_gasto_administrativo.length > 0">
-
-                        <div class="col-md-6 contenedorSeccion_medio">
-                            <h2 class="form-label titulos_carga_datos text-center">Valor Administrativo</h2>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <label class="form-label lables_carga_datos">G. Adm. Coch. 6</label>
-                                    <input type="number" class="form-control inputDatos"
-                                        v-model="configuracion.valores_gasto_administrativo[0].valor">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label lables_carga_datos">G. Adm. Base</label>
-                                    <input type="number" class="form-control inputDatos"
-                                        v-model="configuracion.valores_gasto_administrativo[2].valor">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label lables_carga_datos">G. Adm. Coch. 12</label>
-                                    <input type="number" class="form-control inputDatos"
-                                        v-model="configuracion.valores_gasto_administrativo[1].valor">
-                                </div>
-                                <div class="col-6 d-flex align-items-end">
-                                    <button type="button" class="btn btn-primary btn-sm w-100"
-                                        @click="guardarValorAdministrativo">
-                                        Guardar cambios
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-5 contenedorSeccion_medio" v-if="configuracion.valores_hoja">
-                            <h2 class="form-label titulos_carga_datos text-center">Precio Hoja</h2>
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label lables_carga_datos">Valor de Hoja</label>
-                                    <input type="number" class="form-control inputDatos"
-                                        v-model="configuracion.valores_hoja[0].precio">
-                                </div>
-                                <div class="col-12">
-                                    <button type="button" class="btn btn-primary btn-sm w-100"
-                                        @click="guardarPrecioHoja">
-                                        Guardar cambios
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row modulosDatos contenedorSeccion"
-                        v-if="configuracion.valores_sellado && configuracion.valores_sellado.length > 0">
-                        <div class="col-md-12 text-center">
-                            <h2 class="form-label titulos_carga_datos">Valor Sellado</h2>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label lables_carga_datos">Vivienda</label>
-                            <input type="number" class="form-control inputDatos"
-                                v-model="configuracion.valores_sellado[0].valor">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label lables_carga_datos">Comercio</label>
-                            <input type="number" class="form-control inputDatos"
-                                v-model="configuracion.valores_sellado[1].valor">
-                        </div>
-                        <div class="col-md-4 d-flex align-items-end">
-                            <button type="button" class="btn btn-primary btn-sm w-100" @click="guardarSellado">
-                                Guardar cambios
-                            </button>
-                        </div>
-                    </div>
-
-                </form>
+      <div class="tab-pane fade" id="adm">
+        <div class="row g-2">
+          <div class="col-8">
+            <div class="card border-0 shadow-sm h-100 p-2">
+              <span class="small fw-bold text-primary mb-2 d-block">Gastos Administrativos</span>
+              <div class="row g-1">
+                <div class="col-4" v-for="(label, i) in ['Coch. 6', 'Coch. 12', 'Base']" :key="i">
+                  <label class="x-small text-muted d-block">{{label}}</label>
+                  <input type="number" class="form-control form-control-sm border-primary-subtle" v-model="configuracion.valores_gasto_administrativo[i].valor">
+                </div>
+                <div class="col-12 mt-2">
+                  <button class="btn btn-primary btn-sm w-100 py-0" @click="guardarValorAdministrativo">Guardar Cambios</button>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="col-4 text-center">
+            <div class="card border-1 shadow-sm h-100 p-2 ">
+              <label class="small fw-bold text-primary">Precio Hoja</label>
+              <div class="input-group input-group-sm my-1">
+                <input type="number" class="form-control border-1" v-model="configuracion.valores_hoja[0].precio">
+              </div>
+              <button class="btn btn-primary btn-sm w-100 mt-auto shadow-sm py-0" @click="guardarPrecioHoja">Guardar Hoja</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        </template>
+      <div class="tab-pane fade" id="sel">
+        <div class="card border-0 shadow-sm p-2 bg-light">
+          <div class="d-flex justify-content-between align-items-center gap-2">
+            <div class="w-100">
+              <label class="x-small text-muted d-block">Vivienda</label>
+              <input type="number" class="form-control form-control-sm border-1 border-primary-subtle shadow-sm" v-model="configuracion.valores_sellado[0].valor">
+            </div>
+            <div class="w-100">
+              <label class="x-small text-muted d-block">Comercio</label>
+              <input type="number" class="form-control form-control-sm border-1 border-primary-subtle shadow-sm" v-model="configuracion.valores_sellado[1].valor">
+            </div>
+            <div class="align-self-end">
+              <button class="btn btn-primary btn-sm px-3 shadow-sm" @click="guardarSellado">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
     </BaseModal>
 </template>
 
@@ -280,39 +270,39 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.titulos_carga_datos {
-    color: rgba(0, 175, 154, 0.96);
-    font-size: 80%;
+/* Micro-ajustes para evitar el scroll */
+.form-control-sm {
+    font-size: 0.75rem !important;
+    padding: 0.2rem 0.4rem;
 }
 
-.lables_carga_datos {
-    color: rgb(0, 85, 185);
-    font-size: 70%;
+.form-label {
+    font-size: 0.7rem;
 }
 
-.inputDatos {
-    color: rgba(0, 175, 154, 0.96);
-    font-size: 70%;
+.x-small {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Estilo contenedeor formularios de MODAL: calcuo de datos */
-.contenedorSeccion {
-    box-shadow: 0 2px 8px rgba(156, 182, 231, 0.838);
-    padding: 5px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin-bottom: 5px;
-    margin-top: 5px;
+.nav-pills .nav-link {
+    color: #6c757d;
+    transition: all 0.2s;
 }
 
-.contenedorSeccion_medio {
-    box-shadow: 0 2px 8px rgba(156, 182, 231, 0.838);
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    width: 49.5%;
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
 }
 
-#nombre_inmobiliaria {
-    display: none;
+.card {
+    transition: transform 0.2s;
+}
+
+/* Asegura que el contenedor no crezca */
+.tab-content {
+    min-height: 120px;
 }
 </style>

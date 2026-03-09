@@ -12,8 +12,8 @@ export const alertas = {
             timer: 3000,
             timerProgressBar: true,
             background: '#fff',
-            color: '#007bff',
-            iconColor: '#007bff'
+            color: '#00af9af5',
+            iconColor: '#0055b9'
         });
     },
     error(title, text = '') {
@@ -22,13 +22,13 @@ export const alertas = {
             title: title,
             text: text,
             toast: true,
-            position: 'bottom-end',
+            position: 'top-end',
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
             background: '#fff',
-            color: '#155724',
-            iconColor: '#f27474'
+            color: '#ff0000',
+            iconColor: '#0055b9'
         });
     },
 
@@ -38,8 +38,8 @@ export const alertas = {
             text: text,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
+            confirmButtonColor: '#0055b9',
+            cancelButtonColor: '#ff0000',
             confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar',
             reverseButtons: true // Pone el botón de cancelar a la izquierda (estilo Windows/Web estándar)

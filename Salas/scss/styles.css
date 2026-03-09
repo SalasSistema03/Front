@@ -501,13 +501,13 @@
   text-align: center;
 }
 .form-group label {
-  color: rgb(0, 85, 185);
-  font-size: 0.8rem;
-  font-weight: bold;
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.8rem !important;
+  font-weight: bold !important;
 }
 .form-group input, .form-group select, .form-group textarea {
   /* border: 2px solid $azulSalas !important */
-  border-radius: 5px;
+  border-radius: 5px !important;
   box-shadow: 0 0 3px rgb(0, 85, 185) !important;
-  font-size: 0.75rem;
+  font-size: 0.75rem !important;
 }/*# sourceMappingURL=styles.css.map */
