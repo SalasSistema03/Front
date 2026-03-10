@@ -494,6 +494,7 @@ import { useEstadosAlquiler } from '../../composables/atcl/useEstadosAlquiler'
 import { useCaptadorInterno } from '../../composables/atcl/useCaptadorInterno'
 import { useAsesores } from '../../composables/atcl/useAsesores'
 import { useToast } from '../../composables/useToast'
+import { getUser } from '../../Services/api/Usuario/userApi'
 
 export default {
   name: 'PropiedadUpdateView',
@@ -518,6 +519,7 @@ export default {
     const { captadoresInternos, error: captadoresInternosError, cargarCaptadoresInternos } = useCaptadorInterno()
     const { asesores, error: asesoresError, cargarAsesores } = useAsesores()
     const { showWarning, showError, showSuccess } = useToast()
+
     return {
       showWarning, showError, showSuccess,
       callesFiltradas, mostrarSugerencias, calleSeleccionada, calleId, cargarCalles, filtrarCalles, seleccionarCalle, ocultarSugerencias, mostrarLista,
@@ -891,6 +893,10 @@ export default {
           return
         }
 
+        //Obtenemos el id del usuario a travez del localStorage
+        const id_usuario = await getUser(localStorage.getItem('token'))
+
+
         // Crear FormData para enviar archivos y datos juntos
         const formData = new FormData()
         // Datos básicos de la propiedad
@@ -907,6 +913,7 @@ export default {
         formData.append('comentario_llave', this.comentario_llave ?? '')
         formData.append('cartel', this.cartel ?? '')
         formData.append('comentario_cartel', this.comentario_cartel ?? '')
+        formData.append('id_usuario', id_usuario.data.id)
 
         // Datos de los modales - enviar como JSON string
         if (this.propiedad_update) {

@@ -42,13 +42,14 @@
               <input v-if="propiedad" type="text" class="form-control text-center"
                 :value="propiedad.estado_alquiler?.name" readonly>
               <select v-else class="form-select " aria-label="Default select example" name="estado_alquiler"
-                v-model="alquiler.estado_alquiler">
+                id="estado_alquiler" v-model="alquiler.estado_alquiler">
                 <option value="">Seleccione una estado</option>
                 <option v-for="estado in props.estadosAlquiler" :key="estado.id" :value="estado.id">
                   {{ estado.name }}
                 </option>
               </select>
             </div>
+
             <div class="form-group  px-1 col-md-2 pt-2">
               <label class="text-center form-label" id="basic-addon1"></label>
               <input v-if="propiedad" type="text" class="form-control text-center" :value="monedaAlquilerDisplay"
@@ -152,6 +153,18 @@
               </select>
             </div>
 
+            <div class="col-md-8" v-show="mostrarDescripcion" id="descripcion_container_alquiler">
+              <label for="descripcion_alquiler" class="text-center" id="basic-addon1">Descripción</label>
+              <input type="text" class="form-control" name="descripcion_estado_alquiler" id="descripcion_alquiler"
+                v-model="alquiler.descripcion_estado_alquiler">
+            </div>
+
+            <div class="col-md-2" v-show="mostrarBajaTemporal" id="baja_temporal_alquiler">
+              <label class="text-center" id="basic-addon1">Baja Temporal</label>
+              <input type="date" class="form-control text-center" name="fecha_baja_temporal_alquiler"
+                id="fecha_baja_temporal_alquiler" v-model="alquiler.fecha_baja_temporal_alquiler">
+            </div>
+
             <div class="form-group  px-1 col-md-3 pt-2">
               <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
                 data-bs-target="#condicionAlquilesPropiedad">
@@ -172,7 +185,7 @@
               </button>
             </div>
             <!-- Componente oculto con la plantilla -->
-            <FichaPropiedad ref="fichaPdfRef" :propiedad="propiedad" :ubicacion="'A'" />
+            <FichaPropiedad ref="fichaPdfRef" :propiedad="propiedad" ubicacion="'A'" />
 
           </div>
 
@@ -393,10 +406,39 @@ const alquiler = reactive({
   tiempo_clausula: '',
   alquiler_fecha_alta: '',
   mascota: '',
+  descripcion_estado_alquiler: '',
+  fecha_baja_temporal_alquiler: '',
+})
+
+// Lógica equivalente al toggleDescripcion del blade
+const ESTADOS_CON_DESCRIPCION = ['BAJA', 'RESET', 'BAJA TEMPORAL']
+
+const estadoSeleccionadoTexto = computed(() => {
+  if (!alquiler.estado_alquiler) return ''
+  const estado = props.estadosAlquiler.find(e => e.id == alquiler.estado_alquiler)
+  return estado?.name?.trim().toUpperCase() || ''
+})
+
+const mostrarDescripcion = computed(() =>
+  ESTADOS_CON_DESCRIPCION.includes(estadoSeleccionadoTexto.value)
+)
+
+const mostrarBajaTemporal = computed(() =>
+  estadoSeleccionadoTexto.value === 'BAJA TEMPORAL'
+)
+
+// Limpiar campos al ocultarse (igual que el JS original)
+watch(mostrarDescripcion, (val) => {
+  if (!val) alquiler.descripcion_estado_alquiler = ''
+})
+
+watch(mostrarBajaTemporal, (val) => {
+  if (!val) alquiler.fecha_baja_temporal_alquiler = ''
 })
 
 // Observar cambios y emitir automáticamente
 watch(alquiler, (newValue) => {
   emit('update:alquiler', { ...newValue })
 }, { deep: true })
+
 </script>

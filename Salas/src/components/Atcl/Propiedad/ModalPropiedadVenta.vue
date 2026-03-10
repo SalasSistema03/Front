@@ -30,6 +30,8 @@
 
               </select>
             </div>
+
+
             <div class="col-md-2 form-group" style="padding-top: 6px;">
               <label class="text-center form-label" id="basic-addon1">
               </label>
@@ -233,6 +235,17 @@
 
 
               </select>
+            </div>
+            <div class="col-md-8" v-show="mostrarDescripcion">
+              <label for="descripcion_venta" class="text-center form-label">Descripción</label>
+              <input type="text" class="form-control" name="descripcion_estado_venta" id="descripcion_venta"
+                v-model="venta.descripcion_estado_venta">
+            </div>
+
+            <div class="col-md-2" v-show="mostrarBajaTemporal">
+              <label class="text-center form-label">Baja Temporal</label>
+              <input type="date" class="form-control text-center" name="fecha_baja_temporal_venta"
+                v-model="venta.fecha_baja_temporal_venta">
             </div>
             <div v-if="propiedad" class="form-group  px-1 col-md-3 pt-2">
               <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
@@ -451,11 +464,38 @@ const venta = reactive(
     flyer: '',
     reel: '',
     web: '',
+    descripcion_estado_venta: '',
+    fecha_baja_temporal_venta: '',
   }
 )
 
 
 
+
+// Lógica toggleDescripcion para venta
+const ESTADOS_CON_DESCRIPCION_VENTA = ['BAJA', 'RESET', 'BAJA TEMPORAL']
+
+const estadoVentaTexto = computed(() => {
+  if (!venta.estado_venta) return ''
+  const estado = props.estadosVenta.find(e => e.id == venta.estado_venta)
+  return estado?.name?.trim().toUpperCase() || ''
+})
+
+const mostrarDescripcion = computed(() =>
+  ESTADOS_CON_DESCRIPCION_VENTA.includes(estadoVentaTexto.value)
+)
+
+const mostrarBajaTemporal = computed(() =>
+  estadoVentaTexto.value === 'BAJA TEMPORAL'
+)
+
+watch(mostrarDescripcion, (val) => {
+  if (!val) venta.descripcion_estado_venta = ''
+})
+
+watch(mostrarBajaTemporal, (val) => {
+  if (!val) venta.fecha_baja_temporal_venta = ''
+})
 
 watch(venta, (newValue) => {
   emit('update:venta', { ...newValue })
