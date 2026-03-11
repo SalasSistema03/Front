@@ -15,8 +15,9 @@ export default defineConfig({
   },
   // --- AGREGAMOS ESTO ---
   build: {
-  outDir: '../../backEnd/public',
-  // CAMBIA ESTO A FALSE:
-  emptyOutDir: false, 
-},
+    sourcemap: false, // Esto evita que el código original sea legible en la pestaña "Sources"
+    outDir: '../../backEnd/public',
+    // CAMBIA ESTO A FALSE:
+    emptyOutDir: false, 
+  },
 })
