@@ -295,6 +295,7 @@ import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalProp
 import { Popover } from 'bootstrap'
 import { descargarFotos } from '../../Services/api/Atcl/AtclApi'
 
+
 export default {
   components: {
     NavComponent,
@@ -347,7 +348,7 @@ export default {
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data
-        //console.log('Propiedad encontrada:', this.propiedad)
+        console.log('Propiedad encontrada:', this.propiedad)
       } catch (error) {
         console.error('Error cargando propiedad:', error)
         this.error = 'No se pudo cargar la propiedad'

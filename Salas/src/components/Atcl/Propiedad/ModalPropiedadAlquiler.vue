@@ -131,10 +131,10 @@
             </div>
 
 
-            <div class="form-group px-1 col-md-2" v-if="propiedad">
+            <!-- <div class="form-group px-1 col-md-2" v-if="propiedad">
               <label class="text-center form-label">Fecha Baja</label>
               <input type="date" class="form-control text-center">
-            </div>
+            </div> -->
             <!-- <div class="form-group px-1 col-md-2">
               <label class="text-center form-label"> Fecha Pub.</label>
               <input v-if="propiedad" type="date" class="form-control text-center"
@@ -153,15 +153,25 @@
               </select>
             </div>
 
-            <div class="col-md-8" v-show="mostrarDescripcion" id="descripcion_container_alquiler">
+            <div class="col-md-8"
+              v-show="mostrarDescripcion || propiedad?.historial_estados_alquiler?.comentario_alquiler"
+              id="descripcion_container_alquiler">
               <label for="descripcion_alquiler" class="text-center" id="basic-addon1">Descripción</label>
-              <input type="text" class="form-control" name="descripcion_estado_alquiler" id="descripcion_alquiler"
-                v-model="alquiler.descripcion_estado_alquiler">
+              <input v-if="propiedad?.historial_estados_alquiler?.comentario_alquiler" type="text" class="form-control"
+                name="descripcion_estado_alquiler" id="descripcion_alquiler"
+                :value="propiedad.historial_estados_alquiler.comentario_alquiler" readonly>
+              <input v-else type="text" class="form-control" name="descripcion_estado_alquiler"
+                id="descripcion_alquiler" v-model="alquiler.descripcion_estado_alquiler">
             </div>
 
-            <div class="col-md-2" v-show="mostrarBajaTemporal" id="baja_temporal_alquiler">
+            <div class="col-md-2"
+              v-show="mostrarBajaTemporal || propiedad?.historial_estados_alquiler?.reactiva_fecha_alquiler"
+              id="baja_temporal_alquiler">
               <label class="text-center" id="basic-addon1">Baja Temporal</label>
-              <input type="date" class="form-control text-center" name="fecha_baja_temporal_alquiler"
+              <input v-if="propiedad?.historial_estados_alquiler?.reactiva_fecha_alquiler" type="date"
+                class="form-control text-center" name="fecha_baja_temporal_alquiler" id="fecha_baja_temporal_alquiler"
+                :value="propiedad.historial_estados_alquiler.reactiva_fecha_alquiler?.split(' ')[0]" readonly>
+              <input v-else type="date" class="form-control text-center" name="fecha_baja_temporal_alquiler"
                 id="fecha_baja_temporal_alquiler" v-model="alquiler.fecha_baja_temporal_alquiler">
             </div>
 
@@ -251,6 +261,8 @@ watch(() => props.propiedadUpdate, (newValue) => {
     alquiler.tiempo_clausula = newValue.tiempo_clausula || ''
     alquiler.alquiler_fecha_alta = newValue.alquiler_fecha_alta || ''
     alquiler.mascota = newValue.mascota || ''
+    alquiler.descripcion_estado_alquiler = newValue.historial_estados_alquiler?.comentario_alquiler || ''
+    alquiler.fecha_baja_temporal_alquiler = newValue.historial_estados_alquiler?.reactiva_fecha_alquiler?.split(' ')[0] || ''
 
     // Precargar folios si existen
     if (newValue.folios && newValue.folios.length > 0) {

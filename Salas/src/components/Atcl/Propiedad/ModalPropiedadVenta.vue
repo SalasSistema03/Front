@@ -60,12 +60,16 @@
               <!-- Si no hay propiedad, mostrar input editable -->
               <input v-else type="date" class="form-control text-center" v-model="venta.fecha_tasacion_venta">
             </div>
+
             <div class="col-md-2 form-group" style="padding-top: 6px;" v-if="propiedad">
               <label class="text-center form-label" id="basic-addon1">
               </label>
               <!-- Si hay propiedad, mostrar moneda según prioridad -->
-              <input type="text" class="form-control text-center" readonly>
+              <input v-if="propiedad.tasaciones?.[0]?.tasacion_dolar_venta" type="text" class="form-control text-center"
+                value="U$D" readonly>
+              <input v-else type="text" class="form-control text-center" value="$" readonly>
             </div>
+
             <div class="form-group  px-1 col-md-2">
               <label class="text-center form-label" id="basic-addon1">Valor Tasacion</label>
               <input v-if="propiedad" type="number" class="form-control text-center" :value="montoTasacion" readonly>
@@ -111,11 +115,11 @@
             </div>
             <div class="form-group px-1 col-md-2" v-if="propiedad">
               <label class="text-center form-label">Clausula Venta</label>
-              <input type="text" class="form-control text-center">
+              <input type="text" class="form-control text-center" :value="propiedad.clausula_de_venta">
             </div>
             <div class="form-group px-1 col-md-2" v-if="propiedad">
               <label class="text-center form-label">Tiempo Clausula</label>
-              <input type="text" class="form-control text-center">
+              <input type="text" class="form-control text-center" :value="propiedad.tiempo_clausula">
             </div>
 
 
@@ -140,9 +144,17 @@
 
 
 
-            <div class="form-group px-1 col-md-2" v-if="propiedad">
+            <div class="form-group px-1 col-md-2" v-if="propiedad || propiedadUpdate">
               <label class="text-center form-label">Autorizacion</label>
-              <input type="text" class="form-control text-center">
+              <input v-if="propiedad" type="text" class="form-control text-center"
+                :value="propiedad.autorizacion_venta">
+              <select v-else class="form-select" aria-label="Default select example" v-model="venta.autorizacion_venta">
+                <option value="">-</option>
+                <option value="SI">
+                  SI</option>
+                <option value="NO">
+                  NO</option>
+              </select>
             </div>
             <div class="form-group  px-1 col-md-2">
               <label class="text-center form-label" id="basic-addon1">Fecha
@@ -236,15 +248,21 @@
 
               </select>
             </div>
-            <div class="col-md-8" v-show="mostrarDescripcion">
+            <div class="col-md-8" v-show="mostrarDescripcion || propiedad?.historial_estados_venta?.comentario">
               <label for="descripcion_venta" class="text-center form-label">Descripción</label>
-              <input type="text" class="form-control" name="descripcion_estado_venta" id="descripcion_venta"
+              <input v-if="propiedad?.historial_estados_venta?.comentario" type="text" class="form-control"
+                name="descripcion_estado_venta" id="descripcion_venta"
+                :value="propiedad.historial_estados_venta.comentario" readonly>
+              <input v-else type="text" class="form-control" name="descripcion_estado_venta" id="descripcion_venta"
                 v-model="venta.descripcion_estado_venta">
             </div>
 
-            <div class="col-md-2" v-show="mostrarBajaTemporal">
+            <div class="col-md-2" v-show="mostrarBajaTemporal || propiedad?.historial_estados_venta?.reactiva_fecha">
               <label class="text-center form-label">Baja Temporal</label>
-              <input type="date" class="form-control text-center" name="fecha_baja_temporal_venta"
+              <input v-if="propiedad?.historial_estados_venta?.reactiva_fecha" type="date"
+                class="form-control text-center" name="fecha_baja_temporal_venta"
+                :value="propiedad.historial_estados_venta.reactiva_fecha" readonly>
+              <input v-else type="date" class="form-control text-center" name="fecha_baja_temporal_venta"
                 v-model="venta.fecha_baja_temporal_venta">
             </div>
             <div v-if="propiedad" class="form-group  px-1 col-md-3 pt-2">
@@ -339,6 +357,7 @@ watch(() => props.propiedadUpdate, (newValue) => {
     venta.exclusividad_venta = newValue.exclusividad_venta || ''
     venta.comparte_venta = newValue.comparte_venta || ''
     venta.condicionado_venta = newValue.condicionado_venta || ''
+    venta.autorizacion_venta = newValue.autorizacion_venta || ''
     venta.venta_fecha_alta = newValue.venta_fecha_alta || ''
     venta.fecha_autorizacion_venta = newValue.fecha_autorizacion_venta || ''
     venta.comentario_autorizacion = newValue.comentario_autorizacion || ''
@@ -348,6 +367,9 @@ watch(() => props.propiedadUpdate, (newValue) => {
     venta.web = newValue.web || ''
     venta.captador_interno = newValue.usuario_captador_int?.id || ''
     venta.asesor_resultado = newValue.usuario_asesor?.id || ''
+    venta.descripcion_estado_venta = newValue.historial_estados_venta?.comentario || ''
+    venta.fecha_baja_temporal_venta = newValue.historial_estados_venta?.reactiva_fecha || ''
+
   }
 }, { immediate: true })
 
@@ -466,6 +488,7 @@ const venta = reactive(
     web: '',
     descripcion_estado_venta: '',
     fecha_baja_temporal_venta: '',
+    autorizacion_venta: '',
   }
 )
 

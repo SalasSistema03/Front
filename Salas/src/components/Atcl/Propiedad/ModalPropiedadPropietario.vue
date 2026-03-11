@@ -45,7 +45,7 @@
                   <th v-if="propiedad && !ocultarBotones">Baja Propietario</th>
                   <th>-</th>
                   <th v-if="propiedad && !ocultarBotones">Editar</th>
-                  <th v-if="mostrarQuitar">Quitar</th>
+                  <th v-if="!propiedad">Quitar</th>
                 </tr>
               </thead>
               <tbody v-if="propiedad">
@@ -98,7 +98,7 @@
                       <i class="bi bi-pencil">Editar</i>
                     </button>
                   </td> -->
-                  <td v-if="mostrarQuitar">
+                  <td v-if="!propiedad">
                     <button type="button" class="btn btn-danger btn-sm w-50"
                       @click="eliminarPropietario(index)">Quitar</button>
                   </td>
@@ -116,158 +116,38 @@
   </ModalCargaPersona>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import ModalCargaPersona from './ModalCargaPersona.vue'
-import { watch } from 'vue'
-import { buscaPersona, muestraPropiedad } from '../../../Services/api/Atcl/AtclApi'
-import { Modal } from 'bootstrap'
+import { useModalPropiedadPropietario } from '@/composables/atcl/useModalPropiedadPropietario'
 
-export default {
-  components: { ModalCargaPersona },
-  props: {
-    propiedad: { type: Object, default: null },
-    mostrarBuscador: { type: Boolean, default: false },
-    ocultarBotones: { type: Boolean, default: false },
-    mostrarQuitar: { type: Boolean, default: false }
-  },
-  data() {
-    return {
-      busqueda: '',
-      sugerencias: [],
-      personaSeleccionada: null,
-      timeout: null,
-      propietarios: [],
-      personaParaVer: null,
-      mostrarModalVer: false,
-      propietarioEnEdicion: null
-    }
-  },
-  methods: {
-    switchModals() {
-      const modalPadre = Modal.getInstance(document.getElementById('modalPropietarios'))
-      if (modalPadre) modalPadre.hide()
-      setTimeout(() => {
-        const modalHijo = new Modal(document.getElementById('modalCargaPersona'))
-        modalHijo.show()
-      }, 400)
-    },
-    abrirModalCargaPersona() {
-      this.personaParaVer = null
-      this.mostrarModalVer = false
-      this.$refs.modalCargaPersona.resetForm()
-      this.switchModals()
-    },
-    async buscar() {
-      if (this.timeout) clearTimeout(this.timeout)
-      if (this.busqueda.trim() === '') { this.sugerencias = []; return; }
-      this.timeout = setTimeout(async () => {
-        try {
-          const esDNI = /^\d+$/.test(this.busqueda.trim())
-          let params = esDNI ? { dni: this.busqueda.trim() } : { apellido: this.busqueda.trim() }
-          const response = await buscaPersona(params)
-          this.sugerencias = response.data.slice(0, 10)
-        } catch (error) { console.error('Error buscando persona:', error); this.sugerencias = [] }
-      }, 300)
-    },
-    seleccionarPersona(persona) {
-      this.personaSeleccionada = persona
-      this.busqueda = `${persona.apellido}, ${persona.nombre}`
-      this.sugerencias = []
-    },
-    asignarPropietario() {
-      if (!this.personaSeleccionada) return
+const props = defineProps({
+  propiedad: { type: Object, default: null },
+  mostrarBuscador: { type: Boolean, default: false },
+  ocultarBotones: { type: Boolean, default: false },
+  mostrarQuitar: { type: Boolean, default: false }
+})
 
-      if (this.propiedad) {
-        const existe = this.propiedad.propietarios.some(p => p.id === this.personaSeleccionada.id)
-        if (existe) { alert('Ya está asignado'); return; }
-        this.propiedad.propietarios.push({ ...this.personaSeleccionada, pivot: { observaciones: '', baja: 'no' } })
-        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
-      } else {
-        // Caso para nueva propiedad (sin propiedad existente)
-        const existe = this.propietarios.some(p => p.id === this.personaSeleccionada.id)
-        if (existe) { alert('Ya está asignado'); return; }
-        this.propietarios.push({ ...this.personaSeleccionada, pivot: { observaciones: '', baja: 'no' } })
-        this.$emit('propietarios-cambiados', this.propietarios)
-      }
-      this.personaSeleccionada = null; this.busqueda = ''; this.sugerencias = []
-    },
-    toggleBajaPropietario(persona) {
-      if (this.propiedad) {
-        persona.pivot.baja = (persona.pivot.baja === 'si') ? 'no' : 'si'
-        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
-      } else {
-        persona.pivot.baja = (persona.pivot.baja === 'si') ? 'no' : 'si'
-        this.$emit('propietarios-cambiados', this.propietarios)
-      }
-    },
-    async verPropietario(persona) {
-      try {
-        // Obtener datos actualizados de la propiedad
-        const id = this.propiedad.id
-        const response = await muestraPropiedad({ id: id })
+const emit = defineEmits(['propietarios-cambiados'])
 
-        // Buscar la persona actualizada en la respuesta
-        const personaActualizada = response.data.propietarios.find(p => p.id === persona.id)
+const modalCargaPersona = ref(null)
 
-        // Usar los datos actualizados si existen, si no usar los originales
-        this.personaParaVer = personaActualizada || persona
-        this.mostrarModalVer = true
-        this.switchModals()
-      } catch (error) {
-        console.error('Error al obtener datos actualizados:', error)
-        // Si hay error, usar los datos originales
-        this.personaParaVer = persona
-        this.mostrarModalVer = true
-        this.switchModals()
-      }
-    },
-    async editarPropietario(persona) {
-      try {
-        const id = this.propiedad.id
-        const response = await muestraPropiedad({ id: id })
-
-        const personaActualizada = response.data.propietarios.find(p => p.id === persona.id)
-
-        this.personaParaVer = { ...personaActualizada }
-      } catch (error) {
-        console.error('Error al obtener datos actualizados:', error)
-        this.personaParaVer = { ...persona }
-      }
-      this.mostrarModalVer = false
-      this.switchModals()
-    },
-    eliminarPropietario(index) {
-      if (this.propiedad) {
-        this.propiedad.propietarios.splice(index, 1)
-        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
-      } else {
-        this.propietarios.splice(index, 1)
-        this.$emit('propietarios-cambiados', this.propietarios)
-      }
-    },
-    formatFecha(fecha) {
-      if (!fecha) return '-'
-      const d = new Date(fecha)
-      return isNaN(d) ? '-' : d.toLocaleDateString('es-AR')
-    },
-    emitirCambiosPropietario() {
-      if (this.propiedad) {
-        this.$emit('propietarios-cambiados', this.propiedad.propietarios)
-      } else {
-        this.$emit('propietarios-cambiados', this.propietarios)
-      }
-    }
-  },
-  mounted() {
-    watch(() => this.propiedad, (newVal) => {
-      if (newVal && newVal.propietarios) {
-        this.propietarios = newVal.propietarios.map(p => ({
-          persona: p,
-          baja: p.pivot ? p.pivot.baja === 'si' : false,
-          observaciones: p.pivot ? p.pivot.observaciones : ''
-        }))
-      }
-    })
-  }
-}
+const {
+  busqueda,
+  sugerencias,
+  propietarios,
+  personaParaVer,
+  mostrarModalVer,
+  propietarioEnEdicion,
+  abrirModalCargaPersona,
+  buscar,
+  seleccionarPersona,
+  asignarPropietario,
+  toggleBajaPropietario,
+  verPropietario,
+  editarPropietario,
+  eliminarPropietario,
+  formatFecha,
+  emitirCambiosPropietario
+} = useModalPropiedadPropietario(props, emit, modalCargaPersona)
 </script>

@@ -1082,7 +1082,8 @@ export default {
 
       } catch (error) {
         console.error('Error actualizando propiedad:', error)
-        alert('Error al actualizar la propiedad: ' + (error.response?.data?.message || error.message))
+        /*  alert('Error al actualizar la propiedad: ' + (error.response?.data?.message || error.message)) */
+        this.showError('Error al actualizar la propiedad: ' + (error.response?.data?.message || error.message))
       }
     },
   },
