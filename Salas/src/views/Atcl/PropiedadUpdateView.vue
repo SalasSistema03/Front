@@ -662,8 +662,8 @@ export default {
 
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
-        this.propiedad_update = response.data
-        console.log('propiedad_update', this.propiedad_update);
+        this.propiedad_update = response.data.data
+        //console.log('propiedad_update', this.propiedad_update);
         this.numero_calle = this.propiedad_update.numero_calle
         this.piso = this.propiedad_update.piso
         this.departamento = this.propiedad_update.departamento

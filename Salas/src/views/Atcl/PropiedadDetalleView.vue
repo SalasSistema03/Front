@@ -348,7 +348,7 @@ export default {
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data.data
-        console.log('Propiedad encontrada:', this.propiedad)
+        //console.log('Propiedad encontrada:', this.propiedad)
       } catch (error) {
         console.error('Error cargando propiedad:', error)
         this.error = 'No se pudo cargar la propiedad'

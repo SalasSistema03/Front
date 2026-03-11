@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_AUTH_URL
 
 export const getInmueble = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/tipos-inmueble`, {
+  return axios.get(`${API_URL}/v1/tipos-inmueble`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -12,7 +12,7 @@ export const getInmueble = () => {
 }
 export const getZonas = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/zonas`, {
+  return axios.get(`${API_URL}/v1/zonas`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -21,7 +21,7 @@ export const getZonas = () => {
 
 export const getProvincias = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/provincias`, {
+  return axios.get(`${API_URL}/v1/provincias`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -30,7 +30,7 @@ export const getProvincias = () => {
 
 export const getEstadoGeneral = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/estado-general`, {
+  return axios.get(`${API_URL}/v1/estado-general`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -39,7 +39,7 @@ export const getEstadoGeneral = () => {
 
 export const getEstadoVenta = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/estado-venta`, {
+  return axios.get(`${API_URL}/v1/estado-venta`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -48,7 +48,7 @@ export const getEstadoVenta = () => {
 
 export const getEstadoAlquiler = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/estado-alquiler`, {
+  return axios.get(`${API_URL}/v1/estado-alquiler`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -57,7 +57,7 @@ export const getEstadoAlquiler = () => {
 
 export const getCalles = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/calles`, {
+  return axios.get(`${API_URL}/v1/calles`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -66,7 +66,7 @@ export const getCalles = () => {
 
 export const getAsesor = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/asesor`, {
+  return axios.get(`${API_URL}/v1/asesor`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -75,7 +75,7 @@ export const getAsesor = () => {
 
 export const getCaptadorInterno = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/captador-interno`, {
+  return axios.get(`${API_URL}/v1/captador-interno`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -86,7 +86,7 @@ export const getCaptadorInterno = () => {
 export const guardarPropiedad = (id, data) => {
 
   const token = localStorage.getItem('token')
-  return axios.post(`${API_URL}/v1/auth/propiedad/guardar/${id}`, data, {
+  return axios.post(`${API_URL}/v1/propiedad/guardar/${id}`, data, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'multipart/form-data' // Para enviar archivos
@@ -96,7 +96,7 @@ export const guardarPropiedad = (id, data) => {
 
 export const buscaPersona = (params) => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/padron/buscar`, {
+  return axios.get(`${API_URL}/v1/padron/buscar`, {
     params: params,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ export const cargarPadron = (data) => {
   console.log(data)
   const token = localStorage.getItem('token')
 
-  return axios.post(`${API_URL}/v1/auth/padron/cargar`, data, {
+  return axios.post(`${API_URL}/v1/padron/cargar`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data'
