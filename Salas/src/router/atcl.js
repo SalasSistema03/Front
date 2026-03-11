@@ -30,8 +30,8 @@ const routesAtcl = [
         },
     },
     {
-        path: '/propiedad-update',
-        alias: '/atcl/propiedad-update',
+        path: '/propiedad-update/:id',
+        alias: '/atcl/propiedad-update/:id',
         name: 'propiedad-update',
         component: () => import('../views/Atcl/PropiedadUpdateView.vue'),
         meta: {

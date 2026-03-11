@@ -42,7 +42,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* .login-form-container 
+/* .login-form-container
  * */
 .navbar {
   background-color: #fff;
@@ -114,9 +114,15 @@
 }
 
 .navbar-item_menu {
-  font-weight: 500;
-  font-size: 14px;
-  color: rgb(0, 85, 185);
+  font-weight: 550 !important;
+  font-size: 14px !important;
+  color: rgb(0, 85, 185) !important;
+}
+.navbar-item_menu:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.navbar-item_menu:focus {
+  color: rgba(0, 175, 154, 0.96) !important;
 }
 
 #navbar_contenedor_logo {
@@ -147,9 +153,9 @@
 
 .navbar-admin_dropdown {
   position: relative;
-  transform: translateY(-12%) translateX(-5%);
-  font-size: 14px;
-  padding: 0.5rem 1rem;
+  transform: translateY(-12%) translateX(-5%) !important;
+  font-size: 14px !important;
+  padding: 0.5rem 1rem !important;
 }
 
 .register_permisos_menu {
@@ -256,7 +262,7 @@
 
 .atcl_contenedor_tabla {
   width: 100%;
-  max-height: 58vh;
+  max-height: 48vh;
   overflow-y: auto;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -367,6 +373,17 @@
 
 .atcl_calle_desplegable {
   color: red !important;
+}
+
+.atcl_modal_header {
+  background-color: white;
+  color: rgb(0, 85, 185);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 0.8rem;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .agenda_barra_lateral {

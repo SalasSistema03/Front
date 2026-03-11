@@ -6,8 +6,16 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue(),
-    
+
   ],
+  server: {
+    proxy: {
+      '/imagenes': {
+        target: 'http://localhost',
+        changeOrigin: true,
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -15,8 +23,8 @@ export default defineConfig({
   },
   // --- AGREGAMOS ESTO ---
   build: {
-  outDir: '../../backEnd/public',
-  // CAMBIA ESTO A FALSE:
-  emptyOutDir: false, 
-},
+    outDir: '../../backEnd/public',
+    // CAMBIA ESTO A FALSE:
+    emptyOutDir: false,
+  },
 })
