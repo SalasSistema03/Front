@@ -8,7 +8,7 @@
             Calle
           </label>
           <input type="text" class="form-control form-control-sm" placeholder="- - -" readonly
-            :value="propiedad?.calle.name">
+            :value="propiedad?.calle?.name">
         </div>
         <div class="col-md-3 mt-0">
           <label class="form-label " for="input-altura">
@@ -347,7 +347,7 @@ export default {
 
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
-        this.propiedad = response.data
+        this.propiedad = response.data.data
         console.log('Propiedad encontrada:', this.propiedad)
       } catch (error) {
         console.error('Error cargando propiedad:', error)

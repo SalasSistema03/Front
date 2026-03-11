@@ -222,9 +222,6 @@ import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
 
 
 
-/* const components = {
-  ModalNovedades
-} */
 const props = defineProps({
   estadosAlquiler: {
     type: Array,

@@ -41,11 +41,11 @@
       </p>
       <p v-else>
         <strong>Valor:
-          <span v-if="ubicacion === 'V' && propiedad?.precio_actual.moneda_venta_dolar != null">
-            U$D{{ propiedad?.precio_actual.moneda_venta_dolar }}
+          <span v-if="ubicacion === 'V' && propiedad?.precio_actual?.moneda_venta_dolar != null">
+            U$D{{ propiedad?.precio_actual?.moneda_venta_dolar }}
           </span>
-          <span v-else-if="ubicacion === 'V' && propiedad?.precio_actual.moneda_venta_pesos != null">
-            ${{ propiedad?.precio_actual.moneda_venta_pesos }}
+          <span v-else-if="ubicacion === 'V' && propiedad?.precio_actual?.moneda_venta_pesos != null">
+            ${{ propiedad?.precio_actual?.moneda_venta_pesos }}
           </span>
           <span v-else>
             Sin Precio
