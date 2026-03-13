@@ -1,70 +1,163 @@
 <template>
   <!-- Plantilla oculta para capturar con html2canvas -->
-  <div ref="plantillaPdf" style="position: absolute; left: -9999px; top: 0; width: 794px;">
-    <div style="font-family: Arial; font-size: 12px; padding: 30px;">
-      <h1 style="text-align: center; margin-bottom: 10px; color: red;">Ficha de propiedad en <span
-          v-if="ubicacion === 'A'">alquiler</span><span v-else>venta</span></h1>
-      <hr>
-      <h2>Datos de la propiedad</h2>
-      <p><strong>Direccion:</strong> {{ propiedad?.calle?.name }} {{ propiedad?.numero_calle }}<span
-          v-if="propiedad?.piso"> - Piso {{ propiedad?.piso }}</span><span v-if="propiedad?.departamento"> -
-          Departamento {{ propiedad?.departamento }}</span>
-      </p>
-      <p><strong>Zona:</strong> {{ propiedad?.zona?.name }}</p>
-      <p><strong>Tipo Inmueble:</strong> {{ propiedad?.tipo_inmueble?.inmueble }}</p>
-      <p><strong>Servicios:</strong>
-        <span v-if="propiedad?.gas === 'SI'"> GAS,</span>
-        <span v-if="propiedad?.agua === 'SI'"> AGUA,</span>
-        <span v-if="propiedad?.cloaca === 'SI'"> CLOACA,</span>
-        <span v-if="propiedad?.asfalto === 'SI'"> ASFALTO</span>
-      </p>
-      <p><strong>Metros:</strong> {{ propiedad?.mLote }} m²</p>
-      <p><strong>Metros Cubiertos:</strong> {{ propiedad?.mCubiertos }} m²</p>
-      <p><strong>Codigo Web:</strong><span v-if="ubicacion === 'A'">{{ propiedad?.cod_alquiler }}</span><span v-else>{{
-        propiedad?.cod_venta }}</span></p>
-      <p><strong>Alquilado:</strong>
-        <span v-if="new Date(propiedad?.buscarContratoMasReciente?.rescicion) > new Date()">Sí</span>
-        <span v-else>No</span>
-      </p>
-      <p v-if="ubicacion === 'A'">
-        <strong>Valor:
-          <span v-if="ubicacion === 'A' && propiedad?.precio_actual.moneda_alquiler_pesos != null">
-            ${{ propiedad?.precio_actual.moneda_alquiler_pesos }}
-          </span>
-          <span v-else-if="ubicacion === 'A' && propiedad?.precio_actual.moneda_alquiler_dolar != null">
-            U$D{{ propiedad.precio_actual.moneda_alquiler_dolar }}
-          </span>
-          <span v-else>
-            Sin Precio
-          </span>
-        </strong>
-      </p>
-      <p v-else>
-        <strong>Valor:
-          <span v-if="ubicacion === 'V' && propiedad?.precio_actual?.moneda_venta_dolar != null">
-            U$D{{ propiedad?.precio_actual?.moneda_venta_dolar }}
-          </span>
-          <span v-else-if="ubicacion === 'V' && propiedad?.precio_actual?.moneda_venta_pesos != null">
-            ${{ propiedad?.precio_actual?.moneda_venta_pesos }}
-          </span>
-          <span v-else>
-            Sin Precio
-          </span>
-        </strong>
-      </p>
-      <p><strong>Descripcion:</strong> {{ propiedad?.descipcion_propiedad }}</p>
+  <div ref="plantillaPdf" style="position: absolute; left: -9999px; top: 0; width: 794px; background: #fff;">
+    <div style="font-family: Arial, sans-serif; font-size: 12px; padding: 20px; box-sizing: border-box;">
 
-      <p>¿Que te parecio tu visita?</p>
-      <p>Contanos</p>
-      <p>QR ACA</p>
-
-      <!-- Mostrar las 3 primeras fotos -->
-      <div v-if="cargando" style="margin: 20px 0; color: #666;">Cargando imágenes...</div>
-      <div class="fotos-container" v-else-if="imagenesCargadas.length > 0">
-        <div v-for="(imagen, index) in imagenesCargadas" :key="index" class="foto-item">
-          <img :src="imagen" alt="Foto propiedad" style="width: 100%; height: 100%; object-fit: cover;" />
-        </div>
+      <!-- ===== BLOQUE DE IMÁGENES (replica layout de referencia) ===== -->
+      <div v-if="cargando"
+        style="height: 300px; display: flex; align-items: center; justify-content: center; color: #666; background: #f5f5f5; margin-bottom: 8px;">
+        Cargando imágenes...
       </div>
+
+      <div v-else-if="imagenesCargadas.length > 0">
+
+        <!-- IMAGEN 1: Hero full width -->
+        <div style="width: 100%; height: 280px; overflow: hidden; margin-bottom: 6px;">
+          <img :src="imagenesCargadas[0]" alt="Foto principal"
+            style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+
+        <!-- IMÁGENES 2 y 3: lado a lado -->
+        <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+          <div v-if="imagenesCargadas[1]" style="flex: 1; height: 200px; overflow: hidden;">
+            <img :src="imagenesCargadas[1]" alt="Foto 2"
+              style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+          </div>
+          <div v-if="imagenesCargadas[2]" style="flex: 1; height: 200px; overflow: hidden;">
+            <img :src="imagenesCargadas[2]" alt="Foto 3"
+              style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+          </div>
+          <!-- Si solo hay 2 imágenes, completar con placeholder -->
+          <div v-if="imagenesCargadas.length === 1" style="flex: 1; height: 200px; background: #f0f0f0;"></div>
+        </div>
+
+      </div>
+
+      <!-- ===== FILA: PRECIO + UBICACIÓN ===== -->
+      <div style="display: flex; align-items: flex-start; margin-bottom: 14px;">
+
+        <!-- PRECIO (≈ 35%) -->
+        <div style="flex: 0 0 35%; padding-right: 12px; box-sizing: border-box;">
+          <div style="color: #00589f; text-transform: uppercase; font-size: 22px; font-weight: 700; line-height: 1;">
+            {{ ubicacion === 'A' ? 'ALQUILER' : 'VENTA' }}
+          </div>
+          <div style="font-size: 16px; font-weight: 600; margin-top: 4px; color: #333;">
+            <!-- Precio alquiler -->
+            <template v-if="ubicacion === 'A'">
+              <span v-if="propiedad?.precio_actual?.moneda_alquiler_pesos">
+                ${{ propiedad.precio_actual.moneda_alquiler_pesos }}
+              </span>
+              <span v-else-if="propiedad?.precio_actual?.moneda_alquiler_dolar">
+                U$D {{ propiedad.precio_actual.moneda_alquiler_dolar }}
+              </span>
+              <span v-else>$ Consultar</span>
+            </template>
+            <!-- Precio venta -->
+            <template v-else>
+              <span v-if="propiedad?.precio_actual?.moneda_venta_dolar">
+                U$D {{ propiedad.precio_actual.moneda_venta_dolar }}
+              </span>
+              <span v-else-if="propiedad?.precio_actual?.moneda_venta_pesos">
+                ${{ propiedad.precio_actual.moneda_venta_pesos }}
+              </span>
+              <span v-else>$ Consultar</span>
+            </template>
+          </div>
+        </div>
+
+        <!-- UBICACIÓN (≈ 65%) -->
+        <div style="flex: 1; display: flex; align-items: flex-start; gap: 8px;">
+          <!-- Ícono marcador -->
+          <div style="font-size: 22px; color: #00589f; margin-top: -2px; flex-shrink: 0;">📍</div>
+          <div>
+            <div style="font-size: 18px; font-weight: 700; line-height: 1.3; color: #222;">
+              {{ propiedad?.tipo_inmueble?.inmueble }}<br>
+              {{ propiedad?.calle?.name }} {{ propiedad?.numero_calle }}
+              <span v-if="propiedad?.piso"> - Piso {{ propiedad?.piso }}</span>
+              <span v-if="propiedad?.departamento"> Dpto {{ propiedad?.departamento }}</span>
+            </div>
+            <div style="font-size: 15px; color: #555; margin-top: 2px;">{{ propiedad?.zona?.name }}</div>
+            <div style="font-size: 12px; color: #888; margin-top: 3px;">
+              COD: {{ ubicacion === 'A' ? propiedad?.cod_alquiler : propiedad?.cod_venta }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SEPARADOR -->
+      <hr style="border: none; border-top: 1px solid #d9d4d4; margin: 6px 0 12px 0;">
+
+      <!-- ===== FILA: CARACTERÍSTICAS + QR ===== -->
+      <div style="display: flex; align-items: flex-start; gap: 10px;">
+
+        <!-- CARACTERÍSTICAS (≈ 78%) -->
+        <div style="flex: 0 0 78%; box-sizing: border-box;">
+          <div
+            style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+            Características
+          </div>
+
+          <!-- Grilla de características -->
+          <div style="display: flex; flex-wrap: wrap; gap: 0;">
+
+            <!-- Sup. Exclusiva -->
+            <div v-if="propiedad?.mCubiertos"
+              style="width: 50%; box-sizing: border-box; border-top: 1px solid #d9d4d4; padding: 5px 4px;">
+              <span style="color: #00589f; font-weight: 600; text-transform: uppercase; font-size: 12px;">
+                📐 Sup. Cubierta: {{ propiedad.mCubiertos }} m²
+              </span>
+            </div>
+
+            <!-- M Lote -->
+            <div v-if="propiedad?.mLote"
+              style="width: 50%; box-sizing: border-box; border-top: 1px solid #d9d4d4; padding: 5px 4px;">
+              <span style="color: #00589f; font-weight: 600; text-transform: uppercase; font-size: 12px;">
+                📏 Sup. Lote: {{ propiedad.mLote }} m²
+              </span>
+            </div>
+
+            <!-- Servicios -->
+            <div style="width: 100%; box-sizing: border-box; border-top: 1px solid #d9d4d4; padding: 5px 4px;">
+              <span style="color: #00589f; font-weight: 600; text-transform: uppercase; font-size: 12px;">
+                🔧 Servicios:
+                <span v-if="propiedad?.gas === 'SI'"> GAS</span>
+                <span v-if="propiedad?.agua === 'SI'"> · AGUA</span>
+                <span v-if="propiedad?.cloaca === 'SI'"> · CLOACA</span>
+                <span v-if="propiedad?.asfalto === 'SI'"> · ASFALTO</span>
+              </span>
+            </div>
+
+            <!-- Descripcion -->
+            <div v-if="propiedad?.descipcion_propiedad"
+              style="width: 100%; box-sizing: border-box; border-top: 1px solid #d9d4d4; padding: 5px 4px;">
+              <span style="color: #444; font-size: 12px; line-height: 1.5;">
+                {{ propiedad.descipcion_propiedad }}
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- QR + LOGO (≈ 22%) -->
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 22px;">
+          <p style="font-size: 11px; color: #555; text-align: center; margin: 0;">
+            ¿Qué te pareció tu visita?<br>Contanos 👇
+          </p>
+          <!-- Placeholder QR -->
+          <div
+            style="width: 80px; height: 80px; background: #f0f0f0; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; text-align: center;">
+            QR<br>aquí
+          </div>
+          <!-- Logo inmobiliaria -->
+          <div
+            style="margin-top: 6px; font-size: 10px; color: #888; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            SALAS<br>INMOBILIARIA
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </div>
 </template>
@@ -81,7 +174,6 @@ const props = defineProps({
   },
   ubicacion: {
     type: String,
-
   }
 })
 
@@ -131,7 +223,8 @@ watch(() => props.propiedad?.fotos, async (fotos) => {
   imagenesCargadas.value = imagenesBase64
   cargando.value = false
 }, { immediate: true })
-// Computed del precio
+
+// Computed del precio (mantenido por compatibilidad)
 const precioDisplay = computed(() => {
   const precio = props.propiedad?.precio_actual
   if (!precio) return ''
@@ -142,7 +235,6 @@ const precioDisplay = computed(() => {
 
 // Función expuesta para que el padre la pueda llamar
 const generarPdf = async () => {
-  // Esperar a que las imágenes terminen de cargar antes de capturar
   if (cargando.value) {
     await new Promise(resolve => {
       const stop = watch(cargando, (val) => { if (!val) { stop(); resolve() } })
@@ -168,18 +260,4 @@ const generarPdf = async () => {
 defineExpose({ generarPdf })
 </script>
 
-<style scoped>
-.fotos-container {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  flex-wrap: wrap;
-}
-
-.foto-item {
-  width: 240px;
-  height: 160px;
-  border: 1px solid #ddd;
-  overflow: hidden;
-}
-</style>
+<!-- Sin estilos scoped: todo inline para máxima compatibilidad con html2canvas -->

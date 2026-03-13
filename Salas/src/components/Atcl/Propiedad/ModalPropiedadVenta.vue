@@ -52,7 +52,7 @@
               <input v-else type="number" class="form-control text-center " id="" min="0" v-model="venta.monto_venta">
             </div>
 
-            <div class="form-group  px-1 col-md-2">
+            <div class="form-group  px-1 col-md-3">
               <label class="text-center form-label" id="basic-addon1">Tasacion</label>
               <!-- Si hay propiedad, mostrar fecha de tasación más reciente -->
               <input v-if="propiedad" type="date" class="form-control text-center" :value="fechaTasacionDisplay"
@@ -248,7 +248,8 @@
 
               </select>
             </div>
-            <div class="col-md-8" v-show="mostrarDescripcion || propiedad?.historial_estados_venta?.comentario">
+            <div class="col-md-6 form-group"
+              v-show="mostrarDescripcion || propiedad?.historial_estados_venta?.comentario">
               <label for="descripcion_venta" class="text-center form-label">Descripción</label>
               <input v-if="propiedad?.historial_estados_venta?.comentario" type="text" class="form-control"
                 name="descripcion_estado_venta" id="descripcion_venta"
@@ -257,7 +258,8 @@
                 v-model="venta.descripcion_estado_venta">
             </div>
 
-            <div class="col-md-2" v-show="mostrarBajaTemporal || propiedad?.historial_estados_venta?.reactiva_fecha">
+            <div class="col-md-2 form-group"
+              v-show="mostrarBajaTemporal || propiedad?.historial_estados_venta?.reactiva_fecha">
               <label class="text-center form-label">Baja Temporal</label>
               <input v-if="propiedad?.historial_estados_venta?.reactiva_fecha" type="date"
                 class="form-control text-center" name="fecha_baja_temporal_venta"

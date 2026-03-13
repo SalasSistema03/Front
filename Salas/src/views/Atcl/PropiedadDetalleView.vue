@@ -78,7 +78,7 @@
         </div>
         <div class="col-md-4 mt-3 text-center">
           <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-            data-bs-target="#modalPropietarios">
+            data-bs-target="#modalPropietarios" :disabled="!botones?.propietario">
             Propietarios
           </button>
         </div>
@@ -104,7 +104,7 @@
           </div>
           <div class="col-md-6  text-center">
             <button type="button" class="btn btn-light btn-sm w-100" data-bs-toggle="modal" data-bs-target="#"
-              @click="modificarDatosPropiedad">
+              @click="modificarDatosPropiedad" :disabled="!botones?.modificar">
               Modificar
             </button>
           </div>
@@ -120,7 +120,7 @@
           <div class="col-md-6  text-center">
 
             <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-              data-bs-target="#modalVentas">
+              data-bs-target="#modalVentas" :disabled="!botones?.informacion_venta">
               Informacion Ventas
             </button>
           </div>
@@ -137,7 +137,7 @@
           <div class="col-md-6  text-center">
 
             <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-              data-bs-target="#modalAlquiler">
+              data-bs-target="#modalAlquiler" :disabled="!botones?.informacion_alquiler">
               Informacion Alquiler
             </button>
           </div>
@@ -310,7 +310,8 @@ export default {
     return {
       propiedad: null,
       loading: true,
-      error: null
+      error: null,
+      botones: null,
     }
   },
   computed: {
@@ -349,6 +350,9 @@ export default {
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data.data
         //console.log('Propiedad encontrada:', this.propiedad)
+        this.botones = response.data.botones
+        //console.log('console de propiedad', this.botones)
+        console.log('esto me devuelve response', response)
       } catch (error) {
         console.error('Error cargando propiedad:', error)
         this.error = 'No se pudo cargar la propiedad'

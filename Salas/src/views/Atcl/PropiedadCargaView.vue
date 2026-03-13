@@ -136,7 +136,7 @@
           </button>
         </div>
 
-        <div class="col-md-12 row mt-4 d-flex justify-content-center">
+        <div class="col-md-12 row mt-4 d-flex justify-content-center ">
           <button type="submit" class="btn btn-primary w-50" :disabled="isSubmitting">
             {{ isSubmitting ? 'Cargando...' : 'Cargar Propiedad' }}
           </button>

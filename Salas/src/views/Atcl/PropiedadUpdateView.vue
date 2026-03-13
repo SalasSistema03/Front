@@ -658,12 +658,16 @@ export default {
       try {
         // Obtiene el ID de la URL
         const id = this.$route.params.id
-        //console.log('ID de la propiedad:', id)
 
-        // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
+        console.log('Response completa:', response.data)
+
+        if (!response.data.success) {
+          this.error = response.data.message || 'No se pudo cargar la propiedad'
+          return
+        }
+
         this.propiedad_update = response.data.data
-        //console.log('propiedad_update', this.propiedad_update);
         this.numero_calle = this.propiedad_update.numero_calle
         this.piso = this.propiedad_update.piso
         this.departamento = this.propiedad_update.departamento
@@ -677,23 +681,40 @@ export default {
         this.cartel = this.propiedad_update.cartel
         this.calleSeleccionada = this.propiedad_update.calle.name
         this.calleId = this.propiedad_update.calle.id
-        this.fotosOriginales = response.data.fotos.map(f => ({
-          id: f.id,
-          orden: f.orden,
-          notes: f.notes,
-          updated_at: f.updated_at,
-          archivado: f.archivado
-        }))
-        //console.log(this.foto)
-        this.documentosOriginales = response.data.documentacion.map(d => ({
-          id: d.id,
-          notes: d.notes,
-        }))
 
-        this.videosOriginales = response.data.video.map(v => ({
-          id: v.id,
-          notes: v.notes,
-        }))
+        // Verificar si existen las fotos antes de mapear
+        if (response.data.data.fotos && Array.isArray(response.data.data.fotos)) {
+          this.fotosOriginales = response.data.data.fotos.map(f => ({
+            id: f.id,
+            orden: f.orden,
+            notes: f.notes,
+            updated_at: f.updated_at,
+            archivado: f.archivado
+          }))
+        } else {
+          console.log('No hay fotos en la respuesta o no es un array:', response.data.data.fotos)
+          this.fotosOriginales = []
+        }
+
+        // Verificar documentación
+        if (response.data.data.documentacion && Array.isArray(response.data.data.documentacion)) {
+          this.documentosOriginales = response.data.data.documentacion.map(d => ({
+            id: d.id,
+            notes: d.notes,
+          }))
+        } else {
+          this.documentosOriginales = []
+        }
+
+        // Verificar videos
+        if (response.data.data.video && Array.isArray(response.data.data.video)) {
+          this.videosOriginales = response.data.data.video.map(v => ({
+            id: v.id,
+            notes: v.notes,
+          }))
+        } else {
+          this.videosOriginales = []
+        }
 
         // Guardar propietarios originales
         this.propietariosOriginales = response.data.propietarios.map(p => ({
@@ -959,17 +980,21 @@ export default {
 
         // Fotos existentes actualizadas
         if (this.propiedad_update?.fotos) {
+          console.log('estas son las fotosOriginales', this.fotosOriginales)
+          //console.log('1', this.propiedad_update.fotos)
           const fotasModificadas = this.propiedad_update.fotos.filter(foto => {
+
             const original = this.fotosOriginales.find(o => o.id === foto.id)
             if (!original) return false
             return foto.orden != original.orden || foto.notes != original.notes || foto.archivado != original.archivado
           })
 
-          console.log('Fotos modificadas:', fotasModificadas.length > 0 ? fotasModificadas : 'Ninguna')
+          //console.log('fotasModificadas', fotasModificadas)
+          //console.log('Fotos modificadas:', fotasModificadas.length > 0 ? fotasModificadas : 'Ninguna')
 
           if (fotasModificadas.length > 0) {
             const datos = fotasModificadas.map(f => ({ id: f.id, orden: f.orden ?? '', notes: f.notes ?? '', archivado: f.archivado ?? '' }))
-            console.log('fotos_modificadas', datos)
+            //console.log('fotos_modificadas', datos)
             formData.append('fotos_modificadas', JSON.stringify(datos))
           }
         }

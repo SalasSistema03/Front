@@ -80,13 +80,13 @@
                 </div>
 
                 <!-- Inq-Prop -->
-                  <div class="col-12 col-md-2 form-group">
-                    <label class="form-label fw-bold small  text-muted">Inq-Prop</label>
-                    <select v-model="form.inq_prop" class="form-select form-select-sm shadow-sm" required>
-                      <option value="SI">SI</option>
-                      <option value="NO">NO</option>
-                    </select>
-                  </div>
+                <div class="col-12 col-md-2 form-group">
+                  <label class="form-label fw-bold small  text-muted">Inq-Prop</label>
+                  <select v-model="form.inq_prop" class="form-select form-select-sm shadow-sm" required>
+                    <option value="SI">SI</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
 
                 <div class="col-12 col-md-4 form-group">
                   <label class="form-label fw-bold small  text-muted">Inicio Contrato</label>
@@ -97,7 +97,7 @@
 
               <div class="row g-2 align-items-center">
                 <div class="col-12 col-md-auto">
-                  <button type="button" class="btn btn-outline-secondary btn-sm w-100 px-4" @click="resetForm" >
+                  <button type="button" class="btn btn-outline-secondary btn-sm w-100 px-4" @click="resetForm">
                     Limpiar
                   </button>
                 </div>
@@ -113,8 +113,10 @@
                     <i class="bi bi-gear engrtanaje"></i>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" @click.prevent="mostrarModal = true"  v-if="permisos.datosDeCalculo"> Datos de Cálculo</a></li>
-                    <li><a class="dropdown-item" href="#" @click.prevent="mostrarModalAcciones = true"  v-if="permisos.acciones">Acciones</a></li>
+                    <li><a class="dropdown-item" href="#" @click.prevent="mostrarModal = true"
+                        v-if="permisos.datosDeCalculo"> Datos de Cálculo</a></li>
+                    <li><a class="dropdown-item" href="#" @click.prevent="mostrarModalAcciones = true"
+                        v-if="permisos.acciones">Acciones</a></li>
                   </ul>
                 </div>
               </div>
@@ -227,9 +229,9 @@ const form = ref({
 
 const registros = ref([]);
 const permisos = ref({
-    datosDeCalculo: false,
-    acciones: false,
-    guardar: false
+  datosDeCalculo: false,
+  acciones: false,
+  guardar: false
 });
 const resultado = ref(null);
 const loading = ref(false);
@@ -332,7 +334,7 @@ onMounted(() => {
 }
 
 #tablaDatos {
-  /* Eliminé border: 10vh porque crearía un borde gigante. 
+  /* Eliminé border: 10vh porque crearía un borde gigante.
      Si querías un borde fino, usa 1px o 2px */
   border: 1px solid rgba(0, 175, 154, 0.96);
 }

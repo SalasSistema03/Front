@@ -153,18 +153,18 @@
               </select>
             </div>
 
-            <div class="col-md-8"
+            <div class="form-group px-1 col-md-4 "
               v-show="mostrarDescripcion || propiedad?.historial_estados_alquiler?.comentario_alquiler"
               id="descripcion_container_alquiler">
-              <label for="descripcion_alquiler" class="text-center" id="basic-addon1">Descripción</label>
-              <input v-if="propiedad?.historial_estados_alquiler?.comentario_alquiler" type="text" class="form-control"
-                name="descripcion_estado_alquiler" id="descripcion_alquiler"
+              <label for="descripcion_alquiler" class="text-center form-label" id="basic-addon1">Descripción</label>
+              <input v-if="propiedad?.historial_estados_alquiler?.comentario_alquiler" type="text"
+                class="form-control text-center" name="descripcion_estado_alquiler" id="descripcion_alquiler"
                 :value="propiedad.historial_estados_alquiler.comentario_alquiler" readonly>
               <input v-else type="text" class="form-control" name="descripcion_estado_alquiler"
                 id="descripcion_alquiler" v-model="alquiler.descripcion_estado_alquiler">
             </div>
 
-            <div class="col-md-2"
+            <div class="col-md-3 form-group"
               v-show="mostrarBajaTemporal || propiedad?.historial_estados_alquiler?.reactiva_fecha_alquiler"
               id="baja_temporal_alquiler">
               <label class="text-center" id="basic-addon1">Baja Temporal</label>
@@ -175,7 +175,7 @@
                 id="fecha_baja_temporal_alquiler" v-model="alquiler.fecha_baja_temporal_alquiler">
             </div>
 
-            <div class="form-group  px-1 col-md-3 pt-2">
+            <div class="form-group  px-1 col-md-3 pt-4">
               <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
                 data-bs-target="#condicionAlquilesPropiedad">
                 Condición Alquiler
