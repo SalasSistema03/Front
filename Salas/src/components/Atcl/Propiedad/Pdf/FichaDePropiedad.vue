@@ -254,7 +254,7 @@ const generarPdf = async () => {
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width
 
   pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-  window.open(pdf.output('bloburl'), '_blank')
+  pdf.save('ficha-propiedad.pdf')
 }
 
 defineExpose({ generarPdf })
