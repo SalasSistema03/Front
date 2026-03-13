@@ -130,17 +130,6 @@
               <input v-else type="date" class="form-control text-center " v-model="alquiler.alquiler_fecha_alta">
             </div>
 
-
-            <!-- <div class="form-group px-1 col-md-2" v-if="propiedad">
-              <label class="text-center form-label">Fecha Baja</label>
-              <input type="date" class="form-control text-center">
-            </div> -->
-            <!-- <div class="form-group px-1 col-md-2">
-              <label class="text-center form-label"> Fecha Pub.</label>
-              <input v-if="propiedad" type="date" class="form-control text-center"
-                :value="propiedad.alquiler_fecha_pub">
-              <input v-else type="date" class="form-control text-center" v-model="alquiler.alquiler_fecha_pub">
-            </div> -->
             <div class=" form-group px-1 col-md-2 ">
               <label class=" text-center form-label" id="basic-addon1">Mascota</label>
               <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.mascota" readonly>
@@ -216,7 +205,6 @@
 // Recibir las props del componente padre
 import ModalNovedades from './ModalNovedades.vue'
 import { reactive, watch, defineEmits, computed } from 'vue'
-import { generarPdfPlantillaPropiedad } from '@/Services/api/Atcl/AtclApi'
 import { ref } from 'vue'
 import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
 
@@ -274,50 +262,6 @@ watch(() => props.propiedadUpdate, (newValue) => {
   }
 }, { immediate: true })
 
-
-
-
-
-
-const handleGenerarPdf = async (id, tipoBTN) => {
-  try {
-    console.log('Generando PDF para propiedad:', id, 'tipo:', tipoBTN)
-    const response = await generarPdfPlantillaPropiedad(id, tipoBTN)
-    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }))
-    window.open(url, '_blank') // ← Abre en nueva pestaña en vez de descargar
-  } catch (error) {
-    console.error('Error al generar PDF:', error)
-
-    // Mostrar más detalles del error
-    if (error.response) {
-      console.error('Status:', error.response.status)
-      console.error('Data:', error.response.data)
-      console.error('Headers:', error.response.headers)
-    } else if (error.request) {
-      console.error('Request:', error.request)
-    } else {
-      console.error('Error config:', error.config)
-    }
-  }
-}
-
-
-
-
-
-
-
-// Computed property para determinar el folio según empresa
-const folioDisplay = computed(() => {
-  const propiedadActiva = props.propiedad || props.propiedadUpdate
-  if (!propiedadActiva?.folios || propiedadActiva.folios.length === 0) {
-    return ''
-  }
-
-  // Buscar folio según empresa_id
-  const folio = propiedadActiva.folios.find(f => f.empresa_id === 1)
-  return folio?.folio || ''
-})
 
 // Computed properties separadas para cada tipo de folio
 const folioCentral = computed(() => {

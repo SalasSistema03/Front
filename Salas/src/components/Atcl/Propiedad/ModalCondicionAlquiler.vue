@@ -15,7 +15,7 @@
             <div class="col-md-12">
               <div class="mb-6">
                 <textarea v-if="propiedad" name="condicion" id="condicion" class="form-control form-control-atcl"
-                  rows="8" v-model="propiedad.condicion"
+                  rows="8" :value="propiedad?.condicion"
                   placeholder="Ingrese las condiciones de alquiler..."></textarea>
                 <textarea v-else name="condicion" id="condicion" class="form-control form-control-atcl" rows="8"
                   v-model="condicionData.condicion" placeholder="Ingrese las condiciones de alquiler..."></textarea>

@@ -163,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 
@@ -223,15 +223,6 @@ watch(() => props.propiedad?.fotos, async (fotos) => {
   imagenesCargadas.value = imagenesBase64
   cargando.value = false
 }, { immediate: true })
-
-// Computed del precio (mantenido por compatibilidad)
-const precioDisplay = computed(() => {
-  const precio = props.propiedad?.precio_actual
-  if (!precio) return ''
-  if (precio.moneda_alquiler_pesos) return `$ ${precio.moneda_alquiler_pesos}`
-  if (precio.moneda_alquiler_dolar) return `u$s ${precio.moneda_alquiler_dolar}`
-  return ''
-})
 
 // Función expuesta para que el padre la pueda llamar
 const generarPdf = async () => {

@@ -193,7 +193,7 @@ watch(() => props.propiedadUpdate, (newValue) => {
   if (newValue) {
     //console.log('Cargando datos:', newValue)
     comodidades.estado_general = newValue.id_estado_general || ''
-    comodidades.dormitorios = newValue.cantidad_dormitorios || ''
+    comodidades.dormitorios = newValue.cantidad_dormitorios ?? ''
     comodidades.banios = newValue.banios || ''
     comodidades.lotes = newValue.mLote || ''
     comodidades.lote_cubierto = newValue.mCubiertos || ''
