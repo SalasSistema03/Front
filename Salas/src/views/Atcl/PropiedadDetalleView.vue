@@ -83,8 +83,7 @@
           </button>
         </div>
         <div class="col-md-4 mt-3 text-center">
-          <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-            data-bs-target="#modalDescripcion">
+          <button type="button" class="btn btn-secondary btn-sm w-100" @click="abrirDescripcionModal">
             Descripcion
           </button>
         </div>
@@ -277,7 +276,7 @@
     </div>
   </div>
   <ModalPropiedadComodidades :propiedad="propiedad" />
-  <ModalPropiedadDescripcion :propiedad="propiedad" />
+  <ModalPropiedadDescripcion :propiedad="propiedad" :show="showDescripcionModal" @close="cerrarDescripcionModal" />
   <ModalPropiedadVenta :propiedad="propiedad" />
   <ModalPropiedadAlquiler :propiedad="propiedad" />
   <ModalCondicionAlquiler :propiedad="propiedad" />
@@ -312,6 +311,7 @@ export default {
       loading: true,
       error: null,
       botones: null,
+      showDescripcionModal: false,
     }
   },
   computed: {
@@ -339,6 +339,12 @@ export default {
     })
   },
   methods: {
+    abrirDescripcionModal() {
+      this.showDescripcionModal = true
+    },
+    cerrarDescripcionModal() {
+      this.showDescripcionModal = false
+    },
     async mostrarPropiedad() {
       try {
         // Obtiene el ID de la URL (ej: /propiedad-detalle/825)

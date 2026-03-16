@@ -1,6 +1,19 @@
 <template>
+  <BaseModal v-if="usaBaseModal" :show="show" size="md" @close="emit('close')">
+    <template #title>DescripciÃ³n</template>
+    <template #body>
+      <textarea v-if="propiedad && propiedad.descipcion_propiedad" style="width: 100%;" rows="8"
+        :value="propiedad.descipcion_propiedad" readonly class="form-control"></textarea>
+      <textarea v-else style="width: 100%;" rows="5" v-model="descripcion.texto"
+        placeholder="Ingrese la descripciÃ³n de la propiedad..." class="form-control"></textarea>
+    </template>
+    <template #footer>
+      <button type="button" class="btn btn-secondary" @click="emit('close')">Cerrar</button>
+    </template>
+  </BaseModal>
+
   <!-- Modal -->
-  <div class="modal fade" id="modalDescripcion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  <div v-else class="modal fade" id="modalDescripcion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -26,7 +39,9 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits, defineProps } from 'vue'
+import { reactive, watch, defineEmits, defineProps, computed } from 'vue'
+import BaseModal from '../../base/BaseModal.vue'
+import * as bootstrap from 'bootstrap'
 
 // Definir props para recibir la propiedad (opcional)
 const props = defineProps({
@@ -37,12 +52,16 @@ const props = defineProps({
   propiedadUpdate: {
     type: Object,
     default: null
+  },
+  show: {
+    type: Boolean,
+    default: null
   }
 
 })
 
 // Definir los emits (para modo edición)
-const emit = defineEmits(['update:descripcion'])
+const emit = defineEmits(['update:descripcion', 'close'])
 
 // Datos reactivos del modal (para modo edición)
 const descripcion = reactive({
@@ -56,6 +75,11 @@ watch(() => props.propiedadUpdate, (newValue) => {
 
   }
 }, { immediate: true })
+if (typeof window !== 'undefined') {
+  window.bootstrap = window.bootstrap || bootstrap
+}
+
+const usaBaseModal = computed(() => props.show !== null)
 // Observar cambios y emitir automáticamente (solo para modo edición)
 watch(descripcion, (newValue) => {
   if (!props.propiedad || !props.propiedad.descipcion_propiedad) {
