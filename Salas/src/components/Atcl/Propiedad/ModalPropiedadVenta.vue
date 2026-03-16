@@ -329,6 +329,9 @@ const props = defineProps({
 
 import { reactive, watch, defineEmits, computed } from 'vue'
 
+
+
+
 // Definir los emits
 const emit = defineEmits(['update:venta', 'update:novedadVenta', 'update:observacionesModificadasVenta'])
 const fichaPdfRef = ref(null)
@@ -493,10 +496,6 @@ const venta = reactive(
     autorizacion_venta: '',
   }
 )
-
-
-
-
 // Lógica toggleDescripcion para venta
 const ESTADOS_CON_DESCRIPCION_VENTA = ['BAJA', 'RESET', 'BAJA TEMPORAL']
 

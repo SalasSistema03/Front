@@ -561,6 +561,7 @@ export default {
       propietariosEliminados: [],
       propietariosModificados: [],
       propietariosOriginales: [],
+      id: null,
     }
   },
   computed: {
@@ -1096,14 +1097,26 @@ export default {
 
         // Enviar al backend
         const response = await actualizaPropiedad(formData)
-        console.log('Respuesta:', response)
+        const id = this.$route.params.id
+        //console.log('Respuesta:', response.data)
 
-        this.showSuccess('Propiedad actualizada correctamente')
+
         // Mostrar mensaje de éxito
-        // alert('Propiedad actualizada correctamente')
+        //alert('Propiedad actualizada correctamente')
+
+        if (response.data.success) {
+          this.showSuccess('Propiedad actualizada correctamente')
+          // Redirigir a la vista de detalle de la propiedad
+
+          this.$router.push(`/propiedad-detalle/${id}`)
+        } else {
+          // Si no hay ID, redirigir a una página por defecto o mostrar mensaje
+          this.showError('No se pudo obtener el ID de la propiedad para redirigir')
+        }
+
 
         // Opcional: recargar los datos
-        await this.mostrarPropiedad()
+        /*  await this.mostrarPropiedad() */
 
       } catch (error) {
         console.error('Error actualizando propiedad:', error)

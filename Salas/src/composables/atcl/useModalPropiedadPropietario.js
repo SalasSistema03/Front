@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import { Modal } from 'bootstrap'
+/* import { Modal } from 'bootstrap' */
 import { buscaPersona, muestraPropiedad } from '@/Services/api/Atcl/AtclApi'
 
 export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) {
@@ -39,10 +39,10 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
   const emitirPropietarios = () => emit('propietarios-cambiados', getPropietariosList())
 
   const switchModals = () => {
-    const modalPadre = Modal.getInstance(document.getElementById('modalPropietarios'))
+    const modalPadre = window.bootstrap.Modal.getInstance(document.getElementById('modalPropietarios'))
     if (modalPadre) modalPadre.hide()
     setTimeout(() => {
-      const modalHijo = new Modal(document.getElementById('modalCargaPersona'))
+      const modalHijo = new window.bootstrap.Modal(document.getElementById('modalCargaPersona'))
       modalHijo.show()
     }, 400)
   }
@@ -93,7 +93,7 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     const lista = getPropietariosList()
     const existe = lista.some((p) => p.id === personaSeleccionada.value.id)
     if (existe) {
-      alert('Ya está asignado')
+      alert('Ya estï¿½ asignado')
       return
     }
 

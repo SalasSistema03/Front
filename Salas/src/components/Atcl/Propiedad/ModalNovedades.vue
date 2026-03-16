@@ -55,7 +55,6 @@
 
 <script setup>
 import { defineProps, ref, watch } from 'vue'
-import { Modal } from 'bootstrap'
 import { guardarNovedad as guardarNovedadApi } from '../../../Services/api/Atcl/AtclApi'
 import { useToast } from '../../../composables/useToast' // ajustá el path
 import { getUser } from '../../../Services/api/Usuario/userApi'
@@ -115,7 +114,7 @@ const guardarNovedad = async () => {
 
     // Cerrar el modal
     const modalEl = document.getElementById(props.modalId)
-    Modal.getInstance(modalEl)?.hide()
+    window.bootstrap.Modal.getInstance(modalEl)?.hide()
 
   } catch (error) {
     showError('Error al guardar la novedad')

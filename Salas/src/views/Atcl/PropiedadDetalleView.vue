@@ -291,7 +291,7 @@ import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadV
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
-import { Popover } from 'bootstrap'
+/* import { Popover } from 'bootstrap' */
 import { descargarFotos } from '../../Services/api/Atcl/AtclApi'
 
 
@@ -334,7 +334,7 @@ export default {
     this.$nextTick(() => {
       const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
       popoverTriggerList.map(function (popoverTriggerEl) {
-        return new Popover(popoverTriggerEl)
+        return new window.bootstrap.Popover(popoverTriggerEl)
       })
     })
   },

@@ -1,6 +1,6 @@
 <template>
   <BaseModal v-if="usaBaseModal" :show="show" size="md" @close="emit('close')">
-    <template #title>DescripciÃ³n</template>
+    <template #title>Descripcion</template>
     <template #body>
       <textarea v-if="propiedad && propiedad.descipcion_propiedad" style="width: 100%;" rows="8"
         :value="propiedad.descipcion_propiedad" readonly class="form-control"></textarea>
@@ -41,7 +41,6 @@
 <script setup>
 import { reactive, watch, defineEmits, defineProps, computed } from 'vue'
 import BaseModal from '../../base/BaseModal.vue'
-import * as bootstrap from 'bootstrap'
 
 // Definir props para recibir la propiedad (opcional)
 const props = defineProps({
@@ -75,9 +74,6 @@ watch(() => props.propiedadUpdate, (newValue) => {
 
   }
 }, { immediate: true })
-if (typeof window !== 'undefined') {
-  window.bootstrap = window.bootstrap || bootstrap
-}
 
 const usaBaseModal = computed(() => props.show !== null)
 // Observar cambios y emitir automáticamente (solo para modo edición)
