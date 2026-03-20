@@ -1,0 +1,29 @@
+@use 'colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+
+.tabla_clientes
+
+  width: 100%
+  overflow-x: auto
+  display: flex
+
+  justify-content: center
+  overflow-y: auto
+  max-height: 23vh
+
+  table
+    width: 95%
+    border-collapse: collapse
+    font-size: 0.8rem
+
+    thead
+      th
+        background-color: $azulSalas !important
+        color: white
+        position: sticky
+        top: 0
+
+.card_clientes_criterio_busqueda
+  height: 33vh !important
+

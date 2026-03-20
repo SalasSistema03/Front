@@ -7,6 +7,7 @@ import Usuario from '../router/usuario'
 import Contable from '../router/contable'
 import Atcl from '../router/atcl'
 import Agenda from '../router/agenda'
+import Cliente from '../router/cliente'
 import { useAuthStore } from '@/stores/auth'
 import { alertas } from '../utils/alertas'
 
@@ -36,7 +37,8 @@ const router = createRouter({
     ...Atcl,
     ...Contable,
     ...Agenda,
-    
+    ...Cliente,
+
   ],
 })
 
@@ -62,7 +64,7 @@ router.beforeEach(async (to) => {
   // --- NUEVO: CANDADO DE ADMINISTRADOR ---
   if (to.meta.requiresAdmin) {
     // Agregamos un log extra para ver qué llegó ahora
-   
+
 
     // Usa el nombre exacto que veas en la consola (admin o is_admin)
     if (Number(authStore.user?.admin) !== 1) {
