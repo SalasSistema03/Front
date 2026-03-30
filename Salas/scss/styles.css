@@ -386,6 +386,14 @@
   white-space: nowrap;
 }
 
+.atcl_card_body {
+  height: 19.5rem !important;
+}
+
+.atcl_card_body_panel_fotos_documentos_videos {
+  height: 19.5rem !important;
+}
+
 .agenda_barra_lateral {
   font-size: 1rem !important;
   border-radius: 8px;
@@ -511,6 +519,214 @@
   height: 33vh !important;
 }
 
+.card-header-cliente {
+  background-color: rgb(0, 85, 185) !important;
+  color: white;
+  height: 2.5rem;
+}
+
+.barra-asesores {
+  border-right: 1px solid rgb(0, 85, 185);
+  height: 30.2rem;
+}
+.barra-asesores .tipo-potabiliadad-asesores {
+  color: red;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.barra-asesores .selector_potabilidad-asesores button {
+  font-size: 0.7rem !important;
+  color: rgb(0, 85, 185) !important;
+  background-color: white !important;
+}
+.barra-asesores .selector_potabilidad-asesores i {
+  color: rgb(0, 85, 185);
+  font-size: 0.7rem !important;
+}
+.barra-asesores .selector_potabilidad-asesores .texto-seleccionado {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+}
+.barra-asesores .lista-contacto-asesores {
+  border-radius: 5px !important;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+  color: red !important;
+  height: 24rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.barra-asesores .lista-contacto-asesores .nombre-contacto-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+}
+.barra-asesores .lista-contacto-asesores .nombre-contacto-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.barra-asesores .lista-contacto-asesores .telefono-contacto-asesores {
+  font-size: 0.6rem;
+  text-align: left;
+  color: black !important;
+}
+.barra-asesores .lista-contacto-asesores .fecha-contacto-asesores {
+  font-size: 0.5rem;
+  text-align: right;
+  color: black !important;
+}
+.barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+}
+.barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.9rem;
+}
+.barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+}
+.barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+}
+.barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.7rem;
+}
+.barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
+  font-size: 0.5rem;
+  margin-right: 0.5rem;
+}
+.barra-asesores .lista-contacto-asesores .pertenece-inmobiliaria-asesores {
+  font-size: 0.6rem !important;
+  text-align: center;
+  border-radius: 5px !important;
+  box-shadow: 0 0 0px rgb(0, 85, 185) !important;
+  background-color: rgb(185, 217.1621621622, 255) !important;
+  color: black;
+}
+.barra-asesores .titulo-columna-asesores {
+  font-size: 0.8rem;
+  color: rgb(0, 85, 185) !important;
+  border-bottom: 1px solid rgb(0, 85, 185);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.barra-asesores .creterio-asesores {
+  font-size: 0.8rem;
+  border-bottom: 1px solid #cccccc;
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  /* box-shadow: 0 0 3px $azulSalas !important */
+}
+.barra-asesores .creterio-asesores .criterio-titulos-asesores {
+  font-weight: 700;
+  font-size: 0.5rem;
+  color: rgb(0, 85, 185);
+}
+.barra-asesores .creterio-asesores .criterio-texto-asesores {
+  font-size: 0.65rem;
+  color: rgb(0, 85, 185);
+}
+.barra-asesores .creterio-asesores .boton-editar-criterio-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+}
+.barra-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.9rem;
+}
+.barra-asesores .creterio-asesores .boton-editar-criterio-asesores {
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+}
+
+.conversacion_asesores {
+  font-size: 0.7rem;
+}
+
+.contenedor_conversacion_asesores {
+  height: 23rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.contenedor_conversacion_asesores .conversacion_asesores_devolcucion {
+  font-size: 0.7rem;
+  color: black;
+  font-weight: 700;
+}
+.contenedor_conversacion_asesores .btn-light-conversacion-asesores {
+  font-size: 0.6rem !important;
+  height: 1rem !important;
+  border: 1px solid rgb(0, 85, 185) !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  border-radius: 5px !important;
+  margin-left: 0.5rem !important;
+  padding: 0rem 0.3rem !important;
+  cursor: pointer !important;
+}
+.contenedor_conversacion_asesores .btn-light-conversacion-asesores:hover {
+  border-color: rgba(0, 175, 154, 0.96) !important;
+  background-color: white !important;
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+
+.btn-adds-conversacion-asesores {
+  font-size: 0.8rem !important;
+  border: 1px solid rgb(0, 85, 185) !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  border-radius: 25px !important;
+  cursor: pointer !important;
+}
+.btn-adds-conversacion-asesores:hover {
+  border-color: rgb(0, 26.4189189189, 57.5) !important;
+  background-color: rgb(0, 61.5675675676, 134) !important;
+  color: white !important;
+}
+
+.lista-codigos-asesores {
+  height: 27rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.lista-codigos-asesores .codigos-ofrecido-asesores {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.6rem;
+  border: 0px solid rgba(0, 175, 154, 0.96) !important;
+  background-color: transparent !important;
+  border-radius: 10px !important;
+}
+.lista-codigos-asesores .codigos-ofrecido-asesores:hover {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+}
+.lista-codigos-asesores .codigos-agendado-asesores {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.6rem;
+  border: 0px solid rgb(0, 85, 185) !important;
+  background-color: transparent !important;
+  border-radius: 10px !important;
+}
+.lista-codigos-asesores .codigos-agendado-asesores:hover {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+}
+.lista-codigos-asesores .codigos-consultado-asesores {
+  color: grey !important;
+  font-size: 0.6rem;
+  border-radius: 10px !important;
+  border: 0px solid grey !important;
+  background-color: transparent !important;
+}
+.lista-codigos-asesores .codigos-consultado-asesores:hover {
+  background-color: grey !important;
+  color: white !important;
+}
+
 .btn-primary {
   background-color: rgb(0, 85, 185) !important;
   border-color: rgb(0, 85, 185) !important;
@@ -550,20 +766,26 @@
   /* border: 2px solid $azulSalas !important */
   border-radius: 5px !important;
   box-shadow: 0 0 3px rgb(0, 85, 185) !important;
-  font-size: 0.75rem !important;
+  font-size: 0.8rem !important;
 }
 
 .card {
-  border: 1px solid rgb(0, 85, 185);
-  border-radius: 10px;
+  border: 1px solid rgb(0, 85, 185) !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  height: 38vh;
 }
 .card .card-header {
-  background-color: rgb(0, 85, 185);
-  color: white;
+  background-color: white;
   margin: 0;
-  padding: 2px;
   text-align: center;
   font-weight: bold;
+}
+
+.modal-lg {
+  max-width: 90% !important;
+}
+
+.modal {
+  max-width: 100% !important;
+  overflow-x: visible;
+  overflow-y: visible;
 }/*# sourceMappingURL=styles.css.map */

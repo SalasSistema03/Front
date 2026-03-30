@@ -169,7 +169,7 @@
         <div class="modal-body d-flex justify-content-center row">
 
           <!-- Subida local (sin impactar BD) -->
-          <div class="col-md-12 row align-items-center form-group mb-3">
+          <div class="col-md-12 row align-items-star form-group mb-3">
             <div class="col-md-2">
               <label for="fotos" class="form-label">Seleccionar Fotos</label>
             </div>
@@ -266,7 +266,7 @@
         <div class="modal-body d-flex justify-content-center row">
 
           <!-- Subida local -->
-          <div class="col-md-12 row align-items-center form-group mb-3">
+          <div class="col-md-12 row align-items-star form-group mb-3">
             <div class="col-md-2">
               <label for="documentos" class="form-label">Seleccionar Documentos</label>
             </div>
@@ -360,7 +360,7 @@
         <div class="modal-body d-flex justify-content-center row">
 
           <!-- Subida local -->
-          <div class="col-md-12 row align-items-center form-group mb-3">
+          <div class="col-md-12 row align-items-star form-group mb-3">
             <div class="col-md-2">
               <label for="videos" class="form-label">Seleccionar Videos</label>
             </div>

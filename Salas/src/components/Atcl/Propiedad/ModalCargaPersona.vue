@@ -57,14 +57,14 @@
             </div>
 
             <div class="col-md-5">
-              <div class="row g-1">
+              <div class="row">
                 <div class="col-md-12">
-                  <div v-for="(tel, idx) in telefonos" :key="idx" class="telefono d-flex gap-2 pt-2">
-                    <div class="mb-2 w-50">
+                  <div v-for="(tel, idx) in telefonos" :key="idx" class="telefono d-flex px-1">
+                    <div class="m-0 px-1 w-50">
                       <label class="form-label">{{ idx === 0 ? 'Teléfono' : '' }}</label>
                       <input class="form-control" type="text" placeholder="Teléfono" v-model="tel.phone_number" />
                     </div>
-                    <div class="mb-2 w-50">
+                    <div class="m-0 px-1 w-50">
                       <label class="form-label">{{ idx === 0 ? 'Notas' : '' }}</label>
                       <input class="form-control" type="text" placeholder="Notas" v-model="tel.notes" />
                     </div>

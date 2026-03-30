@@ -42,10 +42,10 @@
                   <th>Motivo</th>
                   <th>Baja</th>
                   <th>Fecha Nacimiento</th>
-                  <th v-if="propiedad && !ocultarBotones">Baja Propietario</th>
-                  <th>-</th>
-                  <th v-if="propiedad && !ocultarBotones">Editar</th>
-                  <th v-if="!propiedad">Quitar</th>
+                  <th v-if="propiedad && !ocultarBotones"></th>
+                  <th></th>
+                  <th v-if="propiedad && !ocultarBotones"></th>
+                  <th v-if="!ocultarBotones"></th>
                 </tr>
               </thead>
               <tbody v-if="propiedad">
@@ -61,7 +61,7 @@
                     </button>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-info btn-sm w-50" @click="verPropietario(item)">
+                    <button type="button" class="btn btn-secondary btn-sm w-50" @click="verPropietario(item)">
                       <i class="bi bi-eye">Ver</i>
                     </button>
                   </td>

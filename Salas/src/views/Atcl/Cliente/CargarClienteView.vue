@@ -1,12 +1,12 @@
   <template>
     <NavComponent titulo="Cargar Cliente"></NavComponent>
 
-    <div class="px-3 pb-3">
+    <div class="px-3 pb-2">
       <div class="row d-flex justify-content-center">
         <div class="col-md-6 row p-0">
           <div class="col-md-12">
-            <div class="card m-1">
-              <div class="card-header">
+            <div class="card  m-1">
+              <div class="card-header card-header-cliente">
                 <h5>Datos del Cliente</h5>
               </div>
               <div class="card-body form-group row">
@@ -20,12 +20,13 @@
                 </div>
                 <div class="col-4">
                   <label for="asesor">Asesor</label>
-                  <select class="form-control form-control-sm" id="asesor" v-model="id_asesor">
+                  <select class="form-control form-control-sm" id="asesor" v-model="id_asesor" v-if="tienePermiso">
                     <option value="">Seleccione</option>
                     <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
                       {{ asesor.username }}
                     </option>
                   </select>
+                  <input type="text" class="form-control form-control-sm" id="asesor" :value="username" readonly v-else>
                 </div>
                 <div class="col-4">
                   <label for="ingreso">Ingreso por</label>
@@ -62,13 +63,13 @@
           <!-- ------------------------CRITERIO DE BUSQUEDA--------------------------------------------- -->
           <div class="col-md-12">
             <div class="card card_clientes_criterio_busqueda m-1">
-              <div class="row card-header">
+              <div class="row card-header card-header-cliente">
                 <div class="col-10">
                   <h5>Criterio de Busqueda</h5>
                 </div>
                 <div class="col-2">
-                  <button class="btn btn-secondary btn-sm w-100" @click="asignarCriterio"><i
-                      class="bi bi-search"></i></button>
+                  <button class="btn btn-secondary btn-sm w-100 " @click="asignarCriterio"><i
+                      class="bi bi-plus-square"></i></button>
                 </div>
               </div>
               <div class="form-group row mx-2">
@@ -115,13 +116,13 @@
         <div class="col-md-6 row p-0">
           <div class="col-md-12">
             <div class="card m-1">
-              <div class="row card-header">
+              <div class="row card-header card-header-cliente">
                 <div class="col-10">
                   <h5>Propiedad Asignada</h5>
                 </div>
                 <div class="col-2">
                   <button class=" btn btn-secondary btn-sm w-100" @click="abirBusquedaPropiedadVentaModal"><i
-                      class="bi bi-search"></i></button>
+                      class="bi bi-house-add"></i></button>
                 </div>
 
               </div>
@@ -163,7 +164,7 @@
 
           <div class="col-md-12">
             <div class="card m-1">
-              <div class="card-header">
+              <div class="card-header card-header-cliente">
                 <h5>Lista criterio de búsqueda</h5>
               </div>
               <div class="form-group row">
@@ -224,7 +225,7 @@ import { useZona } from '@/composables/atcl/useZona';
 import ModalBusquedaPropiedadVenta from '@/components/Atcl/Cliente/ModalBusquedaPropiedadVenta.vue';
 import { useToast } from '@/composables/useToast'
 import { guardarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi'
-import { getClientePorTelefono } from '@/Services/api/Atcl/Cliente/ClienteApi';
+import { getClientePorTelefono, verificarPermisoSeleccionarAsesor } from '@/Services/api/Atcl/Cliente/ClienteApi';
 import { watch } from 'vue';
 
 export default {
@@ -264,6 +265,8 @@ export default {
       observaciones: '',
       sector_asesor: 'venta',
       usuario_id: '',
+      username: '',
+      tienePermiso: false,
 
       /* CRITERIO DE BUSQUEDA */
       id_sector_asesor: 'Venta',
@@ -299,7 +302,13 @@ export default {
     async getUserData() {
       const token = localStorage.getItem('token')
       const user = await getUser(token)
+      console.log(user)
       this.usuario_id = user.data.id
+      this.username = user.data.username
+      // Si no tiene permiso para seleccionar asesor, usar su propio ID
+      if (!this.tienePermiso) {
+        this.id_asesor = this.usuario_id
+      }
     },
     PerteneceInmobiliaria() {
       if (this.pertenece_a_inmobiliaria === 'S') {
@@ -544,6 +553,18 @@ export default {
         this.showError("Error al guardar el cliente")
 
       }
+    },
+    async verificarPermiso() {
+      try {
+        const response = await verificarPermisoSeleccionarAsesor()
+        // Si la respuesta está vacía o es undefined, tratamos como false
+        this.tienePermiso = response.data !== undefined && response.data !== '' ? response.data : false
+        console.log('¿El usuario tiene permiso para seleccionar asesor?', this.tienePermiso)
+      } catch (error) {
+        console.error('Error al verificar permiso:', error)
+        this.tienePermiso = false
+        console.log('¿El usuario tiene permiso para seleccionar asesor erro?', false)
+      }
     }
   },
 
@@ -551,7 +572,9 @@ export default {
     this.cargarAsesores()
     this.cargarInmuebles()
     this.cargarZonas()
-    this.getUserData()
+    this.verificarPermiso().then(() => {
+      this.getUserData()
+    })
   }
 }
 </script>

@@ -33,3 +33,21 @@ export const getClientePorTelefono = (telefono) => {
     }
   })
 }
+
+export const verificarPermisoSeleccionarAsesor = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/verificaPermisoAsesor/seleccionarAsesor`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getAsesores = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/asesores`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}

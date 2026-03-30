@@ -10,6 +10,15 @@ const routesCliente = [
       requiresAuth: true,
     },
   },
+  {
+    path: '/asesores',
+    alias: '/atcl/asesores',
+    name: 'asesores',
+    component: () => import('../views/Atcl/Cliente/AsesoresView.vue'),
+    meta: {
+      requiresAuth: true,
+    }
+  },
 
 
 ]

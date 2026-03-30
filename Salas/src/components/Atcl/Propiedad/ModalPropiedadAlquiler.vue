@@ -54,7 +54,7 @@
               <label class="text-center form-label" id="basic-addon1"></label>
               <input v-if="propiedad" type="text" class="form-control text-center" :value="monedaAlquilerDisplay"
                 readonly>
-              <select v-else class="form-select" aria-label="Default select example" name="moneda_alquiler"
+              <select v-else class="form-select selector_potabilidad" name="moneda_alquiler"
                 v-model="alquiler.moneda_alquiler">
                 <option value="1">$</option>
                 <option value="2">u$s</option>

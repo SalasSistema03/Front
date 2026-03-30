@@ -161,14 +161,14 @@
             </ul>
           </div>
 
-          <div class="card-body p-0">
+          <div class="card-body atcl_card_body p-0">
             <div class="tab-content" id="myTabContent">
 
               <!-- ==================== SECCIÓN DE FOTOS ==================== -->
-              <div class="tab-pane fade show active" id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
+              <div class="tab-pane fade show active " id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
 
                 <!-- Carrusel cuando HAY fotos -->
-                <div v-if="propiedad?.fotos && propiedad.fotos.length > 0" id="carouselFotos" class="carousel slide"
+                <div v-if="propiedad?.fotos && propiedad.fotos.length > 0" id="carouselFotos" class="carousel slide atcl_card_body_panel_fotos_documentos_videos"
                   data-bs-ride="carousel" style="height: 345px;">
 
                   <!-- Indicadores -->
@@ -221,7 +221,7 @@
                 <div class="list-group" style="overflow-y: auto; max-height: 400px;">
 
                   <div v-for="(documento, index) in propiedad?.documentacion" :key="'doc-' + index"
-                    class="list-group-item d-flex flex-column h-100">
+                    class="list-group-item d-flex flex-column h-100 atcl_card_body_panel_fotos_documentos_videos">
 
                     <div class="flex-grow-1" style="overflow: hidden;">
                       <embed :src="'http://localhost' + documento.url" type="application/pdf" class="w-100"
@@ -247,7 +247,7 @@
                 <div class="list-group" style="overflow-y: auto; max-height: 400px;">
 
                   <div v-for="(video, index) in propiedad?.video" :key="'video-' + index"
-                    class="list-group-item d-flex flex-column h-100">
+                    class="list-group-item d-flex flex-column h-100 atcl_card_body_panel_fotos_documentos_videos">
 
                     <div class="flex-grow-1" style="overflow: hidden;">
                       <video controls class="w-100" height="300px">
