@@ -226,7 +226,7 @@ import ModalBusquedaPropiedadVenta from '@/components/Atcl/Cliente/ModalBusqueda
 import { useToast } from '@/composables/useToast'
 import { guardarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi'
 import { getClientePorTelefono, verificarPermisoSeleccionarAsesor } from '@/Services/api/Atcl/Cliente/ClienteApi';
-import { watch } from 'vue';
+/* import { watch } from 'vue'; */
 
 export default {
 

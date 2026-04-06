@@ -580,8 +580,6 @@
 .barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   font-size: 0.9rem;
-}
-.barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
   font-size: 0.6rem;
   margin-left: 0.4rem;
 }
@@ -592,8 +590,6 @@
 .barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   font-size: 0.7rem;
-}
-.barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
   font-size: 0.5rem;
   margin-right: 0.5rem;
 }
@@ -637,8 +633,6 @@
 .barra-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   font-size: 0.9rem;
-}
-.barra-asesores .creterio-asesores .boton-editar-criterio-asesores {
   font-size: 0.6rem;
   margin-left: 0.4rem;
 }
@@ -673,6 +667,23 @@
   background-color: white !important;
   color: rgba(0, 175, 154, 0.96) !important;
 }
+.contenedor_conversacion_asesores .mensaje-resaltado {
+  animation: resaltar 5s ease forwards;
+}
+@keyframes resaltar {
+  0% {
+    background-color: rgb(220.7, 236.4594594595, 255);
+  }
+  50% {
+    background-color: red;
+  }
+  75% {
+    background-color: black;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
 
 .btn-adds-conversacion-asesores {
   font-size: 0.8rem !important;
@@ -695,7 +706,7 @@
 }
 .lista-codigos-asesores .codigos-ofrecido-asesores {
   color: rgba(0, 175, 154, 0.96) !important;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   border: 0px solid rgba(0, 175, 154, 0.96) !important;
   background-color: transparent !important;
   border-radius: 10px !important;
@@ -704,20 +715,20 @@
   background-color: rgba(0, 175, 154, 0.96) !important;
   color: white !important;
 }
-.lista-codigos-asesores .codigos-agendado-asesores {
+.lista-codigos-asesores .codigos-muestra-asesores {
   color: rgb(0, 85, 185) !important;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   border: 0px solid rgb(0, 85, 185) !important;
   background-color: transparent !important;
   border-radius: 10px !important;
 }
-.lista-codigos-asesores .codigos-agendado-asesores:hover {
+.lista-codigos-asesores .codigos-muestra-asesores:hover {
   background-color: rgb(0, 85, 185) !important;
   color: white !important;
 }
 .lista-codigos-asesores .codigos-consultado-asesores {
   color: grey !important;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   border-radius: 10px !important;
   border: 0px solid grey !important;
   background-color: transparent !important;
@@ -725,6 +736,34 @@
 .lista-codigos-asesores .codigos-consultado-asesores:hover {
   background-color: grey !important;
   color: white !important;
+}
+
+.boton_debolucion_asesores {
+  font-size: 0.6rem !important;
+  height: 1rem !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  border-radius: 5px !important;
+  margin-left: 0.5rem !important;
+  padding: 0rem 0.3rem !important;
+}
+.boton_debolucion_asesores:hover {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+}
+
+.list-group-item-asesores {
+  border-bottom: 1px solid #dee2e6 !important;
+  padding-bottom: 1rem !important;
+}
+
+.seleccionAsesores {
+  /* background-color: lighten($azulSalas, 60%) !important */
+  box-shadow: 0px -10px 9px rgb(220.7, 236.4594594595, 255) inset !important;
+  color: white !important;
+  border-radius: 10px !important;
+  border: 0px solid !important;
+  border-bottom: 1px solid rgb(0, 85, 185) !important;
 }
 
 .btn-primary {

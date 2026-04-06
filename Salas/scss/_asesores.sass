@@ -13,12 +13,10 @@ $verdeSalas: colorSalas.$verdeSalas
 
   .selector_potabilidad-asesores
 
-
     button
       font-size: 0.7rem !important
       color: $azulSalas !important
       background-color: white !important
-
 
     i
       color: $azulSalas
@@ -54,16 +52,16 @@ $verdeSalas: colorSalas.$verdeSalas
       &:hover
         color: $verdeSalas !important
         font-size: 0.9rem
-      font-size: 0.6rem
-      margin-left: 0.4rem
+        font-size: 0.6rem
+        margin-left: 0.4rem
     .boton-whatsapp-clientes-asesores
       color: $azulSalas !important
       text-align: left
       &:hover
         color: $verdeSalas !important
         font-size: 0.7rem
-      font-size: 0.5rem
-      margin-right: 0.5rem
+        font-size: 0.5rem
+        margin-right: 0.5rem
     .pertenece-inmobiliaria-asesores
       font-size: 0.6rem !important
       text-align: center
@@ -72,20 +70,15 @@ $verdeSalas: colorSalas.$verdeSalas
       background-color: lighten($azulSalas, 50%) !important
       color: black
 
-
-
   .titulo-columna-asesores
     font-size: 0.8rem
     color: $azulSalas !important
     border-bottom: 1px solid $azulSalas
-    font-weight: 600   // extra bold
+    font-weight: 600 // extra bold
     // hacer que el texto se corte a la derecha
     overflow: hidden
     text-overflow: ellipsis
     white-space: nowrap
-
-
-
 
   .creterio-asesores
     font-size: 0.8rem
@@ -109,9 +102,8 @@ $verdeSalas: colorSalas.$verdeSalas
       &:hover
         color: $verdeSalas !important
         font-size: 0.9rem
-      font-size: 0.6rem
-      margin-left: 0.4rem
-
+        font-size: 0.6rem
+        margin-left: 0.4rem
 
 .conversacion_asesores
   font-size: 0.7rem
@@ -138,6 +130,17 @@ $verdeSalas: colorSalas.$verdeSalas
       border-color: $verdeSalas !important
       background-color: white !important
       color: $verdeSalas !important
+  .mensaje-resaltado
+    animation: resaltar 5s ease forwards
+  @keyframes resaltar
+    0%
+      background-color: lighten($azulSalas, 57%)
+    50%
+      background-color: red
+    75%
+       background-color: black
+    100%
+      background-color: transparent
 
 .btn-adds-conversacion-asesores
   font-size: 0.8rem !important
@@ -156,16 +159,16 @@ $verdeSalas: colorSalas.$verdeSalas
   overflow-x: hidden
   .codigos-ofrecido-asesores
     color: $verdeSalas !important
-    font-size: 0.6rem
+    font-size: 0.55rem
     border: 0px solid $verdeSalas !important
     background-color: transparent !important
     border-radius: 10px !important
     &:hover
       background-color: $verdeSalas !important
       color: white !important
-  .codigos-agendado-asesores
+  .codigos-muestra-asesores
     color: $azulSalas !important
-    font-size: 0.6rem
+    font-size: 0.55rem
     border: 0px solid $azulSalas !important
     background-color: transparent !important
     border-radius: 10px !important
@@ -174,7 +177,7 @@ $verdeSalas: colorSalas.$verdeSalas
       color: white !important
   .codigos-consultado-asesores
     color: grey !important
-    font-size: 0.6rem
+    font-size: 0.55rem
     border-radius: 10px !important
     border: 0px solid grey !important
     background-color: transparent !important
@@ -182,4 +185,27 @@ $verdeSalas: colorSalas.$verdeSalas
       background-color: grey !important
       color: white !important
 
+.boton_debolucion_asesores
+  font-size: 0.6rem !important
+  height: 1rem !important
+  background-color: $azulSalas !important
+  color: white !important
+  border-radius: 5px !important
+  margin-left: 0.5rem !important
+  padding: 0rem 0.3rem !important
 
+  &:hover
+    background-color: $verdeSalas !important
+    color: white !important
+
+.list-group-item-asesores
+  border-bottom: 1px solid #dee2e6 !important
+  padding-bottom: 1rem !important
+.seleccionAsesores
+  /* background-color: lighten($azulSalas, 60%) !important */
+  //quiero la sombra para arriba y para adentro
+  box-shadow: 0px -10px 9px lighten($azulSalas, 57%) inset !important
+  color: white !important
+  border-radius: 10px !important
+  border: 0px solid !important
+  border-bottom: 1px solid $azulSalas !important
