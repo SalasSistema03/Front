@@ -81,6 +81,7 @@ import BaseModal from '@/components/base/BaseModal.vue'
 import { useInmuebles } from '@/composables/atcl/useInmuebles'
 import { useZona } from '@/composables/atcl/useZona'
 import { modificarCriterio } from '@/Services/api/Atcl/Cliente/ClienteApi'
+import { useToast } from '@/composables/useToast'
 
 
 const props = defineProps({
@@ -89,11 +90,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'seleccionar', 'criterio-actualizado'])
-
+const { showSuccess, handleApiError } = useToast()
 const { inmuebles, cargarInmuebles } = useInmuebles()
 const { zonas, cargarZonas } = useZona()
 
-// ✅ Objeto reactivo central que copia los datos del criterio
+//  Objeto reactivo central que copia los datos del criterio
 const form = reactive({
   id_criterio_venta: null,
   id_categoria: null,
@@ -106,7 +107,7 @@ const form = reactive({
   observaciones: null,
 })
 
-// ✅ Watch para poblar el form cuando llegue el criterio (o cambie)
+//  Watch para poblar el form cuando llegue el criterio (o cambie)
 watch(
   () => props.criterio,
   (nuevoCriterio) => {
@@ -125,17 +126,18 @@ watch(
   { immediate: true } // Se ejecuta de inmediato al montar
 )
 
-// ✅ Ahora sí captura todos los campos modificados
+// Ahora sí captura todos los campos modificados
 const actualizarCriterio = async () => {
   try {
-    console.log('📦 Criterio actualizado:', { ...form })
+    //console.log('📦 Criterio actualizado:', { ...form })
     await modificarCriterio(form)
+    showSuccess('Criterio actualizado correctamente')
 
     // 👈 Emitimos el evento con el criterio actualizado
     emit('criterio-actualizado')
     emit('close')
   } catch (error) {
-    console.error('Error al actualizar criterio:', error)
+    handleApiError(error)
     // Aquí podrías mostrar un mensaje de error al usuario
   }
 }

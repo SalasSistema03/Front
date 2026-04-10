@@ -126,12 +126,11 @@
 }
 
 #navbar_contenedor_logo {
-  padding: 0;
-  height: inherit;
+  padding: 0 !important;
+  height: inherit !important;
 }
 #navbar_contenedor_logo img {
-  height: 55px;
-  width: auto;
+  width: 11vh !important;
 }
 
 /* #navbar_logo_nav
@@ -235,22 +234,20 @@
 }
 
 .mostrarTurnosPublicidad {
-  height: 80vh;
-  width: 120vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: rgb(0, 85, 185);
-  border: 3px solid rgb(0, 85, 185);
+  height: 83vh;
+}
+.mostrarTurnosPublicidad {
   border-radius: 15px;
+}
+.mostrarTurnosPublicidad video {
+  max-height: 83vh;
+  border-radius: 20px;
+  border: 3px solid white;
 }
 
 .turnosMostrar {
   font-size: 14vh !important;
   font-weight: bold !important;
-  color: rgb(0, 85, 185) !important;
   background-color: white !important;
   border-radius: 8px;
 }
@@ -411,20 +408,12 @@
   filter: invert(1);
 }
 
-.agenda_tabla {
-  border-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-}
-.agenda_tabla h6 {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
 .agenda_tabla .tabla-scroll-container {
-  max-height: 28vh;
   overflow-y: auto;
+  height: 80vh;
+  border-radius: 8px;
+  border: 1px solid rgb(0, 85, 185);
+  margin-bottom: 1rem;
 }
 .agenda_tabla thead tr th {
   background-color: rgb(0, 85, 185);
@@ -433,7 +422,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  font-size: 0.8rem;
+  font-size: 1rem;
   text-align: center;
   white-space: nowrap;
 }
@@ -451,7 +440,6 @@
 }
 
 .agenda_modal {
-  max-height: 50vh;
   overflow-y: auto;
 }
 .agenda_modal .form-control {
@@ -472,10 +460,10 @@
 }
 
 .agenda_tabla_general {
-  height: 10vh;
+  height: 19vh;
   overflow-y: auto;
   overflow-x: hidden;
-  border-top: 1px solid rgb(0, 85, 185) !important;
+  border-bottom: 1px solid rgb(0, 85, 185) !important;
 }
 
 .agenda_titulo_tabla_modal {
@@ -484,15 +472,93 @@
 .agenda_titulo_tabla_modal th {
   position: sticky !important;
   top: 0;
-  color: rgb(0, 85, 185) !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
   padding: 0rem 0;
 }
 
 .agenda_cuerpo_tabla_modal {
-  font-size: 0.7rem !important;
+  font-size: 0.6rem !important;
 }
 .agenda_cuerpo_tabla_modal td {
   padding: 0.2rem 0;
+}
+
+.agenda_desplegable_busqueda {
+  z-index: 1000;
+  max-height: 40vh;
+  overflow-y: auto;
+  max-width: 47vw;
+}
+.agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad {
+  font-size: 0.7rem !important;
+}
+.agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad:hover {
+  background-color: rgb(0, 85, 185);
+  color: white !important;
+}
+.agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad .estado_activa {
+  font-size: 0.5rem !important;
+}
+
+.agenda_ancho_tabla_hora {
+  /* ancho */
+  width: 15vh !important;
+}
+
+.agenda-noseleccionada {
+  min-width: 7vh;
+  width: 7vh;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  color: black !important;
+  height: 10vh;
+}
+.agenda-noseleccionada:hover {
+  border: 1px solid rgb(0, 85, 185) !important;
+}
+.agenda-noseleccionada {
+  /* .texto-agenda
+  * width: 7vh
+  * font-size: 2.9vh !important
+  * word-wrap: break-word
+  * word-break: break-word
+  * white-space: normal
+  * display: inline-block */
+}
+
+.agenda-seleccionada {
+  padding: 0;
+  margin: 0;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  height: 10vh;
+  min-width: 7vh;
+}
+.agenda-seleccionada:hover {
+  background-color: rgb(0, 61.5675675676, 134) !important;
+}
+.agenda-seleccionada .texto-agenda {
+  min-width: 7vh;
+  max-width: 7vh;
+  font-size: 2vh !important;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: inline-block;
+}
+.agenda-seleccionada .texto-agenda .texto-agenda-content {
+  font-size: 1.3vh !important;
+  min-width: 17vh;
+}
+.agenda-seleccionada .texto-agenda-logo {
+  min-width: 7vh;
+  font-size: 4vh;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: inline-block;
 }
 
 .tabla_clientes {
@@ -576,20 +642,24 @@
 .barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: right;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
 }
 .barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
-  font-size: 0.9rem;
-  font-size: 0.6rem;
+  text-align: right;
+  font-size: 0.8rem;
   margin-left: 0.4rem;
 }
 .barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: left;
+  font-size: 0.6rem;
+  margin-right: 0.5rem;
 }
 .barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
-  font-size: 0.7rem;
+  text-align: left;
   font-size: 0.5rem;
   margin-right: 0.5rem;
 }
@@ -629,11 +699,12 @@
 .barra-asesores .creterio-asesores .boton-editar-criterio-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: right;
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
 }
 .barra-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
-  font-size: 0.9rem;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   margin-left: 0.4rem;
 }
 
@@ -668,21 +739,7 @@
   color: rgba(0, 175, 154, 0.96) !important;
 }
 .contenedor_conversacion_asesores .mensaje-resaltado {
-  animation: resaltar 5s ease forwards;
-}
-@keyframes resaltar {
-  0% {
-    background-color: rgb(220.7, 236.4594594595, 255);
-  }
-  50% {
-    background-color: red;
-  }
-  75% {
-    background-color: black;
-  }
-  100% {
-    background-color: transparent;
-  }
+  box-shadow: 0px -5px 9px rgb(220.7, 236.4594594595, 255) inset !important;
 }
 
 .btn-adds-conversacion-asesores {

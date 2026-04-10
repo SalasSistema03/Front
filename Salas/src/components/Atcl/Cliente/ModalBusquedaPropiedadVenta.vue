@@ -1,5 +1,5 @@
 <template>
-  <baseModal :show="show" size="lg">
+  <baseModal :show="show" size="lg" @close="emit('close')">
     <template #title>Busqueda de Propiedad</template>
     <template #body>
       <div class="row form-group d-flex align-items-center justify-content-center">
@@ -104,6 +104,7 @@
 import { defineProps, defineEmits, ref } from 'vue'
 import { getPropiedadesVenta } from '@/Services/api/Atcl/Cliente/ClienteApi'
 import BaseModal from '@/components/base/BaseModal.vue'
+import { useToast } from '@/composables/useToast'
 
 const props = defineProps({
   show: {
@@ -117,7 +118,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'seleccionar'])
-
+const { handleApiError } = useToast()
 const filtroCodigo = ref('')
 const filtroCalle = ref('')
 const filtroDorm = ref('')
@@ -129,10 +130,6 @@ const error = ref('')
 const buscado = ref(false)
 
 const buscar = async () => {
-  /* if (!filtroCodigo.value && !filtroCalle.value && !props.vistaAsesores) {
-    error.value = 'Ingrese un código o una calle para buscar.'
-    return
-  } */
 
   try {
     cargando.value = true
@@ -141,11 +138,13 @@ const buscar = async () => {
 
     const { data } = await getPropiedadesVenta(filtroCodigo.value, filtroCalle.value, filtroDorm.value, filtroBaños.value, filtroCochera.value)
     propiedades.value = data.data ?? []
-    console.log('este es el filtrado', propiedades.value)
+    //console.log('este es el filtrado', propiedades.value)
 
-  } catch (error) {
+  } catch (err) {
+
     error.value = 'Error al buscar propiedades. Intente nuevamente.'
     propiedades.value = []
+     handleApiError(err)
   } finally {
     cargando.value = false
   }

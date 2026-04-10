@@ -3,12 +3,13 @@
     <template #title>Devolucion</template>
     <template #body>
       <div class="row form-group">
-        <div class="col-md-4">
+        <!-- <div class="col-md-12">
           <label for="nombre" class="form-label">Devolucion</label>
-          <textarea v-model="mensajeDevolucion" name="" id=""></textarea>
+        </div> -->
+        <div class="col-md-12">
+          <textarea v-model="mensajeDevolucion" class="form-control" rows="5"></textarea>
         </div>
       </div>
-      <br>
     </template>
     <template #footer>
       <button type="button" class="btn btn-secondary btn-sm" @click="actualizarCliente()">Enviar</button>

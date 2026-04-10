@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg sticky-top mb-3 px-3">
     <router-link class="navbar-brand" id="navbar_contenedor_logo" :to="{ name: 'home' }">
-      <img :src="logo" alt="Logo" class="img-fluid" style="max-width: 11vh" />
+      <img :src="logo" alt="Logo" class="img-fluid" />
     </router-link>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

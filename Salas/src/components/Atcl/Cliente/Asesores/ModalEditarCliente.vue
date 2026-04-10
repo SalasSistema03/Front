@@ -23,8 +23,6 @@
           <label for="nombre_inmobiliaria" class="form-label">Nombre de la Inmobiliaria</label>
           <input type="text" class="form-control form-control-sm" id="nombre_inmobiliaria" v-model="form.nombre_de_inmobiliaria">
         </div>
-
-
       </div>
       <br>
     </template>
@@ -38,6 +36,7 @@
 import { defineProps, defineEmits, onMounted, reactive, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { modificarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi'
+import { useToast } from '@/composables/useToast'
 
 const props = defineProps({
   show: { type: Boolean, default: false },
@@ -46,7 +45,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'seleccionar', 'criterio-actualizado'])
 
-
+const { showSuccess, handleApiError } = useToast()
 
 const form = reactive({
   id_cliente: null,
@@ -72,13 +71,14 @@ watch(
 
 const actualizarCliente = async () => {
   try {
-    console.log('📦 Cliente actualizado:', { ...form })
+    //console.log('📦 Cliente actualizado:', { ...form })
 
     await modificarCliente(form)
+    showSuccess('Cliente actualizado correctamente')
     emit('criterio-actualizado')
     emit('close')
   } catch (error) {
-    console.error('Error al actualizar cliente:', error)
+    handleApiError(error)
     // Aquí podrías mostrar un mensaje de error al usuario
   }
 }

@@ -55,7 +55,7 @@
           <div class="col-6 pb-1 px-2 d-flex ">
             <label for="devolucionInput" class="form-label devolucionT  p-1">Devolucion</label>
             <input class="form-check-input mt-2 p-1" type="checkbox" value=""
-              aria-label="Checkbox for following text input" id="devolucionescheck">
+              aria-label="Checkbox for following text input" id="devolucionescheck" v-model="filtroSinDevolucion">
           </div>
           <!-- Buscador -->
           <div class="col-12 pb-1 px-2">
@@ -87,8 +87,6 @@
                   </div>
                   <div class="col-1 tipo-potabiliadad-asesores"
                     v-if="cliente.criterios_ordenados?.some(c => c.estado_criterio_venta === 'Activo')">
-
-                    <!-- En lugar de tu condición anterior -->
                     <div class="col-1 tipo-potabiliadad-asesores" v-if="getPotabilidadCliente(cliente) === 'o'">
                       <i class="bi bi-pencil-square text-secondary"></i>
                     </div>
@@ -260,11 +258,8 @@
           </div>
           <ul v-else class="list-group list-group-flush p-2 contenedor_conversacion_asesores">
             <li v-for="item in historialConversacion" :key="item.fecha_hora + item.mensaje">
-              <div
-                class="conversacion_asesores list-group-item-asesores"
-                :data-mensaje-id="item.id || null"
-                :class="{ 'mensaje-resaltado': mensajeIdSeleccionado && item.id === mensajeIdSeleccionado }"
-              >
+              <div class="conversacion_asesores list-group-item-asesores" :data-mensaje-id="item.id || null"
+                :class="{ 'mensaje-resaltado': mensajeIdSeleccionado && item.id === mensajeIdSeleccionado }">
                 <div>
                   <span>{{ item.fecha_hora }}</span>
                   <span>&nbsp;&nbsp;&nbsp;{{ item.mensaje }}</span>
@@ -284,7 +279,7 @@
           </ul>
         </div>
         <!-- Input form -->
-        <div class="p-3">
+        <div class="p-3" v-if="recargandoMensaje !== true && recargando !== true">
 
 
           <div class="input-group form-group" v-if="criterioSeleccionado">
@@ -293,11 +288,11 @@
               @click="abirBusquedaPropiedadVentaModal">
               <i class="bi bi-search"></i>
             </button>
-            <button type="button" class="btn btn-sm px-2 ms-2 btn-adds-conversacion-asesores"><i
+            <button type="button" class="btn btn-sm px-2 ms-2 btn-adds-conversacion-asesores" @click="abrirModalAgenda()"><i
                 class="bi bi-calendar-plus"></i></button>
 
             <input type="text" name="mensaje" class="form-control px-1 ms-1 input-texto ms-2"
-              placeholder="Escribe un mensaje..." v-model="mensaje">
+              placeholder="Escribe un mensaje..." v-model="mensaje" autocomplete="off">
 
             <button type="submit" class="btn btn-sm px-3 ms-2 btn-adds-conversacion-asesores"
               @click="enviarMensaje(mensaje)">
@@ -316,15 +311,16 @@
           Codigos
         </div>
 
-         <div v-if="recargandoMensaje" class="text-center p-3">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="mt-2">Actualizando codigos...</p>
+        <div v-if="recargandoMensaje" class="text-center p-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
           </div>
+          <p class="mt-2">Actualizando codigos...</p>
+        </div>
         <div v-else class="lista-codigos-asesores">
           <ul class="list-group list-group-flush">
-            <li v-for="codigo in codigos" :key="codigo.id" class="list-group-item p-1" @click="seleccionarCodigoPorId(codigo)">
+            <li v-for="codigo in codigos" :key="codigo.id" class="list-group-item p-1"
+              @click="seleccionarCodigoPorId(codigo)">
               <!-- {{ codigo }} -->
               <div v-if="codigo.codigo_ofrecimiento" class="codigos-ofrecido-asesores">
                 <div class="row p-1">
@@ -337,8 +333,6 @@
                   <div class="col-2 px-0">
                     <i v-if="codigo.devolucion" class="bi bi-check-lg">
                     </i>
-                    <!-- <i v-else class="bi bi-x-lg">
-                    </i> -->
                   </div>
 
                   <div class="col-12 d-flex justify-content-center align-items-center">
@@ -357,8 +351,6 @@
                   <div class="col-2 px-0">
                     <i v-if="codigo.devolucion" class="bi bi-check-lg">
                     </i>
-                    <!-- <i v-else class="bi bi-x-lg">
-                    </i> -->
                   </div>
                   <div class="col-12 d-flex justify-content-center align-items-center">
                     {{ codigo.direccion }}
@@ -376,8 +368,6 @@
                   <div class="col-2 px-0">
                     <i v-if="codigo.devolucion" class="bi bi-check-lg">
                     </i>
-                    <!-- <i v-else class="bi bi-x-lg">
-                    </i> -->
                   </div>
                   <div class="col-12 d-flex justify-content-center align-items-center">
                     {{ codigo.direccion }}
@@ -405,6 +395,9 @@
   <ModalDevolucion :show="showDevolucionModal" @close="showDevolucionModal = false" :item="itemActual"
     @mensajeDevolucion="recibirDevolucion" />
 
+   <ModalAgenda :show="showModalAgenda" :username="usuarioAgenda" :sector="selectedSector"
+    @close="showModalAgenda = false"  :criterioSeleccionado ="criterioSeleccionado" @nota-guardada="recargarMensajeYCódigos"/>
+
 
 </template>
 
@@ -419,6 +412,10 @@ import { enviarMensaje } from '../../../Services/api/Atcl/Cliente/ClienteApi';
 import ModalDevolucion from '../../../components/Atcl/Cliente/Asesores/ModalDevolucion.vue';
 import { devolucionMensaje } from '../../../Services/api/Atcl/Cliente/ClienteApi';
 import { obtenerHistorialCod } from '../../../Services/api/Atcl/Cliente/ClienteApi';
+import ModalAgenda from '../../../components/Agenda/ModalAgenda.vue';
+import { getUser } from "@/Services/api/Usuario/userApi";
+import { getToken } from "@/Services/business/auth";
+import { useToast } from "@/composables/useToast";
 
 export default {
   components: {
@@ -426,7 +423,8 @@ export default {
     ModalEditarCriterioCliente,
     ModalEditarCliente,
     ModalBusquedaPropiedadVenta,
-    ModalDevolucion
+    ModalDevolucion,
+    ModalAgenda
   },
   data() {
 
@@ -440,7 +438,10 @@ export default {
     const mensaje = ''
     const codigos = [];
     const mensajeIdSeleccionado = null;
-
+    const filtroSinDevolucion = false;
+    const showModalAgenda = false;
+    const usuarioAgenda = null;
+    const selectedSector = { nombre: 'Ventas' , id:2}
 
 
     return {
@@ -460,8 +461,18 @@ export default {
       vistaAsesores,
       mensaje,
       codigos,
-      mensajeIdSeleccionado
+      mensajeIdSeleccionado,
+      filtroSinDevolucion,
+      showModalAgenda,
+      usuarioAgenda,
+      selectedSector
     }
+  },
+  setup() {
+    const toast = useToast();
+    return {
+      toast
+    };
   },
   computed: {
     clientesFiltrados() {
@@ -485,11 +496,17 @@ export default {
         });
       }
 
+
+
       // Filtrar por nombre si hay texto de búsqueda
       if (this.buscar.trim() !== '') {
         clientesFiltrados = clientesFiltrados.filter(cliente =>
           cliente.nombre.toLowerCase().includes(this.buscar.toLowerCase())
         );
+      }
+
+      if (this.filtroSinDevolucion) {
+        clientesFiltrados = clientesFiltrados.filter(cliente => this.clienteTieneDevolucionesPendientes(cliente))
       }
 
       return clientesFiltrados;
@@ -542,6 +559,7 @@ export default {
 
       // Agregar muestras con sus devoluciones (juntas)
       if (this.criterioSeleccionado.historial_muestras) {
+
         this.criterioSeleccionado.historial_muestras.forEach(muestra => {
           historial.push({
             fecha_hora: muestra.fecha_hora,
@@ -555,7 +573,7 @@ export default {
       }
 
       // Ordenar por fecha original para eventos, manteniendo las devoluciones con sus padres
-      console.log('aaaaa',historial);
+      //console.log('aaaaa', this.criterioSeleccionado.historial_muestras);
       return historial.sort((a, b) => {
         // Si es una devolución, usar la fecha de su evento original
         const fechaAOriginal = a.fechaOriginal || a.fecha_hora;
@@ -583,15 +601,18 @@ export default {
       const token = localStorage.getItem('token')
       const asesoresInfo = await getAsesores(token)
       this.clientes = asesoresInfo.data.clientes
-      //console.log(asesoresInfo)
+      //console.log('aaaaaaaaa',asesoresInfo)
     },
     async recargarListaCompleta() {
       if (this.recargando) return // Evitar múltiples recargas simultáneas
 
       this.recargando = true
       this.clienteSeleccionado = ''
+      this.criterioSeleccionado = ''
       try {
         await this.getAsesores()
+
+        //this.criterioSeleccionado =
         //console.log('✅ Lista de asesores actualizada completamente')
       } catch (error) {
         console.error('❌ Error al actualizar la lista:', error)
@@ -633,6 +654,21 @@ export default {
       else {
         return 'o';
       }
+    },
+    clienteTieneDevolucionesPendientes(cliente) {
+      const criterios = Array.isArray(cliente?.criterios_ordenados) ? cliente.criterios_ordenados : []
+      const criteriosActivos = criterios.filter(c => c?.estado_criterio_venta === 'Activo')
+      const criteriosARevisar = criteriosActivos.length ? criteriosActivos : criterios
+
+      return criteriosARevisar.some(criterio => {
+        const consultas = Array.isArray(criterio?.historial_consultas) ? criterio.historial_consultas : []
+        const ofrecimientos = Array.isArray(criterio?.historial_ofrecimientos) ? criterio.historial_ofrecimientos : []
+        const muestras = Array.isArray(criterio?.historial_muestras) ? criterio.historial_muestras : []
+
+        const hayPendiente = (arr) => arr.some(x => x && (x.devolucion === null || x.devolucion === undefined || String(x.devolucion).trim() === ''))
+
+        return hayPendiente(consultas) || hayPendiente(ofrecimientos) || hayPendiente(muestras)
+      })
     },
     seleccionarCodigoPorId(codigo) {
       if (!codigo || !codigo.id) return
@@ -678,7 +714,7 @@ export default {
     },
     async seleccionarCriterio(criterio) {
       this.criterioSeleccionado = criterio;
-      console.log('codigos',criterio);
+      //console.log('codigos', criterio);
       const response = await obtenerHistorialCod(criterio.id_criterio_venta);
       this.codigos = response.data; // Solo tomar los datos, no el objeto completo
       this.mensajeIdSeleccionado = null
@@ -782,7 +818,7 @@ export default {
         // Recargar códigos después de agregar una propiedad
         if (this.criterioSeleccionado) {
           const response = await obtenerHistorialCod(this.criterioSeleccionado.id_criterio_venta);
-          console.log('codigos 2', response.data)
+          //console.log('codigos 2', response.data)
           this.codigos = response.data;
         }
       } catch (error) {
@@ -797,11 +833,54 @@ export default {
           id_criterio_venta: this.criterioSeleccionado.id_criterio_venta,
           mensaje: mensaje
         })
-        console.log('Mensaje enviado')
+        //console.log('Mensaje enviado')
         await this.recargarSeleccionActual()
         this.mensaje = ''
       } catch (error) {
         console.log(error)
+      }
+    },
+    async abrirModalAgenda() {
+      //console.log('abrirModalAgenda')
+      await this.getUsername()
+      this.showModalAgenda = true
+    },
+    async recargarMensajeYCódigos() {
+      if (this.recargandoMensaje) return
+      this.recargandoMensaje = true
+
+      try {
+        await this.recargarSeleccionActual()
+        // Recargar códigos después de guardar una nota
+        if (this.criterioSeleccionado) {
+          const response = await obtenerHistorialCod(this.criterioSeleccionado.id_criterio_venta);
+          //console.log('codigos recargados', response.data)
+          this.codigos = response.data;
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.recargandoMensaje = false
+      }
+    },
+    async getUsername() {
+      try {
+        const token = getToken()
+        if (!token) {
+          this.usuarioAgenda = null
+          return
+        }
+
+        const user = await getUser(token)
+        const data = user?.data || {}
+
+        this.usuarioAgenda = {
+          usuario_id: data.usuario_id ?? data.id ?? data.user_id ?? null,
+          nombre: data.username ?? data.name ?? data.nombre ?? ''
+        }
+      } catch (error) {
+        console.error('Error al obtener usuario actual:', error)
+        this.usuarioAgenda = null
       }
     }
   },
