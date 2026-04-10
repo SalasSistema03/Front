@@ -49,17 +49,21 @@ $verdeSalas: colorSalas.$verdeSalas
     .boton-editar-clientes-asesores
       color: $azulSalas !important
       text-align: right
+      font-size: 0.7rem
+      margin-left: 0.4rem
       &:hover
         color: $verdeSalas !important
-        font-size: 0.9rem
-        font-size: 0.6rem
+        text-align: right
+        font-size: 0.8rem
         margin-left: 0.4rem
     .boton-whatsapp-clientes-asesores
       color: $azulSalas !important
       text-align: left
+      font-size: 0.6rem
+      margin-right: 0.5rem
       &:hover
         color: $verdeSalas !important
-        font-size: 0.7rem
+        text-align: left
         font-size: 0.5rem
         margin-right: 0.5rem
     .pertenece-inmobiliaria-asesores
@@ -99,10 +103,11 @@ $verdeSalas: colorSalas.$verdeSalas
     .boton-editar-criterio-asesores
       color: $azulSalas !important
       text-align: right
+      font-size: 0.6rem
+      margin-left: 0.4rem
       &:hover
         color: $verdeSalas !important
-        font-size: 0.9rem
-        font-size: 0.6rem
+        font-size: 0.7rem
         margin-left: 0.4rem
 
 .conversacion_asesores
@@ -131,16 +136,8 @@ $verdeSalas: colorSalas.$verdeSalas
       background-color: white !important
       color: $verdeSalas !important
   .mensaje-resaltado
-    animation: resaltar 5s ease forwards
-  @keyframes resaltar
-    0%
-      background-color: lighten($azulSalas, 57%)
-    50%
-      background-color: red
-    75%
-       background-color: black
-    100%
-      background-color: transparent
+    box-shadow: 0px -5px 9px lighten($azulSalas, 57%) inset !important
+
 
 .btn-adds-conversacion-asesores
   font-size: 0.8rem !important

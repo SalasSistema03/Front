@@ -17,7 +17,7 @@
           <input type="number" class="form-control form-control-sm" placeholder="N°" v-model="codigo">
         </div>
 
-        <!-- 🔥 INPUT DE CALLE CON COMPOSABLE -->
+        <!--  INPUT DE CALLE CON COMPOSABLE -->
         <div class="form-group col-md-4 px-1">
           <label for="input-calle" class="form-label">Calle</label>
           <div class="position-relative">
