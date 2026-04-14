@@ -157,7 +157,7 @@
 
   </BaseModal>
 
-  <ModalMotivoBorrar :show="showModalMotivoBorrar" @close="cerrarModalMotivoBorrar" @confirm="confirmarBorrado" />
+  <ModalMotivoBorrar :show="showModalMotivoBorrar" @close="cerrarModalMotivoBorrar" @confirm="confirmarBorrado" @nota-borrada="emit('nota-borrada')" />
 </template>
 
 <script setup>
@@ -172,7 +172,7 @@ import { useToast } from '@/composables/useToast'
 
 const HORA_MIN = '07:00'
 const HORA_MAX = '20:45'
-const emit = defineEmits(['close', 'nota-guardada'])
+const emit = defineEmits(['close', 'nota-guardada', 'nota-borrada'])
 
 // Variables para los datos del formulario
 const descripcion = ref('')
@@ -593,8 +593,11 @@ async function confirmarBorrado(motivo) {
   if (!props.nota?.id) return
   try {
     await borarr(props.nota.id, motivo)
-    showModalMotivoBorrar.value = false
-    emit('close')
+    // Pequeño delay para asegurar que el usuario vea la animación de borrado
+    setTimeout(() => {
+      showModalMotivoBorrar.value = false
+      emit('close')
+    }, 300)
   } catch (error) {
     console.error('Error al borrar nota:', error)
   }

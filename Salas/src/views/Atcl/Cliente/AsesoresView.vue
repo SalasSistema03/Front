@@ -884,9 +884,26 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getAsesores()
+  async mounted() {
+    await this.getAsesores()
 
+    // Check if there's a clienteId in the query params
+    const clienteId = this.$route.query.clienteId;
+    const criterioId = this.$route.query.criterioId;
+    if (clienteId) {
+      // Find the client with the matching ID
+      const cliente = this.clientes.find(c => c.id_cliente === parseInt(clienteId));
+      if (cliente) {
+        this.seleccionarCliente(cliente);
+        // If there's a criterioId, select the corresponding criterio
+        if (criterioId && cliente.criterios_ordenados) {
+          const criterio = cliente.criterios_ordenados.find(c => c.id_criterio_venta === parseInt(criterioId));
+          if (criterio) {
+            this.seleccionarCriterio(criterio);
+          }
+        }
+      }
+    }
   }
 }
 </script>

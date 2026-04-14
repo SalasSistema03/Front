@@ -14,14 +14,11 @@
               </button>
             </div>
           </div>
-
-
         </div>
         <div class="col-md-10 mb-2 agenda_tabla">
           <div v-if="cargaAgenda" class="d-flex justify-content-center align-items-center h-100">
             <div role="status">
-              <div class="spinner-border spinner-border-light" role="status"><img
-                  src="../../assets/Escudo_Colon_Campeon.png" alt="" style="width: 100px; height: 100px;"></div>
+              <div class="spinner-border spinner-border-light" role="status"></div>
               <p>Seleccione un sector</p>
             </div>
           </div>
@@ -67,7 +64,7 @@
     </div>
   </div>
   <ModalAgenda :show="showModalAgenda" :username="selectedUsername" :hora="selectedHora" :sector="selectedSector"
-    :fecha="fechaSeleccionada" :nota="selectedNota" @close="showModalAgenda = false" />
+    :fecha="fechaSeleccionada" :nota="selectedNota" @close="showModalAgenda = false" @nota-guardada="recargarSector" @nota-borrada="recargarSector" />
 </template>
 <script>
 import NavComponent from '../../components/NavComponent.vue'
@@ -82,17 +79,22 @@ export default {
     ModalAgenda
   },
   watch: {
-    fechaSeleccionada() {
-      this.sectorSeleccionado = ''
-      this.usernames = []
-      this.sectoresCargados = false
-      this.cargaAgenda = true
-
+    async fechaSeleccionada() {
+      // Al cambiar la fecha mantenemos el sector seleccionado y recargamos su agenda.
+      // Solo limpiamos el estado del modal para evitar inconsistencias.
       this.showModalAgenda = false
       this.selectedUsername = null
       this.selectedHora = null
       this.selectedSector = null
       this.selectedNota = null
+
+      if (this.sectorSeleccionado && this.sectorSeleccionado.id) {
+        await this.seleccionarSector(this.sectorSeleccionado)
+      } else {
+        this.usernames = []
+        this.sectoresCargados = false
+        this.cargaAgenda = true
+      }
     }
   },
   data() {
@@ -141,17 +143,26 @@ export default {
     },
     async seleccionarSector(sector) {
       this.cargaAgenda = true
-
-      //console.log(this.fechaSeleccionada)
       try {
         const response = await getUsuarioSector(sector.id, this.fechaSeleccionada)
-        //console.log('RESPUESTA GETUSUARIOS', response)
         this.sectorSeleccionado = sector
         this.usernames = response.data
-        console.log(this.usernames)
+        //console.log(this.usernames)
         this.sectoresCargados = true
       } catch (error) {
         console.error('Error al cargar usuarios:', error)
+      } finally {
+        this.cargaAgenda = false
+      }
+    },
+    async recargarSector() {
+      if (!this.sectorSeleccionado) return
+      this.cargaAgenda = true
+      try {
+        const response = await getUsuarioSector(this.sectorSeleccionado.id, this.fechaSeleccionada)
+        this.usernames = response.data
+      } catch (error) {
+        console.error('Error al recargar usuarios del sector:', error)
       } finally {
         this.cargaAgenda = false
       }
@@ -174,8 +185,7 @@ export default {
       this.$nextTick(() => {
         this.showModalAgenda = true;
       });
-    }
-    ,
+    },
     normalizarHora(hora) {
       if (!hora) return ''
       return String(hora).slice(0, 5)

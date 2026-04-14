@@ -2,14 +2,17 @@
     <NavComponent titulo="Cargar Cliente"></NavComponent>
 
     <div class="px-3 pb-2">
+
       <div class="row d-flex justify-content-center">
-        <div class="col-md-6 row p-0">
-          <div class="col-md-12">
-            <div class="card  m-1">
+
+
+<!-- DATOS DEL CLIENTE -->
+          <div class="col-md-6 mb-1">
+            <div class="card">
               <div class="card-header card-header-cliente">
                 <h5>Datos del Cliente</h5>
               </div>
-              <div class="card-body form-group row">
+              <div class="card-body-cliente-datos form-group row px-3 py-0 mb-2">
                 <div class="col-4">
                   <label for="telefono">Telefono</label>
                   <input type="number" class="form-control form-control-sm" id="telefono" v-model="telefono">
@@ -38,7 +41,7 @@
                   </select>
                 </div>
                 <div class="col-4">
-                  <label for="perteneceInmobiliaria">¿Pert. Inmobiliaria?</label>
+                  <label for="perteneceInmobiliaria">¿Pert. Inmob.?</label>
                   <select class="form-control form-control-sm" id="perteneceInmobiliaria"
                     v-model="pertenece_a_inmobiliaria" @change="PerteneceInmobiliaria">
                     <option value="">Seleccione</option>
@@ -47,7 +50,7 @@
                   </select>
                 </div>
                 <div class="col-4" v-show="showNombreInmobiliaria != false">
-                  <label for="nombreInmobiliaria">Nombre de Inmob.</label>
+                  <label for="nombreInmobiliaria">Inmobiliaria</label>
                   <input type="text" class="form-control form-control-sm" id="nombreInmobiliaria"
                     v-model="nombre_de_inmobiliaria">
 
@@ -60,19 +63,14 @@
               </div>
             </div>
           </div>
-          <!-- ------------------------CRITERIO DE BUSQUEDA--------------------------------------------- -->
-          <div class="col-md-12">
-            <div class="card card_clientes_criterio_busqueda m-1">
+<!-- ------------------------CRITERIO DE BUSQUEDA--------------------------------------------- -->
+          <div class="col-md-6 mb-1">
+            <div class="card ">
               <div class="row card-header card-header-cliente">
-                <div class="col-10">
+
                   <h5>Criterio de Busqueda</h5>
-                </div>
-                <div class="col-2">
-                  <button class="btn btn-secondary btn-sm w-100 " @click="asignarCriterio"><i
-                      class="bi bi-plus-square"></i></button>
-                </div>
               </div>
-              <div class="form-group row mx-2">
+              <div class="card-body-cliente-datos form-group  row px-3 py-0 mb-2">
                 <div class="col-6">
                   <label for="tipoInmueble">Tipo de Inmueble</label>
                   <select class="form-control" id="tipoInmueble" v-model="id_tipo_inmueble">
@@ -83,7 +81,7 @@
                   </select>
                 </div>
                 <div class="col-6">
-                  <label for="cantidadDormitorios">Cantidad de Dormitorios</label>
+                  <label for="cantidadDormitorios">Cant. de Dormitorios</label>
                   <input type="number" class="form-control" id="cantidadDormitorios" v-model="cant_dormitorios">
                 </div>
                 <div class="col-4">
@@ -103,19 +101,20 @@
                     </option>
                   </select>
                 </div>
+                <div class="col-4 mt-4">
+                  <button class="btn btn-secondary btn-sm w-100 " @click="asignarCriterio"><i
+                      class="bi bi-plus-square"></i></button>
+                </div>
 
               </div>
             </div>
           </div>
 
-          <div class="col-md-12 d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btn-sm w-50" @click="handleGuardar">Guardar</button>
-          </div>
 
-        </div>
-        <div class="col-md-6 row p-0">
-          <div class="col-md-12">
-            <div class="card m-1">
+
+<!-- PROPiedad Asignada -->
+          <div class="col-md-6 mb-1">
+            <div class="card">
               <div class="row card-header card-header-cliente">
                 <div class="col-10">
                   <h5>Propiedad Asignada</h5>
@@ -126,9 +125,9 @@
                 </div>
 
               </div>
-              <div class="form-group row">
+              <div class="form-group row card-body-cliente">
 
-                <div class="col-12 mt-2">
+                <div class="col-12  ">
                   <div class="tabla_clientes">
                     <table class="table table-sm titulo_tabla">
                       <thead>
@@ -145,7 +144,7 @@
                           <td>{{ prop.calle }}</td>
                           <td>{{ prop.fecha_asignacion }}</td>
                           <td>
-                            <button class="btn btn-danger btn-sm" @click="eliminarPropiedad(index)"
+                            <button class="btn btn-danger btn-sm mx-1" @click="eliminarPropiedad(index)"
                               v-if="!prop.id_con_prop_venta">
                               <i class="bi bi-trash"></i>
                             </button>
@@ -162,20 +161,20 @@
             </div>
           </div>
 
-          <div class="col-md-12">
-            <div class="card m-1">
+          <div class="col-md-6 mb-1">
+            <div class="card ">
               <div class="card-header card-header-cliente">
                 <h5>Lista criterio de búsqueda</h5>
               </div>
-              <div class="form-group row">
+              <div class="form-group row card-body-cliente">
 
-                <div class="col-12 mt-2">
+                <div class="col-12 ">
                   <div class="tabla_clientes">
                     <table class="table table-sm titulo_tabla">
                       <thead>
                         <tr>
-                          <th>Tipo Inmueble</th>
-                          <th>Cant. Dormitorios</th>
+                          <th>Inmueble</th>
+                          <th>Cant. Dorm.</th>
                           <th>Cochera</th>
                           <th>Zona</th>
                           <th>Fecha</th>
@@ -192,7 +191,7 @@
                           <td>{{ criterio.fecha_criterio }}</td>
                           <td>{{ criterio.estado_criterio_venta }}</td>
                           <td>
-                            <button class="btn btn-danger btn-sm" @click="eliminarCriterio(index)"
+                            <button class="btn btn-danger btn-sm mx-1" @click="eliminarCriterio(index)"
                               v-if="!criterio.id_criterio_venta">
                               <i class="bi bi-trash"></i>
                             </button>
@@ -205,8 +204,12 @@
               </div>
             </div>
           </div>
-        </div>
+
+
+      <div class="col-md-4 d-flex justify-content-center px-5 mt-2">
+        <button type="submit" class="btn btn-primary btn-sm w-50" @click="handleGuardar">Guardar</button>
       </div>
+    </div>
     </div>
 
 
@@ -559,7 +562,7 @@ export default {
         const response = await verificarPermisoSeleccionarAsesor()
         // Si la respuesta está vacía o es undefined, tratamos como false
         this.tienePermiso = response.data !== undefined && response.data !== '' ? response.data : false
-        console.log('¿El usuario tiene permiso para seleccionar asesor?', this.tienePermiso)
+        //console.log('¿El usuario tiene permiso para seleccionar asesor?', this.tienePermiso)
       } catch (error) {
         console.error('Error al verificar permiso:', error)
         this.tienePermiso = false
