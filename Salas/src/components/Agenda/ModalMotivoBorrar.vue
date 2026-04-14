@@ -27,7 +27,7 @@ const props = defineProps({
   show: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['close', 'confirm'])
+const emit = defineEmits(['close', 'confirm', 'nota-borrada'])
 
 const motivo = ref('')
 const mostrarError = ref(false)
@@ -50,5 +50,7 @@ function confirmar() {
   }
 
   emit('confirm', valor)
+  emit('nota-borrada')
+  emit('close')
 }
 </script>

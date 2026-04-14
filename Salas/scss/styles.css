@@ -46,18 +46,22 @@
  * */
 .navbar {
   background-color: #fff;
-  box-shadow: 0 1px 1px rgba(0, 175, 154, 0.96);
+  box-shadow: 0 0px 6px rgba(0, 175, 154, 0.96);
 }
 
 .navbar-dropdown-submenu {
   position: relative;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .navbar-dropdown-menu {
   min-width: 20px;
   padding: 0.1rem 0;
   border: 1px solid rgb(0, 85, 185);
+}
+.navbar-dropdown-menu .bi {
+  color: rgba(0, 175, 154, 0.96);
+  margin-right: 0.5vh;
 }
 .navbar-dropdown-menu a {
   color: rgb(0, 85, 185) !important;
@@ -67,9 +71,14 @@
   color: rgba(0, 175, 154, 0.96) !important;
   background-color: rgba(0, 72, 145, 0);
 }
+.navbar-dropdown-menu a:hover:hover .bi {
+  color: rgb(0, 85, 185);
+  transition: all 0.3s;
+  font-size: 13px;
+}
 
 .navbar-dropdown-submenu-content {
-  font-size: 12px;
+  font-size: 11px;
   color: rgb(0, 85, 185) !important;
   position: absolute;
   top: 0;
@@ -97,7 +106,7 @@
     box-shadow: none;
     background-color: #f8f9fa;
   }
-  .navbar-dropdown-submenu-content .dropdown-item {
+  .navbar-dropdown-submenu-content .navbar-dropdown-submenu-content .dropdown-item {
     padding-left: 2rem;
   }
 }
@@ -115,13 +124,20 @@
 
 .navbar-item_menu {
   font-weight: 550 !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   color: rgb(0, 85, 185) !important;
+}
+.navbar-item_menu .bi {
+  color: rgba(110, 190, 255, 0.6352941176);
+  font-size: 15px;
+}
+.navbar-item_menu:hover .bi {
+  color: rgb(0, 85, 185);
 }
 .navbar-item_menu:hover {
   color: rgba(0, 175, 154, 0.96) !important;
 }
-.navbar-item_menu:focus {
+.navbar-item_menu:hover:focus {
   color: rgba(0, 175, 154, 0.96) !important;
 }
 
@@ -134,7 +150,7 @@
 }
 
 /* #navbar_logo_nav
- *  height: 40px */
+ * height: 40px */
 .dropdown-toggle::after {
   display: none !important;
 }
@@ -143,6 +159,7 @@
   font-size: 13px !important;
   color: rgba(0, 175, 154, 0.96) !important;
   font-weight: 800 !important;
+  border-radius: 10px !important;
 }
 .navbar-admin:hover {
   color: white !important;
@@ -155,6 +172,66 @@
   transform: translateY(-12%) translateX(-5%) !important;
   font-size: 14px !important;
   padding: 0.5rem 1rem !important;
+}
+
+.navbar-notificaciones {
+  font-size: 13px !important;
+  color: rgb(0, 85, 185) !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+.navbar-notificaciones:hover {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+  border-radius: 10px !important;
+}
+.navbar-notificaciones:hover .navbar-notificaciones-contador {
+  color: white !important;
+  background-color: rgb(0, 85, 185) !important;
+  border-radius: 10px !important;
+}
+.navbar-notificaciones .navbar-notificaciones-contador {
+  position: absolute;
+  top: 0.1vh;
+  margin-left: 0vh;
+  color: rgb(0, 85, 185);
+  background-color: white;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 10px !important;
+  padding-left: 0.7vh;
+  padding-right: 0.7vh;
+  min-width: 2.5vh;
+  font-size: 1.6vh !important;
+}
+
+.navbar-notificaciones_dropdown a {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: inline-block;
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+.navbar-notificaciones_dropdown {
+  position: relative;
+  transform: translateY(-12%) translateX(-5%) !important;
+  font-size: 12px !important;
+  padding: 0.3rem 0.3rem !important;
+  width: 27vh;
+}
+.navbar-notificaciones_dropdown i {
+  color: black;
+}
+.navbar-notificaciones_dropdown .navbar-notificacion-nombre {
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+.navbar-notificaciones_dropdown .navbar-notificacion-nombre .bi {
+  color: rgba(0, 175, 154, 0.96);
+  margin-right: 0.5vh;
+}
+.navbar-notificaciones_dropdown .navbar-notificacion-fecha {
+  font-size: 8px !important;
 }
 
 .register_permisos_menu {
@@ -567,28 +644,37 @@
   display: flex;
   justify-content: center;
   overflow-y: auto;
-  max-height: 23vh;
+  max-height: 25.5vh;
+  border: 1px solid white;
 }
 .tabla_clientes table {
-  width: 95%;
+  width: 100%;
   border-collapse: collapse;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
 }
 .tabla_clientes table thead th {
   background-color: rgb(0, 85, 185) !important;
   color: white;
   position: sticky;
   top: 0;
+  white-space: nowrap;
 }
-
-.card_clientes_criterio_busqueda {
-  height: 33vh !important;
+.tabla_clientes table tbody button {
+  font-size: 0.7rem;
 }
 
 .card-header-cliente {
   background-color: rgb(0, 85, 185) !important;
   color: white;
   height: 2.5rem;
+}
+
+.card-body-cliente-datos {
+  max-height: 33vh !important;
+}
+
+.card-body-cliente {
+  height: 27vh;
 }
 
 .barra-asesores {
