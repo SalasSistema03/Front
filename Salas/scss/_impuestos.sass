@@ -1,0 +1,80 @@
+@use 'colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+$grisSalas: colorSalas.$grisSalas
+
+.titulo-impuestos
+  font-size: 2.5vh
+  color: $azulSalas
+  text-align: center
+
+.contenedor-tabla-impuestos
+  height: 57vh
+  overflow-y: auto
+
+
+.tabla-modifica-carga-impuestos
+  max-height: 27vh !important
+  min-height: 10vh !important
+  button
+    font-size: 2vh
+
+
+.tabla-impuestos
+    th
+      background-color: $azulSalas
+      color: white
+      font-weight: bold
+      text-align: center
+      font-size: 2.5vh
+      position: sticky
+      top: 0
+      padding: 0.5vh
+    td
+      border-left: 1px solid $azulSalas
+      border-right: 1px solid $azulSalas
+      text-align: center
+      vertical-align: middle
+      overflow: hidden
+      font-size: 2vh
+      padding: 0.36vh !important
+/* aca da opciones a los botones en las tablas */
+      button
+        font-weight: bold
+        padding-left: 0.6vh
+        padding-right: 0.6vh
+        padding-top: 0.3vh
+        padding-bottom: 0.3vh
+        &:hover
+          background-color: $grisSalas !important
+          border: 1px solid $grisSalas !important
+
+.listado-mas-opciones-impuestos
+  width: 30vh
+  height: 25vh
+  border: 1px solid $azulSalas
+  .text-options-impuestos
+    color: $azulSalas
+    font-size: 2vh
+    &:hover
+      color: $verdeSalas
+      background-color: transparent
+      .bi
+        font-size: 2.5vh
+        color: $azulSalas
+
+
+.lista-mas-opciones-impuestos
+  width: 25vh !important
+  height: 10vh
+  border: 1px solid $azulSalas
+  .text-options-impuestos
+    color: $azulSalas
+    font-size: 2vh
+    &:hover
+      color: $verdeSalas
+      background-color: transparent
+      .bi
+        font-size: 2.5vh
+        color: $azulSalas
+

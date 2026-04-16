@@ -183,7 +183,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(criterio, index) in listaCriterios" :key="index">
+                        <tr v-for="(criterio, index) in listaCriterios" :key="index" >
                           <td>{{ criterio.tipo_inmueble_nombre }}</td>
                           <td>{{ criterio.cant_dormitorios }}</td>
                           <td>{{ criterio.cochera }}</td>

@@ -328,7 +328,7 @@
                     Código {{ codigo.codigo_ofrecimiento }}
                   </div>
                   <div class="col-5 px-0">
-                    {{ formatearFecha(codigo.fecha_devolucion) }}
+                    {{ formatDate(codigo.fecha_devolucion) }}
                   </div>
                   <div class="col-2 px-0">
                     <i v-if="codigo.devolucion" class="bi bi-check-lg">
@@ -346,7 +346,7 @@
                     Código {{ codigo.codigo_consulta }}
                   </div>
                   <div class="col-5 px-0">
-                    {{ formatearFecha(codigo.fecha_devolucion) }}
+                    {{ formatDate(codigo.fecha_devolucion) }}
                   </div>
                   <div class="col-2 px-0">
                     <i v-if="codigo.devolucion" class="bi bi-check-lg">
@@ -416,6 +416,7 @@ import ModalAgenda from '../../../components/Agenda/ModalAgenda.vue';
 import { getUser } from "@/Services/api/Usuario/userApi";
 import { getToken } from "@/Services/business/auth";
 import { useToast } from "@/composables/useToast";
+import { useDateFormatter } from "@/composables/useDateFormatter";
 
 export default {
   components: {
@@ -470,8 +471,10 @@ export default {
   },
   setup() {
     const toast = useToast();
+    const { formatDate } = useDateFormatter();
     return {
-      toast
+      toast,
+      formatDate
     };
   },
   computed: {
@@ -705,12 +708,6 @@ export default {
       this.showEditarCriterioModal = true
       this.criterioSeleccionado = criterio
       //console.log(criterio)
-    },
-    formatearFecha(fechaCompleta) {
-      if (!fechaCompleta) return '';
-      const [fecha] = fechaCompleta.split(' '); // Toma solo la parte de la fecha
-      const [anio, mes, dia] = fecha.split('-'); // Divide año-mes-día
-      return `${dia}-${mes}-${anio}`; // Devuelve día-mes-año
     },
     async seleccionarCriterio(criterio) {
       this.criterioSeleccionado = criterio;

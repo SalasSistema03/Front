@@ -909,6 +909,92 @@
   border-bottom: 1px solid rgb(0, 85, 185) !important;
 }
 
+.titulo-impuestos {
+  font-size: 2.5vh;
+  color: rgb(0, 85, 185);
+  text-align: center;
+}
+
+.contenedor-tabla-impuestos {
+  height: 57vh;
+  overflow-y: auto;
+}
+
+.tabla-modifica-carga-impuestos {
+  max-height: 27vh !important;
+  min-height: 10vh !important;
+}
+.tabla-modifica-carga-impuestos button {
+  font-size: 2vh;
+}
+
+.tabla-impuestos th {
+  background-color: rgb(0, 85, 185);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 2.5vh;
+  position: sticky;
+  top: 0;
+  padding: 0.5vh;
+}
+.tabla-impuestos td {
+  border-left: 1px solid rgb(0, 85, 185);
+  border-right: 1px solid rgb(0, 85, 185);
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  font-size: 2vh;
+  padding: 0.36vh !important;
+}
+.tabla-impuestos td button {
+  font-weight: bold;
+  padding-left: 0.6vh;
+  padding-right: 0.6vh;
+  padding-top: 0.3vh;
+  padding-bottom: 0.3vh;
+}
+.tabla-impuestos td button:hover {
+  background-color: rgba(110, 190, 255, 0.6352941176) !important;
+  border: 1px solid rgba(110, 190, 255, 0.6352941176) !important;
+}
+
+.listado-mas-opciones-impuestos {
+  width: 30vh;
+  height: 25vh;
+  border: 1px solid rgb(0, 85, 185);
+}
+.listado-mas-opciones-impuestos .text-options-impuestos {
+  color: rgb(0, 85, 185);
+  font-size: 2vh;
+}
+.listado-mas-opciones-impuestos .text-options-impuestos:hover {
+  color: rgba(0, 175, 154, 0.96);
+  background-color: transparent;
+}
+.listado-mas-opciones-impuestos .text-options-impuestos:hover .bi {
+  font-size: 2.5vh;
+  color: rgb(0, 85, 185);
+}
+
+.lista-mas-opciones-impuestos {
+  width: 25vh !important;
+  height: 10vh;
+  border: 1px solid rgb(0, 85, 185);
+}
+.lista-mas-opciones-impuestos .text-options-impuestos {
+  color: rgb(0, 85, 185);
+  font-size: 2vh;
+}
+.lista-mas-opciones-impuestos .text-options-impuestos:hover {
+  color: rgba(0, 175, 154, 0.96);
+  background-color: transparent;
+}
+.lista-mas-opciones-impuestos .text-options-impuestos:hover .bi {
+  font-size: 2.5vh;
+  color: rgb(0, 85, 185);
+}
+
 .btn-primary {
   background-color: rgb(0, 85, 185) !important;
   border-color: rgb(0, 85, 185) !important;
