@@ -1,0 +1,14 @@
+@use '../colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+
+.card
+  border: 1px solid $azulSalas !important
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
+
+  .card-header
+    background-color: white
+    margin: 0
+    text-align: center
+    font-weight: bold
+
