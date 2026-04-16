@@ -217,7 +217,7 @@ onMounted(async () => {
   // 5. Cargar notificaciones
   const response = await getNotificaciones();
   notificaciones.value = response.data.data;
-  console.log(notificaciones.value);
+  //console.log(notificaciones.value);
 
   // 6. Agregar listener para clics fuera
   document.addEventListener('click', handleClickOutside);

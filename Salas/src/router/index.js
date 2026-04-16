@@ -8,6 +8,7 @@ import Contable from '../router/contable'
 import Atcl from '../router/atcl'
 import Agenda from '../router/agenda'
 import Cliente from '../router/cliente'
+import Impuestos from '../router/impuestos'
 import { useAuthStore } from '@/stores/auth'
 import { alertas } from '../utils/alertas'
 
@@ -38,6 +39,7 @@ const router = createRouter({
     ...Contable,
     ...Agenda,
     ...Cliente,
+    ...Impuestos,
 
   ],
 })
