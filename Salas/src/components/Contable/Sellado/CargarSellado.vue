@@ -3,133 +3,133 @@
     <div class="row vh-50">
 
       <!-- IZQUIERDA: FORMULARIO -->
-      <div class="col-12 col-md-6 h-100 overflow-auto  ">
-        <div class="card  shadow-sm h-100 ">
-          <div class="card-body p-2">
+      <div class="col-12 col-lg-6 h-100 overflow-auto">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-3">
 
-           <form @submit.prevent="handleSubmit" class="container-fluid px-0">
+            <form @submit.prevent="handleSubmit" class="container-fluid px-0">
 
-  <div class="row g-2 mb-2">
-    <div class="col-6 col-sm-4 col-md-2 form-group">
-      <label class="form-label fw-semibold small">Folio</label>
-      <input type="number" v-model="form.folio" class="form-control form-control-sm text-center" required />
-    </div>
+              <div class="row g-3 ">
+                <div class="col-12 col-md-2 form-group">
+                  <label class="form-label fw-bold small  text-muted">Folio</label>
+                  <input type="number" v-model="form.folio" class="form-control form-control-sm shadow-sm" required />
+                </div>
 
-    <div class="col-12 col-sm-8 col-md-8 form-group">
-      <label class="form-label fw-semibold small">Nombre del Inquilino</label>
-      <input type="text" v-model="form.nombre" class="form-control form-control-sm" required />
-    </div>
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label fw-bold small  text-muted">Nombre del Inquilino</label>
+                  <input type="text" v-model="form.nombre" class="form-control form-control-sm shadow-sm" required />
+                </div>
 
-    <div class="col-6 col-sm-12 col-md-2 form-group">
-      <label class="form-label fw-semibold small">C/Meses</label>
-      <input type="number" v-model="form.cantidad_meses" class="form-control form-control-sm" required />
-    </div>
-  </div>
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">C/Meses</label>
+                  <input type="number" v-model="form.cantidad_meses" class="form-control form-control-sm shadow-sm"
+                    required />
+                </div>
 
-  <div class="row g-2 mb-2">
-    <div class="col-6 col-md-3 form-group">
-      <label class="form-label fw-semibold small">Monto Alquiler</label>
-      <div class="input-group input-group-sm">
-        <input type="number" v-model="form.monto_alquiler" class="form-control" required />
-      </div>
-    </div>
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">Monto Alquiler</label>
+                  <div class="input-group input-group-sm shadow-sm">
+                    <input type="number" v-model="form.monto_alquiler" class="form-control" required />
+                  </div>
+                </div>
+              </div>
 
-    <div class="col-6 col-md-3 form-group">
-      <label class="form-label fw-semibold small">Monto Doc.</label>
-      <div class="input-group input-group-sm">
-        <input type="number" v-model="form.monto_documento" class="form-control" />
-      </div>
-    </div>
+              <div class="row g-3 ">
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">Monto Doc.</label>
+                  <div class="input-group input-group-sm shadow-sm">
+                    <input type="number" v-model="form.monto_documento" class="form-control" />
+                  </div>
+                </div>
 
-    <div class="col-6 col-md-3 form-group">
-      <label class="form-label fw-semibold small">Monto Contrato</label>
-      <div class="input-group input-group-sm">
-        <input type="number" v-model="form.monto_contrato" class="form-control" />
-      </div>
-    </div>
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">Monto Contrato</label>
+                  <div class="input-group input-group-sm shadow-sm">
+                    <input type="number" v-model="form.monto_contrato" class="form-control" />
+                  </div>
+                </div>
 
-    <div class="col-6 col-md-3 form-group">
-      <label class="form-label fw-semibold small">C/Hojas</label>
-      <input type="number" v-model="form.hojas" class="form-control form-control-sm" required />
-    </div>
-  </div>
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">C/Hojas</label>
+                  <input type="number" v-model="form.hojas" class="form-control form-control-sm shadow-sm" required />
+                </div>
 
-  <div class="row g-2 mb-3 align-items-end border-bottom pb-3">
-    <div class="col-6 col-md-2 form-group">
-      <label class="form-label fw-semibold small">Informe</label>
-      <select v-model="form.informe" class="form-select form-select-sm">
-        <option value="SI">SI</option>
-        <option value="NO">NO</option>
-      </select>
-    </div>
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">Informe</label>
+                  <select v-model="form.informe" class="form-select form-select-sm shadow-sm">
+                    <option value="SI">SI</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
+              </div>
 
-    <div class="col-6 col-md-2 form-group">
-      <label class="form-label fw-semibold small">C/ Informes</label>
-      <input type="number" v-model="form.cantidad_informes" class="form-control form-control-sm" />
-    </div>
+              <div class="row g-3  border-bottom pb-4">
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">Cant. Inf.</label>
+                  <input type="number" v-model="form.cantidad_informes"
+                    class="form-control form-control-sm shadow-sm" />
+                </div>
 
-    <div class="col-12 col-sm-6 col-md-3 form-group">
-      <label class="form-label fw-semibold small">Tipo Contrato</label>
-      <select v-model="form.tipo_contrato" class="form-select form-select-sm" required>
-        <option disabled value="">Seleccione</option>
-        <option value="Vivienda">Vivienda</option>
-        <option value="Comercio">Comercio</option>
-        <option value="Vivienda Comercial">Viv. Comercial</option>
-        <option value="Cochera">Cochera</option>
-      </select>
-    </div>
+                <div class="col-12 col-md-3 form-group">
+                  <label class="form-label fw-bold small  text-muted">Contrato</label>
+                  <select v-model="form.tipo_contrato" class="form-select form-select-sm shadow-sm" required>
+                    <option disabled value="">Seleccione...</option>
+                    <option value="Vivienda">Vivienda</option>
+                    <option value="Comercio">Comercio</option>
+                  </select>
+                </div>
 
-    <div class="col-6 col-sm-6 col-md-2 form-group">
-      <label class="form-label fw-semibold small">Inq - Prop</label>
-      <select v-model="form.inq_prop" class="form-select form-select-sm" required>
-        <option value="SI">SI</option>
-        <option value="NO">NO</option>
-      </select>
-    </div>
+                <!-- Inq-Prop -->
+                <div class="col-12 col-md-2 form-group">
+                  <label class="form-label fw-bold small  text-muted">Inq-Prop</label>
+                  <select v-model="form.inq_prop" class="form-select form-select-sm shadow-sm" required>
+                    <option value="SI">SI</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
 
-    <div class="col-6 col-sm-12 col-md-3 form-group">
-      <label class="form-label fw-semibold small">Inicio Contrato</label>
-      <input type="date" v-model="form.fecha_inicio" class="form-control form-control-sm" required />
-    </div>
-  </div>
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label fw-bold small  text-muted">Inicio Contrato</label>
+                  <input type="date" v-model="form.fecha_inicio" class="form-control form-control-sm shadow-sm"
+                    required />
+                </div>
+              </div>
 
-  <div class="row g-2 justify-content-md-end align-items-center">
-    <div class="col-4 col-md-auto">
-      <button type="button" class="btn btn-outline-secondary btn-sm w-100" @click="resetForm">
-        Limpiar
-      </button>
-    </div>
+              <div class="row g-2 align-items-center">
+                <div class="col-12 col-md-auto">
+                  <button type="button" class="btn btn-outline-secondary btn-sm w-100 px-4" @click="resetForm">
+                    Limpiar
+                  </button>
+                </div>
 
-    <div class="col-6 col-md-auto">
-      <button type="submit" class="btn btn-primary btn-sm w-100">
-        {{ loading ? 'Calculando...' : 'Calcular' }}
-      </button>
-    </div>
+                <div class="col-10 col-md-7 ms-auto">
+                  <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold shadow" v-if="permisos.guardar">
+                    {{ loading ? 'Calculando...' : 'Calcular Gastos' }}
+                  </button>
+                </div>
 
-    <div class="col-2 col-md-auto text-end">
-      <div class="dropdown">
-        <button class="btn engrtanaje" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-gear"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="#" @click.prevent="mostrarModal = true">Datos de Cálculo</a></li>
-          <li><a class="dropdown-item" href="#" @click.prevent="mostrarModalAcciones = true">Acciones</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
+                <div class="col-2 col-md-auto text-end" v-if="permisos.datosDeCalculo || permisos.acciones">
+                  <button class="btn   btn-sm shadow-sm" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-gear engrtanaje"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" @click.prevent="mostrarModal = true"
+                        v-if="permisos.datosDeCalculo"> Datos de Cálculo</a></li>
+                    <li><a class="dropdown-item" href="#" @click.prevent="mostrarModalAcciones = true"
+                        v-if="permisos.acciones">Acciones</a></li>
+                  </ul>
+                </div>
+              </div>
 
-</form>
-
-            <div v-if="error" class="alert alert-danger mt-3 small">
-              {{ error }}
-            </div>
+            </form>
           </div>
         </div>
       </div>
 
+
+
       <!-- DERECHA: RESULTADOS -->
-      <div class="col-12 col-md-6 h-100 overflow-auto">
+      <div class="col-12 col-lg-6 h-100 overflow-auto">
         <div class="card shadow-sm h-100">
           <div class="card-body p-2">
             <div v-if="resultado">
@@ -228,6 +228,11 @@ const form = ref({
 });
 
 const registros = ref([]);
+const permisos = ref({
+  datosDeCalculo: false,
+  acciones: false,
+  guardar: false
+});
 const resultado = ref(null);
 const loading = ref(false);
 const error = ref(null);
@@ -290,7 +295,10 @@ const obtenerRegistros = async () => {
   try {
     const response = await getRegistrosService();
     console.log(response.data.data.registros);
-    // Verifica si tu API devuelve los datos en .data o .data.data
+    console.log(response.data.permisos);
+    if (response.data.permisos) {
+      permisos.value = response.data.permisos;
+    }
     registros.value = response.data.data.registros || response.data;
   } catch (err) {
     alertas.error('Error De conexion ' + (err.response?.data?.message || err.message));
@@ -326,7 +334,7 @@ onMounted(() => {
 }
 
 #tablaDatos {
-  /* Eliminé border: 10vh porque crearía un borde gigante. 
+  /* Eliminé border: 10vh porque crearía un borde gigante.
      Si querías un borde fino, usa 1px o 2px */
   border: 1px solid rgba(0, 175, 154, 0.96);
 }
@@ -355,7 +363,7 @@ onMounted(() => {
 
 /* --- Tus estilos de engranaje se mantienen igual --- */
 .engrtanaje {
-  color: rgba(0, 175, 154, 0.96);
+  color: rgb(0, 0, 0);
   background: transparent;
   border: none;
   font-size: 1.0rem;

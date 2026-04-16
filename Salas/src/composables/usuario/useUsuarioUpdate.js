@@ -1,10 +1,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { getPermisos, getNombresDeUsuarios, getDatosGenerales, updateUser } from '@/Services/api/Usuario/userApi'
 import { useToast } from '@/composables/useToast'
-import { 
-  handleSectorChange, 
-  isSectorSelected, 
-  handleVistaChange, 
+import {
+  handleSectorChange,
+  isSectorSelected,
+  handleVistaChange,
   isVistaSelected,
   handleBotonChange,
   isBotonSelected
@@ -56,6 +56,17 @@ export const useUsuarioUpdate = () => {
     if (nombre) {
       loading.value = true
       try {
+        // Asegurar que los permisos estén cargados antes de mapear Agenda.
+        // Si no están cargados todavía, usar la API para obtenerlos.
+        if (!Array.isArray(permisos.value) || permisos.value.length === 0) {
+          try {
+            const permisosResponse = await getPermisos()
+            permisos.value = permisosResponse.data
+          } catch (error) {
+            console.error('Error cargando permisos:', error)
+          }
+        }
+
         const response = await getDatosGenerales(nombre)
         const datos = response.data
 
@@ -77,23 +88,18 @@ export const useUsuarioUpdate = () => {
 
         // Mapear sectores de agenda al formato [menu_id, vista_id, null, sector_id]
         if (datos.agenda && datos.agenda.length > 0) {
-        
+
 
           // CORRECCIÓN: Buscar la vista "Agenda" correctamente
           // 1. Primero buscar el menú "Agenda" en los permisos cargados
           const menuAgenda = permisos.value.find(p => p.menu === 'Agenda' || p.id === 3)
-          const navIdAgenda = menuAgenda ? menuAgenda.id : 3 // menu_id de Agenda es 3
+          const navIdAgenda = menuAgenda?.id ?? 3
 
           // 2. Buscar la vista "Agenda" dentro del menú Agenda
-          let vistaAgendaId = null
-          if (menuAgenda && menuAgenda.vistas) {
-            const vistaAgenda = menuAgenda.vistas.find(v => v.nombre_visual === 'Agenda')
-            vistaAgendaId = vistaAgenda ? vistaAgenda.id : 33 // vista_id de Agenda es 33
-          } else {
-            vistaAgendaId = 33 // Default
-          }
+          const vistaAgenda = menuAgenda?.vistas?.find(v => v.nombre_visual === 'Agenda')
+          const vistaAgendaId = vistaAgenda?.id ?? 33
 
-          
+
 
           // 3. Mapear los sectores
           const sectoresAgenda = datos.agenda.map(sector => [
@@ -103,7 +109,7 @@ export const useUsuarioUpdate = () => {
             sector.sector_id      // sector_id: 1,2,3,etc
           ])
 
-        
+
           // 4. Agregar los sectores a los permisos
           datosUsuario.permisos.push(...sectoresAgenda)
 
@@ -116,15 +122,15 @@ export const useUsuarioUpdate = () => {
             datosUsuario.permisos.push([navIdAgenda, vistaAgendaId, null])
           }
 
-         
+
 
           // 6. DEBUG: Verificar si los sectores están en los permisos
-        
+
           datos.agenda.forEach(sector => {
             const existe = datosUsuario.permisos.some(p =>
               p[0] === navIdAgenda && p[1] === vistaAgendaId && p[3] === sector.sector_id
             )
-           
+
           })
         }
 
@@ -153,6 +159,30 @@ export const useUsuarioUpdate = () => {
     loading.value = true
 
     try {
+      // Normalización de permisos para Agenda:
+      // Si el usuario tiene la vista Agenda seleccionada pero NO tiene sectores asignados,
+      // el backend espera [3, null, null] en lugar de [3, 33, null].
+      const permisosNormalizados = Array.isArray(datosUsuario.permisos)
+        ? datosUsuario.permisos.map(p => Array.isArray(p) ? [...p] : p)
+        : []
+
+      const AGENDA_MENU_ID = 3
+      const AGENDA_VISTA_ID = 33
+      const tieneSectoresAgenda = permisosNormalizados.some(p =>
+        Array.isArray(p) && p[0] === AGENDA_MENU_ID && p[1] === AGENDA_VISTA_ID && p.length >= 4 && p[3] != null
+      )
+
+      if (!tieneSectoresAgenda) {
+        for (let i = 0; i < permisosNormalizados.length; i++) {
+          const p = permisosNormalizados[i]
+          if (Array.isArray(p) && p.length === 3 && p[0] === AGENDA_MENU_ID && p[1] === AGENDA_VISTA_ID) {
+            permisosNormalizados[i] = [AGENDA_MENU_ID, null, null]
+          }
+        }
+      }
+
+      datosUsuario.permisos = permisosNormalizados
+
       const response = await updateUser(datosUsuario, nombreUsuario.value)
       showSuccess(response.message || 'Usuario actualizado correctamente')
     } catch (err) {

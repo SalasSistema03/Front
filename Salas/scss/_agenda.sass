@@ -9,27 +9,17 @@ $verdeSalas: colorSalas.$verdeSalas
     border: 1px solid $verdeSalas !important
     input
         margin-top: 0.5rem
-    
-
     color: white
     border: none
     &::-webkit-calendar-picker-indicator
         filter: invert(1)
 .agenda_tabla
-    border-shadow: 0 0 5px rgba(0, 0, 0, 0.1)
-    border-radius: 8px
-    display: flex
-    flex-direction: column
-    h6
-        margin: 0.5rem 0
-        font-size: 1rem
-        font-weight: 600
-    
     .tabla-scroll-container
-        max-height: 28vh
         overflow-y: auto
-        
-        
+        height: 80vh
+        border-radius: 8px
+        border: 1px solid $azulSalas
+        margin-bottom: 1rem
     thead
         tr
             th
@@ -39,7 +29,7 @@ $verdeSalas: colorSalas.$verdeSalas
                 position: sticky
                 top: 0
                 z-index: 10
-                font-size: 0.8rem
+                font-size: 01rem
                 text-align: center
                 white-space: nowrap
     tbody
@@ -52,11 +42,11 @@ $verdeSalas: colorSalas.$verdeSalas
                 overflow: hidden
                 text-overflow: ellipsis
                 button
-                    
+
                     border-radius: 8px !important
                     padding: 0.5rem 1rem
 .agenda_modal
-    max-height: 50vh
+
     overflow-y: auto
 
     .form-control
@@ -71,24 +61,87 @@ $verdeSalas: colorSalas.$verdeSalas
     .form-select:focus
         background-color: #00489100
         color: orange
-                   
 .agenda_tabla_general
-    height: 10vh
+    height: 19vh
     overflow-y: auto
     overflow-x: hidden
-    border-top: 1px solid $azulSalas !important
+    border-bottom: 1px solid $azulSalas !important
 .agenda_titulo_tabla_modal
-  
+
     font-size: 0.6rem !important
-    
+
     th
         position: sticky !important
         top: 0
-        color: $azulSalas !important
+        background-color: $azulSalas !important
+        color: white !important
         padding: 0rem 0
 .agenda_cuerpo_tabla_modal
-    
-    font-size: 0.7rem !important
+    font-size: 0.6rem !important
     td
         padding: 0.2rem 0
-   
+.agenda_desplegable_busqueda
+
+  z-index: 1000
+  max-height: 40vh
+  overflow-y: auto
+  max-width: 47vw
+  .agenda_desplegable_busqueda_propiedad
+    font-size: 0.7rem !important
+    &:hover
+      background-color: $azulSalas
+      color: white !important
+    .estado_activa
+      font-size: 0.5rem !important
+
+.agenda_ancho_tabla_hora
+  /* ancho */
+  width: 15vh !important
+
+.agenda-noseleccionada
+  min-width: 7vh
+  width: 7vh
+  padding: 0
+  margin: 0
+  background-color: transparent
+  color: black !important
+  height: 10vh
+  &:hover
+    border: 1px solid $azulSalas !important
+  /* .texto-agenda
+    width: 7vh
+    font-size: 2.9vh !important
+    word-wrap: break-word
+    word-break: break-word
+    white-space: normal
+    display: inline-block */
+.agenda-seleccionada
+  padding: 0
+  margin: 0
+  background-color: $azulSalas !important
+  color: white !important
+  height: 10vh
+  min-width: 7vh
+
+  &:hover
+    background-color: darken($azulSalas, 10%) !important
+  .texto-agenda
+    min-width: 7vh
+    max-width: 7vh
+    font-size: 2vh !important
+    word-wrap: break-word
+    word-break: break-word
+    white-space: normal
+    display: inline-block
+    .texto-agenda-content
+      font-size: 1.3vh !important
+      min-width: 17vh
+  .texto-agenda-logo
+    min-width: 7vh
+    font-size: 4vh
+    word-wrap: break-word
+    word-break: break-word
+    white-space: normal
+    display: inline-block
+
+
