@@ -1,10 +1,10 @@
 <template>
   <div class="px-3">
-    <h1 class="titulo-impuestos">Padron TGI</h1>
+    <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
       <div class="col-auto">
         <button class="btn btn-sm btn-primary" id="btnActualizarPadron" @click="actualizarPadron()">
-          Actualizar Padrón TGI
+          Actualizar Padrón {{ props.impuesto?.toUpperCase() }}
         </button>
       </div>
 
@@ -13,46 +13,50 @@
         <!-- Input que filtra solo por FOLIO -->
         <div class="col-md-2 px-1">
           <label class="form-label">Folio</label>
-          <input type="text" class="form-control form-control-sm" placeholder="Buscar por folio..." v-model="search_folio">
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por folio..."
+            v-model="search_folio">
         </div>
 
 
         <!-- Input que filtra por todo menos por FOLIO -->
         <div class="col-md-4">
-          <label class="form-label">Partida/Clave</label>
+          <label class="form-label" v-if="props.impuesto === 'tgi'">Partida/Clave</label>
+          <label class="form-label" v-if="props.impuesto === 'agua'">Partida/Punto</label>
           <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, clave..."
-            v-model="search_all">
+            v-model="search_all" v-if="props.impuesto === 'tgi'">
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, punto..."
+            v-model="search_all" v-if="props.impuesto === 'agua'">
         </div>
 
 
         <div class="col-md-3 d-flex align-items-end justify-content-center">
 
-            <button class="btn btn-secondary dropdown-toggle w-100 btn-sm" type="button" data-bs-toggle="dropdown"
-              data-bs-auto-close="outside" aria-expanded="false">
-              Filtrar opciones
-            </button>
-            <div class="dropdown-menu p-3" style="min-width: 25px;">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="ACTIVO" v-model="filtros">
-                <label class="form-check-label">Activos</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="INACTIVO" v-model="filtros">
-                <label class="form-check-label">Inactivos</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="L" v-model="filtros">
-                <label class="form-check-label">Adm inmobiliario</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="P" v-model="filtros">
-                <label class="form-check-label">Adm propietario</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="I" v-model="filtros">
-                <label class="form-check-label">Adm inquilino</label>
-              </div>
+          <button class="btn btn-secondary dropdown-toggle w-100 btn-sm" type="button" data-bs-toggle="dropdown"
+            data-bs-auto-close="outside" aria-expanded="false">
+            Filtrar opciones
+          </button>
+          <div class="dropdown-menu p-3" style="min-width: 25px;">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="ACTIVO" v-model="filtros">
+              <label class="form-check-label">Activos</label>
             </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="INACTIVO" v-model="filtros">
+              <label class="form-check-label">Inactivos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="L" v-model="filtros">
+              <label class="form-check-label">Adm inmobiliario</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="P" v-model="filtros">
+              <label class="form-check-label">Adm propietario</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="I" v-model="filtros">
+              <label class="form-check-label">Adm inquilino</label>
+            </div>
+          </div>
 
         </div>
 
@@ -71,7 +75,8 @@
             <th>Folio</th>
             <th>Calle</th>
             <th>Partida</th>
-            <th>Clave</th>
+            <th v-if="props.impuesto === 'tgi'">Clave</th>
+            <th v-if="props.impuesto === 'agua'">Punto</th>
             <th>Administra</th>
             <th>Estado</th>
             <th>Comienza</th>
@@ -80,8 +85,8 @@
           </tr>
         </thead>
         <tbody>
-
-          <tr v-for="padron in PadronCompleto?.data?.data" :key="padron.id" :class="{ 'table-danger': padron.estado === 'INACTIVO' }">
+          <tr v-for="padron in PadronCompleto?.data?.data" :key="padron.id"
+            :class="{ 'table-danger': padron.estado === 'INACTIVO' }">
             <td>{{ padron.folio }}</td>
             <td>{{ padron.calle }}</td>
             <td>{{ padron.partida }}</td>
@@ -102,6 +107,8 @@
 
   </div>
 
+  <ModalModificarPadron :show="showModificarModal" :padron="selectedPadron" :impuesto="props.impuesto"
+    @close="closeModalModificar" @success="handleSuccess" />
 </template>
 <script setup>
 
@@ -109,6 +116,7 @@ import { useToast } from '@/composables/useToast';
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import { ref, onMounted } from 'vue';
 import { actualizaPadron, getPadron } from '@/Services/api/Impuestos/tgiApi';
+import ModalModificarPadron from './ModalImpuestos/ModalModificarPadron.vue';
 
 const props = defineProps({
   impuesto: {
@@ -133,7 +141,7 @@ const actualizarPadron = async () => {
     showSuccess('Padrón actualizado correctamente');
     //console.log(response);
   } catch (error) {
-    //console.error(error);
+    console.error(error);
     showError('Error al actualizar el padrón');
   }
 }
@@ -145,15 +153,13 @@ const filtrar = async () => {
     search_all: search_all.value,
     search_folio: search_folio.value
   }
-  //console.log(form);
   try {
     const padron = await getPadron(form);
-    console.log(padron)
     PadronCompleto.value = padron;
     showSuccess('Padrón filtrado correctamente');
     return padron;
   } catch (error) {
-    //console.error(error);
+    console.log(error);
     showError('Error al filtrar el padrón');
   }
 }
@@ -162,6 +168,16 @@ const openModalModificar = (padron) => {
   selectedPadron.value = padron;
   props.impuesto;
   showModificarModal.value = true;
+}
+
+const closeModalModificar = () => {
+  showModificarModal.value = false;
+  selectedPadron.value = null;
+}
+
+const handleSuccess = async () => {
+  await filtrar();
+  closeModalModificar();
 }
 //quiero asignarle a padroncompleto los valores de filtrar
 onMounted(async () => {
