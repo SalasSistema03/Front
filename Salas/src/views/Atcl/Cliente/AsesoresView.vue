@@ -125,8 +125,8 @@
                   <!-- Fecha  mas alta del array -->
                   <div class=" col-4 fecha-contacto-asesores ">
                     {{cliente.criterios_ordenados?.some(c => c.fecha_criterio_venta) ?
-                      cliente.criterios_ordenados?.reduce((max, c) => c.fecha_criterio_venta > max ?
-                        c.fecha_criterio_venta : max, cliente.criterios_ordenados[0].fecha_criterio_venta) : ''}}
+                      formatDate(cliente.criterios_ordenados?.reduce((max, c) => c.fecha_criterio_venta > max ?
+                        c.fecha_criterio_venta : max, cliente.criterios_ordenados[0].fecha_criterio_venta)) : ''}}
                   </div>
                   <!-- Boton editar cliente -->
                   <div class=" col-1 ">
@@ -193,7 +193,7 @@
               Fecha:
             </div>
             <div class="col-10 criterio-texto-asesores pl-0 d-flex justify-content-star align-items-center">
-              {{ criterio.fecha_criterio_venta }}
+              {{formatDate(criterio.fecha_criterio_venta) }}
             </div>
             <div class="col-2 criterio-titulos-asesores p-0 d-flex justify-content-star align-items-center">
               Precio:
@@ -363,7 +363,7 @@
                     Código {{ codigo.codigo_muestra }}
                   </div>
                   <div class="col-4 px-0">
-                    {{ formatearFecha(codigo.fecha_devolucion) }}
+                    {{ formatDate(codigo.fecha_devolucion) }}
                   </div>
                   <div class="col-2 px-0">
                     <i v-if="codigo.devolucion" class="bi bi-check-lg">

@@ -35,10 +35,6 @@
           </select>
         </div>
       </div>
-
-
-
-
     </template>
 
     <template #footer>
@@ -91,6 +87,8 @@ const guardarCambios = async () => {
   }
   emit('close')
 }
+
+
 watch(() => props.padron, (newPadron) => {
   if (newPadron) {
     localPadron.value = { ...newPadron }

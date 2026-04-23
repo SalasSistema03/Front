@@ -32,8 +32,11 @@
                 <th>
                   Partida
                 </th>
-                <th>
+                <th v-if="props.impuesto === 'tgi'">
                   Clave
+                </th>
+                <th v-if="props.impuesto === 'agua'">
+                  Punto
                 </th>
                 <th>
                   Administra
@@ -79,6 +82,15 @@
           <input type="number" class="form-control form-control-sm" v-model="importe">
         </div>
 
+          <div class="col-md-2" v-if="props.impuesto === 'agua'">
+          <label for="edit-fecha" class="form-label">Fecha</label>
+          <input type="date" class="form-control form-control-sm" v-model="fecha2">
+        </div>
+        <div class="col-md-2">
+          <label for="edit-importe" class="form-label" v-if="props.impuesto === 'agua'">Importe</label>
+          <input type="number" class="form-control form-control-sm" v-model="importe2">
+        </div>
+
       </div>
 
 
@@ -107,6 +119,8 @@ const showTabla = ref(false);
 const impuestoSeleccionado = ref(null);
 const fecha = ref('');
 const importe = ref('');
+const fecha2 = ref('');
+const importe2 = ref('');
 
 const props = defineProps({
   show: {
@@ -121,10 +135,10 @@ const props = defineProps({
 
 const seleccionarImpuesto = (impuesto) => {
   impuestoSeleccionado.value = impuesto
-  console.log('Impuesto seleccionado',impuesto)
+  //console.log('Impuesto seleccionado',impuesto)
 }
 const buscarFolio = async () => {
-  console.log('Buscar folio',folio.value, empresa.value)
+  //console.log('Buscar folio',folio.value, empresa.value)
   const form={
     impuesto: props.impuesto,
     folio: folio.value,
@@ -133,7 +147,7 @@ const buscarFolio = async () => {
   try{
   const response = await cargaManual(form)
   resultadoCarga.value = response
-  console.log('Form',resultadoCarga.value)
+  //console.log('Form',resultadoCarga.value)
   showSuccess('Carga manual exitosa')
   showTabla.value = true
   }catch(error){
@@ -148,11 +162,13 @@ const guardarCambios = async ()=>{
     impuesto : props.impuesto,
     partida : impuestoSeleccionado.value.partida,
     fecha_vencimiento: fecha.value,
-    importe: importe.value
+    importe: importe.value,
+    fecha_vencimiento2: fecha2.value,
+    importe2: importe2.value
   }
 
   try{
-  const response = await cargaNuevoManual(form)
+   await cargaNuevoManual(form)
   //console.log('Response',response)
   showSuccess('Carga manual exitosa')
   emit('success')

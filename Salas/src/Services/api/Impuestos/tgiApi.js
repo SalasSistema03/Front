@@ -65,3 +65,152 @@ export const cargaNuevoManual = (data) =>{
     },
   })
 }
+
+export const cargaNuevoImpuesto = (data) =>{
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/nuevo_impuesto`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const exportarFaltantes = (data) =>{
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/exportar_faltantes`, {
+    params: {
+      ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob',
+  })
+}
+
+export const sumarMontos = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/sumar_montos`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const mostrarBroches = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/mostrar_broches`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const guardarBroches = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/guardar_num_broches`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const guardarBrochesSalas = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/guardar_num_broche_salas`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const exportarBroches = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/exportar_broches`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const exportarBrochesSalas = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/exportar_broches_salas`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+
+export const ModificarBajado = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/modificar_bajado`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const ModificarEstado = (data) =>{
+  const token = localStorage.getItem('token')
+  return axios.put(`${API_URL}/v1/modificar_estado`, {data}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const EliminarImpuesto = (data) =>{
+  const token = localStorage.getItem('token')
+  return axios.delete(`${API_URL}/v1/eliminar_impuesto`, {
+    params: {
+        ...data
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const GenerarPdfBroches = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/broches/pdf`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob'
+  })
+}
+
+/* export const GenerarPdfBrochesSalas = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/broches/salas/pdf`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob'
+  })
+} */
+
