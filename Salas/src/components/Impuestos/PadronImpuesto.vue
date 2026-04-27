@@ -3,7 +3,7 @@
     <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
       <div class="col-auto">
-        <button class="btn btn-sm btn-primary" id="btnActualizarPadron" @click="actualizarPadron()">
+        <button class="btn btn-sm btn-primary" @click="actualizarPadron()">
           Actualizar Padrón {{ props.impuesto?.toUpperCase() }}
         </button>
       </div>
@@ -22,10 +22,13 @@
         <div class="col-md-4">
           <label class="form-label" v-if="props.impuesto === 'tgi'">Partida/Clave</label>
           <label class="form-label" v-if="props.impuesto === 'agua'">Partida/Punto</label>
+          <label class="form-label" v-if="props.impuesto === 'gas'">Persona/Cliente</label>
           <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, clave..."
             v-model="search_all" v-if="props.impuesto === 'tgi'">
           <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, punto..."
             v-model="search_all" v-if="props.impuesto === 'agua'">
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, persona, cliente..."
+            v-model="search_all" v-if="props.impuesto === 'gas'">
         </div>
 
 
@@ -43,6 +46,10 @@
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="INACTIVO" v-model="filtros">
               <label class="form-check-label">Inactivos</label>
+            </div>
+            <div class="form-check" v-if="props.impuesto === 'agua' || props.impuesto === 'gas'">
+              <input class="form-check-input" type="checkbox" value="PENDIENTE" v-model="filtros">
+              <label class="form-check-label">Pendientes</label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="L" v-model="filtros">
@@ -74,9 +81,11 @@
           <tr>
             <th>Folio</th>
             <th>Calle</th>
-            <th>Partida</th>
+            <th v-if="props.impuesto === 'tgi' || props.impuesto === 'agua'">Partida</th>
+            <th v-if="props.impuesto === 'gas'">Persona</th>
             <th v-if="props.impuesto === 'tgi'">Clave</th>
             <th v-if="props.impuesto === 'agua'">Punto</th>
+            <th v-if="props.impuesto === 'gas'">Cliente</th>
             <th>Administra</th>
             <th>Estado</th>
             <th>Comienza</th>
@@ -139,7 +148,6 @@ const actualizarPadron = async () => {
   try {
     await actualizaPadron({ impuesto: props.impuesto });
     showSuccess('Padrón actualizado correctamente');
-    //console.log(response);
   } catch (error) {
     console.error(error);
     showError('Error al actualizar el padrón');
@@ -179,7 +187,7 @@ const handleSuccess = async () => {
   await filtrar();
   closeModalModificar();
 }
-//quiero asignarle a padroncompleto los valores de filtrar
+
 onMounted(async () => {
   await filtrar();
 })

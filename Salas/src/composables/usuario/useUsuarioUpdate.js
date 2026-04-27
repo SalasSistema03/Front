@@ -127,10 +127,9 @@ export const useUsuarioUpdate = () => {
           // 6. DEBUG: Verificar si los sectores están en los permisos
 
           datos.agenda.forEach(sector => {
-            const existe = datosUsuario.permisos.some(p =>
+            datosUsuario.permisos.some(p =>
               p[0] === navIdAgenda && p[1] === vistaAgendaId && p[3] === sector.sector_id
             )
-
           })
         }
 
@@ -218,6 +217,22 @@ export const useUsuarioUpdate = () => {
     return isBotonSelected(vista, menu, boton, datosUsuario.permisos)
   }
 
+  const agruparVistasPorSeccion = (vistas) => {
+    const agrupadas = {}
+
+    if (!Array.isArray(vistas)) return agrupadas
+
+    vistas.forEach(vista => {
+      const seccion = vista.Seccion || 'Sin Sección'
+      if (!agrupadas[seccion]) {
+        agrupadas[seccion] = []
+      }
+      agrupadas[seccion].push(vista)
+    })
+
+    return agrupadas
+  }
+
   onMounted(loadInitialData)
 
   return {
@@ -237,6 +252,7 @@ export const useUsuarioUpdate = () => {
     onVistaChange,
     checkVistaSelected,
     onBotonChange,
-    checkBotonSelected
+    checkBotonSelected,
+    agruparVistasPorSeccion
   }
 }
