@@ -93,45 +93,53 @@
                 class="border rounded p-3 bg-light ">
                 <!-- Vistas -->
                 <div v-if="permiso.vistas && permiso.vistas.length > 0" class="permisos_menu_scrolleable">
-                  <div class="row">
-                    <div v-for="vista in permiso.vistas" :key="vista.id" class="col-md-4 mb-3 text-start">
-                      <div class="border rounded p-2">
-                        <div class="form-check mb-2">
-                          <input type="checkbox" class="form-check-input" :id="`vista-${vista.id}`"
-                            :checked="checkVistaSelected(vista, permiso)"
-                            @change="onVistaChange(vista, permiso, $event.target.checked)" />
+                  <div v-for="(vistasPorSeccion, seccion) in agruparVistasPorSeccion(permiso.vistas)" :key="seccion"
+                    class="mb-4">
+                    <h6 class="text-start fw-bold mb-3  pb-2">
+                      {{ seccion }}
+                    </h6>
 
-                          <label class="form-check-label fw-semibold" :for="`vista-${vista.id}`">
-                            📄 {{ vista.nombre_visual }}
-                          </label>
-                        </div>
+                    <div class="row">
+                      <div v-for="vista in vistasPorSeccion" :key="vista.id" class="col-md-4 mb-3 text-start">
+                        <div class="border rounded p-2">
+                          <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" :id="`vista-${vista.id}`"
+                              :checked="checkVistaSelected(vista, permiso)"
+                              @change="onVistaChange(vista, permiso, $event.target.checked)" />
 
-                        <!-- Botones de la vista (normales para todas las vistas excepto Agenda) -->
-                        <div v-if="vista.botones && vista.botones.length > 0 && vista.nombre_visual !== 'Agenda'"
-                          class="ms-4">
-                          <div v-for="boton in vista.botones" :key="boton.id" class="form-check">
-                            <input type="checkbox" class="form-check-input" :id="`boton-${boton.id}`"
-                              :checked="checkBotonSelected(vista, permiso, boton)"
-                              @change="onBotonChange(vista, permiso, boton, $event.target.checked)" />
-                            <label class="form-check-label" :for="`boton-${boton.id}`">
-                              🖋️{{ boton.nombre_visual }}
+                            <label class="form-check-label fw-semibold" :for="`vista-${vista.id}`">
+                              📄 {{ vista.nombre_visual }}
                             </label>
                           </div>
-                        </div>
 
-                        <!-- Para la vista "Agenda" específicamente, mostrar sectores en lugar de botones -->
-                        <div v-if="vista.nombre_visual === 'Agenda' && permiso.sectores && permiso.sectores.length > 0"
-                          class="ms-4">
-                          <div v-for="sector in permiso.sectores" :key="sector.id" class="form-check">
-                            <input type="checkbox" class="form-check-input" :id="`sector-${sector.id}`"
-                              :checked="checkSectorSelected(sector, vista, permiso)"
-                              @change="onSectorChange(sector, vista, permiso, $event.target.checked)" />
-                            <label class="form-check-label" :for="`sector-${sector.id}`">
-                              {{ sector.nombre }}
-                            </label>
+                          <!-- Botones de la vista (normales para todas las vistas excepto Agenda) -->
+                          <div v-if="vista.botones && vista.botones.length > 0 && vista.nombre_visual !== 'Agenda'"
+                            class="ms-4">
+                            <div v-for="boton in vista.botones" :key="boton.id" class="form-check">
+                              <input type="checkbox" class="form-check-input" :id="`boton-${boton.id}`"
+                                :checked="checkBotonSelected(vista, permiso, boton)"
+                                @change="onBotonChange(vista, permiso, boton, $event.target.checked)" />
+                              <label class="form-check-label" :for="`boton-${boton.id}`">
+                                🖋️{{ boton.nombre_visual }}
+                              </label>
+                            </div>
                           </div>
-                        </div>
 
+                          <!-- Para la vista "Agenda" específicamente, mostrar sectores en lugar de botones -->
+                          <div
+                            v-if="vista.nombre_visual === 'Agenda' && permiso.sectores && permiso.sectores.length > 0"
+                            class="ms-4">
+                            <div v-for="sector in permiso.sectores" :key="sector.id" class="form-check">
+                              <input type="checkbox" class="form-check-input" :id="`sector-${sector.id}`"
+                                :checked="checkSectorSelected(sector, vista, permiso)"
+                                @change="onSectorChange(sector, vista, permiso, $event.target.checked)" />
+                              <label class="form-check-label" :for="`sector-${sector.id}`">
+                                {{ sector.nombre }}
+                              </label>
+                            </div>
+                          </div>
+
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -180,6 +188,7 @@ const {
   onVistaChange,
   checkVistaSelected,
   onBotonChange,
-  checkBotonSelected
+  checkBotonSelected,
+  agruparVistasPorSeccion
 } = useUsuarioUpdate()
 </script>

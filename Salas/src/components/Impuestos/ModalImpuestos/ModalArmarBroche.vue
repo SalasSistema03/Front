@@ -4,7 +4,6 @@
     <template #body>
 
       <div class="row g-4">
-        <!-- Columna TGI -->
         <div class="col-md-6">
           <h6 class="text-primary">TGI - Administra L</h6>
           <p class="fw-bold text-muted">Monto Total: {{ montoTotal.total }}</p>
@@ -18,17 +17,17 @@
           </div>
 
           <div v-if="resultado_broche">
-          <label class="form-label mt-3">Resultado</label>
-          <ul class="list-group" >
-            <li class="list-group-item" v-for="(broche, index) in resultado_broche" :key="index">
-              Broche {{ index + 1 }}: ${{ parseFloat(broche.importe).toFixed(2) }}
-            </li>
-          </ul>
+            <label class="form-label mt-3">Resultado</label>
+            <ul class="list-group">
+              <li class="list-group-item" v-for="(broche, index) in resultado_broche" :key="index">
+                Broche {{ index + 1 }}: ${{ parseFloat(broche.importe).toFixed(2) }}
+              </li>
+            </ul>
           </div>
         </div>
 
         <!-- Columna Salas -->
-        <div class="col-md-6">
+        <div class="col-md-6" v-if="props.impuesto !== 'gas'">
           <h6 class="text-success">TGI - Salas</h6>
           <p class="fw-bold text-muted" id="monto_total_salas">Monto Total Salas: {{ montoTotalSalas }}</p>
 
@@ -38,20 +37,16 @@
       </div>
 
 
-
-
-
     </template>
 
     <template #footer>
-      <!-- <button type="button" class="btn btn-secondary btn-sm" @click="emit('close')">Cerrar</button>
-      <button type="button" class="btn btn-primary btn-sm">Cargar</button> -->
       <div class="modal-footer justify-content-between">
         <button type="submit" class="btn btn-primary btn-sm" id="btn_guardar_broches_tgi" @click="guardarNumeroBroches">
           <i class="bi bi-save"></i> Guardar Broches TGI
         </button>
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-success btn-sm" id="btn_guardar_broches_salas" @click="guardarNumeroBrochesSalas">
+        <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
+          <button type="submit" class="btn btn-success btn-sm" id="btn_guardar_broches_salas"
+            @click="guardarNumeroBrochesSalas">
             <i class="bi bi-save"></i> Guardar Broches Salas
           </button>
         </div>
@@ -103,11 +98,8 @@ const totalMontoCargado = async () => {
       mes: props.mes,
       anio: props.anio
     })
-    //console.log('aaaaaa',response)
     montoTotal.value = response.data.total
-    //console.log('montoTotal',montoTotal.value)
     montoTotalSalas.value = response.data.totalSalas
-    //console.log('montoTotalSalas',montoTotalSalas.value)
   } catch (error) {
     console.log(error)
     showError('Error al traer los montos')
@@ -155,7 +147,6 @@ const calcularBroches = async () => {
     cant_broches: cant_broches.value
   }
   try {
-    //console.log('form', form)
     const response = await mostrarBroches(form)
     resultado_broche.value = response.data.broches
     showSuccess('Broches calculados correctamente')
@@ -163,9 +154,6 @@ const calcularBroches = async () => {
     console.log(error)
     showError('Error al calcular los broches')
   }
-  //console.log('resultado_broche', resultado_broche.value)
-
-
 }
 
 

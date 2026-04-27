@@ -37,8 +37,24 @@ const routesImpuestos = [
       requiresAuth: true,
     },
   },
-
-
+  {
+    path: '/padrongas',
+    alias: '/impuestos/padrongas',
+    name: 'padrongas',
+    component: () => import('../views/Impuestos/GAS/PadronGASView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/carga_gas',
+    alias: '/impuestos/cargagas',
+    name: 'cargagas',
+    component: () =>import('../views/Impuestos/GAS/CargarGASView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
 ]
 

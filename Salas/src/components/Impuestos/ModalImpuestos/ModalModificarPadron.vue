@@ -5,30 +5,33 @@
       <div class="row form-group m-0 p-0">
         <div class="col-md-4">
           <label for="edit-folio" class="form-label">Folio</label>
-          <input type="text" class="form-control" name="folio" id="edit-folio" v-model="localPadron.folio">
+          <input type="text" class="form-control"  autocomplete="off" v-model="localPadron.folio">
         </div>
         <div class="col-md-8">
           <label for="edit-calle" class="form-label">Calle</label>
-          <input type="text" class="form-control" name="calle" id="edit-calle" v-model="localPadron.calle">
+          <input type="text" class="form-control"  autocomplete="off" v-model="localPadron.calle">
         </div>
         <div class="col-md-8">
           <label for="edit-partida" class="form-label">Partida</label>
-          <input type="text" class="form-control" name="partida" id="edit-partida" v-model="localPadron.partida">
+          <input type="text" class="form-control"  autocomplete="off" v-model="localPadron.partida">
         </div>
         <div class="col-md-4">
-          <label for="edit-clave" class="form-label">Clave</label>
-          <input type="text" class="form-control" name="clave" id="edit-clave" v-model="localPadron.clave">
+          <label for="edit-clave" class="form-label" v-if="props.impuesto === 'tgi'">Clave</label>
+          <label for="edit-clave" class="form-label" v-if="props.impuesto === 'gas'">Cliente</label>
+          <label for="edit-clave" class="form-label" v-if="props.impuesto === 'agua'">Punto</label>
+          <input type="text" class="form-control"  autocomplete="off" v-model="localPadron.clave">
         </div>
         <div class="col-md-6">
           <label for="edit-estado" class="form-label">Estado</label>
-          <select class="form-select" name="estado" id="edit-estado" v-model="localPadron.estado">
+          <select class="form-select"  autocomplete="off" v-model="localPadron.estado">
             <option value="ACTIVO">ACTIVO</option>
+            <option value="PENDIENTE" v-if="props.impuesto === 'gas' || props.impuesto === 'agua'">PENDIENTE</option>
             <option value="INACTIVO">INACTIVO</option>
           </select>
         </div>
         <div class="col-md-6">
           <label for="edit-administra" class="form-label">Administra</label>
-          <select class="form-select" name="administra" id="edit-administra" v-model="localPadron.administra">
+          <select class="form-select"  autocomplete="off" v-model="localPadron.administra">
             <option value="P">Propietario</option>
             <option value="L">Inmobiliario</option>
             <option value="I">Inquilino</option>
@@ -70,18 +73,15 @@ const props = defineProps({
 const localPadron = ref({})
 
 const guardarCambios = async () => {
-  //console.log('Guardando cambios', localPadron.value)
-
-   const form = {
+  const form = {
     impuesto: props.impuesto,
     ...localPadron.value
   }
-  try{
+  try {
     await actualizarRegistro(form)
     showSuccess('Registro actualizado correctamente')
     emit('success')
-
-  }catch(error){
+  } catch (error) {
     console.error('Error al actualizar el registro', error)
     showError('Error al actualizar el registro')
   }

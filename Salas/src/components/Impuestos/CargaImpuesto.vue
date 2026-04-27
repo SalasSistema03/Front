@@ -7,32 +7,44 @@
       <div class="col-md-1 px-1">
         <label for="mes" class="form-label mb-1">Mes</label>
         <input type="number" v-model="mes" class="form-control form-control-sm" placeholder="Mes" min="1" max="12"
-          id="mes" oninput="this.value = this.value.slice(0, 2)">
+           oninput="this.value = this.value.slice(0, 2)" autocomplete="off">
       </div>
 
       <!-- Año (4 dígitos) -->
       <div class="col-md-1 px-1">
         <label for="anio" class="form-label mb-1">Año</label>
-        <input type="number" v-model="anio" class="form-control form-control-sm" placeholder="Año" id="anio"
-          oninput="this.value = this.value.slice(0, 4)">
+        <input type="number" v-model="anio" class="form-control form-control-sm" placeholder="Año"
+          oninput="this.value = this.value.slice(0, 4)" autocomplete="off">
       </div>
 
       <!-- Folio (hasta 8 números) -->
       <div class="col-md-2 px-1">
         <label for="folio" class="form-label mb-1">Folio</label>
         <input type="number" v-model="folio" class="form-control form-control-sm" placeholder="Folio" maxlength="8"
-          pattern="\d{1,8}" title="Máximo 8 números">
+          pattern="\d{1,8}" title="Máximo 8 números" autocomplete="off">
       </div>
 
 
       <!-- Partida / Clave (hasta 15 números) -->
       <div class="col-md-3 px-1">
-        <label for="busqueda" class="form-label mb-1" v-if="props.impuesto === 'tgi'">Partida / Clave</label>
-        <label for="busqueda" class="form-label mb-1" v-if="props.impuesto === 'agua'">Partida / Punto</label>
-        <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida / Clave"
-          maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" v-if="props.impuesto === 'tgi'">
-        <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida / Punto"
-          maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" v-if="props.impuesto === 'agua'">
+        <div v-if="props.impuesto === 'tgi'">
+          <label for="busqueda" class="form-label mb-1">Partida / Clave</label>
+          <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida / Clave"
+            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off">
+        </div>
+
+        <div v-if="props.impuesto === 'agua'">
+          <label for="busqueda" class="form-label mb-1">Partida / Punto</label>
+          <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida / Punto"
+            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off">
+        </div>
+
+        <div v-if="props.impuesto === 'gas'">
+          <label for="busqueda" class="form-label mb-1">Persona / Cliente</label>
+          <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Persona / Cliente"
+            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off">
+        </div>
+
       </div>
 
       <!-- Estado (select) -->
@@ -42,6 +54,7 @@
           <option value="">Todos</option>
           <option value="INACTIVO">Inactivo</option>
           <option value="ACTIVO">Activo</option>
+          <option value="PENDIENTE" v-if="props.impuesto === 'agua' || props.impuesto === 'gas'">Pendiente</option>
         </select>
       </div>
 
@@ -61,7 +74,7 @@
 
       <div class="col-md-6 px-1">
         <label for="codigo_barras" class="form-label">Código de Barras</label>
-        <input type="text" name="codigo_barras" id="codigo_barras" class="form-control form-control-sm"
+        <input type="text" autocomplete="off" class="form-control form-control-sm"
           placeholder="Código de Barras" v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()">
       </div>
 
@@ -97,7 +110,7 @@
                 <i class="bi bi-file-earmark-pdf"></i> Exportar broches
               </button>
             </li>
-            <li>
+            <li v-if="props.impuesto !== 'gas'">
               <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos" target="_blank"
                 @click="exportarBrochesPdfSalas">
                 <i class="bi bi-file-earmark-pdf"></i> Exportar broches SALAS
@@ -120,11 +133,14 @@
           <tr>
             <th>Código de Barras</th>
             <th>Folio</th>
-            <th v-if="props.impuesto === 'tgi'">Partida</th>
+            <th v-if="props.impuesto === 'tgi' || props.impuesto === 'agua'">Partida</th>
+            <th v-if="props.impuesto === 'tgi'">Clave</th>
             <th v-if="props.impuesto === 'agua'">Punto</th>
-            <th>Clave</th>
+            <th v-if="props.impuesto === 'gas'">Persona</th>
+            <th v-if="props.impuesto === 'gas'">Cliente</th>
             <th>Adm</th>
             <th>Monto</th>
+            <th v-if="props.impuesto === 'gas'">Periodo</th>
             <th>Vencimiento</th>
             <th>Bajado</th>
             <th>-</th>
@@ -142,6 +158,9 @@
             <td>{{ item.padron.clave }}</td>
             <td>{{ item.padron.administra }}</td>
             <td>{{ item.importe }}</td>
+            <td v-if="props.impuesto === 'gas'">{{ formatDate(item.inicio_liquidacion) }} al {{
+              formatDate(item.fin_liquidacion) }} - {{
+                item.liquidacion }}</td>
             <td>{{ formatDate(item.fecha_vencimiento) }}</td>
             <td>{{ item.bajado }}</td>
             <td>
@@ -178,9 +197,9 @@
   <ModalCargaManual :show="showModificarModal" @close="showModificarModal = false" :impuesto="impuesto"
     @success="filtrar"></ModalCargaManual>
 
-  <BrochePdf ref="brochePdfRef" :broches="brochesData" :anio="anio" :mes="mes" />
+  <BrochePdf ref="brochePdfRef" :broches="brochesData" :anio="anio" :mes="mes" :impuesto="impuesto" />
 
-  <BrochePdfSalas ref="brochePdfSalasRef" :broches="brochesDataSalas" :anio="anio" :mes="mes" />
+  <BrochePdfSalas ref="brochePdfSalasRef" :broches="brochesDataSalas" :anio="anio" :mes="mes" :impuesto="impuesto" />
 
   <ModalModificarEstado :show="showModificarEstadoModal" @close="showModificarEstadoModal = false" :impuesto="impuesto"
     :padron="selectedEstadoItem" @success="filtrar"></ModalModificarEstado>
@@ -205,6 +224,8 @@ import { exportarBrochesSalas } from '@/Services/api/Impuestos/tgiApi';
 import { ModificarBajado } from '@/Services/api/Impuestos/tgiApi';
 import ModalModificarEstado from '@/components/Impuestos/ModalImpuestos/ModalModificarEstado.vue';
 import { EliminarImpuesto } from '@/Services/api/Impuestos/tgiApi';
+
+
 
 
 const props = defineProps({
@@ -233,6 +254,7 @@ const brochePdfSalasRef = ref(null)
 const brochesDataSalas = ref([])
 const showModificarEstadoModal = ref(false)
 const selectedEstadoItem = ref(null)
+
 
 
 const filtrar = async () => {
@@ -367,7 +389,8 @@ const modificarBajados = async () => {
   }
   try {
     const response = await ModificarBajado(form)
-    console.log(response)
+    showSuccess('Bajados modificados correctamente')
+    //console.log(response)
   } catch (error) {
     console.error(error)
   }

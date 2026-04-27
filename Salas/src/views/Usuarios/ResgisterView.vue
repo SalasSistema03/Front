@@ -6,7 +6,7 @@
         <div class="card-header">
           <ul class="nav nav-pills card-header-pills">
             <li class="nav-item">
-              <a href="#" class="nav-link" :class="{ active: activeTab === 'tab1' }"
+              <a href="#" class="nav-link" :class="{ 'active': activeTab === 'tab1' }"
                 @click.prevent="activeTab = 'tab1'">
                 Datos Personales
               </a>
@@ -79,12 +79,14 @@
               <div v-for="permiso in permisos" :key="permiso.menu" v-show="permiso.menu === menuActivo"
                 class="border rounded p-3 bg-light ">
                 <div v-if="permiso.vistas && permiso.vistas.length > 0" class="permisos_menu_scrolleable">
+
                   <div v-for="(vistasPorSeccion, seccion) in agruparVistasPorSeccion(permiso.vistas)" :key="seccion"
                     class="mb-4">
                     <h6 class="text-start fw-bold mb-3  pb-2">
                       {{ seccion }}
                     </h6>
                     <div class="row">
+
                       <div v-for="vista in vistasPorSeccion" :key="vista.id" class="col-md-4 mb-3 text-start">
                         <div class="border rounded p-2">
                           <div class="form-check mb-2">

@@ -1,10 +1,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { registerUser, getPermisos } from '@/Services/api/Usuario/userApi'
 import { useToast } from '@/composables/useToast'
-import { 
-  handleSectorChange, 
-  isSectorSelected, 
-  handleVistaChange, 
+import {
+  handleSectorChange,
+  isSectorSelected,
+  handleVistaChange,
   isVistaSelected,
   handleBotonChange,
   isBotonSelected,
@@ -48,13 +48,13 @@ export const useUserRegister = () => {
     success.value = null
     loading.value = true
 
-   
+
 
     try {
       const response = await registerUser(form)
       showSuccess('Usuario registrado correctamente')
-     
-      
+
+
       resetFormData(form)
     } catch (e) {
       handleApiError(e)
@@ -89,18 +89,18 @@ export const useUserRegister = () => {
   }
 
   const agruparVistasPorSeccion = (vistas) => {
-  const agrupadas = {}
-  
-  vistas.forEach(vista => {
-    const seccion = vista.Seccion || 'Sin Sección'
-    if (!agrupadas[seccion]) {
-      agrupadas[seccion] = []
-    }
-    agrupadas[seccion].push(vista)
-  })
-  
-  return agrupadas
-}
+    const agrupadas = {}
+
+    vistas.forEach(vista => {
+      const seccion = vista.Seccion || 'Sin Sección'
+      if (!agrupadas[seccion]) {
+        agrupadas[seccion] = []
+      }
+      agrupadas[seccion].push(vista)
+    })
+    console.log('Agrupadas:', agrupadas)
+    return agrupadas
+  }
   onMounted(loadPermisos)
 
   return {

@@ -135,10 +135,8 @@ const props = defineProps({
 
 const seleccionarImpuesto = (impuesto) => {
   impuestoSeleccionado.value = impuesto
-  //console.log('Impuesto seleccionado',impuesto)
 }
 const buscarFolio = async () => {
-  //console.log('Buscar folio',folio.value, empresa.value)
   const form={
     impuesto: props.impuesto,
     folio: folio.value,
@@ -147,7 +145,6 @@ const buscarFolio = async () => {
   try{
   const response = await cargaManual(form)
   resultadoCarga.value = response
-  //console.log('Form',resultadoCarga.value)
   showSuccess('Carga manual exitosa')
   showTabla.value = true
   }catch(error){
@@ -169,7 +166,6 @@ const guardarCambios = async ()=>{
 
   try{
    await cargaNuevoManual(form)
-  //console.log('Response',response)
   showSuccess('Carga manual exitosa')
   emit('success')
 
