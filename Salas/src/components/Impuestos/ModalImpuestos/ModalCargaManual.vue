@@ -17,27 +17,30 @@
 
         </div>
         <div class="col-md-6 d-flex align-items-end justify-content-center mb-2">
-          <button type="button" class="btn btn-primary btn-sm w-50" @click="buscarFolio(folio, empresa)"> buscar</button>
+          <button type="button" class="btn btn-primary btn-sm w-50" @click="buscarFolio(folio, empresa)">
+            buscar</button>
         </div>
 
 
 
-        <div  v-if="showTabla" class="table-responsive  tabla-modifica-carga-impuestos">
+        <div v-if="showTabla" class="table-responsive  tabla-modifica-carga-impuestos">
           <table class="table table-striped table-hover tabla-impuestos">
             <thead>
               <tr>
                 <th>
                   Folio
                 </th>
-                <th>
+                <th v-if="props.impuesto === 'tgi' || props.impuesto === 'agua'">
                   Partida
                 </th>
+                <th v-if="props.impuesto === 'gas'">Persona</th>
                 <th v-if="props.impuesto === 'tgi'">
                   Clave
                 </th>
                 <th v-if="props.impuesto === 'agua'">
                   Punto
                 </th>
+                <th v-if="props.impuesto === 'gas'">Cliente</th>
                 <th>
                   Administra
                 </th>
@@ -52,7 +55,8 @@
                 <td>{{ resultado.partida }}</td>
                 <td>{{ resultado.clave }}</td>
                 <td>{{ resultado.administra }}</td>
-                <td><button class="btn btn-primary btn-sm" @click="seleccionarImpuesto(resultado)">Seleccionar</button></td>
+                <td><button class="btn btn-primary btn-sm" @click="seleccionarImpuesto(resultado)">Seleccionar</button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -61,7 +65,7 @@
 
       </div>
       <div class="row form-group m-0 p-0" v-if="impuestoSeleccionado">
-         <div class="col-md-4">
+        <div class="col-md-4">
           <label for="edit-folio" class="form-label">Partida</label>
           <input type="text" class="form-control form-control-sm" disabled :value="impuestoSeleccionado.partida">
         </div>
@@ -73,22 +77,24 @@
           <label for="edit-partida" class="form-label">Administra</label>
           <input type="text" class="form-control form-control-sm" disabled :value="impuestoSeleccionado.administra">
         </div>
-          <div class="col-md-2">
+        <div class="col-md-2">
           <label for="edit-clave" class="form-label">Fecha</label>
           <input type="date" class="form-control form-control-sm" v-model="fecha">
         </div>
         <div class="col-md-2">
           <label for="edit-estado" class="form-label">Importe</label>
-          <input type="number" class="form-control form-control-sm" v-model="importe">
+          <input type="number" class="form-control form-control-sm" v-model="importe"
+            @input="importe = $event.target.value.replace(',', '.')">
         </div>
 
-          <div class="col-md-2" v-if="props.impuesto === 'agua'">
+        <div class="col-md-2" v-if="props.impuesto === 'agua'">
           <label for="edit-fecha" class="form-label">Fecha</label>
           <input type="date" class="form-control form-control-sm" v-model="fecha2">
         </div>
-        <div class="col-md-2">
-          <label for="edit-importe" class="form-label" v-if="props.impuesto === 'agua'">Importe</label>
-          <input type="number" class="form-control form-control-sm" v-model="importe2">
+        <div class="col-md-2" v-if="props.impuesto === 'agua'">
+          <label for="edit-importe" class="form-label">Importe</label>
+          <input type="number" class="form-control form-control-sm" v-model="importe2"
+            @input="importe2 = $event.target.value.replace(',', '.')">
         </div>
 
       </div>
@@ -137,40 +143,49 @@ const seleccionarImpuesto = (impuesto) => {
   impuestoSeleccionado.value = impuesto
 }
 const buscarFolio = async () => {
-  const form={
+  const form = {
     impuesto: props.impuesto,
     folio: folio.value,
     empresa: empresa.value
   }
-  try{
-  const response = await cargaManual(form)
-  resultadoCarga.value = response
-  showSuccess('Carga manual exitosa')
-  showTabla.value = true
-  }catch(error){
-    console.error('Error al cargar manualmente',error)
+  try {
+    const response = await cargaManual(form)
+    resultadoCarga.value = response
+    console.log(response)
+    showSuccess('Carga manual exitosa')
+    showTabla.value = true
+  } catch (error) {
+    console.error('Error al cargar manualmente', error)
     showError('Error al cargar manualmente')
   }
 }
 
-const guardarCambios = async ()=>{
+const guardarCambios = async () => {
 
-  const form={
-    impuesto : props.impuesto,
-    partida : impuestoSeleccionado.value.partida,
+  const form = {
+    impuesto: props.impuesto,
+    partida: impuestoSeleccionado.value.partida,
     fecha_vencimiento: fecha.value,
     importe: importe.value,
     fecha_vencimiento2: fecha2.value,
     importe2: importe2.value
   }
 
-  try{
-   await cargaNuevoManual(form)
-  showSuccess('Carga manual exitosa')
-  emit('success')
+  try {
+    await cargaNuevoManual(form)
+    showSuccess('Carga manual exitosa')
+    resultadoCarga.value = []
+    folio.value = ''
+    empresa.value = ''
+    impuestoSeleccionado.value = null
+    fecha.value = ''
+    importe.value = ''
+    fecha2.value = ''
+    importe2.value = ''
+    emit('success')
 
-  }catch(error){
-    console.error('Error al cargar manualmente',error)
+  } catch (error) {
+    console.error('Error al cargar manualmente', error)
     showError('Error al cargar manualmente')
   }
   emit('close')
