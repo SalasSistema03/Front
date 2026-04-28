@@ -3,7 +3,7 @@
     <template #title>Modificar Estado</template>
     <template #body>
       <div class="row form-group m-0 p-0">
-        <div class="form-group">
+        <div class="form-group" >
           <label for="estado">Estado</label>
           <select class="form-select" v-model="estado">
             <option value="ACTIVO">Activo</option>

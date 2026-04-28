@@ -7,7 +7,7 @@
       <div class="col-md-1 px-1">
         <label for="mes" class="form-label mb-1">Mes</label>
         <input type="number" v-model="mes" class="form-control form-control-sm" placeholder="Mes" min="1" max="12"
-           oninput="this.value = this.value.slice(0, 2)" autocomplete="off">
+          oninput="this.value = this.value.slice(0, 2)" autocomplete="off">
       </div>
 
       <!-- Año (4 dígitos) -->
@@ -74,8 +74,8 @@
 
       <div class="col-md-6 px-1">
         <label for="codigo_barras" class="form-label">Código de Barras</label>
-        <input type="text" autocomplete="off" class="form-control form-control-sm"
-          placeholder="Código de Barras" v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()">
+        <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Código de Barras"
+          v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()">
       </div>
 
       <div class="col-md-3 px-1 d-flex align-items-end justify-content-end">
@@ -152,7 +152,8 @@
             <td>
               <span v-for="(comp, index) in parseCompartidos(item.compartidos)" :key="index"
                 :style="{ color: comp.estado === 'ACTIVO' ? 'green' : 'red' }">
-                {{ comp.folio }}{{ index < parseCompartidos(item.compartidos).length - 1 ? ', ' : '' }} </span>
+                {{ comp.empresa === 2 ? 'TRIB ' : comp.empresa === 3 ? 'CAN ' : '' }}{{ comp.folio
+                }}{{ index < parseCompartidos(item.compartidos).length - 1 ? ', ' : '' }} </span>
             </td>
             <td>{{ item.padron.partida }}</td>
             <td>{{ item.padron.clave }}</td>
