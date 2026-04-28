@@ -9,6 +9,14 @@ const routesContable = [
             vistaId:24
          },
     },
+    {
+        path: '/retenciones',
+        name: 'retenciones',
+        component: () => import('../views/Contable/RetencionesView.vue'), // Se importa solo cuando se necesita
+        meta: { requiresAuth: true,
+            vistaId:38
+         },
+    }
 ]
 
 export default routesContable
