@@ -42,7 +42,7 @@
     <template #footer>
       <div class="modal-footer justify-content-between">
         <button type="submit" class="btn btn-primary btn-sm" id="btn_guardar_broches_tgi" @click="guardarNumeroBroches">
-          <i class="bi bi-save"></i> Guardar Broches TGI
+          <i class="bi bi-save"></i> Guardar  Broches TGI
         </button>
         <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
           <button type="submit" class="btn btn-success btn-sm" id="btn_guardar_broches_salas"
