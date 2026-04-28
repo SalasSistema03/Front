@@ -9,4 +9,4 @@ import NavComponent from '../../components/NavComponent.vue'
 import CargarSellado from '../../components/Contable/Sellado/CargarSellado.vue'
 import ResultadoSellado from '../../components/Contable/Sellado/ResultadoSellado.vue'
 
-</script>
+</script> 
