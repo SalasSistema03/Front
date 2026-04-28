@@ -29,14 +29,18 @@
                 <th>
                   Folio
                 </th>
-                <th>
+                <th v-if="props.impuesto === 'tgi' || props.impuesto === 'agua'">
                   Partida
                 </th>
+                <th v-if="props.impuesto === 'gas'">Persona</th>
                 <th v-if="props.impuesto === 'tgi'">
                   Clave
                 </th>
                 <th v-if="props.impuesto === 'agua'">
                   Punto
+                </th>
+                <th v-if="props.impuesto === 'gas'">
+                  Cliente
                 </th>
                 <th>
                   Administra
@@ -145,6 +149,7 @@ const buscarFolio = async () => {
   try{
   const response = await cargaManual(form)
   resultadoCarga.value = response
+  console.log(resultadoCarga)
   showSuccess('Carga manual exitosa')
   showTabla.value = true
   }catch(error){
