@@ -1,8 +1,13 @@
 <template>
   <div class="px-3">
     <h1 class="titulo-impuestos">Carga de Impuestos {{ props.impuesto?.toUpperCase() }}</h1>
-    <div class="row form-group mb-3">
+    <div class="row form-group mb-3 d-flex justify-content-center align-items-end">
 
+      <div class="col-md-1 px-1" v-if="props.impuesto === 'gas'">
+        <label for="dia" class="form-label mb-1">Día</label>
+        <input type="number" v-model="dia" class="form-control form-control-sm" placeholder="Día" min="1" max="31"
+          oninput="this.value = this.value.slice(0, 2)" autocomplete="off">
+      </div>
       <!-- Mes (2 dígitos) -->
       <div class="col-md-1 px-1">
         <label for="mes" class="form-label mb-1">Mes</label>
@@ -59,7 +64,7 @@
       </div>
 
       <!-- Bajado (select) -->
-      <div class="col-md-2 px-1">
+      <div class="col-md-1 px-1">
         <label for="bajado" class="form-label mb-1">Bajado</label>
         <select v-model="bajado" id="bajado" class="form-select form-select-sm" placeholder="">
           <option value="S">SI</option>
@@ -78,13 +83,13 @@
           v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()">
       </div>
 
-      <div class="col-md-3 px-1 d-flex align-items-end justify-content-end">
+      <div class="col-md-2 px-1 d-flex align-items-end justify-content-end">
         <button type="button" class="btn btn-primary btn-sm" @click="openModalCargaManual()">
           Carga manual
         </button>
       </div>
 
-      <div v-if="showMasOpciones" class="col-md-3 px-1 d-flex align-items-end justify-content-end">
+      <div v-if="showMasOpciones" class="col-md-4 px-1 d-flex align-items-end justify-content-end">
         <div class="dropdown">
           <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuOpciones"
             data-bs-toggle="dropdown" aria-expanded="false">
@@ -152,7 +157,7 @@
             <td>
               <span v-for="(comp, index) in parseCompartidos(item.compartidos)" :key="index"
                 :style="{ color: comp.estado === 'ACTIVO' ? 'green' : 'red' }">
-                {{ comp.empresa === 2 ? 'TRIB ' : comp.empresa === 3 ? 'CAN ' : '' }}{{ comp.folio
+                {{ comp.empresa === 2 ? 'CAN ' : comp.empresa === 3 ? 'TRIB ' : '' }}{{ comp.folio
                 }}{{ index < parseCompartidos(item.compartidos).length - 1 ? ', ' : '' }} </span>
             </td>
             <td>{{ item.padron.partida }}</td>
@@ -160,8 +165,7 @@
             <td>{{ item.padron.administra }}</td>
             <td>{{ item.importe }}</td>
             <td v-if="props.impuesto === 'gas'">{{ formatDate(item.inicio_liquidacion) }} al {{
-              formatDate(item.fin_liquidacion) }} - {{
-                item.liquidacion }}</td>
+              formatDate(item.fin_liquidacion) }} - {{item.liquidacion }}</td>
             <td>{{ formatDate(item.fecha_vencimiento) }}</td>
             <td>{{ item.bajado }}</td>
             <td>
@@ -206,7 +210,7 @@
     :padron="selectedEstadoItem" @success="filtrar"></ModalModificarEstado>
 
   <ModalArmarBroche :show="showArmarBroches" @close="showArmarBroches = false" :impuesto="props.impuesto" :mes="mes"
-    :anio="anio"></ModalArmarBroche>
+    :anio="anio" :dia="dia"></ModalArmarBroche>
 
 </template>
 <script setup>
@@ -238,6 +242,7 @@ const props = defineProps({
 
 const { showError, showSuccess, } = useToast();
 const { formatDate } = useDateFormatter();
+const dia = ref(null)
 const mes = ref(null)
 const anio = ref(null)
 const folio = ref(null)
@@ -258,6 +263,7 @@ const selectedEstadoItem = ref(null)
 
 
 
+
 const filtrar = async () => {
   const form = {
     mes: mes.value || null,
@@ -267,6 +273,7 @@ const filtrar = async () => {
     estado: estado.value || null,
     bajado: bajado.value || null,
     impuesto: props.impuesto,
+    dia: dia.value || null
   }
 
   try {
@@ -301,6 +308,7 @@ const cargarCodigoBarra = async () => {
     await filtrar()
   } catch (error) {
     console.error(error)
+    codigo_barras.value = ''
     showError('Error al cargar el código de barras')
   }
 }
@@ -389,7 +397,7 @@ const modificarBajados = async () => {
     anio: anio.value
   }
   try {
-    const response = await ModificarBajado(form)
+    await ModificarBajado(form)
     showSuccess('Bajados modificados correctamente')
     //console.log(response)
   } catch (error) {

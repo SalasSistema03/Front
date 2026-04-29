@@ -43,7 +43,7 @@
                 <th v-if="props.impuesto === 'gas'">
                   Cliente
                 </th>
-                <th v-if="props.impuesto === 'gas'">Cliente</th>
+
                 <th>
                   Administra
                 </th>

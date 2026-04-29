@@ -5,7 +5,7 @@
 
       <div class="row g-4">
         <div class="col-md-6">
-          <h6 class="text-primary">TGI - Administra L</h6>
+          <h6 class="text-primary">{{ props.impuesto.toUpperCase() }} - Administra L</h6>
           <p class="fw-bold text-muted">Monto Total: {{ montoTotal.total }}</p>
 
           <label for="cant_broches" class="form-label">Cantidad de broches</label>
@@ -42,7 +42,7 @@
     <template #footer>
       <div class="modal-footer justify-content-between">
         <button type="submit" class="btn btn-primary btn-sm" id="btn_guardar_broches_tgi" @click="guardarNumeroBroches">
-          <i class="bi bi-save"></i> Guardar  Broches TGI
+          <i class="bi bi-save"></i> Guardar Broches TGI
         </button>
         <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
           <button type="submit" class="btn btn-success btn-sm" id="btn_guardar_broches_salas"
@@ -83,6 +83,10 @@ const props = defineProps({
   anio: {
     type: Number,
     default: null
+  },
+  dia: {
+    type: Number,
+    default: null
   }
 })
 
@@ -96,7 +100,8 @@ const totalMontoCargado = async () => {
     const response = await sumarMontos({
       impuesto: props.impuesto,
       mes: props.mes,
-      anio: props.anio
+      anio: props.anio,
+      dia: props.dia
     })
     montoTotal.value = response.data.total
     montoTotalSalas.value = response.data.totalSalas
@@ -111,7 +116,8 @@ const guardarNumeroBroches = async () => {
     impuesto: props.impuesto,
     mes: props.mes,
     anio: props.anio,
-    cant_broches: cant_broches.value
+    cant_broches: cant_broches.value,
+    dia: props.dia
   }
   try {
     await guardarBroches(form)
@@ -144,6 +150,7 @@ const calcularBroches = async () => {
     impuesto: props.impuesto,
     mes: props.mes,
     anio: props.anio,
+    dia: props.dia,
     cant_broches: cant_broches.value
   }
   try {
