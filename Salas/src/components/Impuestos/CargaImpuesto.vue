@@ -129,7 +129,7 @@
             </li>
             <li v-if="props.impuesto !== 'gas'">
               <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos"
-                @click="modificarBajados()">
+                @click="modificarBajados()" :disabled="!botonesPadron?.[`modificarBajado_${props.impuesto}`]">
                 <i class="bi bi-clipboard2-check-fill"></i> Modificar bajado
               </button>
             </li>
@@ -158,7 +158,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in PadronCompleto?.data" :key="item.id">
+          <tr v-for="item in PadronCompleto" :key="item.id">
             <td>{{ item.codigo_barra }}</td>
             <td>
               <span v-for="(comp, index) in parseCompartidos(item.compartidos)" :key="index"
@@ -166,9 +166,9 @@
                 {{ comp.empresa === 2 ? 'CAN ' : comp.empresa === 3 ? 'TRIB ' : '' }}{{ comp.folio
                 }}{{ index < parseCompartidos(item.compartidos).length - 1 ? ', ' : '' }} </span>
             </td>
-            <td>{{ item.padron.partida }}</td>
-            <td>{{ item.padron.clave }}</td>
-            <td>{{ item.padron.administra }}</td>
+            <td>{{ item.padron?.partida }}</td>
+            <td>{{ item.padron?.clave }}</td>
+            <td>{{ item.padron?.administra }}</td>
             <td>{{ item.importe }}</td>
             <td v-if="props.impuesto === 'gas'">{{ formatDate(item.inicio_liquidacion) }} al {{
               formatDate(item.fin_liquidacion) }} - {{ item.liquidacion }}</td>
@@ -183,13 +183,13 @@
                 <ul class="dropdown-menu lista-mas-opciones-impuestos">
                   <li>
                     <button type="button" class="dropdown-item text-options-impuestos"
-                      @click="modificarEstadoImpuesto(item)">
+                      @click="modificarEstadoImpuesto(item)" :disabled="!botonesPadron?.[`modificarEstado_${props.impuesto}`]">
                       Modificar estado
                     </button>
                   </li>
                   <li>
                     <button type="button" class="dropdown-item text-options-impuestos" title="Eliminar"
-                      @click="eliminarImpuesto(item)">
+                      @click="eliminarImpuesto(item)" :disabled="!botonesPadron?.[`eliminarImpuesto_${props.impuesto}`]">
                       Eliminar
                     </button>
                   </li>
@@ -261,6 +261,7 @@ const estado = ref(null)
 const bajado = ref(null)
 const codigo_barras = ref('')
 const PadronCompleto = ref([])
+const botonesPadron = ref({})
 const showModificarModal = ref(false)
 const showMasOpciones = ref(false)
 const showArmarBroches = ref(false)
@@ -289,8 +290,10 @@ const filtrar = async () => {
 
   try {
     const response = await padronCarga(form)
-    PadronCompleto.value = response
-    //console.log('este es el padron', PadronCompleto.value)
+    botonesPadron.value = response?.data?.botones ?? {}
+    const resultadoRaw = response?.data?.resultado
+    PadronCompleto.value = typeof resultadoRaw === 'string' ? JSON.parse(resultadoRaw) : (resultadoRaw ?? [])
+    console.log('este es el padron', botonesPadron.value)
     if (mes.value !== null && anio.value !== null) {
       showMasOpciones.value = true
     }

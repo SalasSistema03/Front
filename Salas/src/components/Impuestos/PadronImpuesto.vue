@@ -3,7 +3,7 @@
     <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
       <div class="col-auto">
-        <button class="btn btn-sm btn-primary" @click="actualizarPadron()">
+        <button class="btn btn-sm btn-primary" @click="actualizarPadron()" :disabled="!puedeActualizarPadron">
           Actualizar Padrón {{ props.impuesto?.toUpperCase() }}
         </button>
       </div>
@@ -94,7 +94,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="padron in PadronCompleto?.data?.data" :key="padron.id"
+          <tr v-for="padron in PadronCompleto?.original?.data" :key="padron.id"
             :class="{ 'table-danger': padron.estado === 'INACTIVO' }">
             <td>{{ padron.folio }}</td>
             <td>{{ padron.calle }}</td>
@@ -140,6 +140,7 @@ const filtros = ref([]);
 const search_all = ref(null);
 const search_folio = ref(null);
 const PadronCompleto = ref([]);
+const puedeActualizarPadron = ref(true)
 const selectedPadron = ref(null);
 const showModificarModal = ref(false);
 
@@ -147,6 +148,7 @@ const showModificarModal = ref(false);
 const actualizarPadron = async () => {
   try {
     await actualizaPadron({ impuesto: props.impuesto });
+    //console.log(response);
     showSuccess('Padrón actualizado correctamente');
   } catch (error) {
     console.error(error);
@@ -163,7 +165,9 @@ const filtrar = async () => {
   }
   try {
     const padron = await getPadron(form);
-    PadronCompleto.value = padron;
+    PadronCompleto.value = padron?.data?.resultado;
+    puedeActualizarPadron.value = Boolean(padron?.data?.botones?.[`actualizaPadron_${props.impuesto}`])
+    console.log(padron);
     showSuccess('Padrón filtrado correctamente');
     return padron;
   } catch (error) {
