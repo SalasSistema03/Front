@@ -26,8 +26,7 @@
 
             <!-- Lista de sugerencias -->
             <ul v-if="mostrarSugerencias && callesFiltradas.length"
-              class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm "
-              style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+              class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm busqueda-select">
               <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalle(calle)"
                 class="px-3 py-2 cursor-pointer hover:bg-light ">
                 {{ calle.name }}
