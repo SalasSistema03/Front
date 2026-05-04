@@ -4,7 +4,7 @@
     <template #body>
 
       <div class="row g-4">
-        <div class="col-md-6">
+        <div class="col-md-6 form-group">
           <h6 class="text-primary">{{ props.impuesto.toUpperCase() }} - Administra L</h6>
           <p class="fw-bold text-muted">Monto Total: {{ montoTotal.total }}</p>
 
@@ -16,10 +16,12 @@
             </button>
           </div>
 
-          <div v-if="resultado_broche">
-            <label class="form-label mt-3">Resultado</label>
+          <div v-if="resultado_broche" class="tabla_armar_broche">
+            <div class="w-100 titulo-resultados d-flex align-items-center justify-content-center">
+              <label class="form-label">Resultado</label>
+            </div>
             <ul class="list-group">
-              <li class="list-group-item" v-for="(broche, index) in resultado_broche" :key="index">
+              <li class="list-group-item " v-for="(broche, index) in resultado_broche" :key="index">
                 Broche {{ index + 1 }}: ${{ parseFloat(broche.importe).toFixed(2) }}
               </li>
             </ul>
@@ -40,14 +42,14 @@
     </template>
 
     <template #footer>
-      <div class="modal-footer justify-content-between">
+      <div class="d-flex justify-content-between">
         <button type="submit" class="btn btn-primary btn-sm" id="btn_guardar_broches_tgi" @click="guardarNumeroBroches">
-          <i class="bi bi-save"></i> Guardar Broches TGI
+          <i class="bi bi-save"></i> Guardar Broches {{ props.impuesto.toUpperCase() }}
         </button>
         <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
           <button type="submit" class="btn btn-success btn-sm" id="btn_guardar_broches_salas"
             @click="guardarNumeroBrochesSalas">
-            <i class="bi bi-save"></i> Guardar Broches Salas
+            <i class="bi bi-save"></i> Guardar Broches {{ props.impuesto.toUpperCase() }}
           </button>
         </div>
       </div>
@@ -169,6 +171,11 @@ const emit = defineEmits(['close'])
 watch(() => props.show, (newVal) => {
   if (newVal) {
     totalMontoCargado()
+  } else {
+    cant_broches.value = null
+    resultado_broche.value = null
+    montoTotal.value = 0
+    montoTotalSalas.value = 0
   }
 })
 </script>

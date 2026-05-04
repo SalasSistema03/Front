@@ -204,6 +204,32 @@ export const GenerarPdfBroches = (data) => {
   })
 }
 
+export const ObtenerBrochesSinControlar = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/broches/sin_controlar`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const GasBajado = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.put(`${API_URL}/v1/gas_bajado`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const GasRechazar = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.put(`${API_URL}/v1/gas_rechazar`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
 /* export const GenerarPdfBrochesSalas = (data) => {
   const token = localStorage.getItem('token')
   return axios.post(`${API_URL}/v1/broches/salas/pdf`, data, {

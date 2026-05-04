@@ -12,7 +12,7 @@
       <div class="col-md-1 px-1">
         <label for="mes" class="form-label mb-1">Mes</label>
         <input type="number" v-model="mes" class="form-control form-control-sm" placeholder="Mes" min="1" max="12"
-          oninput="this.value = this.value.slice(0, 2)" autocomplete="off">
+          autocomplete="off">
       </div>
 
       <!-- Año (4 dígitos) -->
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Estado (select) -->
-      <div class="col-md-2 px-1">
+      <div class="col-md-2 px-1" >
         <label for="estado" class="form-label mb-1">Estado</label>
         <select v-model="estado" id="estado" class="form-select form-select-sm" placeholder="">
           <option value="">Todos</option>
@@ -121,7 +121,13 @@
                 <i class="bi bi-file-earmark-pdf"></i> Exportar broches SALAS
               </button>
             </li>
-            <li>
+            <li v-if="props.impuesto === 'gas'">
+              <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos"
+                @click="ControlDeBroches()">
+                <i class="bi bi-clipboard2-check-fill"></i> Control
+              </button>
+            </li>
+            <li v-if="props.impuesto !== 'gas'">
               <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos"
                 @click="modificarBajados()">
                 <i class="bi bi-clipboard2-check-fill"></i> Modificar bajado
@@ -165,7 +171,7 @@
             <td>{{ item.padron.administra }}</td>
             <td>{{ item.importe }}</td>
             <td v-if="props.impuesto === 'gas'">{{ formatDate(item.inicio_liquidacion) }} al {{
-              formatDate(item.fin_liquidacion) }} - {{item.liquidacion }}</td>
+              formatDate(item.fin_liquidacion) }} - {{ item.liquidacion }}</td>
             <td>{{ formatDate(item.fecha_vencimiento) }}</td>
             <td>{{ item.bajado }}</td>
             <td>
@@ -212,6 +218,9 @@
   <ModalArmarBroche :show="showArmarBroches" @close="showArmarBroches = false" :impuesto="props.impuesto" :mes="mes"
     :anio="anio" :dia="dia"></ModalArmarBroche>
 
+  <ModalControlBroches :show="showControlBroches" @close="showControlBroches = false" :impuesto="props.impuesto">
+  </ModalControlBroches>
+
 </template>
 <script setup>
 import { padronCarga } from '@/Services/api/Impuestos/tgiApi'
@@ -220,6 +229,7 @@ import { useToast } from '@/composables/useToast'
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import ModalCargaManual from '@/components/Impuestos/ModalImpuestos/ModalCargaManual.vue';
 import ModalArmarBroche from '@/components/Impuestos/ModalImpuestos/ModalArmarBroche.vue';
+import ModalControlBroches from '@/components/Impuestos/ModalImpuestos/ModalControlBroches.vue';
 import BrochePdf from '@/components/Impuestos/Pdfs/BrochePdf.vue';
 import BrochePdfSalas from '@/components/Impuestos/Pdfs/BrochePdfSalas.vue';
 import { cargaNuevoImpuesto } from '@/Services/api/Impuestos/tgiApi';
@@ -254,6 +264,7 @@ const PadronCompleto = ref([])
 const showModificarModal = ref(false)
 const showMasOpciones = ref(false)
 const showArmarBroches = ref(false)
+const showControlBroches = ref(false)
 const brochePdfRef = ref(null)
 const brochesData = ref([])
 const brochePdfSalasRef = ref(null)
@@ -294,6 +305,10 @@ const filtrar = async () => {
 const openModalCargaManual = () => {
   props.impuesto;
   showModificarModal.value = true;
+}
+
+const ControlDeBroches = () => {
+  showControlBroches.value = true
 }
 
 const cargarCodigoBarra = async () => {
