@@ -151,9 +151,6 @@ defineProps({
 });
 const emit = defineEmits(['cerrar']);
 
-// Referencia al div del modal en el template
-const modalRef = ref(null)
-let modalInstance = null // Guardará la instancia de Bootstrap
 
 const cargando = ref(true)
 const guardando = ref(false)
