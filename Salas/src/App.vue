@@ -11,6 +11,7 @@
 <script setup>
 import { useToast } from '@/composables/useToast'
 import ToastComponent from '@/components/ToastComponent.vue'
+import NavComponent from './components/NavComponent.vue';
 
 const { 
   toasts, 
