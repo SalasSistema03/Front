@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_AUTH_URL
 
 export const getSector = () => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/sectores`, {
+  return axios.get(`${API_URL}/v1/sectoresturno`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
