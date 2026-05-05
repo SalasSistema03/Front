@@ -3,6 +3,7 @@ import { putFinalizarTurno, putLlamarTurno } from '@/Services/api/Turnero/turner
 import { useToast } from '@/composables/useToast'
 import { useUsuario } from './useUsuario'
 import { useTurnos } from './useTurnos'
+import notificationSound from '@/assets/notification.wav'
 
 export function useTomaTurno() {
     const turnoLlamado = ref(null)
@@ -10,7 +11,7 @@ export function useTomaTurno() {
     const selectedSector = ref('')
     const sectorSeleccionado = ref('')
     const turnosFiltrados = ref([])
-    
+
     const { handleApiError, showError, showSuccess } = useToast()
     const { obtenerUsuarioActual } = useUsuario()
     const { turnosPendientes, loadTurnosPendientes, filtrarTurnosPorSector } = useTurnos()
@@ -19,7 +20,7 @@ export function useTomaTurno() {
         sectorSeleccionado.value = selectedSector.value
         if (sectorSeleccionado.value) {
             loadingTurnos.value = true
-            
+
             try {
                 await loadTurnosPendientes()
                 turnosFiltrados.value = filtrarTurnosPorSector(sectorSeleccionado.value)
@@ -39,60 +40,63 @@ export function useTomaTurno() {
         if (turnoLlamado.value) {
             try {
                 const usuario = await obtenerUsuarioActual()
-                
+
                 if (!usuario.id) {
                     showError('No se pudo obtener el ID del usuario')
                     return
                 }
-                
+
                 await putFinalizarTurno(turnoLlamado.value.id, usuario.id)
                 showSuccess(`Turno ${turnoLlamado.value.tipo_identificador}: ${turnoLlamado.value.numero_identificador} finalizado correctamente`)
-                
+
                 // Limpiar el turno llamado
                 turnoLlamado.value = null
-                
+
                 // Actualizar lista de turnos pendientes
                 await loadTurnosPendientes()
-                
+
             } catch (error) {
                 handleApiError(error)
             }
             return
         }
-        
+
         // Si no hay turno llamado, tomamos uno nuevo
         loadingTurnos.value = true
-        
+
         try {
             // Tomar el primer turno de los filtrados (ya están ordenados por fecha)
             if (!turnosFiltrados.value || turnosFiltrados.value.length === 0) {
                 showError('No hay turnos pendientes para el sector seleccionado')
                 return
             }
-            
+
             const primerTurno = turnosFiltrados.value[0]
-            
+
             // Obtener el ID del usuario
             const usuario = await obtenerUsuarioActual()
-            
+
             if (!usuario.id) {
                 showError('No se pudo obtener el ID del usuario')
                 return
             }
-            
+
             // Llamar a la API para llamar el turno pasando el ID del usuario
             await putLlamarTurno(primerTurno.id, usuario.id)
-            
+
+            const notification = new Audio(notificationSound)
+            await notification.play()
+
             // Asignar el turno llamado
             turnoLlamado.value = primerTurno
-            
+
             // Mostrar mensaje de éxito
             showSuccess(`Turno ${primerTurno.tipo_identificador}: ${primerTurno.numero_identificador} llamado correctamente`)
-            
+
             // Actualizar lista de turnos pendientes y filtrados
             await loadTurnosPendientes()
             turnosFiltrados.value = filtrarTurnosPorSector(sectorSeleccionado.value)
-            
+
         } catch (error) {
             handleApiError(error)
         } finally {

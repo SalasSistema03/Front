@@ -20,7 +20,7 @@ export function useTurnos() {
     const loadTurnosLlamados = async () => {
         try {
             const response = await getTurnosLlamados()
-            turnosLlamados.value = response.data
+            turnosLlamados.value = response.data ?? []
         } catch (error) {
             console.error('Error cargando turnos llamados:', error)
             throw error
