@@ -24,8 +24,8 @@
       <div class="col-md-4 px-1 d-flex justify-content-center">
         <div class="mostrarTurnosPublicidad">
           <!-- QUIERO MOSTRAR UN VIDEO SIN QUE SE MUESTREN EL START NI LOS COMANDOS DE REPRODUCCION -->
-          <video :src="videoUrl" autoplay muted loop playsinline class="w-100 h-auto"></video>
-        </div>
+          <!-- <video :src="videoUrl" autoplay muted loop playsinline class="w-100 h-auto"></video>
+         --></div>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@ onMounted(async () => {
   await loadAllTurnos() // Espera a que cargue
   intervalId = setInterval(() => {
     loadAllTurnos()
-  }, 500)
+  }, 5000)
 })
 
 onUnmounted(() => {
@@ -56,7 +56,7 @@ onUnmounted(() => {
 const videoLocal = new URL('../../assets/video.mp4', import.meta.url).href;
 
 // 2. Para un video remoto (opcional)
-const videoRemoto = ref('https://tu-servidor.com/video-publicitario.mp4');
+//const videoRemoto = ref('https://tu-servidor.com/video-publicitario.mp4');
 // Elegimos cuál usar
 const videoUrl = ref(videoLocal);
 </script>
