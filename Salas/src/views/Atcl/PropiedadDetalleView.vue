@@ -185,9 +185,9 @@
 
                       <div class="d-flex flex-column h-100">
                         <div class="flex-grow-1" style="overflow: hidden;">
-                          <img :src="'http://localhost' + foto.url" class="w-100 h-100"
+                          <img :src="'http://10.10.10.191' + foto.url" class="w-100 h-100"
                             :alt="'Imagen de propiedad ' + (index + 1)" style="object-fit: cover; cursor: pointer;"
-                            @click="openModal(index)">
+                            @click="openModal(index)"> 
                         </div>
 
                         <div class="p-2 bg-white" v-if="foto.notes">
@@ -224,7 +224,7 @@
                     class="list-group-item d-flex flex-column h-100 atcl_card_body_panel_fotos_documentos_videos">
 
                     <div class="flex-grow-1" style="overflow: hidden;">
-                      <embed :src="'http://localhost' + documento.url" type="application/pdf" class="w-100"
+                      <embed :src="'http://10.10.10.191' + documento.url" type="application/pdf" class="w-100"
                         height="300px">
                     </div>
 
@@ -251,7 +251,7 @@
 
                     <div class="flex-grow-1" style="overflow: hidden;">
                       <video controls class="w-100" height="300px">
-                        <source :src="'http://localhost' + video.url" type="video/mp4">
+                        <source :src="'http://10.10.10.191' + video.url" type="video/mp4">
                         Tu navegador no soporta la etiqueta de video.
                       </video>
                     </div>
@@ -355,7 +355,7 @@ export default {
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data.data
-        //console.log('Propiedad encontrada:', this.propiedad)
+        console.log('Propiedad encontrada:', this.propiedad)
         this.botones = response.data.botones
         //console.log('console de propiedad', this.botones)
         console.log('esto me devuelve response', response)
