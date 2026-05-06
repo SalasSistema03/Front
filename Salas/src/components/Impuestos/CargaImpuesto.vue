@@ -189,7 +189,7 @@
                   </li>
                   <li>
                     <button type="button" class="dropdown-item text-options-impuestos" title="Eliminar"
-                      @click="eliminarImpuesto(item)" :disabled="!botonesPadron?.[`eliminarImpuesto_${props.impuesto}`]">
+                      @click="eliminarImpuesto(item)" :disabled="!botonesPadron?.[`eliminarImpuesto_${props.impuesto}`]" >
                       Eliminar
                     </button>
                   </li>
