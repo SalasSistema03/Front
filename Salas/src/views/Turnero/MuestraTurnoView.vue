@@ -24,8 +24,9 @@
       <div class="col-md-4 px-1 d-flex justify-content-center">
         <div class="mostrarTurnosPublicidad">
           <!-- QUIERO MOSTRAR UN VIDEO SIN QUE SE MUESTREN EL START NI LOS COMANDOS DE REPRODUCCION -->
-          <!-- <video :src="videoUrl" autoplay muted loop playsinline class="w-100 h-auto"></video>
-         --></div>
+         <video :src="videoUrl" autoplay muted loop playsinline class="w-100 h-auto">
+         </video>
+        </div>
       </div>
     </div>
   </div>
