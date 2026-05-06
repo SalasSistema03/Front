@@ -192,12 +192,12 @@ const handleClickOutside = (event) => {
   }
 };
 
-if (isTokenExpiringSoon()) {
+/* if (isTokenExpiringSoon()) {
   await refreshToken()
-}
+} */
 onMounted(async () => {
   //refresh token
-  refreshInterval = setInterval(async () => {
+  /* refreshInterval = setInterval(async () => {
     try {
       if (isTokenExpiringSoon()) {
         const ok = await refreshToken()
@@ -209,7 +209,7 @@ onMounted(async () => {
     } catch (e) {
       console.errror('Error en refresh automatico', e)
     }
-  }, 60000)
+  }, 60000) */
 
 
 
