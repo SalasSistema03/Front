@@ -88,7 +88,9 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="#" @click.prevent="authStore.logout()"> <i class="bi bi-door-open"></i>Logout</a></li>
+            <li><a class="dropdown-item" href="#" @click.prevent="authStore.logout()"> <i
+                  class="bi bi-door-open"></i>Logout</a>
+            </li>
           </ul>
         </li>
       </ul>
@@ -100,7 +102,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth'; // Importamos el store
-import { isAdmin } from '../Services/business/auth';
+import { isAdmin, isTokenExpiringSoon, refreshToken } from '../Services/business/auth';
 import axios from 'axios';
 import { getNotificaciones } from '../Services/api/Nav/NavApi';
 import { notificacionLeida } from '../Services/api/Nav/NavApi';
@@ -113,6 +115,7 @@ const username = ref('');
 const isUserAdmin = ref(false);
 const logo = ref('');
 const notificaciones = ref([]);
+let refreshInterval = null;
 
 // Computed property for notification count
 const notificacionCount = computed(() => {
@@ -189,6 +192,7 @@ const handleClickOutside = (event) => {
   }
 };
 
+
 onMounted(async () => {
   // 1. Cargar permisos y menús
   await authStore.fetchPermissions();
@@ -235,7 +239,7 @@ const iconMap = {
   5: 'bi-display',
   6: 'bi-journal-text',
   10: 'bi-collection',
-        // Ajustes
+  // Ajustes
   'default': 'bi-app-indicator' // Icono por defecto si no coincide ninguno
 };
 
