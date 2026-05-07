@@ -321,6 +321,10 @@ watch(() => form.suma_comprobante, () => {
 });
 
 
+onMounted(() => {
+    const hoy = new Date().toISOString().split('T')[0];
+    form.fecha_comprobante = hoy;
+});
 </script>
 
 <style scoped>
