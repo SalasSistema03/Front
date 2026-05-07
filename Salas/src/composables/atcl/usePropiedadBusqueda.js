@@ -1,13 +1,10 @@
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { buscarPropiedad } from '../../Services/api/Atcl/AtclApi'
 import { useCalleAutocomplete } from './useCalleAutocomplete'
 import { useInmuebles } from './useInmuebles'
 import { useZona } from './useZona'
 
 export function usePropiedadBusqueda() {
-  const router = useRouter()
-
   const {
     callesFiltradas,
     mostrarSugerencias,
@@ -109,7 +106,7 @@ export function usePropiedadBusqueda() {
   }
 
   const verPropiedad = (propiedad) => {
-    router.push(`/propiedad-detalle/${propiedad.id}`)
+    window.open(`/propiedad-detalle/${propiedad.id}`, '_blank')
   }
 
   onMounted(async () => {

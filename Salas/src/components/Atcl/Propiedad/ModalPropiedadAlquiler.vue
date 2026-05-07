@@ -11,7 +11,7 @@
           <input type="hidden" name="formularioComodidades" id="formulario" value="">
           <div class="row g-3">
             <div class="form-group  px-1 col-md-2 ">
-              <label class="text-center form-label" id="basic-addon1">Codigo</label>
+              <label class="text-center form-label" id="basic-addon1">Codigo <span class="text-danger">*</span></label>
               <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.cod_alquiler"
                 readonly>
               <input v-else type="number" class="form-control text-center small " id="" name="cod_alquiler" min="0"
