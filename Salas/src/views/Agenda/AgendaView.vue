@@ -9,7 +9,10 @@
           </div>
           <div class=" row d-flex justify-content-center align-items-center mt-3">
             <div v-for="sector in sectores" :key="sector.id" class="col-12 m-1">
-              <button class="btn btn-primary btn-sm w-100" type="button" @click="seleccionarSector(sector)">
+              <button class="btn btn-sm w-100"
+                      :class="sectorSeleccionado?.id === sector.id ? 'btn-primary' : 'btn-outline-primary'"
+                      type="button"
+                      @click="seleccionarSector(sector)">
                 {{ sector.nombre }}
               </button>
             </div>
@@ -24,6 +27,7 @@
           </div>
 
           <div v-else class="tabla-scroll-container">
+
             <table class="table table-striped table-hover table-sm">
               <thead>
                 <tr>
@@ -39,7 +43,10 @@
                     <button type="button" :class="[
                       'mt-0 p-0 w-100 d-flex flex-column justify-content-center align-items-center',
                       notaEnCelda(username, hora) ? 'agenda-seleccionada' : 'agenda-noseleccionada'
-                    ]" style="border-color: transparent;" @click="cargarAgenda(username, hora)">
+                    ]"
+                    style="border-color: transparent;"
+                    :title="notaEnCelda(username, hora)?.descripcion || ''"
+                    @click="cargarAgenda(username, hora)">
 
                       <div v-if="textoCelda(username, hora)"
                         class="mt-0 texto-agenda row d-flex align-items-center justify-content-center">
@@ -205,7 +212,7 @@ export default {
     textoCelda(username, hora) {
       //console.log(hora)
       const nota = this.notaEnCelda(username, hora)
-      //console.log('acaa', nota)
+      console.log('acaa', nota)
 
       return nota?.propiedad_calle ? nota.propiedad_calle + ' ' + nota?.propiedad_numero_calle : ''
     }

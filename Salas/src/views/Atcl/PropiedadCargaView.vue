@@ -4,7 +4,7 @@
     <form @submit.prevent="handleSubmit" class="row d-flex align-items-start px-3" autocomplete="off" novalidate>
       <div class="col-md-6 row">
         <div class="form-group col-md-4 px-1">
-          <label for="input-calle" class="form-label">Calle</label>
+          <label for="input-calle" class="form-label">Calle  <span class="text-danger">*</span></label>
           <div class="position-relative">
             <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
               v-model="calleSeleccionada" @input="filtrarCalles" @focus="mostrarLista" @blur="ocultarSugerencias">

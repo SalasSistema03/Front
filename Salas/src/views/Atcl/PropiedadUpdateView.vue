@@ -215,7 +215,7 @@
           <div class="row g-1 overflow-y-auto" style="max-height: 55vh;">
             <div v-for="foto in fotosOrdenadas" :key="foto.id" class="col-md-4">
               <div class="card">
-                <img :src="'http://localhost' + foto.url" class="card-img-top img-thumbnail"
+                <img :src="'http://10.10.10.191' + foto.url" class="card-img-top img-thumbnail"
                   style="height: 200px; object-fit: cover;" alt="Imagen de propiedad">
                 <div class="card-body">
                   <div class="row g-1 align-items-center">
@@ -319,9 +319,9 @@
             <div v-for="documento in propiedad_update?.documentacion" :key="documento.id" class="col-md-4">
               <div class="card">
                 <div style="height: 200px; overflow: hidden;">
-                  <embed v-if="documento.url.endsWith('.pdf')" :src="'http://localhost' + documento.url"
+                  <embed v-if="documento.url.endsWith('.pdf')" :src="'http://10.10.10.191' + documento.url"
                     class="w-100 h-100 border-0" type="application/pdf">
-                  <img v-else :src="'http://localhost' + documento.url" class="w-100 h-100 img-thumbnail"
+                  <img v-else :src="'http://10.10.10.191' + documento.url" class="w-100 h-100 img-thumbnail"
                     style="object-fit: cover;">
                 </div>
                 <div class="card-body">
@@ -408,7 +408,7 @@
           <div class="row g-1 overflow-y-auto" style="max-height: 55vh;">
             <div v-for="video in propiedad_update?.video" :key="video.id" class="col-md-4">
               <div class="card">
-                <video :src="'http://localhost' + video.url" class="card-img-top img-thumbnail"
+                <video :src="'http://10.10.10.191' + video.url" class="card-img-top img-thumbnail"
                   style="height: 200px; object-fit: cover;" controls>
                 </video>
                 <div class="card-body">
