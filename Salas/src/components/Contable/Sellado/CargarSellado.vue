@@ -76,6 +76,7 @@
                     <option disabled value="">Seleccione...</option>
                     <option value="Vivienda">Vivienda</option>
                     <option value="Comercio">Comercio</option>
+                    <option value="Cochera">Cochera</option>
                   </select>
                 </div>
 
@@ -257,13 +258,14 @@ const handleSubmit = async () => {
     hojas: Number(form.value.hojas),
     cantidad_informes: Number(form.value.cantidad_informes),
     // Agregamos campos que faltaban pero que Postman pide
-    inq_prop: 1,
-    // Mapeo de tipo_contrato si es necesario (ejemplo: Vivienda = 1)
-    tipo_contrato: form.value.tipo_contrato === 'Vivienda' ? 1 : 2
+    inq_prop:  form.value.inq_prop === 'SI' ? 'SI' : 'NO',
+    // Mapeo de tipo_contrato si es necesario (ejemplo: Vivienda = 1 comercio = 2, cochera = 3)
+    tipo_contrato: form.value.tipo_contrato === 'Vivienda' ? 1 : form.value.tipo_contrato === 'Comercio' ? 2 : 3
   };
 
   try {
     const response = await calcularSelladoService(payload);
+    console.log("Respuesta del servidor:", response.data);
     resultado.value = response.data;
   } catch (err) {
     // Si el error es 500, ahora podremos ver el mensaje del servidor

@@ -5,37 +5,47 @@
 
       <div class="col-12 col-md-4">
         <label class="form-label small  text-secondary">Total Contrato</label>
-        <input type="text" class="form-control form-control-sm bg-light shadow-sm" 
+        <input type="text" class="form-control form-control-sm bg-light shadow-sm"
           :value="formatearMoneda(datos.data.total_contrato)" disabled />
       </div>
 
       <div class="col-12 col-md-4">
-        <label class="form-label small  text-secondary">Prop. Alquiler</label>
-        <input type="text" class="form-control form-control-sm  bg-light shadow-sm" 
-          :value="datos.data.prop_alquiler" disabled />
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label small text-secondary mb-0">Prop. Alquiler</label>
+          <!-- Badge pequeño y sutil -->
+
+          <span v-if="datos.data.monto_alquiler > 1500 && datos.data.inq_prop == 'NO' && (datos.data.tipo_contrato == 2 || datos.data.tipo_contrato == 3)"
+            class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle"
+            style="font-size: 0.65rem;">
+            + IVA
+          </span>
+        </div>
+        <input type="text" class="form-control form-control-sm bg-light shadow-sm" :value="datos.data.prop_alquiler"
+          disabled />
       </div>
 
       <div class="col-12 col-md-4">
         <label class="form-label small  text-secondary">Prop. Doc.</label>
-        <input type="text" class="form-control form-control-sm  bg-light shadow-sm" 
-          :value="datos.data.prop_doc" disabled />
+        <input type="text" class="form-control form-control-sm  bg-light shadow-sm" :value="datos.data.prop_doc"
+          disabled />
       </div>
 
       <div class="col-12 col-md-4">
-        <label class="form-label small  text-secondary">Gasto Adm.</label>
+        <label class="form-label small text-secondary">Gasto Adm.</label>
+        <input type="number" step="0.01" class="form-control form-control-sm bg-white shadow-sm"
+          v-model="gastoAdministrativoLocal" />
+      </div>
+
+      <!-- IVA Gasto. Se actualiza solo -->
+      <div class="col-12 col-md-4">
+        <label class="form-label small text-secondary">IVA Gasto</label>
         <input type="text" class="form-control form-control-sm bg-light shadow-sm"
-          :value="formatearMoneda(datos.data.gasto_administrativo)" disabled />
-      </div>
-
-      <div class="col-12 col-md-4">
-        <label class="form-label small  text-secondary">IVA Gasto</label>
-        <input type="text" class="form-control form-control-sm  bg-light shadow-sm"
-          :value="formatearMoneda(datos.data.iva_gasto_adm)" disabled />
+          :value="formatearMoneda(ivaGastoCalculado)" disabled />
       </div>
 
       <div class="col-12 col-md-4">
         <label class="form-label small text-secondary">Sellado</label>
-        <input type="text" class="form-control form-control-sm  bg-light shadow-sm" 
+        <input type="text" class="form-control form-control-sm  bg-light shadow-sm"
           :value="formatearMoneda(datos.data.sellado)" disabled />
       </div>
 
@@ -46,8 +56,8 @@
       </div>
 
       <div class="col-12 col-md-6 d-flex align-items-end">
-        <button type="button" class="btn btn-success btn-sm w-100 shadow-sm " 
-          @click="guardarRegistro" :disabled="cargando">
+        <button type="button" class="btn btn-success btn-sm w-100 shadow-sm " @click="guardarRegistro"
+          :disabled="cargando">
           <span v-if="cargando" class="spinner-border spinner-border-sm me-2"></span>
           <i v-else class="bi bi-cloud-arrow-up me-2"></i>
           {{ cargando ? 'Guardando...' : 'Confirmar y Guardar' }}
@@ -64,22 +74,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
+import { alertas } from '@/utils/alertas';
 
 const props = defineProps({
   datos: {
     type: Object,
-    default: () => ({})
+    default: () => ({ data: {} })
   }
 });
-// ESTA LÍNEA FALTA:
+
 const emit = defineEmits(['registroGuardado']);
-// Estado para manejar la carga o errores
 const cargando = ref(false);
+
+// Creamos una referencia local para el gasto administrativo
+// Se inicializa con el valor que llega de props
+const gastoAdministrativoLocal = ref(props.datos?.data?.gasto_administrativo || 0);
+
+// Sincronizar si los datos externos cambian (por ejemplo, al hacer un nuevo cálculo)
+watch(() => props.datos?.data?.gasto_administrativo, (nuevoValor) => {
+  gastoAdministrativoLocal.value = nuevoValor;
+});
+
+// Calculamos el IVA automáticamente basado en el gasto local
+const ivaGastoCalculado = computed(() => {
+  const valor = parseFloat(gastoAdministrativoLocal.value) || 0;
+  return valor * 0.21;
+});
 
 const guardarRegistro = async () => {
   cargando.value = true;
-  emit('registroGuardado', props.datos.data); // avisamos al padre
+  // IMPORTANTE: Enviamos los valores actualizados al padre
+  if (!gastoAdministrativoLocal.value) {
+    alertas.error('Por favor, ingresa un valor para el Gasto Administrativo.');
+    cargando.value = false;
+    return;
+  }
+  const datosFinales = {
+    ...props.datos.data,
+    gasto_administrativo: gastoAdministrativoLocal.value,
+    iva_gasto_adm: ivaGastoCalculado.value
+  };
+  emit('registroGuardado', datosFinales);
   cargando.value = false;
 }
 
@@ -91,7 +127,6 @@ const formatearMoneda = (valor) => {
   }).format(valor);
 };
 </script>
-
 <style scoped>
 input[disabled] {
   background-color: #f8f9fa;
