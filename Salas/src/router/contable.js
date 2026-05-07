@@ -16,6 +16,12 @@ const routesContable = [
         meta: { requiresAuth: true,
             vistaId:38
          },
+    },
+    {
+        path: '/buscaComprobante',
+        name: 'buscaComprobante',
+        component: () => import('../views/Contable/Comprobantes/BuscarComprobante.vue'), // Se importa solo cuando se necesita
+        meta: { requiresAuth: true },
     }
 ]
 
