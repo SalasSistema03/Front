@@ -1,5 +1,5 @@
 <template>
-  <div ref="plantillaPdf" class="pdf-container">
+ <!--  <div ref="plantillaPdf" class="pdf-container">
     <div class="pdf-page">
 
       <table class="header-table">
@@ -36,11 +36,6 @@
                       <span class="value">{{ propiedad?.zona?.name?.toUpperCase() }}</span>
                     </div>
                   </div>
-
-                  <!-- <div class="data-group">
-                    <div class="label">Zona</div>
-                    <div class="value">{{ propiedad?.zona?.name?.toUpperCase() }}</div>
-                  </div> -->
 
                   <div class="data-group">
                     <div class="label">🏠 Tipo Inmueble</div>
@@ -142,10 +137,11 @@
       </div>
 
     </div>
-  </div>
+  </div> -->
+  <div></div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .pdf-container {
   position: absolute;
   left: -9999px;
@@ -324,10 +320,10 @@
 .no-border {
   border: none;
 }
-</style>
+</style> -->
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+/* import { ref, watch, onMounted } from 'vue'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { useAuthStore } from '../../../../stores/auth'
@@ -411,7 +407,14 @@ const generarPdf = async () => {
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width
 
   pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-  pdf.save('ficha-propiedad.pdf')
+
+  // Abrir PDF en nueva pestaña en lugar de descargar
+  const pdfBlob = pdf.output('blob')
+  const pdfUrl = URL.createObjectURL(pdfBlob)
+  window.open(pdfUrl, '_blank')
+
+  // Opcional: limpiar la URL después de un tiempo para liberar memoria
+  setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000)
 }
 
 onMounted(async () => {
@@ -430,7 +433,34 @@ onMounted(async () => {
   }
 
   username.value = authStore.user?.username || 'Usuario'
+}) */
+
+import { GenerarPdfFichaPropiedad } from '@/Services/api/Atcl/AtclApi'
+import { defineProps } from 'vue'
+const props = defineProps({
+  propiedad: {
+    type: Object,
+    default: null
+  },
+  ubicacion: {
+    type: String,
+  }
 })
 
+const generarPdf = async () => {
+  try {
+    const response = await GenerarPdfFichaPropiedad({
+      propiedad: props.propiedad,
+      ubicacion: props.ubicacion
+    });
+
+    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const url = window.URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener,noreferrer')
+    setTimeout(() => window.URL.revokeObjectURL(url), 60_000)
+  } catch (error) {
+    console.error("Error al generar PDF en servidor", error);
+  }
+}
 defineExpose({ generarPdf })
 </script>

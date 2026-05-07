@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 .login-form-container {
   width: 100%;
   max-width: 350px;
@@ -60,22 +59,18 @@
   padding: 0.1rem 0;
   border: 1px solid rgb(0, 85, 185);
 }
-
 .navbar-dropdown-menu .bi {
   color: rgba(0, 175, 154, 0.96);
   margin-right: 0.5vh;
 }
-
 .navbar-dropdown-menu a {
   color: rgb(0, 85, 185) !important;
   background-color: rgba(255, 255, 255, 0);
 }
-
 .navbar-dropdown-menu a:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   background-color: rgba(0, 72, 145, 0);
 }
-
 .navbar-dropdown-menu a:hover:hover .bi {
   color: rgb(0, 85, 185);
   transition: all 0.3s;
@@ -111,10 +106,19 @@
     box-shadow: none;
     background-color: #f8f9fa;
   }
-
   .navbar-dropdown-submenu-content .navbar-dropdown-submenu-content .dropdown-item {
     padding-left: 2rem;
   }
+}
+.dropdown-item {
+  color: rgb(0, 85, 185);
+  transition: all 0.3s ease-in-out;
+  background-color: rgba(249, 249, 249, 0);
+}
+.dropdown-item:hover {
+  color: rgba(0, 175, 154, 0.96);
+  background-color: rgba(249, 249, 249, 0);
+  transform: scale(1.1);
 }
 
 .navbar-dropdown-arrow {
@@ -125,7 +129,7 @@
 }
 
 .navbar-dropdown-submenu:hover .navbar-dropdown-arrow,
-.dropdown-toggle[aria-expanded=true]+.navbar-dropdown-arrow {
+.dropdown-toggle[aria-expanded=true] + .navbar-dropdown-arrow {
   transform: rotate(90deg);
 }
 
@@ -134,20 +138,16 @@
   font-size: 13px !important;
   color: rgb(0, 85, 185) !important;
 }
-
 .navbar-item_menu .bi {
   color: rgba(110, 190, 255, 0.6352941176);
   font-size: 15px;
 }
-
 .navbar-item_menu:hover .bi {
   color: rgb(0, 85, 185);
 }
-
 .navbar-item_menu:hover {
   color: rgba(0, 175, 154, 0.96) !important;
 }
-
 .navbar-item_menu:hover:focus {
   color: rgba(0, 175, 154, 0.96) !important;
 }
@@ -156,7 +156,6 @@
   padding: 0 !important;
   height: inherit !important;
 }
-
 #navbar_contenedor_logo img {
   width: 11vh !important;
 }
@@ -173,7 +172,6 @@
   font-weight: 800 !important;
   border-radius: 10px !important;
 }
-
 .navbar-admin:hover {
   color: white !important;
   background-color: rgb(0, 85, 185) !important;
@@ -193,19 +191,16 @@
   font-weight: 800 !important;
   border-radius: 10px !important;
 }
-
 .navbar-notificaciones:hover {
   background-color: rgba(0, 175, 154, 0.96) !important;
   color: white !important;
   border-radius: 10px !important;
 }
-
 .navbar-notificaciones:hover .navbar-notificaciones-contador {
   color: white !important;
   background-color: rgb(0, 85, 185) !important;
   border-radius: 10px !important;
 }
-
 .navbar-notificaciones .navbar-notificaciones-contador {
   position: absolute;
   top: 0.1vh;
@@ -228,7 +223,6 @@
   font-size: 12px !important;
   text-decoration: none !important;
 }
-
 .navbar-notificaciones_dropdown {
   position: relative;
   transform: translateY(-12%) translateX(-5%) !important;
@@ -236,21 +230,17 @@
   padding: 0.3rem 0.3rem !important;
   width: 27vh;
 }
-
 .navbar-notificaciones_dropdown i {
   color: black;
 }
-
 .navbar-notificaciones_dropdown .navbar-notificacion-nombre {
   font-size: 12px !important;
   text-decoration: none !important;
 }
-
 .navbar-notificaciones_dropdown .navbar-notificacion-nombre .bi {
   color: rgba(0, 175, 154, 0.96);
   margin-right: 0.5vh;
 }
-
 .navbar-notificaciones_dropdown .navbar-notificacion-fecha {
   font-size: 8px !important;
 }
@@ -311,7 +301,6 @@
   top: 0;
   z-index: 10;
 }
-
 .turnero_head_table tr th {
   background-color: rgb(0, 85, 185) !important;
   color: white !important;
@@ -328,7 +317,6 @@
   font-weight: bold !important;
   font-size: 12px !important;
 }
-
 .turnero_resaltado:hover {
   color: rgb(0, 85, 185) !important;
 }
@@ -344,11 +332,9 @@
 .mostrarTurnosPublicidad {
   height: 83vh;
 }
-
 .mostrarTurnosPublicidad {
   border-radius: 15px;
 }
-
 .mostrarTurnosPublicidad video {
   max-height: 83vh;
   border-radius: 20px;
@@ -381,7 +367,6 @@
   border-collapse: collapse;
   min-width: 100%;
 }
-
 .atcl_tabla_busqueda_propiedad thead tr th {
   background-color: rgb(0, 85, 185);
   color: white;
@@ -392,11 +377,11 @@
   text-align: center;
   white-space: nowrap;
 }
-
 .atcl_tabla_busqueda_propiedad tbody tr td {
-  font-size: 0.8rem;
+  height: 50px;
+  font-size: 0.6rem;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -408,13 +393,11 @@
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
   }
-
   .atcl_tabla_busqueda_propiedad {
     min-width: 1200px;
     table-layout: auto;
     font-size: 0.9rem;
   }
-
   .atcl_tabla_busqueda_propiedad thead th,
   .atcl_tabla_busqueda_propiedad tbody td {
     white-space: nowrap;
@@ -423,7 +406,6 @@
     text-overflow: ellipsis;
   }
 }
-
 /* Optional: make the scrollbar slightly larger/visible on webkit browsers */
 .atcl_contenedor_tabla::-webkit-scrollbar {
   height: 10px;
@@ -432,6 +414,26 @@
 .atcl_contenedor_tabla::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 6px;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_alquilada {
+  color: red !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_en_alquiler {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_pendiente {
+  color: orange !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_reset {
+  color: rgb(0, 85, 185) !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_en_alquiler_compartido {
+  color: rgba(0, 175, 154, 0.5) !important;
 }
 
 /* carga de propiedad */
@@ -457,14 +459,14 @@
 .atcl_contenedor_foto_tamaño {
   height: 60vh !important;
   -o-object-fit: cover;
-  object-fit: cover;
+     object-fit: cover;
 }
 
 .atcl_cargar_foto_tamaño {
   height: 20vh !important;
   max-width: 35vh !important;
   -o-object-fit: cover;
-  object-fit: cover;
+     object-fit: cover;
 }
 
 .atcl_tabla_propietarios {
@@ -512,16 +514,13 @@
   padding: 0.5rem;
   border: 1px solid rgba(0, 175, 154, 0.96) !important;
 }
-
 .agenda_barra_lateral input {
   margin-top: 0.5rem;
 }
-
 .agenda_barra_lateral {
   color: white;
   border: none;
 }
-
 .agenda_barra_lateral::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
@@ -533,7 +532,6 @@
   border: 1px solid rgb(0, 85, 185);
   margin-bottom: 1rem;
 }
-
 .agenda_tabla thead tr th {
   background-color: rgb(0, 85, 185);
   border: 1px solid rgb(0, 85, 185);
@@ -545,7 +543,6 @@
   text-align: center;
   white-space: nowrap;
 }
-
 .agenda_tabla tbody tr td {
   border-left: 1px solid rgb(0, 85, 185);
   font-size: 0.9rem;
@@ -554,7 +551,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .agenda_tabla tbody tr td button {
   border-radius: 8px !important;
   padding: 0.5rem 1rem;
@@ -563,22 +559,18 @@
 .agenda_modal {
   overflow-y: auto;
 }
-
 .agenda_modal .form-control {
   background-color: rgba(0, 72, 145, 0);
   color: red;
 }
-
 .agenda_modal .form-select {
   background-color: rgba(0, 72, 145, 0);
   color: blue;
 }
-
 .agenda_modal .form-control:focus {
   background-color: rgba(0, 72, 145, 0);
   color: green;
 }
-
 .agenda_modal .form-select:focus {
   background-color: rgba(0, 72, 145, 0);
   color: orange;
@@ -594,7 +586,6 @@
 .agenda_titulo_tabla_modal {
   font-size: 0.6rem !important;
 }
-
 .agenda_titulo_tabla_modal th {
   position: sticky !important;
   top: 0;
@@ -606,7 +597,6 @@
 .agenda_cuerpo_tabla_modal {
   font-size: 0.6rem !important;
 }
-
 .agenda_cuerpo_tabla_modal td {
   padding: 0.2rem 0;
 }
@@ -617,16 +607,13 @@
   overflow-y: auto;
   max-width: 47vw;
 }
-
 .agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad {
   font-size: 0.7rem !important;
 }
-
 .agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad:hover {
   background-color: rgb(0, 85, 185);
   color: white !important;
 }
-
 .agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad .estado_activa {
   font-size: 0.5rem !important;
 }
@@ -645,11 +632,9 @@
   color: black !important;
   height: 10vh;
 }
-
 .agenda-noseleccionada:hover {
   border: 1px solid rgb(0, 85, 185) !important;
 }
-
 .agenda-noseleccionada {
   /* .texto-agenda
   * width: 7vh
@@ -668,11 +653,9 @@
   height: 10vh;
   min-width: 7vh;
 }
-
 .agenda-seleccionada:hover {
   background-color: rgb(0, 61.5675675676, 134) !important;
 }
-
 .agenda-seleccionada .texto-agenda {
   min-width: 7vh;
   max-width: 7vh;
@@ -682,12 +665,10 @@
   white-space: normal;
   display: inline-block;
 }
-
 .agenda-seleccionada .texto-agenda .texto-agenda-content {
   font-size: 1.3vh !important;
   min-width: 17vh;
 }
-
 .agenda-seleccionada .texto-agenda-logo {
   min-width: 7vh;
   font-size: 4vh;
@@ -706,13 +687,11 @@
   max-height: 25.5vh;
   border: 1px solid white;
 }
-
 .tabla_clientes table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.65rem;
 }
-
 .tabla_clientes table thead th {
   background-color: rgb(0, 85, 185) !important;
   color: white;
@@ -720,7 +699,6 @@
   top: 0;
   white-space: nowrap;
 }
-
 .tabla_clientes table tbody button {
   font-size: 0.7rem;
 }
@@ -743,29 +721,24 @@
   border-right: 1px solid rgb(0, 85, 185);
   height: 30.2rem;
 }
-
 .barra-asesores .tipo-potabiliadad-asesores {
   color: red;
   font-size: 0.7rem;
   font-weight: 700;
 }
-
 .barra-asesores .selector_potabilidad-asesores button {
   font-size: 0.7rem !important;
   color: rgb(0, 85, 185) !important;
   background-color: white !important;
 }
-
 .barra-asesores .selector_potabilidad-asesores i {
   color: rgb(0, 85, 185);
   font-size: 0.7rem !important;
 }
-
 .barra-asesores .selector_potabilidad-asesores .texto-seleccionado {
   color: rgb(0, 85, 185) !important;
   font-size: 0.7rem !important;
 }
-
 .barra-asesores .lista-contacto-asesores {
   border-radius: 5px !important;
   box-shadow: 0 0 3px rgb(0, 85, 185) !important;
@@ -775,56 +748,47 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .barra-asesores .lista-contacto-asesores .nombre-contacto-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: left;
 }
-
 .barra-asesores .lista-contacto-asesores .nombre-contacto-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
 }
-
 .barra-asesores .lista-contacto-asesores .telefono-contacto-asesores {
   font-size: 0.6rem;
   text-align: left;
   color: black !important;
 }
-
 .barra-asesores .lista-contacto-asesores .fecha-contacto-asesores {
   font-size: 0.5rem;
   text-align: right;
   color: black !important;
 }
-
 .barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: right;
   font-size: 0.7rem;
   margin-left: 0.4rem;
 }
-
 .barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   text-align: right;
   font-size: 0.8rem;
   margin-left: 0.4rem;
 }
-
 .barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: left;
   font-size: 0.6rem;
   margin-right: 0.5rem;
 }
-
 .barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   text-align: left;
   font-size: 0.5rem;
   margin-right: 0.5rem;
 }
-
 .barra-asesores .lista-contacto-asesores .pertenece-inmobiliaria-asesores {
   font-size: 0.6rem !important;
   text-align: center;
@@ -833,7 +797,6 @@
   background-color: rgb(185, 217.1621621622, 255) !important;
   color: black;
 }
-
 .barra-asesores .titulo-columna-asesores {
   font-size: 0.8rem;
   color: rgb(0, 85, 185) !important;
@@ -843,7 +806,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .barra-asesores .creterio-asesores {
   font-size: 0.8rem;
   border-bottom: 1px solid #cccccc;
@@ -851,25 +813,21 @@
   border-bottom-right-radius: 5px !important;
   /* box-shadow: 0 0 3px $azulSalas !important */
 }
-
 .barra-asesores .creterio-asesores .criterio-titulos-asesores {
   font-weight: 700;
   font-size: 0.5rem;
   color: rgb(0, 85, 185);
 }
-
 .barra-asesores .creterio-asesores .criterio-texto-asesores {
   font-size: 0.65rem;
   color: rgb(0, 85, 185);
 }
-
 .barra-asesores .creterio-asesores .boton-editar-criterio-asesores {
   color: rgb(0, 85, 185) !important;
   text-align: right;
   font-size: 0.6rem;
   margin-left: 0.4rem;
 }
-
 .barra-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
   color: rgba(0, 175, 154, 0.96) !important;
   font-size: 0.7rem;
@@ -885,13 +843,11 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .contenedor_conversacion_asesores .conversacion_asesores_devolcucion {
   font-size: 0.7rem;
   color: black;
   font-weight: 700;
 }
-
 .contenedor_conversacion_asesores .btn-light-conversacion-asesores {
   font-size: 0.6rem !important;
   height: 1rem !important;
@@ -903,13 +859,11 @@
   padding: 0rem 0.3rem !important;
   cursor: pointer !important;
 }
-
 .contenedor_conversacion_asesores .btn-light-conversacion-asesores:hover {
   border-color: rgba(0, 175, 154, 0.96) !important;
   background-color: white !important;
   color: rgba(0, 175, 154, 0.96) !important;
 }
-
 .contenedor_conversacion_asesores .mensaje-resaltado {
   box-shadow: 0px -5px 9px rgb(220.7, 236.4594594595, 255) inset !important;
 }
@@ -922,7 +876,6 @@
   border-radius: 25px !important;
   cursor: pointer !important;
 }
-
 .btn-adds-conversacion-asesores:hover {
   border-color: rgb(0, 26.4189189189, 57.5) !important;
   background-color: rgb(0, 61.5675675676, 134) !important;
@@ -934,7 +887,6 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .lista-codigos-asesores .codigos-ofrecido-asesores {
   color: rgba(0, 175, 154, 0.96) !important;
   font-size: 0.55rem;
@@ -942,12 +894,10 @@
   background-color: transparent !important;
   border-radius: 10px !important;
 }
-
 .lista-codigos-asesores .codigos-ofrecido-asesores:hover {
   background-color: rgba(0, 175, 154, 0.96) !important;
   color: white !important;
 }
-
 .lista-codigos-asesores .codigos-muestra-asesores {
   color: rgb(0, 85, 185) !important;
   font-size: 0.55rem;
@@ -955,12 +905,10 @@
   background-color: transparent !important;
   border-radius: 10px !important;
 }
-
 .lista-codigos-asesores .codigos-muestra-asesores:hover {
   background-color: rgb(0, 85, 185) !important;
   color: white !important;
 }
-
 .lista-codigos-asesores .codigos-consultado-asesores {
   color: grey !important;
   font-size: 0.55rem;
@@ -968,7 +916,6 @@
   border: 0px solid grey !important;
   background-color: transparent !important;
 }
-
 .lista-codigos-asesores .codigos-consultado-asesores:hover {
   background-color: grey !important;
   color: white !important;
@@ -983,7 +930,6 @@
   margin-left: 0.5rem !important;
   padding: 0rem 0.3rem !important;
 }
-
 .boton_debolucion_asesores:hover {
   background-color: rgba(0, 175, 154, 0.96) !important;
   color: white !important;
@@ -1018,7 +964,6 @@
   max-height: 27vh !important;
   min-height: 10vh !important;
 }
-
 .tabla-modifica-carga-impuestos button {
   font-size: 2vh;
 }
@@ -1033,7 +978,6 @@
   top: 0;
   padding: 0.5vh;
 }
-
 .tabla-impuestos td {
   border-left: 1px solid rgb(0, 85, 185);
   border-right: 1px solid rgb(0, 85, 185);
@@ -1043,7 +987,6 @@
   font-size: 2vh;
   padding: 0.36vh !important;
 }
-
 .tabla-impuestos td button {
   font-weight: bold;
   padding-left: 0.6vh;
@@ -1051,7 +994,6 @@
   padding-top: 0.3vh;
   padding-bottom: 0.3vh;
 }
-
 .tabla-impuestos td button:hover {
   background-color: rgba(110, 190, 255, 0.6352941176) !important;
   border: 1px solid rgba(110, 190, 255, 0.6352941176) !important;
@@ -1062,17 +1004,14 @@
   height: 25vh;
   border: 1px solid rgb(0, 85, 185);
 }
-
 .listado-mas-opciones-impuestos .text-options-impuestos {
   color: rgb(0, 85, 185);
   font-size: 2vh;
 }
-
 .listado-mas-opciones-impuestos .text-options-impuestos:hover {
   color: rgba(0, 175, 154, 0.96);
   background-color: transparent;
 }
-
 .listado-mas-opciones-impuestos .text-options-impuestos:hover .bi {
   font-size: 2.5vh;
   color: rgb(0, 85, 185);
@@ -1083,17 +1022,14 @@
   height: 10vh;
   border: 1px solid rgb(0, 85, 185);
 }
-
 .lista-mas-opciones-impuestos .text-options-impuestos {
   color: rgb(0, 85, 185);
   font-size: 2vh;
 }
-
 .lista-mas-opciones-impuestos .text-options-impuestos:hover {
   color: rgba(0, 175, 154, 0.96);
   background-color: transparent;
 }
-
 .lista-mas-opciones-impuestos .text-options-impuestos:hover .bi {
   font-size: 2.5vh;
   color: rgb(0, 85, 185);
@@ -1116,17 +1052,7 @@
   background-color: rgb(0, 85, 185) !important;
   border-color: rgb(0, 85, 185) !important;
 }
-
 .btn-primary:hover {
-  background-color: rgb(0, 61.5675675676, 134) !important;
-  border-color: rgb(0, 61.5675675676, 134) !important;
-}
-
-.btn-outline-primary {
-  border-color: rgb(0, 85, 185) !important;
-}
-
-.btn-outline-primary:hover {
   background-color: rgb(0, 61.5675675676, 134) !important;
   border-color: rgb(0, 61.5675675676, 134) !important;
 }
@@ -1135,7 +1061,6 @@
   background-color: rgba(0, 175, 154, 0.96) !important;
   border-color: rgba(0, 175, 154, 0.96) !important;
 }
-
 .btn-secondary:hover {
   background-color: rgba(0, 124, 109.12, 0.96) !important;
   border-color: rgba(0, 124, 109.12, 0.96) !important;
@@ -1145,7 +1070,6 @@
   border-color: rgba(0, 175, 154, 0.96) !important;
   color: rgba(0, 175, 154, 0.96) !important;
 }
-
 .btn-light:hover {
   border: 1px solid rgb(0, 85, 185) !important;
   color: rgb(0, 85, 185) !important;
@@ -1154,16 +1078,12 @@
 .form-group {
   text-align: center;
 }
-
 .form-group label {
   color: rgb(0, 85, 185) !important;
   font-size: 0.8rem !important;
   font-weight: bold !important;
 }
-
-.form-group input,
-.form-group select,
-.form-group textarea {
+.form-group input, .form-group select, .form-group textarea {
   /* border: 2px solid $azulSalas !important */
   border-radius: 5px !important;
   box-shadow: 0 0 3px rgb(0, 85, 185) !important;
@@ -1187,7 +1107,6 @@
   border: 1px solid rgb(0, 85, 185) !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 .card .card-header {
   background-color: white;
   margin: 0;

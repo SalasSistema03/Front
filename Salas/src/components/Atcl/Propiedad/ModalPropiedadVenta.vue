@@ -12,7 +12,7 @@
           <input type="hidden" id="formulario" value="">
           <div class="row g-3">
             <div class="form-group  px-1 col-md-2 ">
-              <label class="text-center readonly form-label" id="basic-addon1">Codigo</label>
+              <label class="text-center readonly form-label" id="basic-addon1">Codigo <span class="text-danger">*</span></label>
               <input v-if="propiedad" type="number" class="form-control text-center readonly" :value="propiedad.cod_venta"
                 readonly>
               <input v-else type="number" class="form-control text-center readonly " id="" min="0" v-model="venta.cod_venta">
