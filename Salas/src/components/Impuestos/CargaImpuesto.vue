@@ -80,7 +80,7 @@
       <div class="col-md-6 px-1">
         <label for="codigo_barras" class="form-label">Código de Barras</label>
         <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Código de Barras"
-          v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()">
+          v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()" ref="codigoBarrasInput">
       </div>
 
       <div class="col-md-2 px-1 d-flex align-items-end justify-content-end">
@@ -260,6 +260,7 @@ const busqueda = ref(null)
 const estado = ref(null)
 const bajado = ref(null)
 const codigo_barras = ref('')
+const codigoBarrasInput = ref(null)
 const PadronCompleto = ref([])
 const botonesPadron = ref({})
 const showModificarModal = ref(false)
@@ -454,6 +455,11 @@ const armarBroches = async () => {
 }
 onMounted(async () => {
   await filtrar();
+  // Enfocar el input de código de barras
+  await nextTick();
+  if (codigoBarrasInput.value) {
+    codigoBarrasInput.value.focus();
+  }
 })
 
 </script>
