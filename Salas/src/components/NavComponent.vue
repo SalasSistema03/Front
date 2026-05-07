@@ -192,27 +192,8 @@ const handleClickOutside = (event) => {
   }
 };
 
-/* if (isTokenExpiringSoon()) {
-  await refreshToken()
-} */
+
 onMounted(async () => {
-  //refresh token
-  /* refreshInterval = setInterval(async () => {
-    try {
-      if (isTokenExpiringSoon()) {
-        const ok = await refreshToken()
-        if (!ok) {
-          console.warn('No se pudo refrescar el token')
-          router.push('/login')
-        }
-      }
-    } catch (e) {
-      console.errror('Error en refresh automatico', e)
-    }
-  }, 60000) */
-
-
-
   // 1. Cargar permisos y menús
   await authStore.fetchPermissions();
 
