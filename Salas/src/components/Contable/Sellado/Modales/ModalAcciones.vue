@@ -86,24 +86,29 @@ const prepararTextoYExportar = () => {
     // Encabezados (primera fila)
     const encabezados = [
         "Folio",
+        "Nombre",
         "Informe",
         "Fecha Inicio",
         "Tipo Contrato",
         "Monto Vivienda",
         "Monto Comercio",
+        "Monto Contrato",
         "Hojas",
         "Fecha Carga",
         "Inq/Prop"
     ];
 
     // Convertimos los registros en filas separadas por ;
+    console.log("hola",registros.value)
     const filas = registros.value.map(reg => [
         reg.folio,
-        reg.informe, // corregido
+        reg.nombre,
+        reg.informe, 
         reg.fecha_inicio,
         reg.tipo_contrato,
         reg.monto_alquiler_vivienda ?? 0,
-        reg.monto_alquiler_comercio ?? 0,
+        reg.monto_alquiler_comercial ?? 0,
+        reg.monto_contrato ?? 0,
         reg.hojas,
         reg.fecha_carga,
         reg.inq_prop
