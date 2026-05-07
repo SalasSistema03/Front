@@ -5,7 +5,7 @@
       <form class="row" autocomplete="off" @submit.prevent="filtrar">
 
         <div class="form-group col-md-2 px-1">
-          <label for="input-tipo" class="form-label">Busqueda</label>
+          <label for="input-tipo" class="form-label">Busqueda <span class="text-danger">*</span></label>
           <select class="form-select form-select-sm" v-model="busqueda">
             <option value="">-Seleccione-</option>
             <option value="1">Venta</option>
@@ -151,15 +151,21 @@
             <th>Detalle</th>
           </tr>
         </thead>
-        <tbody class="" v-for="propiedad in propiedades" :key="propiedad.id">
+        <tbody v-for="propiedad in propiedades" :key="propiedad.id">
           <tr>
-            <td>{{ propiedad.cod_venta || '-' }}</td>
-            <td>{{ propiedad.cod_alquiler || '-' }}</td>
-            <td>{{ propiedad.calle || '-' }} {{ propiedad.numero_calle || '-' }}</td>
-            <td>{{ propiedad.zona || '-' }}</td>
-            <td>{{ propiedad.tipo || '-' }}</td>
-            <td>{{ propiedad.cantidad_dormitorios ?? '-' }}</td>
-            <td>{{ propiedad.banios || '-' }}</td>
+            <td class="">{{ propiedad.cod_venta || '' }}</td>
+            <td :class="{
+              'atcl_tabla_busqueda_propiedad_estados_alquilada': propiedad.estado_alquiler === 'ALQUILADA',
+              'atcl_tabla_busqueda_propiedad_estados_en_alquiler': propiedad.estado_alquiler === 'EN ALQUILER',
+              'atcl_tabla_busqueda_propiedad_estados_pendiente': propiedad.estado_alquiler === 'PENDIENTE',
+              'atcl_tabla_busqueda_propiedad_estados_reset': propiedad.estado_alquiler === 'RESET',
+              'atcl_tabla_busqueda_propiedad_estados_en_alquiler_compartido': propiedad.estado_alquiler === 'EN ALQUILER COMPARTIDO'
+            }">{{ propiedad.cod_alquiler || '-' }}</td>
+            <td class="atcl_tabla_busqueda_propiedad_calle">{{ propiedad.calle || '-' }} {{ propiedad.numero_calle || '-' }}</td>
+            <td>{{ propiedad.zona || '' }}</td>
+            <td>{{ propiedad.tipo || '' }}</td>
+            <td>{{ propiedad.cantidad_dormitorios ?? '' }}</td>
+            <td>{{ propiedad.banios || '' }}</td>
             <td>{{ propiedad.cochera || '-' }}</td>
             <td>{{ propiedad.mascota || '-' }}</td>
             <td>{{ propiedad.precio_alquiler || '-' }}</td>
@@ -185,11 +191,6 @@ export default {
   setup() {
     return usePropiedadBusqueda()
   },
-  /*
 
-      propiedades: [], // Para guardar los resultados de la búsqueda
-    }
-  },
-*/
 }
 </script>

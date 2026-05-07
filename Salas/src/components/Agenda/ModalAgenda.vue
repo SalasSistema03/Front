@@ -446,7 +446,8 @@ async function guardar() {
     propiedad: propiedadSeleccionada.value,
     sector: props.sector?.id || '',
     busquedaPropiedad: busquedaPropiedad.value,
-    criterioSeleccionado: props.criterioSeleccionado?.id_criterio_venta || ''
+    criterioSeleccionado: props.criterioSeleccionado?.id_criterio_venta || '',
+    nombreCliente: nombreCliente.value
   }
 
    /* console.log('=== DATOS COMPLETOS DEL FORMULARIO ===')

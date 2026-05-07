@@ -1,6 +1,7 @@
 @use 'colorSalas'
 $azulSalas: colorSalas.$azulSalas
 $verdeSalas: colorSalas.$verdeSalas
+$grisSalas: colorSalas.$grisSalas
 
 .atcl_contenedor_busqueda_propiedad
     border: 1px solid $azulSalas
@@ -33,11 +34,12 @@ $verdeSalas: colorSalas.$verdeSalas
     tbody
         tr
             td
-                font-size: 0.8rem
-                text-align: center
-                white-space: nowrap
-                overflow: hidden
-                text-overflow: ellipsis
+              height: 50px
+              font-size: 0.6rem
+              text-align: center
+              white-space: normal
+              overflow: hidden
+              text-overflow: ellipsis
 
 /* Mobile-specific: force horizontal scroll instead of squeezing columns */
 @media (max-width: 767px)
@@ -65,6 +67,22 @@ $verdeSalas: colorSalas.$verdeSalas
 .atcl_contenedor_tabla::-webkit-scrollbar-thumb
     background: rgba(0,0,0,0.18)
     border-radius: 6px
+
+
+.atcl_tabla_busqueda_propiedad_estados_alquilada
+  color: red !important
+
+.atcl_tabla_busqueda_propiedad_estados_en_alquiler
+  color: $verdeSalas !important
+
+.atcl_tabla_busqueda_propiedad_estados_pendiente
+  color: orange !important
+
+.atcl_tabla_busqueda_propiedad_estados_reset
+  color: $azulSalas !important
+
+.atcl_tabla_busqueda_propiedad_estados_en_alquiler_compartido
+  color: rgba($verdeSalas, 0.5) !important
 
 /* carga de propiedad */
 .atcl_cargar_multimedia_tamaño

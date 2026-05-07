@@ -189,3 +189,13 @@ export const generarPdfPlantillaPropiedad = (id, tipoBTN) => {
     responseType: 'blob' // Necesario para recibir el PDF como archivo binario
   })
 }
+
+export const GenerarPdfFichaPropiedad = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/broches/pdf/fichaPropiedad`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob'
+  })
+}
