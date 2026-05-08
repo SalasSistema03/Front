@@ -344,7 +344,7 @@ const exportarFaltantesImpuesto = async () => {
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', `tgi_faltantes_${anio.value}_${mes.value}.txt`)
+    link.setAttribute('download', `${props.impuesto}_faltantes_${anio.value}_${mes.value}.txt`)
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
