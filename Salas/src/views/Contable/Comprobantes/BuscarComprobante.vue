@@ -96,7 +96,11 @@ const numero = ref(null);
 
 const buscarPDF = async () => {
   try {
-    // Crear FormData para enviar al backend
+    if (!numero.value) {
+      showError('El número es obligatorio');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('empresa', empresa.value);
     formData.append('comprobante', comprobante.value);
@@ -105,26 +109,22 @@ const buscarPDF = async () => {
     formData.append('letra', letra.value);
     formData.append('numero', numero.value);
 
-    if (!numero.value) {
-      showError('El número es obligatorio');
-      return;
-    }
-
-    // Enviar solicitud al backend
     const response = await buscarPdf(formData);
-
-    // Con axios y responseType: 'blob', response.data ya es un blob
     const blob = response.data;
-
-    // Crear URL temporal y abrir en nueva pestaña
     const url = window.URL.createObjectURL(blob);
     const newWindow = window.open(url, '_blank');
 
-    // Limpiar la URL después de abrir
     if (newWindow) {
-      newWindow.onload = () => {
-        window.URL.revokeObjectURL(url);
-      };
+      // ✅ Revocar recién cuando el usuario cierre la ventana
+      const intervalo = setInterval(() => {
+        if (newWindow.closed) {
+          window.URL.revokeObjectURL(url);
+          clearInterval(intervalo);
+        }
+      }, 1000);
+    } else {
+      // Si el navegador bloqueó el popup, liberar después de 5 min
+      setTimeout(() => window.URL.revokeObjectURL(url), 5 * 60 * 1000);
     }
 
   } catch (error) {

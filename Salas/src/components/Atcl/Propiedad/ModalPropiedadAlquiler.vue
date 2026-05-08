@@ -165,26 +165,33 @@
             </div>
 
             <div class="form-group  px-1 col-md-3 pt-4">
-              <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+              <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
                 data-bs-target="#condicionAlquilesPropiedad">
                 Condición Alquiler
               </button>
             </div>
 
             <div v-if="propiedad" class="form-group  px-1 col-md-3 pt-4">
-              <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+              <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
                 data-bs-target="#novedadesAlquilerPropiedad">
                 Novedades Alquiler
               </button>
             </div>
 
-            <div v-if="propiedad" class="form-group px-1 col-md-3 pt-4">
+            <div v-if="propiedad" class="form-group px-1 col-md-2 pt-4">
               <button type="button" class="btn btn-primary btn-sm w-100" @click="fichaPdfRef.generarPdf()">
                 Ficha PDF
               </button>
             </div>
-            <!-- Componente oculto con la plantilla -->
+
+            <div v-if="propiedad" class="form-group px-1 col-md-2 pt-4">
+              <button type="button" class="btn btn-primary btn-sm w-100" @click="fichaReservaPdfRef.generarPdf()">
+                Ficha Reserva PDF
+              </button>
+            </div>
+            <!-- Componentes ocultos con las plantillas -->
             <FichaPropiedad ref="fichaPdfRef" :propiedad="propiedad" ubicacion="'A'" />
+            <FichaPropiedad ref="fichaReservaPdfRef" :propiedad="propiedad" ubicacion="'AR'" />
 
           </div>
 
@@ -225,6 +232,7 @@ const props = defineProps({
   }
 })
 const fichaPdfRef = ref(null)
+const fichaReservaPdfRef = ref(null)
 
 
 // Definir los emits
