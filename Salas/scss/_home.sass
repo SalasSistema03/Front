@@ -1,0 +1,21 @@
+@use 'colorSalas'
+
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+$grisSalas: colorSalas.$grisSalas
+
+.card-header-home
+  background-color: $azulSalas !important
+  color: white
+  border-bottom: 1px solid $verdeSalas
+  font-weight: 600
+.card-body-home
+  font-size: 10px
+  th
+    background-color: white
+    color: $azulSalas
+.table-home
+  height: 30vh
+  overflow-y: auto
+  overflow-x: hidden
+

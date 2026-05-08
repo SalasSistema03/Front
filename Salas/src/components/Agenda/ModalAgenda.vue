@@ -594,6 +594,7 @@ async function confirmarBorrado(motivo) {
   if (!props.nota?.id) return
   try {
     await borarr(props.nota.id, motivo)
+    emit('nota-borrada')
     // Pequeño delay para asegurar que el usuario vea la animación de borrado
     setTimeout(() => {
       showModalMotivoBorrar.value = false

@@ -187,7 +187,7 @@
                         <div class="flex-grow-1" style="overflow: hidden;">
                           <img :src="'http://10.10.10.191' + foto.url" class="w-100 h-100"
                             :alt="'Imagen de propiedad ' + (index + 1)" style="object-fit: cover; cursor: pointer;"
-                            @click="openModal(index)"> 
+                            @click="openModal(index)">
                         </div>
 
                         <div class="p-2 bg-white" v-if="foto.notes">
@@ -281,6 +281,7 @@
   <ModalPropiedadAlquiler :propiedad="propiedad" />
   <ModalCondicionAlquiler :propiedad="propiedad" />
   <ModalPropiedadPropietario :propiedad="propiedad" :mostrar-buscador="false" :ocultar-botones="true" />
+  <ModalImagenesPropiedad :propiedad="propiedad" :fotos="propiedad?.fotos" :index="modalIndex" :show="showModal" @close="showModal = false" />
 </template>
 <script>
 import NavComponent from '../../components/NavComponent.vue'
@@ -293,6 +294,8 @@ import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondici
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
 /* import { Popover } from 'bootstrap' */
 import { descargarFotos } from '../../Services/api/Atcl/AtclApi'
+import ModalImagenesPropiedad from '../../components/Atcl/Propiedad/ModalImagenesPropiedad.vue'
+
 
 
 export default {
@@ -304,7 +307,8 @@ export default {
     ModalPropiedadAlquiler,
     ModalCondicionAlquiler,
     ModalPropiedadPropietario,
-  },
+    ModalImagenesPropiedad
+},
   data() {
     return {
       propiedad: null,
@@ -312,6 +316,8 @@ export default {
       error: null,
       botones: null,
       showDescripcionModal: false,
+      showModal: false,
+      modalIndex: 0
     }
   },
   computed: {
@@ -370,6 +376,10 @@ export default {
       // Redirigir a la página de edición con el ID de la propiedad
       const id = this.$route.params.id
       this.$router.push(`/propiedad-update/${id}`)
+    },
+    openModal(index) {
+      this.modalIndex = index
+      this.showModal = true
     },
     async descargarFotos() {
       const id = this.$route.params.id
