@@ -30,7 +30,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 
 const props = defineProps({
   show: Boolean,
-  size: { type: String } // sm, md, lg, xl
+  size: { type: String } // sm, md, lg, xl, modal-fullscreen, modal-fullscreen-sm-down, etc.
 });
 
 const emit = defineEmits(['close']);
