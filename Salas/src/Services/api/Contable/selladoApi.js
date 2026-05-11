@@ -82,3 +82,12 @@ export const eliminarRegistroService = () => {
     },
   })
 }
+
+export const exportarRegistrosService = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/sellado/exportar-registros`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
