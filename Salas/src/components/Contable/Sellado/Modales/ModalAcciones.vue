@@ -70,7 +70,7 @@ const prepararTextoYExportar = () => {
     // 1. Definimos los encabezados
     const encabezados = [
         "Folio", "Nombre", "Informe", "Fecha Inicio", "Tipo Contrato",
-        "Monto Vivienda", "Monto Comercio", "Total Contrato", "Hojas",
+        "Monto Vivienda", "Monto Comercio", "Hojas",
         "Fecha Carga", "Inq/Prop"
     ];
 
@@ -86,7 +86,6 @@ const prepararTextoYExportar = () => {
             // Usamos punto decimal para que Excel lo tome como número
             reg.monto_Vivienda ?? 0,
             reg.monto_Comercial ?? 0,
-            reg.total_contrato ?? 0,
             reg.hojas,
             reg.fecha_Carga,
             reg.inq_Prop
