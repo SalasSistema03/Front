@@ -29,7 +29,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import BaseModal from '../../../base/BaseModal.vue';
-import { getRegistrosService, eliminarRegistroService } from '../../../../Services/api/Contable/selladoApi.js'
+import { exportarRegistrosService , eliminarRegistroService } from '../../../../Services/api/Contable/selladoApi.js'
 import { alertas } from '../../../../utils/alertas.js'
 
 const registros = ref([]);
@@ -48,10 +48,10 @@ onMounted(() => {
 const obtenerRegistros = async () => {
     cargando.value = true;
     try {
-        const response = await getRegistrosService();
-        console.log(response.data.data.registros);
+        const response = await exportarRegistrosService();
+        console.log("holaaaa",response.data.registros)
         // Verifica si tu API devuelve los datos en .data o .data.data
-        registros.value = response.data.data.registros || response.data;
+        registros.value = response.data.registros;
     } catch (err) {
         alertas.error('Error De conexion ' + (err.response?.data?.message || err.message));
         //alert("Error al obtener registros: " + (err.response?.data?.message || err.message));
@@ -60,66 +60,45 @@ const obtenerRegistros = async () => {
     }
 };
 
-/* const prepararTextoYExportar = () => {
-    if (registros.value.length === 0) {
-        alert("No hay datos para exportar");
-        return;
-    }
-
-    // Convertimos el array de objetos a un string legible
-    // Ejemplo: "ID: 1 - Nombre: Registro A \n ID: 2 - Nombre: Registro B"
-    const contenidoTexto = registros.value.map(reg => {
-        // Aquí personalizas qué campos quieres ver. Ejemplo:
-        return `${reg.folio} ; ${reg.infrome} ; ${reg.fecha_inicio} ; ${reg.tipo_contrato} ; ${reg.monto_alquiler_vivienda} ; ${reg.monto_alquiler_comercio} ; ${reg.hojas} ; ${reg.fecha_carga} ; ${reg.inq_prop} `;
-    }).join('\n'); // El .join('\n') añade un salto de línea entre cada registro
-
-    // Llamamos a tu función original con el texto procesado
-    exportarArchivo(contenidoTexto, 'reporte_registros.txt');
-}; */
 
 const prepararTextoYExportar = () => {
     if (registros.value.length === 0) {
-        alert("No hay datos para exportar");
+        alertas.error("No hay datos para exportar");
         return;
     }
 
-    // Encabezados (primera fila)
+    // 1. Definimos los encabezados
     const encabezados = [
-        "Folio",
-        "Nombre",
-        "Informe",
-        "Fecha Inicio",
-        "Tipo Contrato",
-        "Monto Vivienda",
-        "Monto Comercio",
-        "Monto Contrato",
-        "Hojas",
-        "Fecha Carga",
-        "Inq/Prop"
+        "Folio", "Nombre", "Informe", "Fecha Inicio", "Tipo Contrato",
+        "Monto Vivienda", "Monto Comercio", "Total Contrato", "Hojas",
+        "Fecha Carga", "Inq/Prop"
     ];
 
-    // Convertimos los registros en filas separadas por ;
-    console.log("hola",registros.value)
-    const filas = registros.value.map(reg => [
-        reg.folio,
-        reg.nombre,
-        reg.informe, 
-        reg.fecha_inicio,
-        reg.tipo_contrato,
-        reg.monto_alquiler_vivienda ?? 0,
-        reg.monto_alquiler_comercial ?? 0,
-        reg.monto_contrato ?? 0,
-        reg.hojas,
-        reg.fecha_carga,
-        reg.inq_prop
-    ].join(";")
-    );
+    // 2. Procesamos las filas
+    const filas = registros.value.map(reg => {
+        return [
+            reg.folio,
+            // Reemplazamos cualquier punto y coma interno para no romper las columnas
+            (reg.nombre || "").toString().replace(/;/g, ","), 
+            reg.informe,
+            reg.fecha_Inicio,
+            reg.tipo_Contrato,
+            // Usamos punto decimal para que Excel lo tome como número
+            reg.monto_Vivienda ?? 0,
+            reg.monto_Comercial ?? 0,
+            reg.total_contrato ?? 0,
+            reg.hojas,
+            reg.fecha_Carga,
+            reg.inq_Prop
+        ].join(";");
+    });
 
-    // Unimos todo
-    const contenido = [encabezados.join(";"), ...filas].join("\n");
+    // 3. EL TRUCO: Agregamos "sep=;" al inicio para que Excel sepa separar las columnas
+    // Y el prefijo \ufeff para que reconozca los acentos (UTF-8)
+    const contenido = "sep=;\n" + encabezados.join(";") + "\n" + filas.join("\n");
 
-    // Creamos Blob tipo CSV
-    const blob = new Blob([contenido], { 
+    // 4. Creamos el Blob con codificación UTF-8
+    const blob = new Blob(["\ufeff" + contenido], { 
         type: "text/csv;charset=utf-8;" 
     });
 
@@ -127,28 +106,13 @@ const prepararTextoYExportar = () => {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "reporte_registros.csv";
+    link.download = `reporte_sellado.csv`;
     link.click();
 
     URL.revokeObjectURL(url);
 };
 
-const exportarArchivo = (texto, nombreArchivo) => {
-    // 1. Creamos el Blob con el contenido y el tipo de archivo
-    const blob = new Blob([texto], { type: 'text/plain' });
 
-    // 2. Creamos una URL temporal para ese objeto
-    const url = window.URL.createObjectURL(blob);
-
-    // 3. Creamos un elemento <a> invisible
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = nombreArchivo;
-
-    // 4. Simulamos el clic y limpiamos
-    link.click();
-    window.URL.revokeObjectURL(url);
-};
 
 
 const eliminarRegistro = async () => {
