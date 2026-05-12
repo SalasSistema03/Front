@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
-/* import { Modal } from 'bootstrap' */
 import { buscaPersona, muestraPropiedad } from '@/Services/api/Atcl/AtclApi'
+import { useToast } from '@/composables/useToast'
 
 export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) {
   const busqueda = ref('')
@@ -10,6 +10,7 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
   const personaParaVer = ref(null)
   const mostrarModalVer = ref(false)
   const propietarioEnEdicion = ref(null)
+  const { showError } = useToast()
 
   let searchTimeout = null
 
@@ -93,7 +94,8 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     const lista = getPropietariosList()
     const existe = lista.some((p) => p.id === personaSeleccionada.value.id)
     if (existe) {
-      alert('Ya est� asignado')
+      //alert('Ya est� asignado')
+      showError('Este propietario ya se encuentra asignado')
       return
     }
 

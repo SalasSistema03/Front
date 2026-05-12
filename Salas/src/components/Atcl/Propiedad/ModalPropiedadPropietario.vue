@@ -51,7 +51,7 @@
               <tbody v-if="propiedad">
                 <tr v-for="(item, index) in propiedad.propietarios" :key="index">
                   <td>{{ item.apellido }}, {{ item.nombre }}</td>
-                  <td><textarea v-model="item.pivot.observaciones" rows="1" :disabled="propietarioEnEdicion !== item.id"
+                  <td><textarea v-model="item.pivot.observaciones_baja" rows="1" :disabled="item.pivot?.baja !== 'si' || props.ocultarBotones"
                       @input="emitirCambiosPropietario"></textarea></td>
                   <td>{{ item.pivot?.baja === 'si' ? 'Sí' : 'No' }}</td>
                   <td>{{ formatFecha(item.fecha_nacimiento) }}</td>
@@ -66,7 +66,7 @@
                     </button>
                   </td>
                   <td v-if="propiedad && !ocultarBotones">
-                    <button type="button" class="btn btn-primary btn-sm w-50" @click="editarPropietario(item)">
+                    <button type="button" class="btn btn-primary btn-sm" @click="editarPropietario(item)">
                       <i class="bi bi-pencil">Editar</i>
                     </button>
                   </td>
@@ -79,7 +79,7 @@
               <tbody v-else>
                 <tr v-for="(item, index) in propietarios" :key="index">
                   <td>{{ item.apellido }}, {{ item.nombre }}</td>
-                  <td><textarea v-model="item.pivot.observaciones" rows="1" :disabled="propietarioEnEdicion !== item.id"
+                  <td><textarea v-model="item.pivot.observaciones_baja" rows="1" :disabled="item.pivot?.baja !== 'si'"
                       @input="emitirCambiosPropietario"></textarea></td>
                   <td>{{ item.pivot?.baja === 'si' ? 'Sí' : 'No' }}</td>
                   <td>{{ formatFecha(item.fecha_nacimiento) }}</td>
