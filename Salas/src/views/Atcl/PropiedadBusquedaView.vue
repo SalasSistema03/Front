@@ -39,7 +39,7 @@
           <label for="input-Inmueble" class="form-label">Tipo Inmueble</label>
           <div class="position-relative">
             <input type="text" class="form-control form-control-sm" placeholder="Buscar tipo inmueble..."
-              v-model="busquedaInmuebles" @focus="abrirInmuebles" @blur="cerrarInmuebles">
+              v-model="valorInputInmuebles" @focus="abrirInmuebles" @blur="cerrarInmuebles">
 
             <div v-if="mostrarInmuebles"
               class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
@@ -79,7 +79,7 @@
         <div class="form-group col-md-2 px-1">
           <label for="input-zona" class="form-label">Zona</label>
           <div class="position-relative">
-            <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..." v-model="busquedaZonas"
+            <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..." v-model="valorInputZonas"
               @focus="abrirZonas" @blur="cerrarZonas">
 
             <div v-if="mostrarZonas"

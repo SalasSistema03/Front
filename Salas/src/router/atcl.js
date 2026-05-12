@@ -46,6 +46,15 @@ const routesAtcl = [
         meta: {
             requiresAuth: true,
         },
+    },
+    {
+        path: '/listado-venta',
+        alias: '/listado-venta',
+        name: 'listado-venta',
+        component: () => import('../views/Atcl/Listado/ListadoVentaView.vue'),
+        meta: {
+            requiresAuth: true,
+        },
     }
 ]
 

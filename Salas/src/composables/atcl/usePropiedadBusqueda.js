@@ -54,11 +54,54 @@ export function usePropiedadBusqueda() {
     )
   })
 
+  const textoResumenZonas = computed(() => {
+    const ids = zonasSeleccionadas.value
+    const n = ids.length
+    if (n === 0) return ''
+    if (n === 1) {
+      const id = ids[0]
+      const z = zonas.value.find((x) => x.id == id)
+      return z?.name ?? ''
+    }
+    return `${n} zonas seleccionadas`
+  })
+
+  const textoResumenInmuebles = computed(() => {
+    const ids = inmueblesSeleccionados.value
+    const n = ids.length
+    if (n === 0) return ''
+    if (n === 1) {
+      const id = ids[0]
+      const item = inmuebles.value.find((x) => x.id == id)
+      return item?.inmueble ?? ''
+    }
+    return `${n} tipos de inmueble seleccionados`
+  })
+
+  const valorInputZonas = computed({
+    get() {
+      return mostrarZonas.value ? busquedaZonas.value : textoResumenZonas.value
+    },
+    set(val) {
+      if (mostrarZonas.value) busquedaZonas.value = val
+    }
+  })
+
+  const valorInputInmuebles = computed({
+    get() {
+      return mostrarInmuebles.value ? busquedaInmuebles.value : textoResumenInmuebles.value
+    },
+    set(val) {
+      if (mostrarInmuebles.value) busquedaInmuebles.value = val
+    }
+  })
+
   const abrirInmuebles = () => {
     if (cerrarInmueblesTimeoutId.value) {
       clearTimeout(cerrarInmueblesTimeoutId.value)
       cerrarInmueblesTimeoutId.value = null
     }
+    busquedaInmuebles.value = ''
     mostrarInmuebles.value = true
   }
 
@@ -74,6 +117,7 @@ export function usePropiedadBusqueda() {
       clearTimeout(cerrarZonasTimeoutId.value)
       cerrarZonasTimeoutId.value = null
     }
+    busquedaZonas.value = ''
     mostrarZonas.value = true
   }
 
@@ -147,6 +191,8 @@ export function usePropiedadBusqueda() {
     propiedades,
     zonasFiltradas,
     inmuebleFiltrados,
+    valorInputZonas,
+    valorInputInmuebles,
     abrirInmuebles,
     cerrarInmuebles,
     abrirZonas,
