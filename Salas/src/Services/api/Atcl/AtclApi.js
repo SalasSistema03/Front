@@ -199,3 +199,13 @@ export const GenerarPdfFichaPropiedad = (data) => {
     responseType: 'blob'
   })
 }
+
+export const GenerarPdfListadoPropiedad = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/broches/pdf/listadoPropiedad`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob'
+  })
+}

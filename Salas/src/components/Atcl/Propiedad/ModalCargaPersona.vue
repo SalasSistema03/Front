@@ -12,11 +12,11 @@
             @submit.prevent="handleSubmit">
             <div class="col-md-7 row d-flex justify-content-center">
               <div class="form-group col-md-4 px-1 text-start">
-                <label class="form-label">Nombre</label>
+                <label class="form-label">Nombre <span class="text-danger"> * </span></label>
                 <input type="text" class="form-control form-control-sm" placeholder="Nombre" v-model="nombre">
               </div>
               <div class="form-group col-md-4 px-1 text-start">
-                <label class="form-label">Apellido</label>
+                <label class="form-label">Apellido <span class="text-danger"> * </span></label>
                 <input type="text" class="form-control form-control-sm" placeholder="Apellido" v-model="apellido">
               </div>
               <div class="form-group col-md-4 px-1 text-start">
@@ -59,17 +59,19 @@
             <div class="col-md-5">
               <div class="row">
                 <div class="col-md-12">
-                  <div v-for="(tel, idx) in telefonos" :key="idx" class="telefono d-flex px-1">
-                    <div class="m-0 px-1 w-50">
-                      <label class="form-label">{{ idx === 0 ? 'Teléfono' : '' }}</label>
-                      <input class="form-control" type="text" placeholder="Teléfono" v-model="tel.phone_number" />
-                    </div>
-                    <div class="m-0 px-1 w-50">
-                      <label class="form-label">{{ idx === 0 ? 'Notas' : '' }}</label>
-                      <input class="form-control" type="text" placeholder="Notas" v-model="tel.notes" />
+                  <div class="" style="max-height: 200px; overflow-y: auto; overflow-x: hidden;">
+                    <div v-for="(tel, idx) in telefonos" :key="idx" class="telefono d-flex px-1">
+                      <div class="m-0 px-1 w-50">
+                        <label class="form-label">{{ idx === 0 ? 'Teléfono' : 'Teléfono' }}</label>
+                        <input class="form-control" type="text" placeholder="Teléfono" v-model="tel.phone_number" />
+                      </div>
+                      <div class="m-0 px-1 w-50">
+                        <label class="form-label">{{ idx === 0 ? 'Notas' : 'Notas' }}</label>
+                        <input class="form-control" type="text" placeholder="Notas" v-model="tel.notes" />
+                      </div>
                     </div>
                   </div>
-                  <div class="d-flex justify-content-end mt-2" v-if="!ocultarBotones">
+                  <div class="d-flex justify-content-end mt-3" v-if="!ocultarBotones">
                     <button class="btn btn-primary" type="button" @click="agregarTelefono">Agregar Teléfono</button>
                   </div>
                 </div>
