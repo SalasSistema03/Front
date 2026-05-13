@@ -131,7 +131,7 @@
         @cerrarModalTotalQuincena="mostratModalTotalQuincena = false" />
     <ModalRetencionPorCUIT v-if="mostrarModalRetencionPorCUIT" :modalRetencionPorCUIT="mostrarModalRetencionPorCUIT"
         @cerrarModalRetencionPorCUIT="mostrarModalRetencionPorCUIT = false" />
-    <ModalExportar v-if="mostrarModalExportar" :modalExportar="mostrarModalExportar" @cerrarModalExportar="mostrarModalExportar  = false" />
+    <ModalExportar v-if="mostrarModalExportar" :modalExportar="mostrarModalExportar" @cerrarModalExportar="mostrarModalExportar  = false" @registrosExportados="recargarTablaExportar" />
     <!-- FIN MODALES -->
 </template>
 
@@ -286,10 +286,16 @@ const resetForm = () => {
     form.importe_retencion = 0;
     form.numero_comprobante = '';
     form.cuit_retencion = '';
-    form.fecha_comprobante = '';
     form.razon_social = '';
     configRetencion.value.yaVerificado = false;
 };
+
+/* Esta funcion recarga la tabla al exortar */
+const recargarTablaExportar = () => {
+    if(referenciaTabla.value) {
+        referenciaTabla.value.obtenerRetenciones();
+    }
+}
 
 // --- 6. UTILIDADES DE INTERFAZ (UX) ---
 
