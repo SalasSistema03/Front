@@ -3,7 +3,6 @@
 
   <div class="d-flex">
     <!-- Contenedor Izquierdo: Listado con Scroll -->
-    <!-- quiero que se muestre el boton cuando lo apunto -->
     <div class="col-3 px-3">
       <h5 class="mb-4">Listados</h5>
       <div>
@@ -154,7 +153,8 @@
 
               <!-- Botón para listar las propiedades -->
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropiedadesAlquiler">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropiedadesAlquiler"
+                  :disabled="!permiso">
                   Listar
                 </button>
               </div>
@@ -164,9 +164,50 @@
       </div>
 
 
+      <div v-if="currentForm === 'propietarios_alquiler'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Propietarios en Alquiler</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+
+              <!-- Campo para el importe desde -->
+              <div class="col-md-6 p-1 position-relative">
+                <input type="text" class="form-control form-control-sm" id="input-propietarios"
+                  placeholder="Buscar por apellido o DNI..." v-model="busqueda" @input="buscar" autocomplete="off">
+                <ul v-if="sugerencias.length > 0" class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
+                  style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+                  <li v-for="persona in sugerencias" :key="persona.id"
+                    class="list-group-item list-group-item-action cursor-pointer py-1 small"
+                    @click="seleccionarPersona(persona)">
+                    {{ persona.apellido }}, {{ persona.nombre }} - {{ persona.documento || 'Sin DNI' }}
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Botón para listar las propiedades -->
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
+                  :disabled="!permiso">
+                  Listar
+                </button>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
       <!-- Componente para generar PDF -->
-      <ListadoPropiedad ref="listadoPropiedadRef" :formPropiedades="formPropiedades" />
+      <ListadoPropiedad ref="listadoPropiedadRef" :formData="formActual" />
+
+
+
     </div>
   </div>
 </template>
@@ -175,8 +216,9 @@
 import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedad from '../../../components/Atcl/Listado/ListadoPropiedad.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { getEstadoAlquiler } from '@/Services/api/Atcl/AtclApi'
+import { verificarPermiso } from '@/Services/api/Atcl/AtclApi'
 
 export default {
   components: {
@@ -190,7 +232,8 @@ export default {
     const estados = ref([])
     const listadoPropiedadRef = ref(null)
     const camposSeleccionados = ref([])
-    /** Columnas del listado (misma lógica que el Blade original). */
+    const permiso = ref(false)
+    /** Columnas del listado . */
     const informacionMostrar = [
       { key: 'cod_alquiler', label: 'C. Alquiler' },
       { key: 'folio', label: 'Folio / Empresa' },
@@ -208,17 +251,23 @@ export default {
       { key: 'documentacion', label: 'Documentacion' },
       { key: 'usuario', label: 'Usuario' },
     ]
+    const formActual = ref({})
 
     // Inicializar todos los campos como seleccionados por defecto
     camposSeleccionados.value = informacionMostrar.map(campo => campo.key)
 
+    //Obtenemos estados del alquiler y permisos de boton
     const getEstados = async () => {
       const response = await getEstadoAlquiler()
       estados.value = response.data
+      const result = await verificarPermiso('listarPropiedadesAlquiler')
+      permiso.value = result?.data ?? false
+
     }
 
     getEstados()
 
+    //Form de propiedades para enviar todo al back
     const formPropiedades = ref({
       calle: '',
       zona_id: '',
@@ -231,12 +280,13 @@ export default {
       informacionMostrar
     })
 
+    //Form de propietarios para enviar todo al back
     const formPropietarios = ref({
       propietario: '',
       pertenece: 'estadoPropietarioA',
     })
 
-    const submitPropiedadesAlquiler = () => {
+    const submitPropiedadesAlquiler = async () => {
       // Conectar datos del composable con el formulario
       formPropiedades.value.calle = propiedadBusqueda.calleId?.value ?? ''
       formPropiedades.value.zona_id = propiedadBusqueda.zonasSeleccionadas?.value?.length
@@ -247,23 +297,24 @@ export default {
         : []
       formPropiedades.value.informacionMostrar = camposSeleccionados.value
 
-      console.log('Formulario propiedades alquiler:', formPropiedades.value)
-
-      // Generar PDF
-      if (listadoPropiedadRef.value) {
-        listadoPropiedadRef.value.generarPdf()
-      }
+      formActual.value = formPropiedades.value
+      await nextTick()
+      listadoPropiedadRef.value?.generarPdf()
     }
 
-    const submitPropietariosAlquiler = () => {
-      console.log('Formulario propietarios alquiler:', formPropietarios.value)
+    const submitPropietariosAlquiler = async () => {
+      formActual.value = formPropietarios.value
+      await nextTick()
+      listadoPropiedadRef.value?.generarPdf()
     }
 
     return {
       currentForm,
       estados,
+      permiso,
       formPropiedades,
       formPropietarios,
+      formActual,
       submitPropiedadesAlquiler,
       submitPropietariosAlquiler,
       listadoPropiedadRef,
