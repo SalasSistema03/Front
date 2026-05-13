@@ -116,7 +116,7 @@
                   <div class="col-6">
                     {{ cliente.telefono }}
 
-                    <a :href="`https://web.whatsapp.com/send?phone=${cliente.telefono}&text=Hola%20${cliente.nombre.split(',')[0]}`"
+                    <a :href="`https://web.whatsapp.com/send?phone=${cliente.telefono}&text=Hola%20${cliente.nombre?.split(',')[0] || ''}`"
                       target="_blank" class="boton-whatsapp-clientes-asesores text-decoration-none">
                       <i class="bi bi-whatsapp"></i>
                     </a>
@@ -502,11 +502,13 @@ export default {
 
 
       // Filtrar por nombre si hay texto de búsqueda
-      if (this.buscar.trim() !== '') {
-        clientesFiltrados = clientesFiltrados.filter(cliente =>
-          cliente.nombre.toLowerCase().includes(this.buscar.toLowerCase())
-        );
-      }
+      // Filtrar por nombre si hay texto de búsqueda
+if (this.buscar.trim() !== '') {
+  clientesFiltrados = clientesFiltrados.filter(cliente =>
+    (cliente.nombre ?? '').toLowerCase().includes(this.buscar.toLowerCase())
+  );
+}
+
 
       if (this.filtroSinDevolucion) {
         clientesFiltrados = clientesFiltrados.filter(cliente => this.clienteTieneDevolucionesPendientes(cliente))
