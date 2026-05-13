@@ -26,7 +26,7 @@ import { exportarRetencionesTxt } from '@/Services/api/Contable/RetencionesApi.j
 const props = defineProps({
     modalExportar: Boolean
 });
-const emit = defineEmits(['cerrarModalExportar']);
+const emit = defineEmits(['cerrarModalExportar', 'registrosExportados']);
 
 
 const exportarTXT = async () => {
@@ -60,6 +60,8 @@ const exportarTXT = async () => {
         // Limpieza importante
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+
+        emit('registrosExportados');
 
     } catch (error) {
         console.error("Error de red o comunicación:", error);
