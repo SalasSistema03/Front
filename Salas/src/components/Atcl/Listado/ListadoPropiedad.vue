@@ -7,7 +7,7 @@ import { GenerarPdfListadoPropiedad } from '@/Services/api/Atcl/AtclApi'
 import { defineProps } from 'vue'
 
 const props = defineProps({
-  formPropiedades: {
+  formData: {
     type: Object,
     required: true
   }
@@ -15,7 +15,7 @@ const props = defineProps({
 
 const generarPdf = async () => {
   try {
-    const response = await GenerarPdfListadoPropiedad(props.formPropiedades);
+    const response = await GenerarPdfListadoPropiedad(props.formData);
 
     const blob = new Blob([response.data], { type: 'application/pdf' })
     const url = window.URL.createObjectURL(blob)

@@ -209,3 +209,13 @@ export const GenerarPdfListadoPropiedad = (data) => {
     responseType: 'blob'
   })
 }
+
+
+export const verificarPermiso = (botonNombre) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/verificaPermisoAsesor/${botonNombre}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}

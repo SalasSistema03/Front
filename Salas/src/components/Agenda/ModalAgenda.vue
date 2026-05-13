@@ -11,7 +11,8 @@
         </div>
         <div class="col-md-2">
           <label>Fecha</label>
-          <input type="date" class="form-control" :value="fecha" :readonly="nota" />
+          <input type="date" class="form-control" v-model="fechaLocal" :readonly="nota || props.sector?.id !== 2" />
+          <!--   <input type="text" value=props.sector> -->
         </div>
         <div class="col-md-2">
           <label>Hora Inicio</label>
@@ -157,7 +158,8 @@
 
   </BaseModal>
 
-  <ModalMotivoBorrar :show="showModalMotivoBorrar" @close="cerrarModalMotivoBorrar" @confirm="confirmarBorrado" @nota-borrada="emit('nota-borrada')" />
+  <ModalMotivoBorrar :show="showModalMotivoBorrar" @close="cerrarModalMotivoBorrar" @confirm="confirmarBorrado"
+    @nota-borrada="emit('nota-borrada')" />
 </template>
 
 <script setup>
@@ -183,6 +185,7 @@ const clienteSeleccionado = ref(null)
 const historialCliente = ref([])
 const showModalMotivoBorrar = ref(false)
 const { showSuccess, showError } = useToast()
+// Fecha local editable para sector Ventas (id 2)
 
 const props = defineProps({
   show: { type: Boolean, default: false },
@@ -191,9 +194,15 @@ const props = defineProps({
   sector: { type: String, default: '' },
   fecha: { type: String, default: new Date().toISOString().split('T')[0] },
   nota: { type: Object, default: null },
-  criterioSeleccionado: { type: String, default: null}
+  criterioSeleccionado: { type: String, default: null }
 
 })
+const fechaLocal = ref(props.fecha)
+
+watch(() => props.fecha, (nueva) => {
+  fechaLocal.value = nueva
+}, { immediate: true })
+
 
 const horaInicio = ref('')
 const horaFin = ref('')
@@ -436,9 +445,11 @@ const seleccionarCliente = (item) => {
 
 // Función para guardar todos los datos
 async function guardar() {
+
+
   const datosCompletos = {
     usuario: props.username.usuario_id || '',
-    fecha: props.fecha,
+    fecha: props.sector?.id === 2 ? fechaLocal.value : props.fecha,
     horaInicio: horaInicioEfectiva.value,
     horaFin: horaFin.value,
     descripcion: descripcion.value,
@@ -450,7 +461,7 @@ async function guardar() {
     nombreCliente: nombreCliente.value
   }
 
-   /* console.log('=== DATOS COMPLETOS DEL FORMULARIO ===')
+  /* console.log('=== DATOS COMPLETOS DEL FORMULARIO ===')
   console.log('Usuario:', datosCompletos.usuario)
   console.log('Fecha:', datosCompletos.fecha)
   console.log('Hora Inicio:', datosCompletos.horaInicio)
@@ -464,6 +475,7 @@ async function guardar() {
   console.log('Búsqueda:', datosCompletos.busquedaPropiedad)
   console.log('Criterio Seleccionado:', datosCompletos.criterioSeleccionado)
   console.log('=====================================') */
+  // alert('Datos completos del formulario')
 
   try {
     // Llamar a la API para cargar la nota
@@ -550,6 +562,7 @@ watch(
   },
   { immediate: true }
 )
+
 
 // 2. Validar cambios manuales en Hora Fin
 function validarHoraFin(event) {
