@@ -180,15 +180,6 @@ export const guardarNovedad = (data) => {
   })
 }
 
-export const generarPdfPlantillaPropiedad = (id, tipoBTN) => {
-  const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/auth/propiedades/pdf/pdfPlantillaPropiedad/${id}/${tipoBTN}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    responseType: 'blob' // Necesario para recibir el PDF como archivo binario
-  })
-}
 
 export const GenerarPdfFichaPropiedad = (data) => {
   const token = localStorage.getItem('token')

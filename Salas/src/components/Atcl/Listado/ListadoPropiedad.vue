@@ -1,29 +1,390 @@
 <template>
-  <div></div>
+  <NavComponent />
+
+  <div class="d-flex">
+    <div class="col-3 px-3">
+      <h5 class="mb-4">Listados</h5>
+      <div>
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'propiedades_alquiler' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'propiedades_alquiler'">
+          Listar Propiedades en {{ sector }}
+        </div>
+        <div class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'propietarios_alquiler' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'propietarios_alquiler'">
+          Listar Propietarios en {{ sector }}
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel col-9">
+      <div v-if="currentForm === 'propiedades_alquiler'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Propiedades en {{ sector }}</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row" @submit.prevent="submitPropiedadesAlquiler">
+              <div class="form-group col-md-4 px-1">
+                <label for="input-calle" class="form-label">Calle</label>
+                <div class="position-relative">
+                  <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
+                    v-model="calleSeleccionada" @input="filtrarCalles" @focus="mostrarLista" @blur="ocultarSugerencias"
+                    autocomplete="off" />
+
+                  <ul v-if="mostrarSugerencias && callesFiltradas.length"
+                    class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm busqueda-select">
+                    <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalle(calle)"
+                      class="px-3 py-2 cursor-pointer hover:bg-light">
+                      {{ calle.name }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 px-1">
+                <label for="input-zona" class="form-label">Zona</label>
+                <div class="position-relative">
+                  <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..."
+                    v-model="valorInputZonas" @focus="abrirZonas" @blur="cerrarZonas" />
+
+                  <div v-if="mostrarZonas"
+                    class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirZonas">
+                    <div v-for="zona in zonasFiltradas" :key="zona.id" class="form-check">
+                      <input class="form-check-input" type="checkbox" :value="zona.id" v-model="zonasSeleccionadas"
+                        :id="`zona-${zona.id}`" />
+                      <label class="form-check-label" :for="`zona-${zona.id}`">
+                        {{ zona.name }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 px-1">
+                <label for="input-Inmueble" class="form-label">Tipo Inmueble</label>
+                <div class="position-relative">
+                  <input type="text" class="form-control form-control-sm" placeholder="Buscar tipo inmueble..."
+                    v-model="valorInputInmuebles" @focus="abrirInmuebles" @blur="cerrarInmuebles" />
+
+                  <div v-if="mostrarInmuebles"
+                    class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirInmuebles">
+                    <div v-for="inmueble in inmuebleFiltrados" :key="inmueble.id" class="form-check">
+                      <input class="form-check-input" type="checkbox" :value="inmueble.id"
+                        v-model="inmueblesSeleccionados" :id="`inmueble-${inmueble.id}`" />
+                      <label class="form-check-label" :for="`inmueble-${inmueble.id}`">
+                        {{ inmueble.inmueble }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4 px-1" v-if="props.sector === 'Alquiler'">
+                <label class="form-label">Estado</label>
+                <select v-model="formPropiedades.estado_id" class="form-control form-control-sm">
+                  <option value="">Seleccione un estado</option>
+                  <option v-for="estado in estados" :key="estado.id" :value="estado.id">
+                    {{ estado.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-md-4 px-1" v-else>
+                <label class="form-label">Estado</label>
+                <select v-model="formPropiedades.estado_id" class="form-control form-control-sm">
+                  <option value="">Seleccione un estado</option>
+                  <option v-for="estado in estadosVenta" :key="estado.id" :value="estado.id">
+                    {{ estado.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="from-group col-md-4 px-1">
+                <label class="form-label">Importe desde</label>
+                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_minimo"
+                  min="0" placeholder="Importe mínimo"  />
+              </div>
+              <div class="from-group col-md-4 px-1">
+                <label class="form-label">Importe hasta</label>
+                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_maximo"
+                  min="0" placeholder="Importe máximo"  />
+              </div>
+
+              <div class="col-md-6 mt-2">
+                <label class="form-label" for="orden">Ordenar por</label>
+                <select id="orden" class="form-control form-control-sm" v-model="formPropiedades.orden">
+                  <option value="">Sin orden</option>
+                  <option value="precio_asc">Precio (menor a mayor)</option>
+                  <option value="precio_desc">Precio (mayor a menor)</option>
+                  <option value="estado">Estado</option>
+                  <option value="tipo">Tipo de inmueble</option>
+                  <option value="zona">Zona</option>
+                  <option value="calle">Calle</option>
+                  <option value="codigo">Código</option>
+                </select>
+              </div>
+
+              <div class="col-md-6 mt-2 ">
+                <label for="" class="form-label">Información a mostrar</label>
+                <div class="dropdown w-100 ">
+                  <button class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
+                    type="text" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+                    id="infoDropdownBtn">
+                    Selecciona la información a mostrar
+                  </button>
+                  <div class="dropdown-menu p-3 w-100" style="max-height: 280px; overflow: auto; min-width: 300px">
+                    <div class="row" id="infoList">
+                      <div v-for="campo in informacionMostrar" :key="campo.key" class="col-md-6 mb-2">
+                        <div class="form-check">
+                          <input class="form-check-input campo-checkbox" type="checkbox" :value="campo.key"
+                            v-model="camposSeleccionados" :id="`campo-${campo.key}`" />
+                          <label class="form-check-label" :for="`campo-${campo.key}`">
+                            {{ campo.label }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropiedadesAlquiler"
+                  :disabled="!permiso">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="currentForm === 'propietarios_alquiler'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Propietarios en {{ sector }}</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+              <div class="col-md-12 p-1 position-relative">
+                <input type="text" class="form-control form-control-sm" id="input-propietarios"
+                  placeholder="Buscar por apellido o DNI..." v-model="busqueda" @input="buscar" autocomplete="off">
+                <ul v-if="sugerencias.length > 0" class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
+                  style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+                  <li v-for="persona in sugerencias" :key="persona.id"
+                    class="list-group-item list-group-item-action cursor-pointer py-1 small"
+                    @click="seleccionarPersona(persona)">
+                    {{ persona.apellido }}, {{ persona.nombre }} - {{ persona.documento || 'Sin DNI' }}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
+                  :disabled="!permiso">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { GenerarPdfListadoPropiedad } from '@/Services/api/Atcl/AtclApi'
-import { defineProps } from 'vue'
+import { ref, nextTick, onMounted, defineProps } from 'vue'
+import NavComponent from '../../../components/NavComponent.vue'
+import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
+import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
+import { getEstadoAlquiler, verificarPermiso, getEstadoVenta } from '@/Services/api/Atcl/AtclApi'
+import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
 
 const props = defineProps({
-  formData: {
-    type: Object,
+  sector: {
+    type: String,
     required: true
   }
 })
+// Desestructuración del composable
+const {
+  calleSeleccionada,
+  filtrarCalles,
+  mostrarLista,
+  ocultarSugerencias,
+  mostrarSugerencias,
+  callesFiltradas,
+  seleccionarCalle,
+  calleId,
+  valorInputZonas,
+  abrirZonas,
+  cerrarZonas,
+  mostrarZonas,
+  zonasFiltradas,
+  zonasSeleccionadas,
+  valorInputInmuebles,
+  abrirInmuebles,
+  cerrarInmuebles,
+  mostrarInmuebles,
+  inmuebleFiltrados,
+  inmueblesSeleccionados
+} = usePropiedadBusqueda()
 
-const generarPdf = async () => {
-  try {
-    const response = await GenerarPdfListadoPropiedad(props.formData);
+// Estados reactivos
+const currentForm = ref('propiedades_alquiler')
+const estados = ref([])
+const listadoPropiedadRef = ref(null)
+const camposSeleccionados = ref([])
+const permiso = ref(false)
+const formActual = ref({})
+const propietario = ref([])
+const busqueda = ref('')
+const sugerencias = ref([])
+const personaSeleccionada = ref(null)
+const informacionMostrar = ref([])
+const estadosVenta = ref([])
 
-    const blob = new Blob([response.data], { type: 'application/pdf' })
-    const url = window.URL.createObjectURL(blob)
-    window.open(url, '_blank', 'noopener,noreferrer')
-    setTimeout(() => window.URL.revokeObjectURL(url), 60_000)
-  } catch (error) {
-    console.error("Error al generar PDF en servidor", error);
-  }
+if (props.sector === 'Alquiler') {
+
+  informacionMostrar.value = [
+    { key: 'cod_alquiler', label: 'C. Alquiler' },
+    { key: 'folio', label: 'Folio / Empresa' },
+    { key: 'direccion', label: 'Dirección' },
+    { key: 'zona', label: 'Zona' },
+    { key: 'p_d', label: 'P / D' },
+    { key: 'dormitorio', label: 'Dorm.' },
+    { key: 'cochera', label: 'Cochera' },
+    { key: 'inmueble', label: 'Inmueble' },
+    { key: 'estado', label: 'Estado' },
+    { key: 'precio', label: 'Precio' },
+    { key: 'cartel', label: 'Cartel' },
+    { key: 'foto', label: 'Foto' },
+    { key: 'video', label: 'Videos' },
+    { key: 'documentacion', label: 'Documentacion' },
+    { key: 'usuario', label: 'Usuario' },
+  ]
+} else {
+  informacionMostrar.value = [
+    { key: 'cod_venta', label: 'C. Venta' },
+    { key: 'folio', label: 'Folio / Empresa' },
+    { key: 'direccion', label: 'Dirección' },
+    { key: 'zona', label: 'Zona' },
+    { key: 'p_d', label: 'P / D' },
+    { key: 'dormitorio', label: 'Dorm.' },
+    { key: 'cochera', label: 'Cochera' },
+    { key: 'inmueble', label: 'Inmueble' },
+    { key: 'estado', label: 'Estado' },
+    { key: 'precio', label: 'Precio' },
+    { key: 'cartel', label: 'Cartel' },
+    { key: 'foto', label: 'Foto' },
+    { key: 'video', label: 'Videos' },
+    { key: 'documentacion', label: 'Documentacion' },
+    { key: 'usuario', label: 'Usuario' },
+    { key: 'propietario', label: 'Propietario'},
+    { key: 'fecha alta', label: 'Fecha alta'},
+    { key: 'clausula venta', label: 'Clausula Venta'},
+    { key: 'descripcion', label: 'Descripcion'},
+    { key: 'llave', label: 'LLave'},
+    { key: 'autorizacion', label: 'Autorizacion'},
+    { key: 'compartida', label: 'Compartida'},
+    { key: 'reel', label: 'Reel'},
+    { key: 'flyer', label: 'Flyer'},
+    { key: 'captador', label: 'Captador'},
+    { key: 'zonaprop', label: 'ZonaProp'},
+    { key: 'web', label: 'Web'},
+    { key: 'vendedor', label: 'Vendedor'},
+  ]
 }
-defineExpose({ generarPdf })
+
+
+// Inicializar campos seleccionados
+camposSeleccionados.value = informacionMostrar.value.map(campo => campo.key)
+
+const formPropiedades = ref({
+  calle: '',
+  zona_id: '',
+  tipo: '',
+  estado_id: '',
+  importe_minimo: '',
+  importe_maximo: '',
+  pertenece: 'listadoPropiedades',
+  orden: '',
+  informacionMostrar: [],
+  sector: props.sector
+})
+
+const formPropietarios = ref({
+  propietario: '',
+  sector: props.sector,
+  pertenece: 'estadoPropietario',
+})
+
+// Carga de datos inicial
+onMounted(async () => {
+  const [resEstados, resPropietarios, resEstadoVenta] = await Promise.all([
+    getEstadoAlquiler(),
+    PropietariosActivos(),
+    getEstadoVenta()
+  ])
+
+  let resPermiso
+  if(props.sector === 'Alquiler'){
+    resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
+  }else{
+    resPermiso = await verificarPermiso('listarPropiedadesVenta')
+  }
+  estados.value = resEstados.data
+  estadosVenta.value = resEstadoVenta.data
+  permiso.value = resPermiso?.data ?? false
+  propietario.value = resPropietarios.data
+})
+
+// Lógica de búsqueda de propietarios
+const buscar = () => {
+  const texto = busqueda.value.trim().toLowerCase()
+  if (!texto) {
+    sugerencias.value = []
+    personaSeleccionada.value = null
+    formPropietarios.value.propietario = null
+    return
+  }
+  sugerencias.value = propietario.value
+    .filter(p =>
+      p.apellido?.toLowerCase().includes(texto) ||
+      p.nombre?.toLowerCase().includes(texto) ||
+      p.documento?.includes(texto)
+    )
+    .slice(0, 10)
+}
+
+const seleccionarPersona = (persona) => {
+  personaSeleccionada.value = persona
+  busqueda.value = `${persona.apellido}, ${persona.nombre}`
+  sugerencias.value = []
+  formPropietarios.value.propietario = persona.id
+}
+
+// Submits
+const submitPropiedadesAlquiler = async () => {
+  formPropiedades.value.calle = calleId?.value ?? ''
+  formPropiedades.value.zona_id = zonasSeleccionadas?.value ?? []
+  formPropiedades.value.tipo = inmueblesSeleccionados?.value ?? []
+  formPropiedades.value.informacionMostrar = camposSeleccionados.value
+
+  formActual.value = formPropiedades.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+const submitPropietariosAlquiler = async () => {
+  formPropietarios.value.propietario = personaSeleccionada.value?.id ?? null
+  formActual.value = formPropietarios.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
 </script>
