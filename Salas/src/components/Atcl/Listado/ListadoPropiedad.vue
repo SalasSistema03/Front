@@ -14,6 +14,10 @@
           @click="currentForm = 'propietarios_alquiler'">
           Listar Propietarios en {{ sector }}
         </div>
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'ofrecimiento_venta' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'ofrecimiento_venta'" v-if="sector === 'Venta'">
+          Listar Ofrecimiento
+        </div>
       </div>
     </div>
 
@@ -104,12 +108,12 @@
               <div class="from-group col-md-4 px-1">
                 <label class="form-label">Importe desde</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_minimo"
-                  min="0" placeholder="Importe mínimo"  />
+                  min="0" placeholder="Importe mínimo" />
               </div>
               <div class="from-group col-md-4 px-1">
                 <label class="form-label">Importe hasta</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_maximo"
-                  min="0" placeholder="Importe máximo"  />
+                  min="0" placeholder="Importe máximo" />
               </div>
 
               <div class="col-md-6 mt-2">
@@ -192,6 +196,33 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'ofrecimiento_venta'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Propietarios en {{ sector }}</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+              <div class="col-md-6 p-1">
+                <label class="form-label">Desde</label>
+                <input type="date" class="form-control form-control-sm" v-model="formOfrecimiento.fecha_desde" required>
+              </div>
+              <div class="col-md-6 p-1">
+                <label class="form-label">Hasta</label>
+                <input type="date" class="form-control form-control-sm" v-model="formOfrecimiento.fecha_hasta" required>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitOfrecimientoVenta()"
+                  :disabled="!permisoOfrecimiento">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
     </div>
   </div>
@@ -248,6 +279,7 @@ const sugerencias = ref([])
 const personaSeleccionada = ref(null)
 const informacionMostrar = ref([])
 const estadosVenta = ref([])
+const permisoOfrecimiento = ref(false)
 
 if (props.sector === 'Alquiler') {
 
@@ -285,19 +317,19 @@ if (props.sector === 'Alquiler') {
     { key: 'video', label: 'Videos' },
     { key: 'documentacion', label: 'Documentacion' },
     { key: 'usuario', label: 'Usuario' },
-    { key: 'propietario', label: 'Propietario'},
-    { key: 'fecha alta', label: 'Fecha alta'},
-    { key: 'clausula venta', label: 'Clausula Venta'},
-    { key: 'descripcion', label: 'Descripcion'},
-    { key: 'llave', label: 'LLave'},
-    { key: 'autorizacion', label: 'Autorizacion'},
-    { key: 'compartida', label: 'Compartida'},
-    { key: 'reel', label: 'Reel'},
-    { key: 'flyer', label: 'Flyer'},
-    { key: 'captador', label: 'Captador'},
-    { key: 'zonaprop', label: 'ZonaProp'},
-    { key: 'web', label: 'Web'},
-    { key: 'vendedor', label: 'Vendedor'},
+    { key: 'propietario', label: 'Propietario' },
+    { key: 'fecha alta', label: 'Fecha alta' },
+    { key: 'clausula venta', label: 'Clausula Venta' },
+    { key: 'descripcion', label: 'Descripcion' },
+    { key: 'llave', label: 'LLave' },
+    { key: 'autorizacion', label: 'Autorizacion' },
+    { key: 'compartida', label: 'Compartida' },
+    { key: 'reel', label: 'Reel' },
+    { key: 'flyer', label: 'Flyer' },
+    { key: 'captador', label: 'Captador' },
+    { key: 'zonaprop', label: 'ZonaProp' },
+    { key: 'web', label: 'Web' },
+    { key: 'vendedor', label: 'Vendedor' },
   ]
 }
 
@@ -324,6 +356,13 @@ const formPropietarios = ref({
   pertenece: 'estadoPropietario',
 })
 
+const formOfrecimiento = ref({
+  fecha_desde: '',
+  fecha_hasta: '',
+  sector: props.sector,
+  pertenece: 'ofrecimientoVenta',
+})
+
 // Carga de datos inicial
 onMounted(async () => {
   const [resEstados, resPropietarios, resEstadoVenta] = await Promise.all([
@@ -333,15 +372,19 @@ onMounted(async () => {
   ])
 
   let resPermiso
-  if(props.sector === 'Alquiler'){
+  let resPermisoOfrecimiento
+
+  if (props.sector === 'Alquiler') {
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
-  }else{
+  } else {
     resPermiso = await verificarPermiso('listarPropiedadesVenta')
+    resPermisoOfrecimiento = await verificarPermiso('listarOfrecimientoVenta')
   }
   estados.value = resEstados.data
   estadosVenta.value = resEstadoVenta.data
   permiso.value = resPermiso?.data ?? false
   propietario.value = resPropietarios.data
+  permisoOfrecimiento.value = resPermisoOfrecimiento?.data ?? false
 })
 
 // Lógica de búsqueda de propietarios
@@ -384,6 +427,14 @@ const submitPropiedadesAlquiler = async () => {
 const submitPropietariosAlquiler = async () => {
   formPropietarios.value.propietario = personaSeleccionada.value?.id ?? null
   formActual.value = formPropietarios.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+const submitOfrecimientoVenta = async () => {
+  //datos del form
+  console.log(formOfrecimiento.value)
+  formActual.value = formOfrecimiento.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
