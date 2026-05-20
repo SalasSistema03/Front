@@ -20,13 +20,13 @@
             + IVA
           </span>
         </div>
-        <input type="text" class="form-control form-control-sm bg-light shadow-sm" :value="datos.data.prop_alquiler"
+        <input type="text" class="form-control form-control-sm bg-light shadow-sm" :value=" formatearMoneda(datos.data.prop_alquiler)"
           disabled />
       </div>
 
       <div class="col-12 col-md-4">
         <label class="form-label small  text-secondary">Prop. Doc.</label>
-        <input type="text" class="form-control form-control-sm  bg-light shadow-sm" :value="datos.data.prop_doc"
+        <input type="text" class="form-control form-control-sm  bg-light shadow-sm" :value="formatearMoneda(datos.data.prop_doc)"
           disabled />
       </div>
 
