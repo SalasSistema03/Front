@@ -284,6 +284,9 @@ const guardarRegistro = async () => {
     };
     await guardarResultadoService(payload);
 
+    //Formatear formulario y resultado para que el usuario vea que se guardó correctamente
+    resetForm();
+
     alertas.success('Registro guardado correctamente');
     // 3. Ejecutar al guardar el registro
     obtenerRegistros();
