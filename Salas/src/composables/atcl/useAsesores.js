@@ -9,7 +9,7 @@ export function useAsesores() {
     try {
       const response = await getAsesor()
       asesores.value = response.data.original || response.data
-      console.log(asesores.value)
+      //console.log(asesores.value)
     } catch (err) {
       error.value = err
     }

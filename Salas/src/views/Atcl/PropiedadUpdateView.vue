@@ -980,7 +980,7 @@ export default {
 
         // Fotos existentes actualizadas
         if (this.propiedad_update?.fotos) {
-          console.log('estas son las fotosOriginales', this.fotosOriginales)
+          //console.log('estas son las fotosOriginales', this.fotosOriginales)
           //console.log('1', this.propiedad_update.fotos)
           const fotasModificadas = this.propiedad_update.fotos.filter(foto => {
 
@@ -1012,14 +1012,14 @@ export default {
             comentario: f.comentario ?? '',
             archivado: f.archivado ?? 0
           }))
-          console.log('fotos_nuevas archivos:', this.fotosPendientes.map(f => f.file.name))
-          console.log('fotos_nuevas metadata:', metaData)
+          //console.log('fotos_nuevas archivos:', this.fotosPendientes.map(f => f.file.name))
+          //console.log('fotos_nuevas metadata:', metaData)
           formData.append('fotos_nuevas_data', JSON.stringify(metaData))
         }
 
         // Fotos eliminadas
         if (this.fotosEliminadas.length > 0) {
-          console.log('Fotos eliminadas:', this.fotosEliminadas)
+          //console.log('Fotos eliminadas:', this.fotosEliminadas)
           formData.append('fotos_eliminadas', JSON.stringify(this.fotosEliminadas))
         }
 
@@ -1120,7 +1120,7 @@ export default {
       } catch (error) {
         console.error('Error actualizando propiedad:', error)
         /*  alert('Error al actualizar la propiedad: ' + (error.response?.data?.message || error.message)) */
-        this.showError('Error al actualizar la propiedad: ' + (error.response?.data?.message || error.message))
+        this.showError( (error.response?.data?.message || error.message))
       }
     },
   },
