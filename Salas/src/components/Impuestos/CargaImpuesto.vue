@@ -154,6 +154,7 @@
             <th v-if="props.impuesto === 'gas'">Periodo</th>
             <th>Vencimiento</th>
             <th>Bajado</th>
+            <th>N° Broche</th>
             <th>-</th>
           </tr>
         </thead>
@@ -174,6 +175,7 @@
               formatDate(item.fin_liquidacion) }} - {{ item.liquidacion }}</td>
             <td>{{ formatDate(item.fecha_vencimiento) }}</td>
             <td>{{ item.bajado }}</td>
+            <td>{{ item.num_broche }}</td>
             <td>
               <div class=" ">
                 <button class="btn btn-secondary btn-sm p-0" type="button" data-bs-toggle="dropdown"
