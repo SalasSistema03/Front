@@ -3,7 +3,7 @@
 
   <div class="d-flex">
     <div class="col-3 px-3">
-      <h5 class="mb-4">Listados</h5>
+      <h5 class="mb-4">Listados Propiedades</h5>
       <div>
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'propiedades_alquiler' ? 'btn-primary' : 'btn-light'"
           @click="currentForm = 'propiedades_alquiler'">
@@ -17,6 +17,17 @@
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'ofrecimiento_venta' ? 'btn-primary' : 'btn-light'"
           @click="currentForm = 'ofrecimiento_venta'" v-if="sector === 'Venta'">
           Listar Ofrecimiento
+        </div>
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'devoluciones' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'devoluciones'">
+          Listar Devoluciones
+        </div>
+      </div>
+      <h5 class="mb-4">Listados Asesores</h5>
+      <div>
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'criterios_activos' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'criterios_activos'">
+          Listar Criterios Activos
         </div>
       </div>
     </div>
@@ -187,7 +198,7 @@
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
-                  :disabled="!permiso">
+                  :disabled="!propietariosVenta">
                   Listar
                 </button>
               </div>
@@ -223,9 +234,138 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'devoluciones'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Devoluciones</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+              <div class="col-md-4 p-1">
+                <label class="form-label">Codigo</label>
+                <input type="number" class="form-control form-control-sm" v-model="formDevoluciones.codigo">
+              </div>
+
+              <div class="col-md-4 p-1">
+                <label class="form-label">Desde</label>
+                <input type="date" class="form-control form-control-sm" v-model="formDevoluciones.desde">
+              </div>
+              <div class="col-md-4 p-1">
+                <label class="form-label">Hasta</label>
+                <input type="date" class="form-control form-control-sm" v-model="formDevoluciones.hasta">
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitDevoluciones()"
+                  :disabled="!devolucionesVenta">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="currentForm === 'criterios_activos'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Criterios Activos</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+
+
+              <div class="col-md-3">
+                <label>Asesores</label>
+                <select class="form-control form-control-sm" v-model="formCriterios.asesor_id">
+                  <option value="">Todos</option>
+                  <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
+                    {{ asesor.username }}
+                  </option>
+                </select>
+              </div>
+
+
+
+
+
+              <div class="form-group col-md-3 px-1">
+                <label for="input-zona" class="form-label">Zona</label>
+                <div class="position-relative">
+                  <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..."
+                    v-model="valorInputZonas" @focus="abrirZonas" @blur="cerrarZonas" />
+
+                  <div v-if="mostrarZonas"
+                    class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirZonas">
+                    <div v-for="zona in zonasFiltradas" :key="zona.id" class="form-check">
+                      <input class="form-check-input" type="checkbox" :value="zona.id" v-model="zonasSeleccionadas"
+                        :id="`zona-${zona.id}`" />
+                      <label class="form-check-label" :for="`zona-${zona.id}`">
+                        {{ zona.name }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 px-1">
+                <label for="input-Inmueble" class="form-label">Tipo Inmueble</label>
+                <div class="position-relative">
+                  <input type="text" class="form-control form-control-sm" placeholder="Buscar tipo inmueble..."
+                    v-model="valorInputInmuebles" @focus="abrirInmuebles" @blur="cerrarInmuebles" />
+
+                  <div v-if="mostrarInmuebles"
+                    class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirInmuebles">
+                    <div v-for="inmueble in inmuebleFiltrados" :key="inmueble.id" class="form-check">
+                      <input class="form-check-input" type="checkbox" :value="inmueble.id"
+                        v-model="inmueblesSeleccionados" :id="`inmueble-${inmueble.id}`" />
+                      <label class="form-check-label" :for="`inmueble-${inmueble.id}`">
+                        {{ inmueble.inmueble }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-3 px-1">
+                <label class="form-label">Dormitorio</label>
+                <input type="number" class="form-control form-control-sm" v-model="formCriterios.cantidad_dormitorios">
+              </div>
+              <div class="form-group col-md-3">
+                <label class="form-group">Precio Minimo</label>
+                <input type="number" class="form-control form-control-sm" placeholder="$"
+                  v-model="formCriterios.precio_minimo">
+              </div>
+              <div class="form-group col-md-3">
+                <label class="form-group">Precio Maximo</label>
+                <input type="number" class="form-control form-control-sm" placeholder="$"
+                  v-model="formCriterios.precio_maximo">
+              </div>
+              <div class="form-group col-md-3">
+                <label class="form-group">Estado</label>
+                <select class="form-select form-select-sm" v-model="formCriterios.estado">
+                  <option value="">Seleccione un estado</option>
+                  <option value="Potable">Potable</option>
+                  <option value="Medio">Medio</option>
+                  <option value="No Potable">No Potable</option>
+                </select>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitCriteriosActivos()">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
     </div>
   </div>
+
+
 </template>
 
 <script setup>
@@ -235,6 +375,8 @@ import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropied
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
 import { getEstadoAlquiler, verificarPermiso, getEstadoVenta } from '@/Services/api/Atcl/AtclApi'
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
+import { useToast } from '@/composables/useToast'
+import { getAsesor } from '@/Services/api/Atcl/AtclApi'
 
 const props = defineProps({
   sector: {
@@ -242,6 +384,7 @@ const props = defineProps({
     required: true
   }
 })
+const { showError } = useToast()
 // Desestructuración del composable
 const {
   calleSeleccionada,
@@ -269,6 +412,7 @@ const {
 // Estados reactivos
 const currentForm = ref('propiedades_alquiler')
 const estados = ref([])
+
 const listadoPropiedadRef = ref(null)
 const camposSeleccionados = ref([])
 const permiso = ref(false)
@@ -279,8 +423,15 @@ const sugerencias = ref([])
 const personaSeleccionada = ref(null)
 const informacionMostrar = ref([])
 const estadosVenta = ref([])
+const asesores = ref([])
 const permisoOfrecimiento = ref(false)
+const propietariosVenta = ref([false])
+const devolucionesVenta = ref([false])
 
+
+
+// Si es alquiler muestra un conjunto de columnas
+// Si es venta muestra otro más amplio
 if (props.sector === 'Alquiler') {
 
   informacionMostrar.value = [
@@ -335,8 +486,10 @@ if (props.sector === 'Alquiler') {
 
 
 // Inicializar campos seleccionados
+// toma todas las keys y las deja tildadas por defecto
 camposSeleccionados.value = informacionMostrar.value.map(campo => campo.key)
 
+//Variables para guardar los datos del formulario
 const formPropiedades = ref({
   calle: '',
   zona_id: '',
@@ -363,28 +516,62 @@ const formOfrecimiento = ref({
   pertenece: 'ofrecimientoVenta',
 })
 
+const formDevoluciones = ref({
+  codigo: '',
+  desde: '',
+  hasta: '',
+  sector: props.sector,
+  pertenece: 'devoluciones',
+})
+
+const formCriterios = ref({
+  asesor_id: '',
+  estado: '',
+  zona_id: '',
+  tipo: '',
+  cantidad_dormitorios: '',
+  precio_minimo: '',
+  precio_maximo: '',
+  sector: props.sector,
+  pertenece: 'criteriosActivos',
+})
+
 // Carga de datos inicial
+// cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
-  const [resEstados, resPropietarios, resEstadoVenta] = await Promise.all([
+  // Cargamos los asesores para el selector del formulario de criterios activos
+
+
+  const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
     getEstadoAlquiler(),
     PropietariosActivos(),
-    getEstadoVenta()
+    getEstadoVenta(),
+    getAsesor()
+
   ])
 
   let resPermiso
   let resPermisoOfrecimiento
+  let resPropietariosVenta
+  let resDevoluciones
 
   if (props.sector === 'Alquiler') {
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
   } else {
     resPermiso = await verificarPermiso('listarPropiedadesVenta')
     resPermisoOfrecimiento = await verificarPermiso('listarOfrecimientoVenta')
+    resPropietariosVenta = await verificarPermiso('listarPropietarioVenta')
+    resDevoluciones = await verificarPermiso('listarDevolucionesVenta')
   }
   estados.value = resEstados.data
   estadosVenta.value = resEstadoVenta.data
   permiso.value = resPermiso?.data ?? false
   propietario.value = resPropietarios.data
   permisoOfrecimiento.value = resPermisoOfrecimiento?.data ?? false
+  propietariosVenta.value = resPropietariosVenta.data
+  devolucionesVenta.value = resDevoluciones?.data ?? false
+  asesores.value = resAsesores.data
+  console.log('asesires', asesores.value)
 })
 
 // Lógica de búsqueda de propietarios
@@ -402,7 +589,7 @@ const buscar = () => {
       p.nombre?.toLowerCase().includes(texto) ||
       p.documento?.includes(texto)
     )
-    .slice(0, 10)
+    .slice(0, 20)
 }
 
 const seleccionarPersona = (persona) => {
@@ -433,9 +620,40 @@ const submitPropietariosAlquiler = async () => {
 
 const submitOfrecimientoVenta = async () => {
   //datos del form
-  console.log(formOfrecimiento.value)
+  //console.log(formOfrecimiento.value)
   formActual.value = formOfrecimiento.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
+
+const submitDevoluciones = async () => {
+  //console.log(formDevoluciones.value)
+  if (!formDevoluciones.value.codigo || !formDevoluciones.value.desde || !formDevoluciones.value.hasta) {
+    showError("Debe ingresar un codigo o rango de fechas")
+    return
+  }
+  try {
+    formActual.value = formDevoluciones.value
+    await nextTick()
+    listadoPropiedadRef.value?.generarPdf()
+
+
+  } catch (e) {
+    showError("Error al generar PDF en servidor")
+  }
+}
+
+
+const submitCriteriosActivos = async () => {
+
+  formCriterios.value.zona_id = zonasSeleccionadas?.value ?? []
+  formCriterios.value.tipo = inmueblesSeleccionados?.value ?? []
+
+  formActual.value = formCriterios.value
+  //console.log(formActual.value)
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+
 </script>
