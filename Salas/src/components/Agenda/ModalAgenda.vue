@@ -249,7 +249,7 @@ function textoPropiedadDesdeNota(nota) {
 
 function resetFormConDefaults() {
   descripcion.value = ''
-  ignorarWatchTelefono.value = true   // ← evita búsqueda al limpiar el campo
+  ignorarWatchTelefono.value = true
   telefono.value = ''
   nombreCliente.value = ''
   propiedadSeleccionada.value = null

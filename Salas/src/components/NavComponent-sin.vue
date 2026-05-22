@@ -109,7 +109,6 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  // Limpiar listener
   document.removeEventListener('click', handleClickOutside)
 })
 </script>

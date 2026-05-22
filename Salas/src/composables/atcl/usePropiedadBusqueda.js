@@ -145,8 +145,23 @@ export function usePropiedadBusqueda() {
     }
 
     const response = await buscarPropiedad(filtros)
-    console.log('Respuesta recibida:', response)
+    //console.log('Respuesta recibida:', response)
     propiedades.value = response.data
+  }
+
+  const limpiarCampos = () => {
+    busqueda.value = ''
+    codigo.value = ''
+    calleId.value = null
+    inmueblesSeleccionados.value = []
+    zonasSeleccionadas.value = []
+    cochera.value = null
+    mascotas.value = null
+    habitaciones.value = null
+    desde.value = null
+    hasta.value = null
+    orden.value = null
+    ampliar.value = false
   }
 
   const verPropiedad = (propiedad) => {
@@ -198,6 +213,7 @@ export function usePropiedadBusqueda() {
     abrirZonas,
     cerrarZonas,
     filtrar,
-    verPropiedad
+    verPropiedad,
+    limpiarCampos
   }
 }
