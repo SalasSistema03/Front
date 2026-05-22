@@ -121,8 +121,8 @@
         <div class="form-group col-md-1 px-1 align-self-end mt-2">
           <button type="submit" class="btn btn-primary btn-sm w-100">Filtrar</button>
         </div>
-        <div class="form-group col-md-1 px-1 align-self-end mt-2" @reset.prevent="reset">
-          <button type="reset" class="btn btn-secondary btn-sm w-100">Limpiar</button>
+        <div class="form-group col-md-1 px-1 align-self-end mt-2" @click="limpiarCampos">
+          <button type="button" class="btn btn-secondary btn-sm w-100">Limpiar</button>
         </div>
         <div class="form-group col-1 mt-2">
           <div class="form-check form-switch mt-3">
