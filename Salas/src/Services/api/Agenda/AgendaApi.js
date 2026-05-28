@@ -58,4 +58,20 @@ export const borrarNota = (id, motivo) => {
   })
 }
 
+export const UsuariosEnAgenda = (sector_id) => {
+  const token = localStorage.getItem('token')
 
+  return axios.get(`${API_URL}/v1/usuariosConAgenda/${sector_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+export const listarAgenda = (datos) =>{
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/listado-agenda`, datos, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}

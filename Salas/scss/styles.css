@@ -678,6 +678,18 @@
   display: inline-block;
 }
 
+.agenda_listado_card_header {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  font-size: 1.7rem !important;
+}
+
+.agenda_listado_card_body {
+  background-color: white !important;
+  color: black !important;
+  font-size: 0.6rem !important;
+}
+
 .tabla_clientes {
   width: 100%;
   overflow-x: auto;
