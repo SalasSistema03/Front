@@ -9,6 +9,12 @@ const routesAgenda = [
             vistaId:25
          }, */
     },
+    {
+      path: '/agenda/listado',
+      alias: '/agenda/listado',
+      name: '/agenda/listado',
+      component: () => import('../views/Agenda/Listado/ListadoAgenda.View.vue')
+    }
 ]
 
 export default routesAgenda

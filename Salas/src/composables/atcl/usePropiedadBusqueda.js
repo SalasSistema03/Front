@@ -19,7 +19,6 @@ export function usePropiedadBusqueda() {
 
   const { inmuebles, cargarInmuebles } = useInmuebles()
   const { zonas, cargarZonas } = useZona()
-
   const zonasSeleccionadas = ref([])
   const busquedaZonas = ref('')
   const inmueblesSeleccionados = ref([])
