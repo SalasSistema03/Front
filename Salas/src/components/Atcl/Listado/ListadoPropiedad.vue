@@ -30,6 +30,13 @@
           Listar Criterios Activos
         </div>
       </div>
+      <div>
+        <div class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'criterios_activos_fechas' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'criterios_activos_fechas'">
+          Listar Criterios Activos por Fechas
+        </div>
+      </div>
     </div>
 
     <div class="right-panel col-9">
@@ -361,6 +368,37 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'criterios_activos_fechas'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Criterios Activos por Fechas</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+
+
+              <div class="col-md-4 p-1">
+                <label class="form-label">Desde</label>
+                <input type="date" class="form-control form-control-sm" v-model="formCriteriosActivosFechas.desde">
+              </div>
+              <div class="col-md-4 p-1">
+                <label class="form-label">Hasta</label>
+                <input type="date" class="form-control form-control-sm" v-model="formCriteriosActivosFechas.hasta">
+              </div>
+
+
+
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitCriteriosActivosFechas()" :disabled="!permisoCriteriosPorFecha">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
     </div>
   </div>
@@ -427,6 +465,7 @@ const asesores = ref([])
 const permisoOfrecimiento = ref(false)
 const propietariosVenta = ref([false])
 const devolucionesVenta = ref([false])
+const permisoCriteriosPorFecha = ref(false)
 
 
 
@@ -536,6 +575,13 @@ const formCriterios = ref({
   pertenece: 'criteriosActivos',
 })
 
+const formCriteriosActivosFechas = ref({
+  desde: '',
+  hasta: '',
+  sector: props.sector,
+  pertenece: 'criteriosActivosFechas',
+})
+
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
@@ -554,6 +600,7 @@ onMounted(async () => {
   let resPermisoOfrecimiento
   let resPropietariosVenta
   let resDevoluciones
+  let resPermisoCriteriosPorFecha
 
   if (props.sector === 'Alquiler') {
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
@@ -562,6 +609,7 @@ onMounted(async () => {
     resPermisoOfrecimiento = await verificarPermiso('listarOfrecimientoVenta')
     resPropietariosVenta = await verificarPermiso('listarPropietarioVenta')
     resDevoluciones = await verificarPermiso('listarDevolucionesVenta')
+    resPermisoCriteriosPorFecha = await verificarPermiso('listarCriteriosPorFecha')
   }
   estados.value = resEstados.data
   estadosVenta.value = resEstadoVenta.data
@@ -571,7 +619,8 @@ onMounted(async () => {
   propietariosVenta.value = resPropietariosVenta.data
   devolucionesVenta.value = resDevoluciones?.data ?? false
   asesores.value = resAsesores.data
-  console.log('asesires', asesores.value)
+  permisoCriteriosPorFecha.value = resPermisoCriteriosPorFecha?.data ?? false
+  //console.log('asesires', asesores.value)
 })
 
 // Lógica de búsqueda de propietarios
@@ -651,6 +700,12 @@ const submitCriteriosActivos = async () => {
 
   formActual.value = formCriterios.value
   //console.log(formActual.value)
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+const submitCriteriosActivosFechas = async () => {
+  formActual.value = formCriteriosActivosFechas.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
