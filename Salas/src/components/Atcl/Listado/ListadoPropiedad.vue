@@ -19,22 +19,22 @@
           Listar Ofrecimiento
         </div>
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'devoluciones' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'devoluciones'">
+          @click="currentForm = 'devoluciones'" v-if="sector === 'Venta'">
           Listar Devoluciones
         </div>
       </div>
-      <h5 class="mb-4">Listados Asesores</h5>
+      <h5 class="mb-4" v-if="sector === 'Venta'">Listados Asesores</h5>
       <div>
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'criterios_activos' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'criterios_activos'">
+          @click="currentForm = 'criterios_activos'" v-if="sector === 'Venta'">
           Listar Criterios Activos
         </div>
       </div>
       <div>
         <div class="btn w-100 btn-sm mb-2"
-          :class="currentForm === 'criterios_activos_fechas' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'criterios_activos_fechas'">
-          Listar Criterios Activos por Fechas
+          :class="currentForm === 'consultas_ingresadas_fechas' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'consultas_ingresadas_fechas'" v-if="sector === 'Venta'">
+          Listar Consultas Ingresadas por Fechas
         </div>
       </div>
     </div>
@@ -368,10 +368,10 @@
         </div>
       </div>
 
-      <div v-if="currentForm === 'criterios_activos_fechas'" class="form-section">
+      <div v-if="currentForm === 'consultas_ingresadas_fechas'" class="form-section">
         <div class="card border-primary mx-2">
           <div class="card-header bg-transparent border-primary">
-            <label>Listar Criterios Activos por Fechas</label>
+            <label>Listar Consultas Ingresadas por Fechas</label>
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
@@ -379,18 +379,18 @@
 
               <div class="col-md-4 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" v-model="formCriteriosActivosFechas.desde">
+                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.desde" v-model="formConsultasIngresadas.desde">
               </div>
               <div class="col-md-4 p-1">
                 <label class="form-label">Hasta</label>
-                <input type="date" class="form-control form-control-sm" v-model="formCriteriosActivosFechas.hasta">
+                <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde" v-model="formConsultasIngresadas.hasta">
               </div>
 
 
 
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitCriteriosActivosFechas()" :disabled="!permisoCriteriosPorFecha">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConsultasIngresadas()" :disabled="!permisoCriteriosPorFecha">
                   Listar
                 </button>
               </div>
@@ -575,11 +575,11 @@ const formCriterios = ref({
   pertenece: 'criteriosActivos',
 })
 
-const formCriteriosActivosFechas = ref({
+const formConsultasIngresadas = ref({
   desde: '',
   hasta: '',
   sector: props.sector,
-  pertenece: 'criteriosActivosFechas',
+  pertenece: 'consultasIngresadas',
 })
 
 // Carga de datos inicial
@@ -704,8 +704,8 @@ const submitCriteriosActivos = async () => {
   listadoPropiedadRef.value?.generarPdf()
 }
 
-const submitCriteriosActivosFechas = async () => {
-  formActual.value = formCriteriosActivosFechas.value
+const submitConsultasIngresadas = async () => {
+  formActual.value = formConsultasIngresadas.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
