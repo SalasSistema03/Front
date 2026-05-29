@@ -137,7 +137,7 @@
                 </div>
                 <!-- Nombre de la inmobiliaria -->
                 <div class="d-flex justify-content-start align-items-center col-12"
-                  v-if="cliente.pertenece_a_inmobiliaria === 'S' && cliente.nombre_de_inmobiliaria">
+                  v-if="cliente.nombre_de_inmobiliaria">
 
                   <span class="badge  pertenece-inmobiliaria-asesores">
                     <div class="bi bi-houses ">
