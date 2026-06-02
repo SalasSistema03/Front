@@ -339,7 +339,7 @@ export default {
       // Datos del formulario principal
       formData: {
         altura: '',
-        ph: '0',
+        ph: '',
         piso: '',
         dto: '',
         inmueble_id: '',
@@ -347,7 +347,7 @@ export default {
         provincia_id: '',
         llave: '',
         observaciones_llaves: '',
-        cartel: '1',
+        cartel: '',
         observaciones_cartel: '',
         comodidades: {},
         descripcion: {},
