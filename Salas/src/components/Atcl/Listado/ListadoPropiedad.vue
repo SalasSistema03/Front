@@ -110,7 +110,7 @@
                 </div>
               </div>
 
-              <div class="form-group col-md-4 px-1" v-if="props.sector === 'Alquiler'">
+              <div class="form-group col-md-3 px-1" v-if="props.sector === 'Alquiler'">
                 <label class="form-label">Estado</label>
                 <select v-model="formPropiedades.estado_id" class="form-control form-control-sm">
                   <option value="">Seleccione un estado</option>
@@ -119,7 +119,7 @@
                   </option>
                 </select>
               </div>
-              <div class="form-group col-md-4 px-1" v-else>
+              <div class="form-group col-md-3 px-1" v-else>
                 <label class="form-label">Estado</label>
                 <select v-model="formPropiedades.estado_id" class="form-control form-control-sm">
                   <option value="">Seleccione un estado</option>
@@ -129,12 +129,21 @@
                 </select>
               </div>
 
-              <div class="from-group col-md-4 px-1">
+              <div class="form-group col-md-3 px-1">
+                <label class="form-label">Cartel</label>
+                <select v-model="formPropiedades.cartel" class="form-control form-control-sm">
+                  <option value="">Seleccione un cartel</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+
+              <div class="from-group col-md-3 px-1">
                 <label class="form-label">Importe desde</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_minimo"
                   min="0" placeholder="Importe mínimo" />
               </div>
-              <div class="from-group col-md-4 px-1">
+              <div class="from-group col-md-3 px-1">
                 <label class="form-label">Importe hasta</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_maximo"
                   min="0" placeholder="Importe máximo" />
@@ -582,7 +591,8 @@ const formPropiedades = ref({
   pertenece: 'listadoPropiedades',
   orden: '',
   informacionMostrar: [],
-  sector: props.sector
+  sector: props.sector,
+  cartel: '',
 })
 
 const formPropietarios = ref({
