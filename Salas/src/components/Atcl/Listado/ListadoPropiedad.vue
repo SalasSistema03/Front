@@ -37,6 +37,12 @@
           Listar Consultas Ingresadas por Fechas
         </div>
       </div>
+      <div>
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'conversaciones' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'conversaciones'" v-if="sector === 'Venta'">
+          Listar Conversaciones
+        </div>
+      </div>
     </div>
 
     <div class="right-panel col-9">
@@ -379,18 +385,55 @@
 
               <div class="col-md-4 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.desde" v-model="formConsultasIngresadas.desde">
+                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.desde"
+                  v-model="formConsultasIngresadas.desde">
               </div>
               <div class="col-md-4 p-1">
                 <label class="form-label">Hasta</label>
-                <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde" v-model="formConsultasIngresadas.hasta">
+                <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde"
+                  v-model="formConsultasIngresadas.hasta">
               </div>
 
 
 
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConsultasIngresadas()" :disabled="!permisoCriteriosPorFecha">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConsultasIngresadas()"
+                  :disabled="!permisoCriteriosPorFecha">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="currentForm === 'conversaciones'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Conversaciones</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+
+
+
+
+              <div class="col-md-3">
+                <label>Asesores</label>
+                <select class="form-control form-control-sm" v-model="formConversaciones.asesor_id">
+                  <option value="">Todos</option>
+                  <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
+                    {{ asesor.username }}
+                  </option>
+                </select>
+              </div>
+
+
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConversaciones()"
+                  :disabled="!permisoCriteriosPorFecha">
                   Listar
                 </button>
               </div>
@@ -582,6 +625,12 @@ const formConsultasIngresadas = ref({
   pertenece: 'consultasIngresadas',
 })
 
+const formConversaciones = ref({
+  asesor_id: '',
+  sector: props.sector,
+  pertenece: 'conversaciones',
+})
+
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
@@ -710,5 +759,10 @@ const submitConsultasIngresadas = async () => {
   listadoPropiedadRef.value?.generarPdf()
 }
 
+const submitConversaciones = async () => {
+  formActual.value = formConversaciones.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
 
 </script>
