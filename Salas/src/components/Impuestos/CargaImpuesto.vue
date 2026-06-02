@@ -296,7 +296,7 @@ const filtrar = async () => {
     botonesPadron.value = response?.data?.botones ?? {}
     const resultadoRaw = response?.data?.resultado
     PadronCompleto.value = typeof resultadoRaw === 'string' ? JSON.parse(resultadoRaw) : (resultadoRaw ?? [])
-    console.log('este es el padron', botonesPadron.value)
+    //console.log('este es el padron', botonesPadron.value)
     if (mes.value !== null && anio.value !== null) {
       showMasOpciones.value = true
     }

@@ -174,6 +174,15 @@ const guardarCambios = async () => {
     importe2: importe2.value
   }
 
+  if(form.importe === '' || form.importe2 === '') {
+    showError('Debe ingresar el importe para ambos vencimientos')
+    return
+  }
+  if(form.fecha_vencimiento === '' || form.fecha_vencimiento2 === '') {
+    showError('Debe ingresar la fecha para ambos vencimientos')
+    return
+  }
+
   try {
     await cargaNuevoManual(form)
     showSuccess('Carga manual exitosa')
@@ -188,7 +197,6 @@ const guardarCambios = async () => {
     emit('success')
 
   } catch (error) {
-    console.error('Error al cargar manualmente', error)
     showError('Error al cargar manualmente')
   }
   emit('close')
