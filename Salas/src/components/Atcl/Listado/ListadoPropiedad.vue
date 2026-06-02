@@ -442,7 +442,7 @@
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConversaciones()"
-                  :disabled="!permisoCriteriosPorFecha">
+                  :disabled="!permisoConversacion">
                   Listar
                 </button>
               </div>
@@ -467,6 +467,7 @@ import { getEstadoAlquiler, verificarPermiso, getEstadoVenta } from '@/Services/
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
 import { useToast } from '@/composables/useToast'
 import { getAsesor } from '@/Services/api/Atcl/AtclApi'
+import { isAdmin} from '../../../Services/business/auth'
 
 const props = defineProps({
   sector: {
@@ -518,6 +519,8 @@ const permisoOfrecimiento = ref(false)
 const propietariosVenta = ref([false])
 const devolucionesVenta = ref([false])
 const permisoCriteriosPorFecha = ref(false)
+const permisoConversacion = ref([false])
+const isUserAdmin = ref(false);
 
 
 
@@ -646,6 +649,8 @@ const formConversaciones = ref({
 onMounted(async () => {
   // Cargamos los asesores para el selector del formulario de criterios activos
 
+ isUserAdmin.value = await isAdmin();
+ console.log(isUserAdmin.value)
 
   const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
     getEstadoAlquiler(),
@@ -660,6 +665,7 @@ onMounted(async () => {
   let resPropietariosVenta
   let resDevoluciones
   let resPermisoCriteriosPorFecha
+  let resConversacionVenta
 
   if (props.sector === 'Alquiler') {
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
@@ -669,6 +675,7 @@ onMounted(async () => {
     resPropietariosVenta = await verificarPermiso('listarPropietarioVenta')
     resDevoluciones = await verificarPermiso('listarDevolucionesVenta')
     resPermisoCriteriosPorFecha = await verificarPermiso('listarCriteriosPorFecha')
+    resConversacionVenta = await verificarPermiso('listarConversacionesVenta')
   }
   estados.value = resEstados.data
   estadosVenta.value = resEstadoVenta.data
@@ -678,6 +685,15 @@ onMounted(async () => {
   propietariosVenta.value = resPropietariosVenta.data
   devolucionesVenta.value = resDevoluciones?.data ?? false
   asesores.value = resAsesores.data
+  permisoConversacion.value = resConversacionVenta?.data ?? false
+
+  //console.log(asesores.value)
+
+  //si el usuario es admin que saque el id_usuario:3 del  asesores.value
+  if (isUserAdmin.value === false) {
+    asesores.value = asesores.value.filter(a => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18)
+  }
+
   permisoCriteriosPorFecha.value = resPermisoCriteriosPorFecha?.data ?? false
   //console.log('asesires', asesores.value)
 })
