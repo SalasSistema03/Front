@@ -93,11 +93,12 @@ onMounted(async () => {
 
 // WATCH SECTOR
 watch(sectorSeleccionado, async (nuevoSector) => {
+  // siempre resetear usuario al cambiar de sector
+  usuarioSeleccionado.value = ""
 
   // Si no seleccionó sector
   if (!nuevoSector) {
     usuarios.value = []
-    usuarioSeleccionado.value = ""
     return
   }
 
