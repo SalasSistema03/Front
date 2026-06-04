@@ -67,11 +67,12 @@ export const UsuariosEnAgenda = (sector_id) => {
     },
   })
 }
-export const listarAgenda = (datos) =>{
+export const listarAgenda = (datos, config = {}) =>{
   const token = localStorage.getItem('token')
   return axios.post(`${API_URL}/v1/listado-agenda`, datos, {
     headers: {
       Authorization: `Bearer ${token}`
-    }
+    },
+    ...config
   })
 }
