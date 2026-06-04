@@ -650,7 +650,7 @@ onMounted(async () => {
   // Cargamos los asesores para el selector del formulario de criterios activos
 
  isUserAdmin.value = await isAdmin();
- console.log(isUserAdmin.value)
+ //console.log(isUserAdmin.value)
 
   const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
     getEstadoAlquiler(),
