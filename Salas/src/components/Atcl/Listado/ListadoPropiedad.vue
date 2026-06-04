@@ -5,41 +5,75 @@
     <div class="col-3 px-3">
       <h5 class="mb-4">Listados Propiedades</h5>
       <div>
-        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'propiedades_alquiler' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'propiedades_alquiler'">
+        <div
+          class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'propiedades_alquiler' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'propiedades_alquiler'"
+        >
           Listar Propiedades en {{ sector }}
         </div>
-        <div class="btn w-100 btn-sm mb-2"
+
+        <div
+          class="btn w-100 btn-sm mb-2"
           :class="currentForm === 'propietarios_alquiler' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'propietarios_alquiler'">
+          @click="currentForm = 'propietarios_alquiler'"
+        >
           Listar Propietarios en {{ sector }}
         </div>
-        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'ofrecimiento_venta' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'ofrecimiento_venta'" v-if="sector === 'Venta'">
+
+        <div
+          class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'informe_novedades' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'informe_novedades'"
+        >
+          Informe de Novedades
+        </div>
+
+        <div
+          class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'ofrecimiento_venta' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'ofrecimiento_venta'"
+          v-if="sector === 'Venta'"
+        >
           Listar Ofrecimiento
         </div>
-        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'devoluciones' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'devoluciones'" v-if="sector === 'Venta'">
+        <div
+          class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'devoluciones' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'devoluciones'"
+          v-if="sector === 'Venta'"
+        >
           Listar Devoluciones
         </div>
       </div>
       <h5 class="mb-4" v-if="sector === 'Venta'">Listados Asesores</h5>
       <div>
-        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'criterios_activos' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'criterios_activos'" v-if="sector === 'Venta'">
+        <div
+          class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'criterios_activos' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'criterios_activos'"
+          v-if="sector === 'Venta'"
+        >
           Listar Criterios Activos
         </div>
       </div>
       <div>
-        <div class="btn w-100 btn-sm mb-2"
+        <div
+          class="btn w-100 btn-sm mb-2"
           :class="currentForm === 'consultas_ingresadas_fechas' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'consultas_ingresadas_fechas'" v-if="sector === 'Venta'">
+          @click="currentForm = 'consultas_ingresadas_fechas'"
+          v-if="sector === 'Venta'"
+        >
           Listar Consultas Ingresadas por Fechas
         </div>
       </div>
       <div>
-        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'conversaciones' ? 'btn-primary' : 'btn-light'"
-          @click="currentForm = 'conversaciones'" v-if="sector === 'Venta'">
+        <div
+          class="btn w-100 btn-sm mb-2"
+          :class="currentForm === 'conversaciones' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'conversaciones'"
+          v-if="sector === 'Venta'"
+        >
           Listar Conversaciones
         </div>
       </div>
@@ -56,14 +90,28 @@
               <div class="form-group col-md-4 px-1">
                 <label for="input-calle" class="form-label">Calle</label>
                 <div class="position-relative">
-                  <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
-                    v-model="calleSeleccionada" @input="filtrarCalles" @focus="mostrarLista" @blur="ocultarSugerencias"
-                    autocomplete="off" />
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    id="input-calle"
+                    placeholder="Calle"
+                    v-model="calleSeleccionada"
+                    @input="filtrarCalles"
+                    @focus="mostrarLista"
+                    @blur="ocultarSugerencias"
+                    autocomplete="off"
+                  />
 
-                  <ul v-if="mostrarSugerencias && callesFiltradas.length"
-                    class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm busqueda-select">
-                    <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalle(calle)"
-                      class="px-3 py-2 cursor-pointer hover:bg-light">
+                  <ul
+                    v-if="mostrarSugerencias && callesFiltradas.length"
+                    class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm busqueda-select"
+                  >
+                    <li
+                      v-for="calle in callesFiltradas"
+                      :key="calle.id"
+                      @mousedown="seleccionarCalle(calle)"
+                      class="px-3 py-2 cursor-pointer hover:bg-light"
+                    >
                       {{ calle.name }}
                     </li>
                   </ul>
@@ -73,15 +121,29 @@
               <div class="form-group col-md-4 px-1">
                 <label for="input-zona" class="form-label">Zona</label>
                 <div class="position-relative">
-                  <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..."
-                    v-model="valorInputZonas" @focus="abrirZonas" @blur="cerrarZonas" />
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Buscar zona..."
+                    v-model="valorInputZonas"
+                    @focus="abrirZonas"
+                    @blur="cerrarZonas"
+                  />
 
-                  <div v-if="mostrarZonas"
+                  <div
+                    v-if="mostrarZonas"
                     class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
-                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirZonas">
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000"
+                    @mousedown.prevent="abrirZonas"
+                  >
                     <div v-for="zona in zonasFiltradas" :key="zona.id" class="form-check">
-                      <input class="form-check-input" type="checkbox" :value="zona.id" v-model="zonasSeleccionadas"
-                        :id="`zona-${zona.id}`" />
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="zona.id"
+                        v-model="zonasSeleccionadas"
+                        :id="`zona-${zona.id}`"
+                      />
                       <label class="form-check-label" :for="`zona-${zona.id}`">
                         {{ zona.name }}
                       </label>
@@ -93,15 +155,33 @@
               <div class="form-group col-md-4 px-1">
                 <label for="input-Inmueble" class="form-label">Tipo Inmueble</label>
                 <div class="position-relative">
-                  <input type="text" class="form-control form-control-sm" placeholder="Buscar tipo inmueble..."
-                    v-model="valorInputInmuebles" @focus="abrirInmuebles" @blur="cerrarInmuebles" />
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Buscar tipo inmueble..."
+                    v-model="valorInputInmuebles"
+                    @focus="abrirInmuebles"
+                    @blur="cerrarInmuebles"
+                  />
 
-                  <div v-if="mostrarInmuebles"
+                  <div
+                    v-if="mostrarInmuebles"
                     class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
-                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirInmuebles">
-                    <div v-for="inmueble in inmuebleFiltrados" :key="inmueble.id" class="form-check">
-                      <input class="form-check-input" type="checkbox" :value="inmueble.id"
-                        v-model="inmueblesSeleccionados" :id="`inmueble-${inmueble.id}`" />
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000"
+                    @mousedown.prevent="abrirInmuebles"
+                  >
+                    <div
+                      v-for="inmueble in inmuebleFiltrados"
+                      :key="inmueble.id"
+                      class="form-check"
+                    >
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="inmueble.id"
+                        v-model="inmueblesSeleccionados"
+                        :id="`inmueble-${inmueble.id}`"
+                      />
                       <label class="form-check-label" :for="`inmueble-${inmueble.id}`">
                         {{ inmueble.inmueble }}
                       </label>
@@ -140,18 +220,32 @@
 
               <div class="from-group col-md-3 px-1">
                 <label class="form-label">Importe desde</label>
-                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_minimo"
-                  min="0" placeholder="Importe mínimo" />
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  v-model="formPropiedades.importe_minimo"
+                  min="0"
+                  placeholder="Importe mínimo"
+                />
               </div>
               <div class="from-group col-md-3 px-1">
                 <label class="form-label">Importe hasta</label>
-                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_maximo"
-                  min="0" placeholder="Importe máximo" />
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  v-model="formPropiedades.importe_maximo"
+                  min="0"
+                  placeholder="Importe máximo"
+                />
               </div>
 
               <div class="col-md-6 mt-2">
                 <label class="form-label" for="orden">Ordenar por</label>
-                <select id="orden" class="form-control form-control-sm" v-model="formPropiedades.orden">
+                <select
+                  id="orden"
+                  class="form-control form-control-sm"
+                  v-model="formPropiedades.orden"
+                >
                   <option value="">Sin orden</option>
                   <option value="precio_asc">Precio (menor a mayor)</option>
                   <option value="precio_desc">Precio (mayor a menor)</option>
@@ -163,20 +257,37 @@
                 </select>
               </div>
 
-              <div class="col-md-6 mt-2 ">
+              <div class="col-md-6 mt-2">
                 <label for="" class="form-label">Información a mostrar</label>
-                <div class="dropdown w-100 ">
-                  <button class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
-                    type="text" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-                    id="infoDropdownBtn">
+                <div class="dropdown w-100">
+                  <button
+                    class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
+                    type="text"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
+                    id="infoDropdownBtn"
+                  >
                     Selecciona la información a mostrar
                   </button>
-                  <div class="dropdown-menu p-3 w-100" style="max-height: 280px; overflow: auto; min-width: 300px">
+                  <div
+                    class="dropdown-menu p-3 w-100"
+                    style="max-height: 280px; overflow: auto; min-width: 300px"
+                  >
                     <div class="row" id="infoList">
-                      <div v-for="campo in informacionMostrar" :key="campo.key" class="col-md-6 mb-2">
+                      <div
+                        v-for="campo in informacionMostrar"
+                        :key="campo.key"
+                        class="col-md-6 mb-2"
+                      >
                         <div class="form-check">
-                          <input class="form-check-input campo-checkbox" type="checkbox" :value="campo.key"
-                            v-model="camposSeleccionados" :id="`campo-${campo.key}`" />
+                          <input
+                            class="form-check-input campo-checkbox"
+                            type="checkbox"
+                            :value="campo.key"
+                            v-model="camposSeleccionados"
+                            :id="`campo-${campo.key}`"
+                          />
                           <label class="form-check-label" :for="`campo-${campo.key}`">
                             {{ campo.label }}
                           </label>
@@ -188,8 +299,12 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropiedadesAlquiler"
-                  :disabled="!permiso">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitPropiedadesAlquiler"
+                  :disabled="!permiso"
+                >
                   Listar
                 </button>
               </div>
@@ -206,21 +321,39 @@
           <div class="card-body text-primary form-group">
             <div class="row">
               <div class="col-md-12 p-1 position-relative">
-                <input type="text" class="form-control form-control-sm" id="input-propietarios"
-                  placeholder="Buscar por apellido o DNI..." v-model="busqueda" @input="buscar" autocomplete="off">
-                <ul v-if="sugerencias.length > 0" class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
-                  style="z-index: 1000; max-height: 200px; overflow-y: auto;">
-                  <li v-for="persona in sugerencias" :key="persona.id"
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="input-propietarios"
+                  placeholder="Buscar por apellido o DNI..."
+                  v-model="busqueda"
+                  @input="buscar"
+                  autocomplete="off"
+                />
+                <ul
+                  v-if="sugerencias.length > 0"
+                  class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
+                  style="z-index: 1000; max-height: 200px; overflow-y: auto"
+                >
+                  <li
+                    v-for="persona in sugerencias"
+                    :key="persona.id"
                     class="list-group-item list-group-item-action cursor-pointer py-1 small"
-                    @click="seleccionarPersona(persona)">
-                    {{ persona.apellido }}, {{ persona.nombre }} - {{ persona.documento || 'Sin DNI' }}
+                    @click="seleccionarPersona(persona)"
+                  >
+                    {{ persona.apellido }}, {{ persona.nombre }} -
+                    {{ persona.documento || 'Sin DNI' }}
                   </li>
                 </ul>
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
-                  :disabled="!propietariosVenta">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitPropietariosAlquiler"
+                  :disabled="!propietariosVenta"
+                >
                   Listar
                 </button>
               </div>
@@ -238,16 +371,30 @@
             <div class="row">
               <div class="col-md-6 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" v-model="formOfrecimiento.fecha_desde" required>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  v-model="formOfrecimiento.fecha_desde"
+                  required
+                />
               </div>
               <div class="col-md-6 p-1">
                 <label class="form-label">Hasta</label>
-                <input type="date" class="form-control form-control-sm" v-model="formOfrecimiento.fecha_hasta" required>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  v-model="formOfrecimiento.fecha_hasta"
+                  required
+                />
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitOfrecimientoVenta()"
-                  :disabled="!permisoOfrecimiento">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitOfrecimientoVenta()"
+                  :disabled="!permisoOfrecimiento"
+                >
                   Listar
                 </button>
               </div>
@@ -265,21 +412,37 @@
             <div class="row">
               <div class="col-md-4 p-1">
                 <label class="form-label">Codigo</label>
-                <input type="number" class="form-control form-control-sm" v-model="formDevoluciones.codigo">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  v-model="formDevoluciones.codigo"
+                />
               </div>
 
               <div class="col-md-4 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" v-model="formDevoluciones.desde">
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  v-model="formDevoluciones.desde"
+                />
               </div>
               <div class="col-md-4 p-1">
                 <label class="form-label">Hasta</label>
-                <input type="date" class="form-control form-control-sm" v-model="formDevoluciones.hasta">
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  v-model="formDevoluciones.hasta"
+                />
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitDevoluciones()"
-                  :disabled="!devolucionesVenta">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitDevoluciones()"
+                  :disabled="!devolucionesVenta"
+                >
                   Listar
                 </button>
               </div>
@@ -295,34 +458,46 @@
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
-
-
               <div class="col-md-3">
                 <label>Asesores</label>
                 <select class="form-control form-control-sm" v-model="formCriterios.asesor_id">
                   <option value="">Todos</option>
-                  <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
+                  <option
+                    v-for="asesor in asesores"
+                    :key="asesor.id_usuario"
+                    :value="asesor.id_usuario"
+                  >
                     {{ asesor.username }}
                   </option>
                 </select>
               </div>
 
-
-
-
-
               <div class="form-group col-md-3 px-1">
                 <label for="input-zona" class="form-label">Zona</label>
                 <div class="position-relative">
-                  <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..."
-                    v-model="valorInputZonas" @focus="abrirZonas" @blur="cerrarZonas" />
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Buscar zona..."
+                    v-model="valorInputZonas"
+                    @focus="abrirZonas"
+                    @blur="cerrarZonas"
+                  />
 
-                  <div v-if="mostrarZonas"
+                  <div
+                    v-if="mostrarZonas"
                     class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
-                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirZonas">
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000"
+                    @mousedown.prevent="abrirZonas"
+                  >
                     <div v-for="zona in zonasFiltradas" :key="zona.id" class="form-check">
-                      <input class="form-check-input" type="checkbox" :value="zona.id" v-model="zonasSeleccionadas"
-                        :id="`zona-${zona.id}`" />
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="zona.id"
+                        v-model="zonasSeleccionadas"
+                        :id="`zona-${zona.id}`"
+                      />
                       <label class="form-check-label" :for="`zona-${zona.id}`">
                         {{ zona.name }}
                       </label>
@@ -333,15 +508,33 @@
               <div class="form-group col-md-3 px-1">
                 <label for="input-Inmueble" class="form-label">Tipo Inmueble</label>
                 <div class="position-relative">
-                  <input type="text" class="form-control form-control-sm" placeholder="Buscar tipo inmueble..."
-                    v-model="valorInputInmuebles" @focus="abrirInmuebles" @blur="cerrarInmuebles" />
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Buscar tipo inmueble..."
+                    v-model="valorInputInmuebles"
+                    @focus="abrirInmuebles"
+                    @blur="cerrarInmuebles"
+                  />
 
-                  <div v-if="mostrarInmuebles"
+                  <div
+                    v-if="mostrarInmuebles"
                     class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
-                    style="max-height: 150px; overflow-y: auto; z-index: 1000" @mousedown.prevent="abrirInmuebles">
-                    <div v-for="inmueble in inmuebleFiltrados" :key="inmueble.id" class="form-check">
-                      <input class="form-check-input" type="checkbox" :value="inmueble.id"
-                        v-model="inmueblesSeleccionados" :id="`inmueble-${inmueble.id}`" />
+                    style="max-height: 150px; overflow-y: auto; z-index: 1000"
+                    @mousedown.prevent="abrirInmuebles"
+                  >
+                    <div
+                      v-for="inmueble in inmuebleFiltrados"
+                      :key="inmueble.id"
+                      class="form-check"
+                    >
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="inmueble.id"
+                        v-model="inmueblesSeleccionados"
+                        :id="`inmueble-${inmueble.id}`"
+                      />
                       <label class="form-check-label" :for="`inmueble-${inmueble.id}`">
                         {{ inmueble.inmueble }}
                       </label>
@@ -351,17 +544,29 @@
               </div>
               <div class="form-group col-md-3 px-1">
                 <label class="form-label">Dormitorio</label>
-                <input type="number" class="form-control form-control-sm" v-model="formCriterios.cantidad_dormitorios">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  v-model="formCriterios.cantidad_dormitorios"
+                />
               </div>
               <div class="form-group col-md-3">
                 <label class="form-group">Precio Minimo</label>
-                <input type="number" class="form-control form-control-sm" placeholder="$"
-                  v-model="formCriterios.precio_minimo">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  placeholder="$"
+                  v-model="formCriterios.precio_minimo"
+                />
               </div>
               <div class="form-group col-md-3">
                 <label class="form-group">Precio Maximo</label>
-                <input type="number" class="form-control form-control-sm" placeholder="$"
-                  v-model="formCriterios.precio_maximo">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  placeholder="$"
+                  v-model="formCriterios.precio_maximo"
+                />
               </div>
               <div class="form-group col-md-3">
                 <label class="form-group">Estado</label>
@@ -374,7 +579,11 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitCriteriosActivos()">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitCriteriosActivos()"
+                >
                   Listar
                 </button>
               </div>
@@ -390,25 +599,32 @@
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
-
-
               <div class="col-md-4 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.desde"
-                  v-model="formConsultasIngresadas.desde">
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  :max="formConsultasIngresadas.desde"
+                  v-model="formConsultasIngresadas.desde"
+                />
               </div>
               <div class="col-md-4 p-1">
                 <label class="form-label">Hasta</label>
-                <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde"
-                  v-model="formConsultasIngresadas.hasta">
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  :min="formConsultasIngresadas.desde"
+                  v-model="formConsultasIngresadas.hasta"
+                />
               </div>
 
-
-
-
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConsultasIngresadas()"
-                  :disabled="!permisoCriteriosPorFecha">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitConsultasIngresadas()"
+                  :disabled="!permisoCriteriosPorFecha"
+                >
                   Listar
                 </button>
               </div>
@@ -424,25 +640,27 @@
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
-
-
-
-
               <div class="col-md-3">
                 <label>Asesores</label>
                 <select class="form-control form-control-sm" v-model="formConversaciones.asesor_id">
                   <option value="">Todos</option>
-                  <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
+                  <option
+                    v-for="asesor in asesores"
+                    :key="asesor.id_usuario"
+                    :value="asesor.id_usuario"
+                  >
                     {{ asesor.username }}
                   </option>
                 </select>
               </div>
 
-
-
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitConversaciones()"
-                  :disabled="!permisoConversacion">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitConversaciones()"
+                  :disabled="!permisoConversacion"
+                >
                   Listar
                 </button>
               </div>
@@ -454,8 +672,6 @@
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
     </div>
   </div>
-
-
 </template>
 
 <script setup>
@@ -467,13 +683,13 @@ import { getEstadoAlquiler, verificarPermiso, getEstadoVenta } from '@/Services/
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
 import { useToast } from '@/composables/useToast'
 import { getAsesor } from '@/Services/api/Atcl/AtclApi'
-import { isAdmin} from '../../../Services/business/auth'
+import { isAdmin } from '../../../Services/business/auth'
 
 const props = defineProps({
   sector: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 const { showError } = useToast()
 // Desestructuración del composable
@@ -497,7 +713,7 @@ const {
   cerrarInmuebles,
   mostrarInmuebles,
   inmuebleFiltrados,
-  inmueblesSeleccionados
+  inmueblesSeleccionados,
 } = usePropiedadBusqueda()
 
 // Estados reactivos
@@ -520,14 +736,11 @@ const propietariosVenta = ref([false])
 const devolucionesVenta = ref([false])
 const permisoCriteriosPorFecha = ref(false)
 const permisoConversacion = ref([false])
-const isUserAdmin = ref(false);
-
-
+const isUserAdmin = ref(false)
 
 // Si es alquiler muestra un conjunto de columnas
 // Si es venta muestra otro más amplio
 if (props.sector === 'Alquiler') {
-
   informacionMostrar.value = [
     { key: 'cod_alquiler', label: 'C. Alquiler' },
     { key: 'folio', label: 'Folio / Empresa' },
@@ -578,10 +791,9 @@ if (props.sector === 'Alquiler') {
   ]
 }
 
-
 // Inicializar campos seleccionados
 // toma todas las keys y las deja tildadas por defecto
-camposSeleccionados.value = informacionMostrar.value.map(campo => campo.key)
+camposSeleccionados.value = informacionMostrar.value.map((campo) => campo.key)
 
 //Variables para guardar los datos del formulario
 const formPropiedades = ref({
@@ -649,15 +861,14 @@ const formConversaciones = ref({
 onMounted(async () => {
   // Cargamos los asesores para el selector del formulario de criterios activos
 
- isUserAdmin.value = await isAdmin();
- //console.log(isUserAdmin.value)
+  isUserAdmin.value = await isAdmin()
+  //console.log(isUserAdmin.value)
 
   const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
     getEstadoAlquiler(),
     PropietariosActivos(),
     getEstadoVenta(),
-    getAsesor()
-
+    getAsesor(),
   ])
 
   let resPermiso
@@ -691,7 +902,9 @@ onMounted(async () => {
 
   //si el usuario es admin que saque el id_usuario:3 del  asesores.value
   if (isUserAdmin.value === false) {
-    asesores.value = asesores.value.filter(a => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18)
+    asesores.value = asesores.value.filter(
+      (a) => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18,
+    )
   }
 
   permisoCriteriosPorFecha.value = resPermisoCriteriosPorFecha?.data ?? false
@@ -708,10 +921,11 @@ const buscar = () => {
     return
   }
   sugerencias.value = propietario.value
-    .filter(p =>
-      p.apellido?.toLowerCase().includes(texto) ||
-      p.nombre?.toLowerCase().includes(texto) ||
-      p.documento?.includes(texto)
+    .filter(
+      (p) =>
+        p.apellido?.toLowerCase().includes(texto) ||
+        p.nombre?.toLowerCase().includes(texto) ||
+        p.documento?.includes(texto),
     )
     .slice(0, 20)
 }
@@ -752,24 +966,24 @@ const submitOfrecimientoVenta = async () => {
 
 const submitDevoluciones = async () => {
   //console.log(formDevoluciones.value)
-  if (!formDevoluciones.value.codigo || !formDevoluciones.value.desde || !formDevoluciones.value.hasta) {
-    showError("Debe ingresar un codigo o rango de fechas")
+  if (
+    !formDevoluciones.value.codigo ||
+    !formDevoluciones.value.desde ||
+    !formDevoluciones.value.hasta
+  ) {
+    showError('Debe ingresar un codigo o rango de fechas')
     return
   }
   try {
     formActual.value = formDevoluciones.value
     await nextTick()
     listadoPropiedadRef.value?.generarPdf()
-
-
   } catch (e) {
-    showError("Error al generar PDF en servidor")
+    showError('Error al generar PDF en servidor')
   }
 }
 
-
 const submitCriteriosActivos = async () => {
-
   formCriterios.value.zona_id = zonasSeleccionadas?.value ?? []
   formCriterios.value.tipo = inmueblesSeleccionados?.value ?? []
 
@@ -790,5 +1004,4 @@ const submitConversaciones = async () => {
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
-
 </script>
