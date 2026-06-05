@@ -376,6 +376,7 @@
                   type="date"
                   class="form-control form-control-sm"
                   v-model="formInformeNovedades.desde"
+                  :max="formInformeNovedades.hasta"
                   required
                 />
               </div>
@@ -385,6 +386,7 @@
                   type="date"
                   class="form-control form-control-sm"
                   v-model="formInformeNovedades.hasta"
+                  :min="formInformeNovedades.desde"
                   required
                 />
               </div>
@@ -774,10 +776,10 @@ const informacionMostrar = ref([])
 const estadosVenta = ref([])
 const asesores = ref([])
 const permisoOfrecimiento = ref(false)
-const propietariosVenta = ref([false])
-const devolucionesVenta = ref([false])
+const propietariosVenta = ref(false)
+const devolucionesVenta = ref(false)
 const permisoCriteriosPorFecha = ref(false)
-const permisoConversacion = ref([false])
+const permisoConversacion = ref(false)
 const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 
@@ -921,15 +923,16 @@ onMounted(async () => {
     getAsesor(),
   ])
 
-  let resPermiso
-  let resPermisoOfrecimiento
-  let resPropietariosVenta
-  let resDevoluciones
-  let resPermisoCriteriosPorFecha
-  let resConversacionVenta
-  let respermisoNovedades
+  let resPermiso = null
+  let resPermisoOfrecimiento = null
+  let resPropietariosVenta = null
+  let resDevoluciones = null
+  let resPermisoCriteriosPorFecha = null
+  let resConversacionVenta = null
+  let respermisoNovedades = null
 
   if (props.sector === 'Alquiler') {
+    console.log('holaaaaaaaa')
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
     respermisoNovedades = await verificarPermiso('listarInformeNovedades')
   } else {
@@ -945,9 +948,9 @@ onMounted(async () => {
   permiso.value = resPermiso?.data ?? false
   propietario.value = resPropietarios.data
   permisoOfrecimiento.value = resPermisoOfrecimiento?.data ?? false
-  propietariosVenta.value = resPropietariosVenta.data
+  propietariosVenta.value = resPropietariosVenta?.data ?? false
   devolucionesVenta.value = resDevoluciones?.data ?? false
-  asesores.value = resAsesores.data
+  asesores.value = resAsesores.data ?? false
   permisoConversacion.value = resConversacionVenta?.data ?? false
   permisoInformeNovedades.value = respermisoNovedades?.data ?? false
   //console.log(permisoInformeNovedades.value)
@@ -1060,6 +1063,10 @@ const submitConversaciones = async () => {
 }
 
 const submitInformeNovedades = async () => {
+  if (!formInformeNovedades.value.desde || !formInformeNovedades.value.hasta) {
+    showError('Debe especificar un rango de fechas')
+    return
+  }
   formActual.value = formInformeNovedades.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
