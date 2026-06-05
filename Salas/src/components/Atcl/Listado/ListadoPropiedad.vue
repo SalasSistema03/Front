@@ -25,6 +25,7 @@
           class="btn w-100 btn-sm mb-2"
           :class="currentForm === 'informe_novedades' ? 'btn-primary' : 'btn-light'"
           @click="currentForm = 'informe_novedades'"
+          v-if="sector === 'Alquiler'"
         >
           Informe de Novedades
         </div>
@@ -353,6 +354,47 @@
                   class="btn btn-sm btn-primary w-100 mt-2"
                   @click="submitPropietariosAlquiler"
                   :disabled="!propietariosVenta"
+                >
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="currentForm === 'informe_novedades'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Informe de Novedades en {{ sector }}</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+              <div class="col-md-6 p-1">
+                <label class="form-label">Desde</label>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  v-model="formInformeNovedades.desde"
+                  required
+                />
+              </div>
+              <div class="col-md-6 p-1">
+                <label class="form-label">Hasta</label>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  v-model="formInformeNovedades.hasta"
+                  required
+                />
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitInformeNovedades()"
+                  :disabled="!permisoInformeNovedades"
                 >
                   Listar
                 </button>
@@ -736,6 +778,7 @@ const propietariosVenta = ref([false])
 const devolucionesVenta = ref([false])
 const permisoCriteriosPorFecha = ref(false)
 const permisoConversacion = ref([false])
+const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 
 // Si es alquiler muestra un conjunto de columnas
@@ -856,6 +899,13 @@ const formConversaciones = ref({
   pertenece: 'conversaciones',
 })
 
+const formInformeNovedades = ref({
+  desde: '',
+  hasta: '',
+  sector: props.sector,
+  pertenece: 'informeNovedades',
+})
+
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
@@ -877,9 +927,11 @@ onMounted(async () => {
   let resDevoluciones
   let resPermisoCriteriosPorFecha
   let resConversacionVenta
+  let respermisoNovedades
 
   if (props.sector === 'Alquiler') {
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
+    respermisoNovedades = await verificarPermiso('listarInformeNovedades')
   } else {
     resPermiso = await verificarPermiso('listarPropiedadesVenta')
     resPermisoOfrecimiento = await verificarPermiso('listarOfrecimientoVenta')
@@ -897,6 +949,8 @@ onMounted(async () => {
   devolucionesVenta.value = resDevoluciones?.data ?? false
   asesores.value = resAsesores.data
   permisoConversacion.value = resConversacionVenta?.data ?? false
+  permisoInformeNovedades.value = respermisoNovedades?.data ?? false
+  //console.log(permisoInformeNovedades.value)
 
   //console.log(asesores.value)
 
@@ -1001,6 +1055,12 @@ const submitConsultasIngresadas = async () => {
 
 const submitConversaciones = async () => {
   formActual.value = formConversaciones.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+const submitInformeNovedades = async () => {
+  formActual.value = formInformeNovedades.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
