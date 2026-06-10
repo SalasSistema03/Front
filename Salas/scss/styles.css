@@ -999,14 +999,14 @@
   font-size: 2vh;
   padding: 0.36vh !important;
 }
-.tabla-impuestos td button {
+.tabla-impuestos button {
   font-weight: bold;
   padding-left: 0.6vh;
   padding-right: 0.6vh;
   padding-top: 0.3vh;
   padding-bottom: 0.3vh;
 }
-.tabla-impuestos td button:hover {
+.tabla-impuestos button:hover {
   background-color: rgba(110, 190, 255, 0.6352941176) !important;
   border: 1px solid rgba(110, 190, 255, 0.6352941176) !important;
 }
@@ -1034,17 +1034,16 @@
   height: 10vh;
   border: 1px solid rgb(0, 85, 185);
 }
-.lista-mas-opciones-impuestos .text-options-impuestos {
+.lista-mas-opciones-impuestos .text-options-impuestos_lista {
   color: rgb(0, 85, 185);
   font-size: 2vh;
 }
-.lista-mas-opciones-impuestos .text-options-impuestos:hover {
-  color: rgba(0, 175, 154, 0.96);
-  background-color: transparent;
-}
-.lista-mas-opciones-impuestos .text-options-impuestos:hover .bi {
-  font-size: 2.5vh;
-  color: rgb(0, 85, 185);
+.lista-mas-opciones-impuestos .text-options-impuestos_lista:hover {
+  padding-left: 2vh !important;
+  color: rgba(0, 175, 154, 0.96) !important;
+  background-color: transparent !important;
+  font-size: 2vh !important;
+  border: none !important;
 }
 
 .tabla_armar_broche .titulo-resultados {
@@ -1053,8 +1052,6 @@
 }
 .tabla_armar_broche .titulo-resultados label {
   color: white !important;
-}
-.tabla_armar_broche {
   max-height: 30vh;
   overflow-y: auto;
   font-size: 2vh;
