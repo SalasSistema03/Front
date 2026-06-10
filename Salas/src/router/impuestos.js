@@ -1,5 +1,3 @@
-
-
 const routesImpuestos = [
   {
     path: '/padrontgi',
@@ -50,12 +48,29 @@ const routesImpuestos = [
     path: '/carga_gas',
     alias: '/impuestos/cargagas',
     name: 'cargagas',
-    component: () =>import('../views/Impuestos/GAS/CargarGASView.vue'),
+    component: () => import('../views/Impuestos/GAS/CargarGASView.vue'),
     meta: {
       requiresAuth: true,
     },
   },
-
+  {
+    path: '/padronapi',
+    alias: '/impuestos/padronapi',
+    name: 'padronapi',
+    component: () => import('../views/Impuestos/API/PadronAPIView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/cargar_api',
+    alias: '/impuestos/cargaapi',
+    name: 'cargaapi',
+    component: () => import('../views/Impuestos/API/CargarAPIView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ]
 
 export default routesImpuestos

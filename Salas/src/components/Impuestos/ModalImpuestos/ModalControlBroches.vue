@@ -3,18 +3,27 @@
     <template #title>Control</template>
 
     <template #body>
-      <div v-for="(item, index) in listaBroches" :key="index" class="input-group mb-3 form-group form-control">
-        <input type="text" class="form-control" :value="item.nombre + ' Cantidad de Broches (' + item.cantidad + ')'" readonly>
+      <div
+        v-for="(item, index) in listaBroches"
+        :key="index"
+        class="input-group mb-3 form-group form-control"
+      >
+        <input
+          type="text"
+          class="form-control"
+          :value="item.nombre + ' Cantidad de Broches (' + item.cantidad + ')'"
+          readonly
+        />
 
         <div class="input-group-append px-2">
           <button class="btn btn-sm btn-primary mx-1" @click="onBajado(item)">Bajado</button>
-          <button class="btn btn-sm btn-outline-danger mx-1" @click="onRechazar(item)">Rechazar</button>
+          <button class="btn btn-sm btn-outline-danger mx-1" @click="onRechazar(item)">
+            Rechazar
+          </button>
         </div>
       </div>
 
-      <div v-if="listaBroches.length === 0" class="text-center">
-        No hay broches para mostrar.
-      </div>
+      <div v-if="listaBroches.length === 0" class="text-center">No hay broches para mostrar.</div>
     </template>
 
     <template #footer>
@@ -27,28 +36,31 @@
 import { defineEmits, ref, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { ObtenerBrochesSinControlar, GasBajado, GasRechazar } from '@/Services/api/Impuestos/tgiApi'
-import { useToast } from '@/composables/useToast';
-const {showSuccess, showError} = useToast();
+import { useToast } from '@/composables/useToast'
+const { showSuccess, showError } = useToast()
 const props = defineProps({
   show: {
     type: Boolean,
-    default: false
+    default: false,
   },
   impuesto: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'success'])
 
 // Variable reactiva para almacenar los broches
 const listaBroches = ref([])
 
 const cargarBroches = async () => {
   try {
-    const response = await ObtenerBrochesSinControlar()
-    console.log(response)
+    const form = {
+      impuesto: props.impuesto,
+    }
+    const response = await ObtenerBrochesSinControlar(form)
+    //console.log(response)
     const itemsValidos = (response.data ?? []).filter((x) => x?.num_broche)
 
     const agrupado = itemsValidos.reduce((acc, item) => {
@@ -57,7 +69,8 @@ const cargarBroches = async () => {
         acc[nombre] = {
           nombre,
           cantidad: 0,
-          fecha_vencimiento: item.fecha_vencimiento
+          fecha_vencimiento: item.fecha_vencimiento,
+          numero_broche: item.num_broche,
         }
       }
       acc[nombre].cantidad += 1
@@ -66,34 +79,44 @@ const cargarBroches = async () => {
 
     listaBroches.value = Object.values(agrupado)
 
-    console.log("Días agrupados:", listaBroches.value);
+    //console.log('Días agrupados:', listaBroches.value)
   } catch (error) {
-    console.error("Error al obtener broches:", error)
+    console.error('Error al obtener broches:', error)
     listaBroches.value = []
   }
 }
 
 const onBajado = async (item) => {
   //console.log("Bajado:", item)
-  try{
-    await GasBajado({ fecha_vencimiento: item.fecha_vencimiento })
-    showSuccess("Broche bajado correctamente")
+  try {
+    await GasBajado({
+      fecha_vencimiento: item.fecha_vencimiento,
+      impuesto: props.impuesto,
+      numero_broche: item.numero_broche,
+    })
+    showSuccess('Broche bajado correctamente')
+    emit('success')
     emit('close')
   } catch (error) {
-    console.error("Error al bajado:", error)
-    showError("Error al bajado el broche")
+    console.error('Error al bajado:', error)
+    showError('Error al bajado el broche')
   }
 }
 
 const onRechazar = async (item) => {
-  //console.log("Rechazar:", item)
-  try{
-    await GasRechazar({ fecha_vencimiento: item.fecha_vencimiento })
-    showSuccess("Broche rechazado correctamente")
+  console.log('Rechazar:', item)
+  try {
+    await GasRechazar({
+      fecha_vencimiento: item.fecha_vencimiento,
+      impuesto: props.impuesto,
+      numero_broche: item.numero_broche,
+    })
+    showSuccess('Broche rechazado correctamente')
+    emit('success')
     emit('close')
   } catch (error) {
-    console.error("Error al rechazar:", error)
-    showError("Error al rechazar el broche")
+    console.error('Error al rechazar:', error)
+    showError('Error al rechazar el broche')
   }
 }
 
@@ -106,6 +129,6 @@ watch(
     } else {
       listaBroches.value = [] // Limpiamos al cerrar si es necesario
     }
-  }
+  },
 )
 </script>
