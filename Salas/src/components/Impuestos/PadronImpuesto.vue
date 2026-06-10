@@ -79,12 +79,7 @@
               <input class="form-check-input" type="checkbox" value="INACTIVO" v-model="filtros" />
               <label class="form-check-label">Inactivos</label>
             </div>
-            <div
-              class="form-check"
-              v-if="
-                props.impuesto === 'agua' || props.impuesto === 'gas' || props.impuesto === 'api'
-              "
-            >
+            <div class="form-check">
               <input class="form-check-input" type="checkbox" value="PENDIENTE" v-model="filtros" />
               <label class="form-check-label">Pendientes</label>
             </div>
