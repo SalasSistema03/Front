@@ -84,6 +84,15 @@
               <label class="form-check-label">Pendientes</label>
             </div>
             <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="MODIFICADO"
+                v-model="filtros"
+              />
+              <label class="form-check-label">Modificados</label>
+            </div>
+            <div class="form-check">
               <input class="form-check-input" type="checkbox" value="L" v-model="filtros" />
               <label class="form-check-label">Adm inmobiliario</label>
             </div>
