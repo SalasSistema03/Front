@@ -6,210 +6,210 @@
       <div class="row d-flex justify-content-center">
 
 
-<!-- DATOS DEL CLIENTE -->
-          <div class="col-md-6 mb-1">
-            <div class="card">
-              <div class="card-header card-header-cliente">
-                <h5>Datos del Cliente</h5>
+        <!-- DATOS DEL CLIENTE -->
+        <div class="col-md-6 mb-1">
+          <div class="card">
+            <div class="card-header card-header-cliente">
+              <h5>Datos del Cliente</h5>
+            </div>
+            <div class="card-body-cliente-datos form-group row px-3 py-0 mb-2">
+              <div class="col-4">
+                <label for="telefono">Telefono</label>
+                <input type="number" class="form-control form-control-sm" id="telefono" v-model="telefono">
               </div>
-              <div class="card-body-cliente-datos form-group row px-3 py-0 mb-2">
-                <div class="col-4">
-                  <label for="telefono">Telefono</label>
-                  <input type="number" class="form-control form-control-sm" id="telefono" v-model="telefono">
-                </div>
-                <div class="col-4">
-                  <label for="nombre">Nombre</label>
-                  <input type="text" class="form-control form-control-sm" id="nombre" v-model="nombre">
-                </div>
-                <div class="col-4">
-                  <label for="asesor">Asesor</label>
-                  <select class="form-control form-control-sm" id="asesor" v-model="id_asesor" v-if="tienePermiso">
-                    <option value="">Seleccione</option>
-                    <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
-                      {{ asesor.username }}
-                    </option>
-                  </select>
-                  <input type="text" class="form-control form-control-sm" id="asesor" :value="username" readonly v-else>
-                </div>
-                <div class="col-4">
-                  <label for="ingreso">Ingreso por</label>
-                  <select class="form-control form-control-sm" id="ingreso" v-model="ingreso_seleccionado">
-                    <option value="">Seleccione</option>
-                    <option v-for="ingreso in ingreso" :key="ingreso" :value="ingreso">
-                      {{ ingreso }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-4">
-                  <label for="perteneceInmobiliaria">¿Pert. Inmob.?</label>
-                  <select class="form-control form-control-sm" id="perteneceInmobiliaria"
-                    v-model="pertenece_a_inmobiliaria" @change="PerteneceInmobiliaria">
-                    <option value="">Seleccione</option>
-                    <option value="N">NO</option>
-                    <option value="S">SI</option>
-                  </select>
-                </div>
-                <div class="col-4" v-show="showNombreInmobiliaria != false">
-                  <label for="nombreInmobiliaria">Inmobiliaria</label>
-                  <input type="text" class="form-control form-control-sm" id="nombreInmobiliaria"
-                    v-model="nombre_de_inmobiliaria">
+              <div class="col-4">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control form-control-sm" id="nombre" v-model="nombre">
+              </div>
+              <div class="col-4">
+                <label for="asesor">Asesor</label>
+                <select class="form-control form-control-sm" id="asesor" v-model="id_asesor" v-if="tienePermiso">
+                  <option value="">Seleccione</option>
+                  <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
+                    {{ asesor.username }}
+                  </option>
+                </select>
+                <input type="text" class="form-control form-control-sm" id="asesor" :value="username" readonly v-else>
+              </div>
+              <div class="col-4">
+                <label for="ingreso">Ingreso por</label>
+                <select class="form-control form-control-sm" id="ingreso" v-model="ingreso_seleccionado">
+                  <option value="">Seleccione</option>
+                  <option v-for="ingreso in ingreso" :key="ingreso" :value="ingreso">
+                    {{ ingreso }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label for="perteneceInmobiliaria">¿Pert. Inmob.?</label>
+                <select class="form-control form-control-sm" id="perteneceInmobiliaria"
+                  v-model="pertenece_a_inmobiliaria" @change="PerteneceInmobiliaria">
+                  <option value="">Seleccione</option>
+                  <option value="N">NO</option>
+                  <option value="S">SI</option>
+                </select>
+              </div>
+              <div class="col-4" v-show="showNombreInmobiliaria != false">
+                <label for="nombreInmobiliaria">Inmobiliaria</label>
+                <input type="text" class="form-control form-control-sm" id="nombreInmobiliaria"
+                  v-model="nombre_de_inmobiliaria">
+
+              </div>
+              <div class="col-12">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control form-control-sm" id="observaciones" rows="1"
+                  v-model="observaciones"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ------------------------CRITERIO DE BUSQUEDA--------------------------------------------- -->
+        <div class="col-md-6 mb-1">
+          <div class="card ">
+            <div class="row card-header card-header-cliente">
+
+              <h5>Criterio de Busqueda</h5>
+            </div>
+            <div class="card-body-cliente-datos form-group  row px-3 py-0 mb-2">
+              <div class="col-6">
+                <label for="tipoInmueble">Tipo de Inmueble</label>
+                <select class="form-control" id="tipoInmueble" v-model="id_tipo_inmueble">
+                  <option value="">Seleccione</option>
+                  <option v-for="inmueble in inmuebles" :key="inmueble.id" :value="inmueble.id">
+                    {{ inmueble.inmueble }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="cantidadDormitorios">Cant. de Dormitorios</label>
+                <input type="number" class="form-control" id="cantidadDormitorios" v-model="cant_dormitorios">
+              </div>
+              <div class="col-4">
+                <label for="cantidadBanios">Cochera</label>
+                <select class="form-control" id="" v-model="cochera">
+                  <option value="">Seleccione</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label for="zonaInmueble">Zona</label>
+                <select class="form-control" v-model="id_zona">
+                  <option value="">Seleccione</option>
+                  <option v-for="zona in zonas" :key="zona.id" :value="zona.id">
+                    {{ zona.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-4 mt-4">
+                <button class="btn btn-secondary btn-sm w-100 " @click="asignarCriterio"><i
+                    class="bi bi-plus-square"></i></button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- PROPiedad Asignada -->
+        <div class="col-md-6 mb-1">
+          <div class="card">
+            <div class="row card-header card-header-cliente">
+              <div class="col-10">
+                <h5>Propiedad Asignada</h5>
+              </div>
+              <div class="col-2">
+                <button class=" btn btn-secondary btn-sm w-100" @click="abirBusquedaPropiedadVentaModal"><i
+                    class="bi bi-house-add"></i></button>
+              </div>
+
+            </div>
+            <div class="form-group row card-body-cliente">
+
+              <div class="col-12  ">
+                <div class="tabla_clientes">
+                  <table class="table table-sm titulo_tabla">
+                    <thead>
+                      <tr>
+                        <th>Cod - Venta</th>
+                        <th>Direccion</th>
+                        <th>Fecha Asignacion</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(prop, index) in propiedadesAsignadas" :key="prop.id">
+                        <td>{{ prop.cod_venta }}</td>
+                        <td>{{ prop.calle }}</td>
+                        <td>{{ prop.fecha_asignacion }}</td>
+                        <td>
+                          <button class="btn btn-danger btn-sm mx-1" @click="eliminarPropiedad(index)"
+                            v-if="!prop.id_con_prop_venta">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
 
                 </div>
-                <div class="col-12">
-                  <label for="observaciones">Observaciones</label>
-                  <textarea class="form-control form-control-sm" id="observaciones" rows="1"
-                    v-model="observaciones"></textarea>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-1">
+          <div class="card ">
+            <div class="card-header card-header-cliente">
+              <h5>Lista criterio de búsqueda</h5>
+            </div>
+            <div class="form-group row card-body-cliente">
+
+              <div class="col-12 ">
+                <div class="tabla_clientes">
+                  <table class="table table-sm titulo_tabla">
+                    <thead>
+                      <tr>
+                        <th>Inmueble</th>
+                        <th>Cant. Dorm.</th>
+                        <th>Cochera</th>
+                        <th>Zona</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(criterio, index) in listaCriterios" :key="index">
+                        <td>{{ criterio.tipo_inmueble_nombre }}</td>
+                        <td>{{ criterio.cant_dormitorios }}</td>
+                        <td>{{ criterio.cochera }}</td>
+                        <td>{{ criterio.zona_nombre }}</td>
+                        <td>{{ criterio.fecha_criterio }}</td>
+                        <td>{{ criterio.estado_criterio_venta }}</td>
+                        <td>
+                          <button class="btn btn-danger btn-sm mx-1" @click="eliminarCriterio(index)"
+                            v-if="!criterio.id_criterio_venta">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-<!-- ------------------------CRITERIO DE BUSQUEDA--------------------------------------------- -->
-          <div class="col-md-6 mb-1">
-            <div class="card ">
-              <div class="row card-header card-header-cliente">
-
-                  <h5>Criterio de Busqueda</h5>
-              </div>
-              <div class="card-body-cliente-datos form-group  row px-3 py-0 mb-2">
-                <div class="col-6">
-                  <label for="tipoInmueble">Tipo de Inmueble</label>
-                  <select class="form-control" id="tipoInmueble" v-model="id_tipo_inmueble">
-                    <option value="">Seleccione</option>
-                    <option v-for="inmueble in inmuebles" :key="inmueble.id" :value="inmueble.id">
-                      {{ inmueble.inmueble }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <label for="cantidadDormitorios">Cant. de Dormitorios</label>
-                  <input type="number" class="form-control" id="cantidadDormitorios" v-model="cant_dormitorios">
-                </div>
-                <div class="col-4">
-                  <label for="cantidadBanios">Cochera</label>
-                  <select class="form-control" id="" v-model="cochera">
-                    <option value="">Seleccione</option>
-                    <option value="SI">SI</option>
-                    <option value="NO">NO</option>
-                  </select>
-                </div>
-                <div class="col-4">
-                  <label for="zonaInmueble">Zona</label>
-                  <select class="form-control" v-model="id_zona">
-                    <option value="">Seleccione</option>
-                    <option v-for="zona in zonas" :key="zona.id" :value="zona.id">
-                      {{ zona.name }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-4 mt-4">
-                  <button class="btn btn-secondary btn-sm w-100 " @click="asignarCriterio"><i
-                      class="bi bi-plus-square"></i></button>
-                </div>
-
-              </div>
-            </div>
-          </div>
+        </div>
 
 
-
-<!-- PROPiedad Asignada -->
-          <div class="col-md-6 mb-1">
-            <div class="card">
-              <div class="row card-header card-header-cliente">
-                <div class="col-10">
-                  <h5>Propiedad Asignada</h5>
-                </div>
-                <div class="col-2">
-                  <button class=" btn btn-secondary btn-sm w-100" @click="abirBusquedaPropiedadVentaModal"><i
-                      class="bi bi-house-add"></i></button>
-                </div>
-
-              </div>
-              <div class="form-group row card-body-cliente">
-
-                <div class="col-12  ">
-                  <div class="tabla_clientes">
-                    <table class="table table-sm titulo_tabla">
-                      <thead>
-                        <tr>
-                          <th>Cod - Venta</th>
-                          <th>Direccion</th>
-                          <th>Fecha Asignacion</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(prop, index) in propiedadesAsignadas" :key="prop.id">
-                          <td>{{ prop.cod_venta }}</td>
-                          <td>{{ prop.calle }}</td>
-                          <td>{{ prop.fecha_asignacion }}</td>
-                          <td>
-                            <button class="btn btn-danger btn-sm mx-1" @click="eliminarPropiedad(index)"
-                              v-if="!prop.id_con_prop_venta">
-                              <i class="bi bi-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 mb-1">
-            <div class="card ">
-              <div class="card-header card-header-cliente">
-                <h5>Lista criterio de búsqueda</h5>
-              </div>
-              <div class="form-group row card-body-cliente">
-
-                <div class="col-12 ">
-                  <div class="tabla_clientes">
-                    <table class="table table-sm titulo_tabla">
-                      <thead>
-                        <tr>
-                          <th>Inmueble</th>
-                          <th>Cant. Dorm.</th>
-                          <th>Cochera</th>
-                          <th>Zona</th>
-                          <th>Fecha</th>
-                          <th>Estado</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(criterio, index) in listaCriterios" :key="index" >
-                          <td>{{ criterio.tipo_inmueble_nombre }}</td>
-                          <td>{{ criterio.cant_dormitorios }}</td>
-                          <td>{{ criterio.cochera }}</td>
-                          <td>{{ criterio.zona_nombre }}</td>
-                          <td>{{ criterio.fecha_criterio }}</td>
-                          <td>{{ criterio.estado_criterio_venta }}</td>
-                          <td>
-                            <button class="btn btn-danger btn-sm mx-1" @click="eliminarCriterio(index)"
-                              v-if="!criterio.id_criterio_venta">
-                              <i class="bi bi-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-      <div class="col-md-4 d-flex justify-content-center px-5 mt-2">
-        <button type="submit" class="btn btn-primary btn-sm w-50" @click="handleGuardar">Guardar</button>
+        <div class="col-md-4 d-flex justify-content-center px-5 mt-2">
+          <button type="submit" class="btn btn-primary btn-sm w-50" @click="handleGuardar">Guardar</button>
+        </div>
       </div>
-    </div>
     </div>
 
 
@@ -533,6 +533,10 @@ export default {
         nombre_de_inmobiliaria: this.nombre_de_inmobiliaria,
         observaciones: this.observaciones,
         sector_asesor: this.sector_asesor
+      }
+      if (!cliente.ingreso) {
+        this.showError('Debe seleccionar por donde ingreso la persona')
+        return
       }
 
       const data = {
