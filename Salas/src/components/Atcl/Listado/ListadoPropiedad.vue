@@ -353,7 +353,7 @@
                   type="button"
                   class="btn btn-sm btn-primary w-100 mt-2"
                   @click="submitPropietariosAlquiler"
-                  :disabled="!propietariosVenta"
+                  :disabled="!propietariosAlquiler"
                 >
                   Listar
                 </button>
@@ -777,6 +777,7 @@ const estadosVenta = ref([])
 const asesores = ref([])
 const permisoOfrecimiento = ref(false)
 const propietariosVenta = ref(false)
+const propietariosAlquiler = ref(false)
 const devolucionesVenta = ref(false)
 const permisoCriteriosPorFecha = ref(false)
 const permisoConversacion = ref(false)
@@ -926,14 +927,16 @@ onMounted(async () => {
   let resPermiso = null
   let resPermisoOfrecimiento = null
   let resPropietariosVenta = null
+  let resPropietariosAlquiler = null
   let resDevoluciones = null
   let resPermisoCriteriosPorFecha = null
   let resConversacionVenta = null
   let respermisoNovedades = null
 
   if (props.sector === 'Alquiler') {
-    console.log('holaaaaaaaa')
+    //console.log('holaaaaaaaa')
     resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
+    resPropietariosAlquiler = await verificarPermiso('listarPropietarioAlquiler')
     respermisoNovedades = await verificarPermiso('listarInformeNovedades')
   } else {
     resPermiso = await verificarPermiso('listarPropiedadesVenta')
@@ -949,6 +952,7 @@ onMounted(async () => {
   propietario.value = resPropietarios.data
   permisoOfrecimiento.value = resPermisoOfrecimiento?.data ?? false
   propietariosVenta.value = resPropietariosVenta?.data ?? false
+  propietariosAlquiler.value = resPropietariosAlquiler?.data ?? false
   devolucionesVenta.value = resDevoluciones?.data ?? false
   asesores.value = resAsesores.data ?? false
   permisoConversacion.value = resConversacionVenta?.data ?? false
