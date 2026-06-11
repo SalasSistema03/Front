@@ -4,7 +4,7 @@
     <form @submit.prevent="handleSubmit" class="row d-flex align-items-start px-3" autocomplete="off" novalidate>
       <div class="col-md-6 row">
         <div class="form-group col-md-4 px-1">
-          <label for="input-calle" class="form-label">Calle  <span class="text-danger">*</span></label>
+          <label for="input-calle" class="form-label">Calle <span class="text-danger">*</span></label>
           <div class="position-relative">
             <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
               v-model="calleSeleccionada" @input="filtrarCalles" @focus="mostrarLista" @blur="ocultarSugerencias">
@@ -91,8 +91,9 @@
         <div class="form-group col-md-3 px-1">
           <label for="input-cartel" class="form-label">Cartel</label>
           <select class="form-select form-select-sm" name="cartel" id="input-cartel" v-model="formData.cartel">
-            <option value="SI">Si</option>
-            <option value="NO">No</option>
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+            <option value="PENDIENTE">PENDIENTE</option>
           </select>
         </div>
 
