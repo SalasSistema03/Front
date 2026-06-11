@@ -325,7 +325,7 @@ export default {
       return this.propiedad?.llave
     },
     cartelDisplay() {
-      return this.propiedad?.cartel === 'SI' ? 'SI' : 'NO'
+      return this.propiedad?.cartel || 'NO'
     },
     comentarioLlave() {
       return this.propiedad?.comentario_llave || 'Sin comentario'

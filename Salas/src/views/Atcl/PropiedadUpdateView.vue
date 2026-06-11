@@ -81,7 +81,7 @@
           <select class="form-select form-select-sm" name="cartel" id="input-cartel" v-model="cartel">
             <option value="SI">SI</option>
             <option value="NO">NO</option>
-
+            <option value="PENDIENTE">PENDIENTE</option>
           </select>
         </div>
         <div class="form-group col-md-9 px-1 pt-3">

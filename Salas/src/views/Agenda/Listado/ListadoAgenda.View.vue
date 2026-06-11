@@ -39,12 +39,44 @@
       </div>
     </div>
     <div class="form-group col-12 p-3 m-0">
-      <button
-        class="btn btn-sm btn-primary w-50"
-        type="button"
-        @click="listar"
-        :disabled="!permisoAgenda"
-      >
+      <button class="btn btn-sm btn-primary w-50" type="button" @click="listar" :disabled="!permisoAgenda">
+        Listar
+      </button>
+    </div>
+  </div>
+
+  <div class="card m-5">
+    <div class="card-header agenda_listado_card_header p-0">Listado Muestra</div>
+    <div class="card-body agenda_listado_card_body row p-3 m-0 d-flex justify-content-between">
+      <div class="form-group col-2">
+        <label class="form-label" for="">Sector</label>
+        <select class="form-control" v-model="sectorMuestraSeleccionado">
+          <option value="">Seleccione</option>
+          <option v-for="sector in sectoresMuestra" :key="sector">
+            {{ sector }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group col-2">
+        <label class="form-label" for="">Fecha Inicio</label>
+        <input class="form-control" type="date" v-model="fechaInicioMuestra" :max="fechaFinMuestra" />
+      </div>
+      <div class="form-group col-2">
+        <label class="form-label" for="">Fecha Fin</label>
+        <input class="form-control" type="date" v-model="fechaFinMuestra" :min="fechaInicioMuestra" />
+      </div>
+
+      <div class="form-group col-2">
+        <label class="form-label" for="">Estado</label>
+        <select class="form-control" v-model="estadoMuestra">
+          <option value="1">Activo</option>
+          <option value="0">Inactivo</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group col-12 p-3 m-0">
+      <button class="btn btn-sm btn-primary w-50" type="button" @click="listarMuestra" :disabled="!permisoAgenda">
         Listar
       </button>
     </div>
@@ -61,10 +93,10 @@ import { getSectores, UsuariosEnAgenda } from '../../../Services/api/Agenda/Agen
 import ListadoAgendaPdfView from './ListadoAgendaPdfView.vue'
 import { verificarPermiso } from '@/Services/api/Atcl/AtclApi'
 
-// VARIABLES IMPORTADAS
+// CONSTANTES IMPORTADAS
 const { showError } = useToast()
 
-// VARIABLES REACTIVAS
+// CONSTANTES REACTIVAS
 const sectores = ref([])
 const usuarios = ref([])
 const listadoAgendaRef = ref(null)
@@ -78,6 +110,13 @@ const fecha_inicio = ref(null)
 const sectorSeleccionado = ref('')
 const permisoAgenda = ref(false)
 
+// FILTROS MUESTRA
+const sectorMuestraSeleccionado = ref('')
+const fechaInicioMuestra = ref(null)
+const fechaFinMuestra = ref(null)
+const estadoMuestra = ref(1)
+const sectoresMuestra = ref(['Alquiler', 'Venta'])
+
 // ON MOUNTED
 onMounted(async () => {
   let permisoBotonAgenda
@@ -89,6 +128,9 @@ onMounted(async () => {
     // Traer sectores
     const response = await getSectores()
     sectores.value = response.data
+
+
+    //console.log(sectoresMuestra.value)
   } catch (error) {
     console.error('Error al traer sectores', error)
   }
@@ -122,6 +164,7 @@ const listar = async () => {
       fecha_fin: fecha_fin.value,
       fecha_inicio: fecha_inicio.value,
       sector: sectorSeleccionado.value,
+      listado: 'listadoAgenda'
     }
 
     if (form.usuario === null || form.usuario === '') {
@@ -144,6 +187,42 @@ const listar = async () => {
     //console.log(form)
     //const response = await listarAgenda(form)
     //console.log(response.data)
+  } catch (error) {
+    console.error('Error al listar agenda', error)
+  }
+}
+
+// LISTAR MUESTRA
+const listarMuestra = async () => {
+  try {
+    const form = {
+      estado: estadoMuestra.value,
+      fecha_fin: fechaFinMuestra.value,
+      fecha_inicio: fechaInicioMuestra.value,
+      sector: sectorMuestraSeleccionado.value,
+      listado: 'AgendaMuestra'
+    }
+
+    if (form.sector === '') {
+      showError('Debe seleccionar un sector para listar la agenda')
+      return
+    }
+    if (form.fecha_inicio === null || form.fecha_fin === null) {
+      showError('Debe seleccionar un rango de fechas para listar la agenda')
+      return
+    }
+
+    if (form.sector == 'Alquiler') {
+      form.sector = 3
+    } else {
+      form.sector = 2
+    }
+
+    formAgenda.value = form
+    await nextTick()
+    listadoAgendaRef.value?.generarPdf()
+
+
   } catch (error) {
     console.error('Error al listar agenda', error)
   }
