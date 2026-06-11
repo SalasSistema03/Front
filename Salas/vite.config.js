@@ -26,6 +26,6 @@ export default defineConfig({
     sourcemap: false, // Esto evita que el código original sea legible en la pestaña "Sources"
     outDir: '../../backEnd/public',
     // CAMBIA ESTO A FALSE:
-    emptyOutDir: false,
+    emptyOutDir: true,
   },
 })
