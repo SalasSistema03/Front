@@ -228,12 +228,8 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-primary w-100 mt-2"
-                  @click="submitPropietariosAlquiler"
-                  :disabled="!propietariosAlquiler"
-                >
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
+                  :disabled="!propietariosAlquiler">
                   Listar
                 </button>
               </div>
@@ -747,13 +743,17 @@ const buscar = () => {
     formPropietarios.value.propietario = null
     return
   }
+  const vistos = new Set()
   sugerencias.value = propietario.value
-    .filter(
-      (p) =>
+    .filter((p) => {
+      if (vistos.has(p.id)) return false
+      vistos.add(p.id)
+      return (
         p.apellido?.toLowerCase().includes(texto) ||
         p.nombre?.toLowerCase().includes(texto) ||
-        p.documento?.includes(texto),
-    )
+        p.documento?.includes(texto)
+      )
+    })
     .slice(0, 20)
 }
 
