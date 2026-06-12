@@ -36,6 +36,45 @@
                 placeholder="Ej: 123" v-model="alquiler.FTribunales">
             </div>
 
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Flyer IG</label>
+              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.flyer_a"
+                readonly>
+              <input v-else type="date" class="form-control text-center" v-model="alquiler.flyer_a">
+            </div>
+
+            <div class="form-group  px-1 col-md-2 ">
+              <label class="text-center form-label" id="basic-addon1">Reel IG</label>
+              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.reel_a"
+                readonly>
+              <input v-else type="date" class="form-control text-center" v-model="alquiler.reel_a">
+            </div>
+
+            <div class="form-group  px-1 col-md-1 ">
+              <label class="text-center form-label" id="basic-addon1">Web</label>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.web_a"
+                readonly>
+              <select v-else class="form-select" aria-label="Default select example" v-model="alquiler.web_a">
+                <option value="">-</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+
+            <div class="form-group  px-1 col-md-2">
+              <label class="text-center form-label" id="basic-addon1">Cap. Interno</label>
+              <input v-if="propiedad" type="text" class="form-control text-center"
+                :value="propiedad.usuario_captador_int_a?.username" readonly>
+              <select v-else class="form-select" aria-label="Default select example"
+                v-model.number="alquiler.captador_interno_a">
+                <option v-for="captador in (props.captadoresInternos?.original || [])" :key="captador?.id || captador"
+                  :value="captador?.id">
+                  {{ captador?.username }}
+                </option>
+              </select>
+            </div>
+
+
             <div class="form-group  px-1 col-md-4">
               <label class="text-center form-label" for="">Estado de
                 Alquiler</label>
@@ -229,6 +268,10 @@ const props = defineProps({
   propiedadUpdate: {
     type: Object,
     default: null
+  },
+  captadoresInternos: {
+    type: Object,
+    default: null
   }
 })
 const fichaPdfRef = ref(null)
@@ -256,6 +299,10 @@ watch(() => props.propiedadUpdate, (newValue) => {
     alquiler.mascota = newValue.mascota || ''
     alquiler.descripcion_estado_alquiler = newValue.historial_estados_alquiler?.comentario_alquiler || ''
     alquiler.fecha_baja_temporal_alquiler = newValue.historial_estados_alquiler?.reactiva_fecha_alquiler?.split(' ')[0] || ''
+    alquiler.flyer_a = newValue.flyer_a || ''
+    alquiler.reel_a = newValue.reel_a || ''
+    alquiler.web_a = newValue.web_a || ''
+    alquiler.captador_interno_a = newValue.captador_int_a || ''
 
     // Precargar folios si existen
     if (newValue.folios && newValue.folios.length > 0) {
@@ -369,6 +416,10 @@ const alquiler = reactive({
   mascota: '',
   descripcion_estado_alquiler: '',
   fecha_baja_temporal_alquiler: '',
+  flyer_a: '',
+  reel_a: '',
+  web_a: '',
+  captador_interno_a: '',
 })
 
 // Lógica equivalente al toggleDescripcion del blade
