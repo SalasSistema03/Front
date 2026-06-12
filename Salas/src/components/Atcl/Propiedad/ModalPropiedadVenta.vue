@@ -12,10 +12,12 @@
           <input type="hidden" id="formulario" value="">
           <div class="row g-3">
             <div class="form-group  px-1 col-md-2 ">
-              <label class="text-center readonly form-label" id="basic-addon1">Codigo <span class="text-danger">*</span></label>
-              <input v-if="propiedad" type="number" class="form-control text-center readonly" :value="propiedad.cod_venta"
-                readonly>
-              <input v-else type="number" class="form-control text-center readonly " id="" min="0" v-model="venta.cod_venta">
+              <label class="text-center readonly form-label" id="basic-addon1">Codigo <span
+                  class="text-danger">*</span></label>
+              <input v-if="propiedad" type="number" class="form-control text-center readonly"
+                :value="propiedad.cod_venta" readonly>
+              <input v-else type="number" class="form-control text-center readonly " id="" min="0"
+                v-model="venta.cod_venta">
             </div>
             <div class="form-group  px-1 col-md-3">
               <label class="text-center readonly form-label" for="">Estado de Venta</label>
@@ -39,21 +41,24 @@
 
             <div class="form-group  px-1 col-md-2 ">
               <label class="text-center readonly form-label" id="basic-addon1">Flyer IG</label>
-              <input v-if="propiedad" type="date" class="form-control text-center readonly" :value="propiedad.flyer" readonly>
-              <input v-else type="date" class="form-control text-center readonly" v-model="venta.flyer">
+              <input v-if="propiedad" type="date" class="form-control text-center readonly" :value="propiedad.flyer_v"
+                readonly>
+              <input v-else type="date" class="form-control text-center readonly" v-model="venta.flyer_v">
             </div>
 
 
             <div class="form-group  px-1 col-md-2 ">
               <label class="text-center readonly form-label" id="basic-addon1">Reel IG</label>
-              <input v-if="propiedad" type="date" class="form-control text-center readonly" :value="propiedad.reel" readonly>
-              <input v-else type="date" class="form-control text-center readonly" v-model="venta.reel">
+              <input v-if="propiedad" type="date" class="form-control text-center readonly" :value="propiedad.reel_v"
+                readonly>
+              <input v-else type="date" class="form-control text-center readonly" v-model="venta.reel_v">
             </div>
 
             <div class="form-group  px-1 col-md-1 ">
               <label class="text-center readonly form-label" id="basic-addon1">Web</label>
-              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="propiedad.web" readonly>
-              <select v-else class="form-select" aria-label="Default select example" v-model="venta.web">
+              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="propiedad.web_v"
+                readonly>
+              <select v-else class="form-select" aria-label="Default select example" v-model="venta.web_v">
                 <option value="">-</option>
                 <option value="SI">
                   SI</option>
@@ -70,7 +75,8 @@
               <label class="text-center readonly form-label" id="basic-addon1">
               </label>
               <!-- Si hay propiedad, mostrar moneda según prioridad -->
-              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="monedaVentaDisplay" readonly>
+              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="monedaVentaDisplay"
+                readonly>
               <!-- Si no hay propiedad, mostrar select editable -->
               <select v-else class="form-select" aria-label="Default select example" v-model="venta.moneda_venta">
                 <option value="2" selected>u$s</option>
@@ -80,17 +86,18 @@
             <div class=" form-group  px-1 col-md-2 ">
               <label class="text-center readonly form-label" id="basic-addon1">Precio</label>
               <!-- Si hay propiedad, mostrar precio según prioridad -->
-              <input v-if="propiedad" type="number" class="form-control text-center readonly" :value="precioVentaDisplay"
-                readonly>
+              <input v-if="propiedad" type="number" class="form-control text-center readonly"
+                :value="precioVentaDisplay" readonly>
               <!-- Si no hay propiedad, mostrar input editable -->
-              <input v-else type="number" class="form-control text-center readonly " id="" min="0" v-model="venta.monto_venta">
+              <input v-else type="number" class="form-control text-center readonly " id="" min="0"
+                v-model="venta.monto_venta">
             </div>
 
             <div class="form-group  px-1 col-md-2">
               <label class="text-center readonly form-label" id="basic-addon1">Tasacion</label>
               <!-- Si hay propiedad, mostrar fecha de tasación más reciente -->
-              <input v-if="propiedad" type="date" class="form-control text-center readonly" :value="fechaTasacionDisplay"
-                readonly>
+              <input v-if="propiedad" type="date" class="form-control text-center readonly"
+                :value="fechaTasacionDisplay" readonly>
               <!-- Si no hay propiedad, mostrar input editable -->
               <input v-else type="date" class="form-control text-center readonly" v-model="venta.fecha_tasacion_venta">
             </div>
@@ -99,22 +106,23 @@
               <label class="text-center readonly form-label" id="basic-addon1">
               </label>
               <!-- Si hay propiedad, mostrar moneda según prioridad -->
-              <input v-if="propiedad.tasaciones?.[0]?.tasacion_dolar_venta" type="text" class="form-control text-center readonly"
-                value="U$D" readonly>
+              <input v-if="propiedad.tasaciones?.[0]?.tasacion_dolar_venta" type="text"
+                class="form-control text-center readonly" value="U$D" readonly>
               <input v-else type="text" class="form-control text-center readonly" value="$" readonly>
             </div>
 
             <div class="form-group  px-1 col-md-2">
               <label class="text-center readonly form-label" id="basic-addon1">Valor Tasacion</label>
-              <input v-if="propiedad" type="number" class="form-control text-center readonly" :value="montoTasacion" readonly>
+              <input v-if="propiedad" type="number" class="form-control text-center readonly" :value="montoTasacion"
+                readonly>
               <input v-else type="number" class="form-control text-center readonly " id="" placeholder="Ej: 50000"
                 v-model="venta.tasacion_venta">
             </div>
 
             <div class="form-group  px-1 col-md-1">
               <label class="text-center readonly form-label" id="basic-addon1">Exclusividad</label>
-              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="propiedad.exclusividad_venta"
-                readonly>
+              <input v-if="propiedad" type="text" class="form-control text-center readonly"
+                :value="propiedad.exclusividad_venta" readonly>
               <select v-else class="form-select" aria-label="Default select example" v-model="venta.exclusividad_venta">
                 <option value="">-</option>
                 <option value="SI">
@@ -125,8 +133,8 @@
             </div>
             <div class="form-group  px-1 col-md-1">
               <label class="text-center readonly form-label" id="basic-addon1">Comparte</label>
-              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="propiedad.comparte_venta"
-                readonly>
+              <input v-if="propiedad" type="text" class="form-control text-center readonly"
+                :value="propiedad.comparte_venta" readonly>
               <select v-else class="form-select" aria-label="Default select example" v-model="venta.comparte_venta">
                 <option value="">-</option>
                 <option value="SI">
@@ -137,8 +145,8 @@
             </div>
             <div class="form-group  px-1 col-md-1">
               <label class="text-center readonly form-label" id="basic-addon1">Condicionado</label>
-              <input v-if="propiedad" type="text" class="form-control text-center readonly" :value="propiedad.condicionado_venta"
-                readonly>
+              <input v-if="propiedad" type="text" class="form-control text-center readonly"
+                :value="propiedad.condicionado_venta" readonly>
               <select v-else class="form-select" aria-label="Default select example" v-model="venta.condicionado_venta">
                 <option value="">-</option>
                 <option value="SI">
@@ -159,7 +167,8 @@
 
             <div class="form-group px-1 col-md-1" v-if="propiedad">
               <label class="text-center readonly form-label">Folio</label>
-              <input type="text" class="form-control text-center readonly" :value="propiedad.buscarContratoMasReciente?.carpeta">
+              <input type="text" class="form-control text-center readonly"
+                :value="propiedad.buscarContratoMasReciente?.carpeta">
             </div>
             <div class="form-group px-1 col-md-2" v-if="propiedad">
               <label class="text-center readonly form-label">Inicio Contrato</label>
@@ -173,7 +182,8 @@
             </div>
             <div class="form-group px-1 col-md-2" v-if="propiedad">
               <label class="text-center readonly form-label">Alquiler</label>
-              <input type="number" class="form-control text-center readonly" :value="propiedad.detalleContrato?.monto_alquiler">
+              <input type="number" class="form-control text-center readonly"
+                :value="propiedad.detalleContrato?.monto_alquiler">
             </div>
 
 
@@ -196,7 +206,8 @@
                 Aut.</label>
               <input v-if="propiedad" type="date" class="form-control text-center readonly"
                 :value="propiedad.fecha_autorizacion_venta" readonly>
-              <input v-else type="date" class="form-control text-center readonly" v-model="venta.fecha_autorizacion_venta">
+              <input v-else type="date" class="form-control text-center readonly"
+                v-model="venta.fecha_autorizacion_venta">
             </div>
             <div class="form-group  px-1 col-md-3 ">
               <label class="text-center readonly form-label" id="basic-addon1">Comentario
@@ -209,8 +220,8 @@
             <div class="form-group  px-1 col-md-2">
               <label class="text-center readonly form-label" id="basic-addon1">Fecha
                 Alta</label>
-              <input v-if="propiedad" type="date" class="form-control text-center readonly" :value="propiedad.venta_fecha_alta"
-                readonly>
+              <input v-if="propiedad" type="date" class="form-control text-center readonly"
+                :value="propiedad.venta_fecha_alta" readonly>
               <input v-else type="date" class="form-control text-center readonly" v-model="venta.venta_fecha_alta">
             </div>
             <div class="form-group px-1 col-md-2" v-if="propiedad">
@@ -225,9 +236,9 @@
             <div class="form-group  px-1 col-md-1">
               <label class="text-center readonly form-label" id="basic-addon1">Cap. Interno</label>
               <input v-if="propiedad" type="text" class="form-control text-center readonly"
-                :value="propiedad.usuario_captador_int?.username" readonly>
+                :value="propiedad.usuario_captador_int_v?.username" readonly>
               <select v-else class="form-select" aria-label="Default select example"
-                v-model.number="venta.captador_interno">
+                v-model.number="venta.captador_interno_v">
 
                 <option v-for="captador in (props.captadoresInternos?.original || [])" :key="captador?.id || captador"
                   :value="captador?.id">
@@ -271,18 +282,18 @@
               <input v-else type="date" class="form-control text-center readonly" name="fecha_baja_temporal_venta"
                 v-model="venta.fecha_baja_temporal_venta">
             </div>
-            <div class = "col-md-3 row pt-3">
+            <div class="col-md-3 row pt-3">
               <div v-if="propiedad" class="form-group  col-md-12 pt-1">
-              <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-                data-bs-target="#novedadesVentaPropiedad">
-                Novedades Venta
-              </button>
-            </div>
-            <div v-if="propiedad" class="form-group  col-md-12 pt-1">
-              <button type="button" class="btn btn-primary btn-sm w-100" @click="fichaPdfRef.generarPdf()">
-                Ficha PDF
-              </button>
-            </div>
+                <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
+                  data-bs-target="#novedadesVentaPropiedad">
+                  Novedades Venta
+                </button>
+              </div>
+              <div v-if="propiedad" class="form-group  col-md-12 pt-1">
+                <button type="button" class="btn btn-primary btn-sm w-100" @click="fichaPdfRef.generarPdf()">
+                  Ficha PDF
+                </button>
+              </div>
 
             </div>
 
@@ -375,10 +386,10 @@ watch(() => props.propiedadUpdate, (newValue) => {
     venta.fecha_autorizacion_venta = newValue.fecha_autorizacion_venta || ''
     venta.comentario_autorizacion = newValue.comentario_autorizacion || ''
     venta.zona_prop = newValue.zona_prop || ''
-    venta.flyer = newValue.flyer || ''
-    venta.reel = newValue.reel || ''
-    venta.web = newValue.web || ''
-    venta.captador_interno = newValue.usuario_captador_int?.id || ''
+    venta.flyer_v = newValue.flyer_v || ''
+    venta.reel_v = newValue.reel_v || ''
+    venta.web_v = newValue.web_v || ''
+    venta.captador_interno_v = newValue.usuario_captador_int_v?.id || ''
     venta.asesor_resultado = newValue.usuario_asesor?.id || ''
     venta.descripcion_estado_venta = newValue.historial_estados_venta?.comentario || ''
     venta.fecha_baja_temporal_venta = newValue.historial_estados_venta?.reactiva_fecha || ''
@@ -482,7 +493,7 @@ const montoTasacion = computed(() => {
 const venta = reactive(
   {
     asesor_resultado: '',
-    captador_interno: '',
+    captador_interno_v: '',
     cod_venta: '',
     estado_venta: '',
     moneda_venta: '2',
@@ -496,9 +507,9 @@ const venta = reactive(
     fecha_autorizacion_venta: '',
     comentario_autorizacion: '',
     zona_prop: '',
-    flyer: '',
-    reel: '',
-    web: '',
+    flyer_v: '',
+    reel_v: '',
+    web_v: '',
     descripcion_estado_venta: '',
     fecha_baja_temporal_venta: '',
     autorizacion_venta: '',

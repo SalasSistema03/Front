@@ -565,6 +565,10 @@ if (props.sector === 'Alquiler') {
     { key: 'video', label: 'Videos' },
     { key: 'documentacion', label: 'Documentacion' },
     { key: 'usuario', label: 'Usuario' },
+    { key: 'reel', label: 'Reel' },
+    { key: 'flyer', label: 'Flyer' },
+    { key: 'captador', label: 'Captador' },
+    { key: 'web', label: 'Web' },
   ]
 } else {
   informacionMostrar.value = [

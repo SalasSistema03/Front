@@ -267,7 +267,7 @@
         @update:venta="formData.venta = $event">
       </ModalPropiedadVenta>
 
-      <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler" @update:alquiler="formData.alquiler = $event">
+      <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler" :captadores-internos="captadoresInternos" @update:alquiler="formData.alquiler = $event">
       </ModalPropiedadAlquiler>
 
       <ModalCondicionAlquiler @update:condicion_alquiler="formData.condicion_alquiler = $event">
