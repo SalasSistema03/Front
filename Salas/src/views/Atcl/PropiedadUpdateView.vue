@@ -461,7 +461,7 @@
     :propiedad-update="propiedad_update" @update:venta="actualizarVenta">
   </ModalPropiedadVenta>
 
-  <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler" :propiedad-update="propiedad_update"
+  <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler" :captadores-internos="captadoresInternos" :propiedad-update="propiedad_update"
     @update:alquiler="actualizarAlquiler">
   </ModalPropiedadAlquiler>
 
