@@ -1085,6 +1085,20 @@
   font-size: 0.8rem !important;
 }
 
+.proceso_reserva_table thead, .proceso_reserva_table th {
+  color: white;
+  background-color: rgb(0, 85, 185);
+  font-weight: bold;
+  font-size: 13px;
+}
+.proceso_reserva_table tbody, .proceso_reserva_table td {
+  font-size: 12px;
+  color: black;
+}
+.proceso_reserva_table tbody button, .proceso_reserva_table td button {
+  font-size: 9px;
+}
+
 .btn-primary {
   background-color: rgb(0, 85, 185) !important;
   border-color: rgb(0, 85, 185) !important;
