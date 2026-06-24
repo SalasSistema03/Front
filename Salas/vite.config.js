@@ -25,7 +25,13 @@ export default defineConfig({
   build: {
     sourcemap: false, // Esto evita que el código original sea legible en la pestaña "Sources"
     outDir: '../../backEnd/public',
-    // CAMBIA ESTO A FALSE:
-    emptyOutDir: false,
+    emptyOutDir: false, 
+    rollupOptions:{
+      output:{
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/index-[name].js',
+        assetFileNames: 'assets/index.[ext]'
+      }
+    }
   },
 })
