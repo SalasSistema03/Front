@@ -85,7 +85,7 @@ import { ref } from 'vue';
 import { buscarPdf } from '@/Services/api/Contable/bucaPdfApi';
 import { useToast } from '@/composables/useToast'
 
-const {showError} = useToast()
+const { showError } = useToast()
 
 const empresa = ref('Salas');
 const comprobante = ref('Facturas');
