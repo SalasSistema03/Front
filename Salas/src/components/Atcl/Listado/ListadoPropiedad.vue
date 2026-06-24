@@ -229,7 +229,7 @@
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
-                  :disabled="!propietariosAlquiler">
+                  >
                   Listar
                 </button>
               </div>
@@ -723,7 +723,7 @@ onMounted(async () => {
   asesores.value = resAsesores.data ?? false
   permisoConversacion.value = resConversacionVenta?.data ?? false
   permisoInformeNovedades.value = respermisoNovedades?.data ?? false
-  //console.log(permisoInformeNovedades.value)
+  //console.log(propietariosVenta.value)
 
   //console.log(asesores.value)
 
