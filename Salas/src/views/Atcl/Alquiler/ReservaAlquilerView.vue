@@ -33,12 +33,13 @@
           <div class="row  d-flex justify-content-center align-items-center">
             <div class="col-md-10">
               <label for="comprobante" class="form-label">Comprobante</label>
-              <input type="file" class="form-control form-control-sm"
+              <input ref="comprobanteInput" type="file" class="form-control form-control-sm"
                 accept=".jpg,.jpeg,.pdf,application/pdf,image/jpeg" @change="manejarArchivo"
-                :disabled="!selectoresActivos" />
+                :disabled="selectoresActivos === false  || resPermiso2 === true " />
+
             </div>
             <div v-if="verComprobante" class="col-md-2 pt-4">
-              <button class="btn btn-sm btn-secondary w-100" @click="verComprobanteFoto">comprobante</button>
+              <button class="btn btn-sm btn-secondary w-100" @click="verComprobanteFoto">Comprobante</button>
             </div>
 
           </div>
@@ -48,7 +49,7 @@
               <label for="telefono" class="form-label">Numero de Telefono</label>
               <input type="text" class="form-control form-control-sm" id="telefono" autocomplete="off"
                 v-model="telefono" @focus="mostrandoResultadosClientes = resultadosClientes.length > 0"
-                :disabled="!selectoresActivos" />
+                :disabled="selectoresActivos === false  || resPermiso2 === true " />
               <div v-if="mostrandoResultadosClientes && resultadosClientes.length > 0"
                 class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
                 style="z-index: 1000; max-height: 240px; overflow-y: auto">
@@ -67,7 +68,7 @@
             <div class="col-md-5">
               <label for="nombre_reservante" class="form-label">Nombre del Reservante</label>
               <input type="text" class="form-control form-control-sm" v-model="nombreReservante"
-                :disabled="!selectoresActivos" />
+                :disabled="selectoresActivos === false  || resPermiso2 === true " />
             </div>
           </div>
 
@@ -76,7 +77,7 @@
               <label for="codigo" class="form-label">Codigo</label>
               <input type="text" id="codigo" class="form-control form-control-sm" autocomplete="off" v-model="codigo"
                 @focus="mostrandoResultadosPropiedad = resultadosPropiedades.length > 0"
-                :disabled="!selectoresActivos" />
+                :disabled="selectoresActivos === false  || resPermiso2 === true " />
               <div v-if="mostrandoResultadosPropiedad && resultadosPropiedades.length > 0"
                 class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
                 style="z-index: 1000; max-height: 240px; overflow-y: auto">
@@ -102,7 +103,7 @@
           <div class="row d-flex justify-content-center align-items-center pb-3">
             <div class="col-md-3">
               <label for="monto_reserva" class="form-label">Tipo</label>
-              <select class="form-select form-select-sm" v-model="tipo" :disabled="!selectoresActivos">
+              <select class="form-select form-select-sm" v-model="tipo" :disabled="selectoresActivos === false  || resPermiso2 === true ">
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="TRANSFERENCIA">Transferencia</option>
               </select>
@@ -111,22 +112,36 @@
               <label for="monto_reserva" class="form-label">Monto de Reserva</label>
               <div class="row">
                 <div class="col-md-4">
-                  <select v-model="moneda" class="form-select form-select-sm" :disabled="!selectoresActivos">
+                  <select v-model="moneda" class="form-select form-select-sm"
+                    :disabled="selectoresActivos === false  || resPermiso2 === true ">
                     <option value="$">$</option>
                     <option value="U$D">U$D</option>
                   </select>
                 </div>
                 <div class="col-md-8">
                   <input type="number" class="form-control form-control-sm" v-model="montoReserva"
-                    :disabled="!selectoresActivos" />
+                    :disabled="selectoresActivos === false  || resPermiso2 === true "/>
                 </div>
               </div>
             </div>
+
             <div class="col-md-3">
-              <button class="btn btn-primary w-100 btn-sm mt-4" @click="reservar" :disabled="!selectoresActivos">
+              <div class="row">
+                <div class="col-10">
+                  <button class="btn btn-primary w-100 btn-sm mt-4" @click="reservar"
+                :disabled="selectoresActivos === false  || resPermiso2 === true ">
                 Realizar Reserva
               </button>
+
+                </div>
+                <div class="col-2 mt-4 ps-0">
+                  <i class="bi bi-arrow-counterclockwise ms-2" role="button" title="Limpiar formulario" @click="resetForm"
+                    style="cursor: pointer;"></i>
+                </div>
+              </div>
             </div>
+
+
           </div>
         </div>
       </div>
@@ -138,7 +153,7 @@
 
                 <div class="col-md-8">
                   <label for="fecha_reserva" class="form-label">Estado</label>
-                  <select class="form-select form-select-sm" v-model="estado">
+                  <select class="form-select form-select-sm" v-model="estado" :disabled="!habilitarCambioEstado">
                     <option value="1">Pendiente Firma de Reserva</option>
                     <option value="2">Pendiente de Documentacion</option>
                     <option value="3">Reserva Finalizada</option>
@@ -153,7 +168,8 @@
                   <label for="monto_reserva" class="form-label">Motivo de Baja</label>
                   <div class="row">
                     <div class="col-md-12">
-                      <select v-model="motivoBaja" class="form-select form-select-sm" :disabled="!mostrarMotivoBaja">
+                      <select v-model="motivoBaja" class="form-select form-select-sm"
+                        :disabled="!mostrarMotivoBaja || !habilitarCambioEstado">
                         <option value="Sin Motivo">Sin Motivo</option>
                         <option value="Falta de Firma">Falta de Firma</option>
                         <option value="Cambio de Precio">Cambio de Precio</option>
@@ -166,30 +182,38 @@
               <div class="col-12 row">
                 <div>
                   <label for="detalle" class="form-label">Observación</label>
-                  <textarea v-model="detalle" class="form-control form-control-sm" rows="1"></textarea>
+                  <textarea v-model="detalle" class="form-control form-control-sm" rows="1"
+                    :disabled="!habilitarCambioEstado"></textarea>
                 </div>
               </div>
               <div class="row col-md-12 pb-3">
                 <div class="col-md-12">
-                  <button class="btn btn-secondary btn-sm mt-4 w-100" @click="guardarEstadoNuevo">Guardar
+                  <button class="btn btn-secondary btn-sm mt-4 w-100" @click="guardarEstadoNuevo"
+                    :disabled="!habilitarCambioEstado">Guardar
                     Cambios</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="row">
-            <div class="row col-12 ">
-              <div class="col-md-4  mt-3">
+          <div class="row d-flex justify-content-center align-items-center">
+            <div class="row col-12 px-0">
+              <div class="col-md-8  ">
                 <label for="fecha_reserva" class="form-label">Filtro</label>
-              </div>
-              <div class="col-md-8  mt-3">
                 <select v-model="filtroPorEstado" class="form-select form-select-sm">
                   <option value="">Todos</option>
                   <option value="1">Pendiente Firma de Reserva</option>
                   <option value="2">Pendiente de Documentacion</option>
                   <option value="3">Reserva Finalizada</option>
                   <option value="4">Caida</option>
+                </select>
+              </div>
+
+              <div class="col-md-4 ">
+                <label for="fecha_reserva" class="form-label">Mes</label>
+                <select v-model="filtroPorMes" class="form-select form-select-sm">
+                  <option value="Actual">Actual</option>
+                  <option value="Todos">Todas</option>
                 </select>
               </div>
             </div>
@@ -206,6 +230,7 @@
                 <select class="form-select form-select-sm" v-model="reservaIdentificada">
                   <option value="0">NO</option>
                   <option value="1">SI</option>
+
                 </select>
               </div>
             </div>
@@ -231,8 +256,8 @@
       </div>
     </div>
 
-    <div class="">
-      <table class="table table-striped table-hover table-sm proceso_reserva_table">
+    <div class="proceso_reserva_tabla_contenedor mt-1">
+      <table class="table table-striped table-hover proceso_reserva_table">
         <thead>
           <tr class="text-center">
             <th>Codigo</th>
@@ -245,6 +270,7 @@
             <th>Tipo</th>
             <th>Monto</th>
             <th>Estado</th>
+            <th>Pertenece</th>
             <th>Observacion</th>
             <th>Acciones</th>
           </tr>
@@ -266,6 +292,7 @@
             <td>{{ item.proceso_propiedad?.tipo_reserva }}</td>
             <td>{{ item.proceso_propiedad?.moneda }} {{ item.proceso_propiedad?.monto_reserva }}</td>
             <td>{{ item.estado.estado }}</td>
+            <td>{{ item.proceso_propiedad?.asesor_usuario?.username }}</td>
             <td><button class="btn btn-primary btn-sm" @click="abrirModalObservacion(item)">Observación</button></td>
             <td>
               <button class="btn btn-primary btn-sm" @click="seleccionarReserva(item)">Seleccionar</button>
@@ -302,7 +329,7 @@ const username = ref('')
 const { showSuccess, showError } = useToast()
 const fecha_reserva = ref('')
 const comprobante = ref(null)
-const tipo = ref('EFECTIVO')
+const tipo = ref('TRANSFERENCIA')
 const moneda = ref('$')
 const montoReserva = ref('')
 const nombreReservante = ref('')
@@ -339,6 +366,9 @@ const verComprobante = ref(false)
 const rutaComprobante = ref('')
 const reservaIdentificada = ref('0')
 const rutaComprobanteFoto = ref('')
+const comprobanteInput = ref(null)
+const habilitarCambioEstado = ref(false)
+const filtroPorMes = ref('Actual')
 //const aceptarMonto = ref(false)
 
 const abrirModalObservacion = (item) => {
@@ -477,7 +507,7 @@ watch(codigo, (nuevoValor) => {
 
 watch(estado, (nuevoValor) => {
 
-  if (nuevoValor == 'Caida') {
+  if (nuevoValor == '4') {
     mostrarMotivoBaja.value = true
   } else {
     mostrarMotivoBaja.value = false
@@ -485,7 +515,11 @@ watch(estado, (nuevoValor) => {
 })
 
 watch(filtroPorEstado, (nuevoValor) => {
-  listado(nuevoValor)
+  listado(nuevoValor, filtroPorMes.value)
+})
+
+watch(filtroPorMes, (nuevoValor) => {
+  listado(filtroPorEstado.value, nuevoValor)
 })
 
 watch(reservaIdentificada, async (nuevoValor) => {
@@ -502,43 +536,6 @@ watch(reservaIdentificada, async (nuevoValor) => {
   }
 
 })
-
-/* watch(aceptarMonto, async (nuevoValor) => {
-  if (nuevoValor) {
-    const data = {
-      id: idProcesoPropiedad.value
-    }
-    try {
-      guardarReservaIdentificada(data)
-      showSuccess('Reserva confirmada exitosamente')
-      // Recargamos el listado de identificadas con el valor actual del select
-      const response = await getIdentificadas(reservaIdentificada.value)
-      responseListado.value = response.data.resultado
-
-      aceptarMonto.value = false // reseteamos el checkbox
-      folio.value = ' ' //limpiamos el folio
-      codigo.value = ' ' //limpiamos el codigo
-      telefono.value = ' ' //limpiamos el telefono
-      nombreCliente.value = ' ' //limpiamos el nombre
-      nombreReservante.value = ' ' //limpiamos el nombre
-      idCliente.value = ' ' //limpiamos el id
-      idAsesor.value = ' ' //limpiamos el id
-      asesor.value = ' ' //limpiamos el nombre
-      fecha_reserva.value = obtenerHoy() //limpiamos la fecha
-      fecha_fin_reserva.value = calcularDiasHabiles() //limpiamos la fecha
-      tipo.value = 'EFECTIVO' //limpiamos el tipo
-      moneda.value = '$' //limpiamos la moneda
-      montoReserva.value = '' //limpiamos el monto
-      selectoresActivos.value = true
-      getIdentificadas(reservaIdentificada.value)
-
-    }
-    catch (error) {
-      console.log(error)
-      showError('Error al guardar la reserva')
-    }
-  }
-}) */
 
 const handleAceptarMonto = async () => {
   const data = {
@@ -633,9 +630,13 @@ const traerAsesoresAlquiler = async () => {
     listaAsesoresAlquiler.value = asesores // ← corregido, antes decía asesoresAlquiler.value
 
   } catch (error) {
+    //necesito mostrar el error en un toast
+    showError(error.response.data.message || 'Error al obtener los asesores')
     console.log(error)
   }
 }
+
+
 //Verifica si el usuario tiene permiso para ver los asesores de alquiler
 const verificarPermisosAlquileres = async () => {
   try {
@@ -666,6 +667,45 @@ const manejarArchivo = (event) => {
   }
 }
 
+const resetComprobanteField = () => {
+  if (comprobanteInput.value) {
+    comprobanteInput.value.value = ''
+  }
+  comprobante.value = null
+  verComprobante.value = false
+}
+
+const resetForm = () => {
+  asesor.value = ''
+  idAsesor.value = ''
+  fecha_reserva.value = obtenerHoy()
+  fecha_fin_reserva.value = calcularDiasHabiles()
+  idCliente.value = ''
+  telefono.value = ''
+  nombreCliente.value = ''
+  nombreReservante.value = ''
+  idPropiedad.value = ''
+  codigo.value = ''
+  direccion.value = ''
+  folio.value = ''
+  tipo.value = 'TRANSFERENCIA'
+  moneda.value = '$'
+  montoReserva.value = ''
+  estado.value = '1'
+  motivoBaja.value = 'Sin Motivo'
+  detalle.value = ''
+  idProcesoPropiedad.value = ''
+  selectoresActivos.value = true
+  habilitarCambioEstado.value = false
+  resultadosPropiedades.value = []
+  mostrandoResultadosPropiedad.value = false
+  resultadosClientes.value = []
+  mostrandoResultadosClientes.value = false
+  ignorarWatchCodigo.value = false
+  ignorarWatchTelefono.value = false
+  resetComprobanteField()
+}
+
 //enviar los datos al backend
 const reservar = async () => {
 
@@ -693,11 +733,6 @@ const reservar = async () => {
     formData.append('comprobante', comprobante.value)
   }
 
-
-  // Si querés debuguear el FormData antes de enviarlo,
-  // no podés hacerle un console.log directo. Tenés que usar esto:
-  //console.log('Datos a enviar:', Object.fromEntries(formData.entries()))
-
   //3.5 validamos los campos obligatorios
   if (formData.get('telefono') === '') {
     showError('El telefono es obligatorio')
@@ -711,33 +746,18 @@ const reservar = async () => {
     showError('El monto es obligatorio')
     return
   }
-  if (formData.get('comprobante') === null) {
-    showError('El comprobante es obligatorio')
+  if (formData.get('comprobante') === null && formData.get('tipo') === 'TRANSFERENCIA') {
+    showError('El comprobante es obligatorio para reservas por transferencia')
     return
   }
   // 4. Enviamos el formData completo a la API
   try {
     await subirReservas(formData)
     //limpiamos todos los inputs
-    asesor.value = ''
-    idAsesor.value = ''
-    fecha_reserva.value = obtenerHoy()
-    fecha_fin_reserva.value = calcularDiasHabiles()
-    idCliente.value = ''
-    telefono.value = ''
-    nombreCliente.value = ''
-    nombreReservante.value = ''
-    idPropiedad.value = ''
-    codigo.value = ''
-    direccion.value = ''
-    folio.value = ''
-    tipo.value = ''
-    moneda.value = ''
-    montoReserva.value = ''
-    comprobante.value = null
+    resetForm()
 
     showSuccess('Reserva realizada exitosamente')
-    listado()
+    listado(filtroPorEstado.value, filtroPorMes.value)
   } catch (error) {
     console.log(error)
     showError('Error al realizar la reserva')
@@ -746,10 +766,11 @@ const reservar = async () => {
 
 
 //obtenemos el listado
-const listado = async (estadoFiltrado = '') => {
+const listado = async (estadoFiltrado = '', mesFiltrado = '') => {
   try {
-    const res = await obtenerReservas(estadoFiltrado)
+    const res = await obtenerReservas(estadoFiltrado, mesFiltrado)
     responseListado.value = res.data.resultado
+    console.log(responseListado)
   }
   catch (error) {
     console.log(error)
@@ -780,7 +801,8 @@ const seleccionarReserva = (item) => {
   // Evitar que los watchers se disparen y pisen o limpien la data
   ignorarWatchTelefono.value = true
   ignorarWatchCodigo.value = true
-  verComprobante.value = true
+  verComprobante.value = item.proceso_propiedad?.documentacion != null
+  habilitarCambioEstado.value = true
 
   const asesorId = item.proceso_propiedad?.asesor
   selectoresActivos.value = false
@@ -840,7 +862,7 @@ const guardarEstadoNuevo = async () => {
   //console.log(data)
   try {
     await guardarEstado(data)
-    listado()
+    listado(filtroPorEstado.value, filtroPorMes.value)
     showSuccess('Estado guardado exitosamente')
     estado.value = 1
     detalle.value = ''
@@ -892,7 +914,7 @@ onMounted(async () => {
     }
   } else {
     // No tiene ese permiso → carga el listado normal
-    listado()
+    listado(filtroPorEstado.value, filtroPorMes.value)
   }
 })
 </script>
