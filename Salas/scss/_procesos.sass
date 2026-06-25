@@ -2,20 +2,33 @@
 $azulSalas: colorSalas.$azulSalas
 $verdeSalas: colorSalas.$verdeSalas
 $grisSalas: colorSalas.$grisSalas
-
+.proceso_reserva_tabla_contenedor
+  height: 26vh
+  overflow-y: auto
+.proceso_reserva_tabla_contenedor_obserbaciones
+  height: 47vh
+  overflow-y: auto
 .proceso_reserva_table
-  thead,th
+
+  th
     color: white
     background-color: $azulSalas
     font-weight: bold
+    font-size: 1.7vh
+    position: sticky
+    top: 0
+    padding: 0.5vh
+    white-space: nowrap
+  td
+    border-left: 1px solid $azulSalas
+    border-right: 1px solid $azulSalas
+    text-align: center
+    vertical-align: middle
+    overflow: hidden
+    font-size: 1.7vh
+    padding: 0.15vh !important
 
-    font-size: 13px
+  button
+    font-size: 9px
 
-  tbody,td
-    font-size: 12px
-    color: black
-    button
-      font-size: 9px
-.fechaYhora
-  input
-    
+

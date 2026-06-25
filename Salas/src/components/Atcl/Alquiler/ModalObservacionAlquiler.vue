@@ -2,9 +2,9 @@
   <baseModal :show="show" size="lg" @close="emit('close')">
     <template #title>Observación</template>
     <template #body>
-      <div class="table-responsive table-scroll-container">
-        <table class="table table-striped table-hover text-center">
-          <thead>
+      <div class="proceso_reserva_tabla_contenedor_obserbaciones">
+        <table class="table table-striped table-hover proceso_reserva_table">
+          <thead class="text-center">
             <tr>
               <th>Fecha de Carga</th>
               <th>Estado</th>
@@ -17,7 +17,7 @@
             <tr v-for="item in historial.resultado" :key="item.id">
               <td>{{ item.fecha_carga }}</td>
               <td>{{ item.estado.estado }}</td>
-              <td>{{ item.observaciones }}</td>
+              <td class="w-50">{{ item.observaciones }}</td>
               <td>{{ item.quien_cargo }}</td>
             </tr>
           </tbody>
