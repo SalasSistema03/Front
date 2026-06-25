@@ -71,6 +71,34 @@ const routesImpuestos = [
       requiresAuth: true,
     },
   },
+  {
+    path: '/exp_unidades',
+    name: '/expensas/unidades',
+    component: () => import('../views/Impuestos/EXP/UnidadesView.vue'), // Se importa solo cuando se necesita
+    meta: {
+      requiresAuth: true,
+      vistaId: 49
+    }
+  },
+  {
+    path: '/exp_edificios',
+    name: '/expensas/consorcios',
+    component: () => import('../views/Impuestos/EXP/ConsorcioView.vue'), // Se importa solo cuando se necesita
+    meta: {
+      requiresAuth: true,
+      vistaId: 50
+    }
+  },
+  {
+    path: '/exp_administrador_consorcio',
+    name: '/expensas/administradores',
+    component: () => import('../views/Impuestos/EXP/AdministradoresView.vue'), // Se importa solo cuando se necesita
+    meta: {
+      requiresAuth: true,
+      vistaId: 51
+    }
+  }
+
 ]
 
 export default routesImpuestos
