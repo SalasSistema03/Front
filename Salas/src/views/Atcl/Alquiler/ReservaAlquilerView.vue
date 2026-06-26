@@ -23,7 +23,7 @@
                 :max="fecha_fin_reserva" readonly disabled />
             </div>
 
-            <div class="col-md-4 fechaYhora">
+            <div class="col-md-3">
               <label for="fecha_reserva" class="form-label">Fin de Reserva</label>
               <input type="datetime-local" class="form-control form-control-sm text-center" v-model="fecha_fin_reserva"
                 :min="fecha_reserva" readonly disabled />
@@ -35,7 +35,7 @@
               <label for="comprobante" class="form-label">Comprobante</label>
               <input ref="comprobanteInput" type="file" class="form-control form-control-sm"
                 accept=".jpg,.jpeg,.pdf,application/pdf,image/jpeg" @change="manejarArchivo"
-                :disabled="selectoresActivos === false  || resPermiso2 === true " />
+                :disabled="selectoresActivos === false || resPermiso2 === true" />
 
             </div>
             <div v-if="verComprobante" class="col-md-2 pt-4">
@@ -49,7 +49,7 @@
               <label for="telefono" class="form-label">Numero de Telefono</label>
               <input type="text" class="form-control form-control-sm" id="telefono" autocomplete="off"
                 v-model="telefono" @focus="mostrandoResultadosClientes = resultadosClientes.length > 0"
-                :disabled="selectoresActivos === false  || resPermiso2 === true " />
+                :disabled="selectoresActivos === false || resPermiso2 === true" />
               <div v-if="mostrandoResultadosClientes && resultadosClientes.length > 0"
                 class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
                 style="z-index: 1000; max-height: 240px; overflow-y: auto">
@@ -68,7 +68,7 @@
             <div class="col-md-5">
               <label for="nombre_reservante" class="form-label">Nombre del Reservante</label>
               <input type="text" class="form-control form-control-sm" v-model="nombreReservante"
-                :disabled="selectoresActivos === false  || resPermiso2 === true " />
+                :disabled="selectoresActivos === false || resPermiso2 === true" />
             </div>
           </div>
 
@@ -77,7 +77,7 @@
               <label for="codigo" class="form-label">Codigo</label>
               <input type="text" id="codigo" class="form-control form-control-sm" autocomplete="off" v-model="codigo"
                 @focus="mostrandoResultadosPropiedad = resultadosPropiedades.length > 0"
-                :disabled="selectoresActivos === false  || resPermiso2 === true " />
+                :disabled="selectoresActivos === false || resPermiso2 === true" />
               <div v-if="mostrandoResultadosPropiedad && resultadosPropiedades.length > 0"
                 class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
                 style="z-index: 1000; max-height: 240px; overflow-y: auto">
@@ -89,7 +89,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-5">
               <label for="direccion" class="form-label">Direccion</label>
               <input type="text" class="form-control form-control-sm" id="direccion" v-model="direccion" disabled
                 readonly />
@@ -98,12 +98,22 @@
               <label for="folio" class="form-label">Folio</label>
               <input type="text" class="form-control form-control-sm" id="folio" v-model="folio" disabled />
             </div>
+            <div class="col-md-2">
+              <label for="" class="form-label">Precio Alquiler</label>
+              <div class="input-group input-group-sm">
+                <!-- <span class=" input-group-text" :class="monedaPrecioFolio">
+                  {{ monedaPrecioFolio }}
+                </span> -->
+                <input type="text" class="form-control" v-model="precioFolio" :disabled="selectoresActivos === false">
+              </div>
+            </div>
           </div>
 
           <div class="row d-flex justify-content-center align-items-center pb-3">
             <div class="col-md-3">
               <label for="monto_reserva" class="form-label">Tipo</label>
-              <select class="form-select form-select-sm" v-model="tipo" :disabled="selectoresActivos === false  || resPermiso2 === true ">
+              <select class="form-select form-select-sm" v-model="tipo"
+                :disabled="selectoresActivos === false || resPermiso2 === true">
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="TRANSFERENCIA">Transferencia</option>
               </select>
@@ -113,14 +123,14 @@
               <div class="row">
                 <div class="col-md-4">
                   <select v-model="moneda" class="form-select form-select-sm"
-                    :disabled="selectoresActivos === false  || resPermiso2 === true ">
+                    :disabled="selectoresActivos === false || resPermiso2 === true">
                     <option value="$">$</option>
                     <option value="U$D">U$D</option>
                   </select>
                 </div>
                 <div class="col-md-8">
                   <input type="number" class="form-control form-control-sm" v-model="montoReserva"
-                    :disabled="selectoresActivos === false  || resPermiso2 === true "/>
+                    :disabled="selectoresActivos === false || resPermiso2 === true" />
                 </div>
               </div>
             </div>
@@ -129,14 +139,14 @@
               <div class="row">
                 <div class="col-10">
                   <button class="btn btn-primary w-100 btn-sm mt-4" @click="reservar"
-                :disabled="selectoresActivos === false  || resPermiso2 === true ">
-                Realizar Reserva
-              </button>
+                    :disabled="selectoresActivos === false || resPermiso2 === true">
+                    Reservar
+                  </button>
 
                 </div>
                 <div class="col-2 mt-4 ps-0">
-                  <i class="bi bi-arrow-counterclockwise ms-2" role="button" title="Limpiar formulario" @click="resetForm"
-                    style="cursor: pointer;"></i>
+                  <i class="bi bi-arrow-counterclockwise ms-2" role="button" title="Limpiar formulario"
+                    @click="resetForm" style="cursor: pointer;"></i>
                 </div>
               </div>
             </div>
@@ -369,6 +379,8 @@ const rutaComprobanteFoto = ref('')
 const comprobanteInput = ref(null)
 const habilitarCambioEstado = ref(false)
 const filtroPorMes = ref('Actual')
+const precioFolio = ref(null)
+const monedaPrecioFolio = ref(null)
 //const aceptarMonto = ref(false)
 
 const abrirModalObservacion = (item) => {
@@ -383,7 +395,7 @@ const verComprobanteFoto = async () => {
   const response = await buscarComprobanteReserva(data)
   const blob = response.data;
   const url = window.URL.createObjectURL(blob);
-  const newWindow = window.open(url, '_blank');
+  window.open(url, '_blank');
 }
 
 const buscarClientesPorTelefono = async () => {
@@ -452,11 +464,22 @@ const buscarPropiedadPorCodigo = async () => {
 
 const seleccionarPropiedad = (propiedad) => {
 
+  //console.log('propiedad', propiedad)
   ignorarWatchCodigo.value = true
   idPropiedad.value = propiedad.id || ''
   codigo.value = propiedad.cod_alquiler || ''
   direccion.value = `${propiedad.calle || ''} ${propiedad.numero || ''} ${propiedad.piso ? 'P' + propiedad.piso : ''} ${propiedad.departamento ? 'Dpto' + propiedad.departamento : ''}`.trim()
   folio.value = propiedad.folio || ''
+  if (propiedad?.precio?.moneda_alquiler_pesos != null || propiedad?.precio?.moneda_alquiler_pesos != 0) {
+    precioFolio.value = propiedad.precio.moneda_alquiler_pesos
+    monedaPrecioFolio.value = '$'
+  } else if (propiedad?.precio?.moneda_alquiler_dolares != null || propiedad?.precio?.moneda_alquiler_dolares != 0) {
+    precioFolio.value = propiedad.precio.moneda_alquiler_dolares
+    monedaPrecioFolio.value = 'U$S'
+  } else {
+    precioFolio.value = 0
+    monedaPrecioFolio.value = '$'
+  }
   resultadosPropiedades.value = []
   mostrandoResultadosPropiedad.value = false
 }
@@ -703,9 +726,10 @@ const resetForm = () => {
   mostrandoResultadosClientes.value = false
   ignorarWatchCodigo.value = false
   ignorarWatchTelefono.value = false
+  precioFolio.value = null
+  monedaPrecioFolio.value = null
   resetComprobanteField()
 }
-
 //enviar los datos al backend
 const reservar = async () => {
 
@@ -727,6 +751,9 @@ const reservar = async () => {
   formData.append('tipo', tipo.value)
   formData.append('moneda', moneda.value)
   formData.append('montoReserva', montoReserva.value)
+  formData.append('precioFolio', precioFolio.value)
+
+
 
   // 3. Adjuntamos el archivo físico (si existe)
   if (comprobante.value) {
@@ -770,7 +797,7 @@ const listado = async (estadoFiltrado = '', mesFiltrado = '') => {
   try {
     const res = await obtenerReservas(estadoFiltrado, mesFiltrado)
     responseListado.value = res.data.resultado
-    console.log(responseListado)
+    //console.log(responseListado)
   }
   catch (error) {
     console.log(error)
@@ -799,6 +826,7 @@ const formatearFolio = (folios) => {
 
 const seleccionarReserva = (item) => {
   // Evitar que los watchers se disparen y pisen o limpien la data
+
   ignorarWatchTelefono.value = true
   ignorarWatchCodigo.value = true
   verComprobante.value = item.proceso_propiedad?.documentacion != null
@@ -840,10 +868,22 @@ const seleccionarReserva = (item) => {
   idProcesoPropiedad.value = item.proceso_propiedad?.id
   rutaComprobante.value = item.proceso_propiedad?.documentacion
   rutaComprobanteFoto.value = item.proceso_propiedad?.documentacion
+  precioFolio.value = item.proceso_propiedad?.precio_alquiler
 
 
-
+  /* if (item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_pesos != null || item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_pesos != 0) {
+    precioFolio.value = item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_pesos
+    monedaPrecioFolio.value = '$'
+  } else if (item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_dolares != null || item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_dolares != 0) {
+    precioFolio.value = item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_dolares
+    monedaPrecioFolio.value = 'U$S'
+  } else {
+    precioFolio.value = 0
+    monedaPrecioFolio.value = '$'
+  } */
   console.log(item)
+
+
 }
 
 const guardarEstadoNuevo = async () => {
@@ -852,7 +892,6 @@ const guardarEstadoNuevo = async () => {
     motivo_baja: motivoBaja.value,
     detalle: detalle.value,
     idProcesoPropiedad: idProcesoPropiedad.value,
-
   }
 
   if (data.detalle === '') {
@@ -864,30 +903,9 @@ const guardarEstadoNuevo = async () => {
     await guardarEstado(data)
     listado(filtroPorEstado.value, filtroPorMes.value)
     showSuccess('Estado guardado exitosamente')
-    estado.value = 1
-    detalle.value = ''
     filtroPorEstado.value = ''
-    asesor.value = ''
-    idAsesor.value = ''
-    fecha_reserva.value = obtenerHoy()
-    fecha_fin_reserva.value = calcularDiasHabiles()
-    idCliente.value = ''
-    telefono.value = ''
-    nombreCliente.value = ''
-    nombreReservante.value = ''
-    idPropiedad.value = ''
-    codigo.value = ''
-    direccion.value = ''
-    folio.value = ''
+    resetForm()
     tipo.value = 'EFECTIVO'
-    moneda.value = '$'
-    montoReserva.value = ''
-    comprobante.value = null
-    selectoresActivos.value = true
-
-
-
-
 
   } catch (error) {
     console.log(error)
