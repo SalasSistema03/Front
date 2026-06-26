@@ -107,3 +107,12 @@ export const buscarComprobanteReserva = (data) => {
   })
 }
 
+export const getHistorialContrato = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/getHistorialContrato`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
