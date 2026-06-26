@@ -39,14 +39,15 @@ export const subirReservas = (data) => {
   })
 }
 
-export const obtenerReservas = (estado = '') => {
+export const obtenerReservas = (estado = '', mes = '') => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/obtener-reservas`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
     params: {
-      estado: estado
+      estado,
+      mes
     }
   })
 }
@@ -103,6 +104,15 @@ export const buscarComprobanteReserva = (data) => {
       Authorization: `Bearer ${token}`,
     },
     responseType: 'blob' // Importante: especificar que esperamos un blob
+  })
+}
+
+export const getHistorialContrato = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/getHistorialContrato`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   })
 }
 
