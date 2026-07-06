@@ -1,16 +1,16 @@
 <template>
   <div class="px-3 container-fluid mt-3">
-    <h3 class="mb-4 text-uppercase  small text-muted"><i class="bi bi-person-vcard me-2"></i>Padrón Administradores de Consorcio</h3>
+    <h3 class="text-secondary mb-4 text-uppercase  small text-muted"><i class="bi bi-person-vcard me-2"></i>Padrón Administradores de Consorcio</h3>
 
     <div class="row align-items-center mb-3 g-2">
       <div class="col-md-10">
-        <form @submit.prevent="obtenerAdministradores" class="row g-2" autocomplete="off">
+        <form @submit.prevent="obtenerAdministradores" class="row g-2 form-group" autocomplete="off">
           <div class="col-md-4">
-            <input type="text" v-model="search" class="form-control shadow-sm"
+            <input type="text" v-model="search" class="form-control form-control-sm shadow-sm"
               placeholder="Buscar por nombre, cuit, teléfono...">
           </div>
           <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100 shadow-sm" :disabled="cargando">
+            <button type="submit" class="btn btn-primary btn-sm w-100 shadow-sm" :disabled="cargando">
               <span v-if="cargando" class="spinner-border spinner-border-sm me-1"></span>
               <i v-else class="bi bi-search me-1"></i> Filtrar
             </button>
@@ -19,7 +19,7 @@
       </div>
 
       <div class="col-12 col-md-2 text-md-end">
-        <button @click="sincronizarPadron" class="btn btn-success w-100 shadow-sm" :disabled="sincronizando">
+        <button @click="sincronizarPadron" class="btn btn-success w-100 shadow-sm btn-sm" :disabled="sincronizando">
           <span v-if="sincronizando" class="spinner-border spinner-border-sm me-1"></span>
           <i v-else class="bi bi-cloud-arrow-down me-1"></i> 
           {{ sincronizando ? 'Actualizando...' : 'Actualizar Padrón' }}
@@ -29,8 +29,8 @@
 
     <div class="card shadow-sm border-0">
       <div class="card-body p-0">
-        <div class="table-responsive table-scroll-container px-1">
-          <table class="table table-hover table-striped mb-0 align-middle">
+        <div class="table-responsive table-scroll-container">
+          <table class="table table-hover table-striped tabla-impuestos mb-0 align-middle">
             <thead class="table-light">
               <tr style="position: sticky; top: 0; z-index: 1;">
                 <th>Nombre</th>
@@ -131,7 +131,7 @@ onMounted(() => {
 
 <style scoped>
 .table-scroll-container {
-  max-height: 70vh;
+  max-height: 65vh;
   overflow-y: auto;
   overflow-x: hidden;
 }
