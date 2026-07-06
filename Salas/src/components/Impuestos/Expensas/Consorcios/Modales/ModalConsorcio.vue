@@ -6,7 +6,7 @@
     </template>
 
     <template #body>
-      <form @submit.prevent="guardarConsorcio" autocomplete="off">
+      <form @submit.prevent="guardarConsorcio" autocomplete="off" class="form-group ">
         <div class="row g-3">
           
           <div class="col-md-12">
