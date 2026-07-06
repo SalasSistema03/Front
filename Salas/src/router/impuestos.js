@@ -97,6 +97,15 @@ const routesImpuestos = [
       requiresAuth: true,
       vistaId: 51
     }
+  },
+  {
+    path: '/exp_broche_expensas',
+    name: '/expensas/broches',
+    component: () => import('../views/Impuestos/EXP/BrochesView.vue'), // Se importa solo cuando se necesita
+    meta: {
+      requiresAuth: true,
+      vistaId: 52
+    }
   }
 
 ]
