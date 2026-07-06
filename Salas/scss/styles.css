@@ -990,6 +990,10 @@
   top: 0;
   padding: 0.5vh;
 }
+.tabla-impuestos th .bi {
+  font-size: 2.5vh !important;
+  color: white !important;
+}
 .tabla-impuestos td {
   border-left: 1px solid rgb(0, 85, 185);
   border-right: 1px solid rgb(0, 85, 185);
@@ -998,6 +1002,10 @@
   overflow: hidden;
   font-size: 2vh;
   padding: 0.36vh !important;
+}
+.tabla-impuestos td .bi {
+  font-size: 2.5vh !important;
+  color: rgb(0, 85, 185) !important;
 }
 .tabla-impuestos button {
   font-weight: bold;
