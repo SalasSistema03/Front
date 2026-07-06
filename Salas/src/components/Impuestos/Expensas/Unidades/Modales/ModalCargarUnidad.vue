@@ -13,8 +13,8 @@
     <template #body>
       
       <div v-show="!modoComentario">
-        <div class="row g-2 mb-3 bg-light p-2 rounded shadow-sm border border-light">
-          <div class="col-md-2">
+        <div class="row g-2 mb-3 bg-light p-2 rounded shadow-sm border border-light form-group form-group-sm">
+          <div class="col-md-2 ">
             <label class="form-label x-small text-muted fw-bold mb-0">Folio</label>
             <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none" :value="unidad.folio" readonly>
           </div>
@@ -50,14 +50,14 @@
 
         <hr class="text-muted my-2">
 
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-2 ">
           <h6 class="mb-0 text-secondary fw-bold" style="font-size: 0.9rem;">Desglose de Unidades (Padrones)</h6>
           <button type="button" @click="agregarPadronVacio" class="btn btn-sm py-0 btn-outline-primary shadow-sm" style="font-size: 0.8rem;">
             <i class="bi bi-plus-circle me-1"></i> Añadir Padrón
           </button>
         </div>
 
-        <div class="lista-padrones table-scroll-container px-1">
+        <div class="lista-padrones table-scroll-container px-1 form-group">
           <div v-for="(padron, index) in padronesLocales" :key="index" class="card mb-2 border-0 shadow-sm border-start border-3 border-primary">
             <div class="card-body p-2 bg-white">
               <div class="row g-2 align-items-end mb-1">

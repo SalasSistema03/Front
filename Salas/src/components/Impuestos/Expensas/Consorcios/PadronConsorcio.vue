@@ -6,11 +6,11 @@
       <div class="col-md-10">
         <form @submit.prevent="obtenerConsorcios" class="row g-2" autocomplete="off">
           <div class="col-md-8">
-            <input type="text" v-model="search" class="form-control shadow-sm"
+            <input type="text" v-model="search" class="form-control shadow-sm form-control-sm"
               placeholder="Buscar por nombre, dirección, altura...">
           </div>
           <div class="col-md-4">
-            <button type="submit" class="btn btn-primary w-100 shadow-sm" :disabled="cargando">
+            <button type="submit" class="btn btn-primary w-100 shadow-sm btn-sm" :disabled="cargando">
               <span v-if="cargando" class="spinner-border spinner-border-sm me-1"></span>
               <i v-else class="bi bi-search me-1"></i> Filtrar
             </button>
@@ -19,7 +19,7 @@
       </div>
 
       <div class="col-md-2 text-md-end">
-        <button type="button" class="btn btn-success w-100 shadow-sm" @click="abrirModalNuevo">
+        <button type="button" class="btn btn-success w-100 shadow-sm btn-sm" @click="abrirModalNuevo">
           <i class="bi bi-plus-circle me-1"></i> Cargar Consorcio
         </button>
       </div>
@@ -28,7 +28,7 @@
     <div class="card shadow-sm border-0">
       <div class="card-body p-0">
         <div class="table-responsive table-scroll-container">
-          <table class="table table-hover table-striped mb-0 align-middle">
+          <table class="table table-hover table-striped mb-0 align-middle tabla-impuestos">
             <thead class="table-light">
               <tr style="position: sticky; top: 0; z-index: 1;">
                 <th>Nombre Consorcio</th>
@@ -55,7 +55,7 @@
                 <td>{{ edificio.administrador?.nombre || 'No Asignado' }}</td>
                 <td class="text-center">
                   <button type="button" class="btn btn-sm btn-outline-primary py-0" @click="abrirModalEditar(edificio)">
-                    Modificar
+                    <i class="bi bi-pencil-fill"></i>
                   </button>
                 </td>
               </tr>
