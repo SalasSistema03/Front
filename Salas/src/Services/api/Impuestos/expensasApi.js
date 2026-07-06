@@ -98,3 +98,48 @@ export const actualizarPadronAdministradoresService = () => {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
+
+// 1. Obtener la lista de broches cargados (y catálogos para los modales)
+export const getBrochesService = (params) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/expensas/broche`, {
+    headers: { Authorization: `Bearer ${token}` },
+    params: params // Para mandar mes, anio y busqueda (filtros de la tabla principal)
+  })
+}
+
+// 2. Buscar unidades en el modal de "Carga"
+export const buscarBrochesService = (filtros) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/expensas/broche-buscar`, {
+    headers: { Authorization: `Bearer ${token}` },
+    params: filtros 
+  })
+}
+
+// 3. Guardar un nuevo broche desde el modal
+export const guardarBrocheService = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/expensas/broche-guardar`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+// 4. Eliminar un broche desde la tabla
+export const eliminarBrocheService = (id) => {
+  const token = localStorage.getItem('token')
+  return axios.delete(`${API_URL}/v1/expensas/broche-eliminar/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+
+
+export const descargarPdfBrocheService = (params) => {
+  const token = localStorage.getItem('token');
+  return axios.get(`${API_URL}/v1/expensas/broche/descargar-pdf`, {
+    headers: { Authorization: `Bearer ${token}` },
+    params: params,        // Enviaremos { mes: 7, anio: 2026, administrador: 2 }
+    responseType: 'blob'   // ¡CRÍTICO para recibir archivos binarios!
+  });
+};
