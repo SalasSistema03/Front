@@ -29,7 +29,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import BaseModal from '../../../base/BaseModal.vue';
-import { exportarRegistrosService , eliminarRegistroService } from '../../../../Services/api/Contable/selladoApi.js'
+import { exportarRegistrosService, eliminarRegistroService } from '../../../../Services/api/Contable/selladoApi.js'
 import { alertas } from '../../../../utils/alertas.js'
 
 const registros = ref([]);
@@ -49,7 +49,7 @@ const obtenerRegistros = async () => {
     cargando.value = true;
     try {
         const response = await exportarRegistrosService();
-        console.log("holaaaa",response.data.registros)
+        console.log("holaaaa", response.data.registros)
         // Verifica si tu API devuelve los datos en .data o .data.data
         registros.value = response.data.registros;
     } catch (err) {
@@ -60,6 +60,13 @@ const obtenerRegistros = async () => {
     }
 };
 
+
+// Función para que Excel en español entienda los números y decimales
+const formatoExcel = (valor) => {
+    if (!valor) return "0,00";
+    // Fuerza 2 decimales y cambia el punto por coma (ej: 1500.50 -> "1500,50")
+    return Number(valor).toFixed(2).replace('.', ',');
+};
 
 const prepararTextoYExportar = () => {
     if (registros.value.length === 0) {
@@ -76,29 +83,46 @@ const prepararTextoYExportar = () => {
 
     // 2. Procesamos las filas
     const filas = registros.value.map(reg => {
+
+        // Obtenemos el tipo de contrato y lo pasamos a mayúsculas para evitar errores
+        // (Usamos el OR || por si tu backend lo manda con mayúscula o minúscula)
+        const tipoContrato = String(reg.tipo_contrato || reg.tipo_Contrato || '').toUpperCase();
+
+        // Obtenemos el monto real (buscamos la variable general del contrato primero)
+        const montoTotal = reg.monto_contrato || reg.monto_Vivienda || reg.monto_Comercial || 0;
+
+        // Variables limpias para el Excel
+        let montoViviendaExcel = 0;
+        let montoComercioExcel = 0;
+
+        // LÓGICA DE DISTRIBUCIÓN
+        if (tipoContrato === 'VIVIENDA' || tipoContrato === '1') {
+            montoViviendaExcel = montoTotal;
+        } else {
+            // Si es COMERCIO, COCHERA, 2 o 3, va a la columna comercial
+            montoComercioExcel = montoTotal;
+        }
+
         return [
             reg.folio,
-            // Reemplazamos cualquier punto y coma interno para no romper las columnas
             (reg.nombre || "").toString().replace(/;/g, ","), 
             reg.informe,
-            reg.fecha_Inicio,
-            reg.tipo_Contrato,
-            // Usamos punto decimal para que Excel lo tome como número
-            reg.monto_Vivienda ?? 0,
-            reg.monto_Comercial ?? 0,
+            reg.fecha_Inicio || reg.fecha_inicio,
+            reg.tipo_contrato || reg.tipo_Contrato,
+            formatoExcel(montoViviendaExcel), // <--- ACÁ APLICAMOS EL FORMATO
+            formatoExcel(montoComercioExcel), // <--- Y ACÁ TAMBIÉN
             reg.hojas,
-            reg.fecha_Carga,
-            reg.inq_Prop
+            reg.fecha_Carga || reg.fecha_carga,
+            reg.inq_Prop || reg.inq_prop
         ].join(";");
     });
 
-    // 3. EL TRUCO: Agregamos "sep=;" al inicio para que Excel sepa separar las columnas
-    // Y el prefijo \ufeff para que reconozca los acentos (UTF-8)
+    // 3. Agregamos "sep=;" al inicio para Excel y \ufeff para los acentos UTF-8
     const contenido = "sep=;\n" + encabezados.join(";") + "\n" + filas.join("\n");
 
-    // 4. Creamos el Blob con codificación UTF-8
-    const blob = new Blob(["\ufeff" + contenido], { 
-        type: "text/csv;charset=utf-8;" 
+    // 4. Creamos el Blob
+    const blob = new Blob(["\ufeff" + contenido], {
+        type: "text/csv;charset=utf-8;"
     });
 
     const url = URL.createObjectURL(blob);
@@ -110,8 +134,6 @@ const prepararTextoYExportar = () => {
 
     URL.revokeObjectURL(url);
 };
-
-
 
 
 const eliminarRegistro = async () => {
@@ -128,14 +150,14 @@ const eliminarRegistro = async () => {
             // await api.delete(`/registros/${id}`);
 
             // 3. Mostrás el éxito
-           const resultado = await eliminarRegistroService();
-           if (resultado.status === 200) {
-               alertas.success('¡Eliminado!', 'Los registros fueron eliminados correctamente.');
-               obtenerRegistros();
-               //estaAbierto = false;
-               emit('cerrarModalAcciones');
-               emit('recargarTablaDatos');
-           }
+            const resultado = await eliminarRegistroService();
+            if (resultado.status === 200) {
+                alertas.success('¡Eliminado!', 'Los registros fueron eliminados correctamente.');
+                obtenerRegistros();
+                //estaAbierto = false;
+                emit('cerrarModalAcciones');
+                emit('recargarTablaDatos');
+            }
 
         } catch (error) {
             alertas.error('Error', 'No se pudo eliminar el registro.');

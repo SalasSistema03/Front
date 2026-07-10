@@ -143,3 +143,11 @@ export const descargarPdfBrocheService = (params) => {
     responseType: 'blob'   // ¡CRÍTICO para recibir archivos binarios!
   });
 };
+
+export const editarBrocheService = (id, data) => {
+  const token = localStorage.getItem('token');
+  // Usamos PUT porque vamos a actualizar un registro completo
+  return axios.put(`${API_URL}/v1/expensas/broche-editar/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
