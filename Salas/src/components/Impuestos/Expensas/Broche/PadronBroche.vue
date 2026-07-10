@@ -92,7 +92,16 @@
                                 <td>{{ broche.unidad || '-' }}</td>
                                 <td class="text-start">{{ broche.direccion }} {{ broche.altura }}</td>
                                 <td>
-                                    <span class="badge bg-secondary">{{ broche.estado || '-' }}</span>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <span class="badge bg-secondary">{{ broche.estado || '-' }}</span>
+
+                                        <button v-if="broche.observaciones && broche.observaciones.trim() !== ''"
+                                            type="button" class="btn btn-sm btn-link p-0 text-info shadow-none"
+                                            @click="abrirModalObservaciones(broche.observaciones)"
+                                            title="Ver observaciones">
+                                            <i class="bi bi-chat-text-fill fs-5"></i>
+                                        </button>
+                                    </div>
                                 </td>
                                 <td>{{ broche.vencimientobroche || '-' }}</td>
                                 <td>{{ formatearMoneda(broche.extraordinaria) }}</td>
@@ -100,10 +109,16 @@
                                 <td class="fw-bold text-primary">{{ formatearMoneda(broche.total) }}</td>
                                 <td>{{ broche.periodo || '-' }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-danger py-0 shadow-none"
-                                        @click="eliminarBroche(broche.id_broche)">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <button type="button" class="btn btn-sm btn-outline-primary py-0 shadow-none"
+                                            @click="abrirModalEditar(broche)" title="Editar importes">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger py-0 shadow-none"
+                                            @click="eliminarBroche(broche.id_broche)" title="Eliminar broche">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -121,6 +136,16 @@
     <ModalExportarBroche v-if="mostrarModalExportar" :show="mostrarModalExportar" :empresas="listaEmpresas"
         @close="mostrarModalExportar = false" />
 
+    <ModalEditarBroche v-if="mostrarModalEditar" :show="mostrarModalEditar" :broche="brocheSeleccionado"
+        @close="mostrarModalEditar = false" @recargar="obtenerBroches" />
+
+    <ModalObservacionesBroche 
+        v-if="mostrarModalObservaciones" 
+        :show="mostrarModalObservaciones" 
+        :observaciones="textoObservacion"
+        @close="mostrarModalObservaciones = false" 
+    />
+
 </template>
 
 <script setup>
@@ -129,11 +154,17 @@ import { alertas } from '@/utils/alertas';
 import { getBrochesService, eliminarBrocheService } from '@/Services/api/Impuestos/expensasApi.js';
 import ModalCargarBroche from './Modales/ModalCargarBroche.vue';
 import ModalExportarBroche from './Modales/ModalExportarBroche.vue';
+import ModalEditarBroche from './Modales/ModalEditarBroche.vue';
+import ModalObservacionesBroche from './Modales/ModalObservacionesBroche.vue';
 
 // --- ESTADOS ---
 const cargando = ref(false);
 const mostrarModalCarga = ref(false);
 const mostrarModalExportar = ref(false);
+const mostrarModalEditar = ref(false);
+const brocheSeleccionado = ref(null);
+const mostrarModalObservaciones = ref(false);
+const textoObservacion = ref('');
 
 const broches = ref([]);
 const listaEdificios = ref([]);
@@ -203,6 +234,15 @@ const formatearMoneda = (valor) => {
 // 4. Modales
 const abrirModalCarga = () => mostrarModalCarga.value = true;
 const abrirModalExportar = () => mostrarModalExportar.value = true;
+const abrirModalEditar = (broche) => {
+    console.log("DATOS DEL BROCHE A EDITAR:", JSON.parse(JSON.stringify(broche)));
+    brocheSeleccionado.value = broche;
+    mostrarModalEditar.value = true;
+};
+const abrirModalObservaciones = (observacion) => {
+    textoObservacion.value = observacion;
+    mostrarModalObservaciones.value = true;
+};
 
 // --- CICLO DE VIDA ---
 onMounted(() => {
