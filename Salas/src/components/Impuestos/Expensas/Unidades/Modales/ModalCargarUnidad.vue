@@ -151,7 +151,7 @@
 import { ref, onMounted } from 'vue';
 import BaseModal from '@/components/base/BaseModal.vue';
 import { alertas } from '@/utils/alertas';
-import { completarCargaUnidadesService } from '@/Services/api/Impuestos/expensasApi.js';
+import { completarCargaUnidadesService, eliminarUnidadService } from '@/Services/api/Impuestos/expensasApi.js';
 
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -203,8 +203,11 @@ const agregarPadronVacio = () => {
 
 const eliminarPadron = (index) => {
   if (padronesLocales.value[index].id) {
-    alertas.confirmar('¿Eliminar esta fila?', 'Si guardas los cambios, este padrón se borrará del sistema.').then((result) => {
+    alertas.confirmar('¿Eliminar esta fila?', 'Si guardas los cambios, esta unidad se borrará del sistema.').then((result) => {
       if (result.isConfirmed) {
+        eliminarUnidadService(padronesLocales.value[index].id).then(() => {
+          padronesLocales.value.splice(index, 1);
+        });
         padronesLocales.value.splice(index, 1);
       }
     });

@@ -158,17 +158,17 @@
           <div class="card-body p-2">
             <div class="table-responsive table-scroll-container">
               <table class="table table-striped table-hover w-100" id="tablaDatos">
-                <thead>
+              <thead>
                   <tr>
                     <th>Folio</th>
                     <th>Nombre</th>
-                    <th>Meses</th>
-                    <th>Monto Contrato</th>
-                    <th>Hojas</th>
-                    <th>Informe</th>
+                    <th class="text-center">Meses</th>
+                    <th class="text-end">Monto Contrato</th>
+                    <th class="text-center">Hojas</th>
+                    <th class="text-center">Informe</th>
                     <th>Tipo Contrato</th>
-                    <th>Inq-Prop</th>
-                    <th>Sellado</th>
+                    <th class="text-center">Inq-Prop</th>
+                    <th class="text-end">Sellado</th>
                     <th>Usuario</th>
                   </tr>
                 </thead>
@@ -176,13 +176,17 @@
                   <tr v-for="(item, index) in registros" :key="index">
                     <td>{{ item.folio }}</td>
                     <td class="td_nombre">{{ item.nombre }}</td>
-                    <td>{{ item.cantidad_meses }}</td>
-                    <td>{{ item.monto_contrato }}</td>
-                    <td>{{ item.hojas }}</td>
-                    <td>{{ item.informe }}</td>
+                    <td class="text-center">{{ item.cantidad_meses }}</td>
+                    
+                    <td class="text-end fw-semibold">{{ formatearMoneda(item.monto_contrato) }}</td>
+                    
+                    <td class="text-center">{{ item.hojas }}</td>
+                    <td class="text-center">{{ item.informe }}</td>
                     <td>{{ item.tipo_contrato }}</td>
-                    <td>{{ item.inq_prop }}</td>
-                    <td>{{ item.sellado }}</td>
+                    <td class="text-center">{{ item.inq_prop }}</td>
+                    
+                    <td class="text-end fw-bold text-primary">{{ formatearMoneda(item.sellado) }}</td>
+                    
                     <td>{{ item.usuario.username || "-" }}</td>
                   </tr>
                 </tbody>
@@ -319,6 +323,15 @@ const resetForm = () => {
   });
   resultado.value = null;
   error.value = null;
+};
+
+// Función para formatear a pesos argentinos
+const formatearMoneda = (valor) => {
+  if (valor === undefined || valor === null || valor === '') return '$ 0,00';
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+  }).format(valor);
 };
 
 // 3. EJECUTAR AL CARGAR EL COMPONENTE
