@@ -10,8 +10,10 @@ import Alquiler from '../router/alquiler'
 import Agenda from '../router/agenda'
 import Cliente from '../router/cliente'
 import Impuestos from '../router/impuestos'
+import Contratos from '../router/contrato'
 import { useAuthStore } from '@/stores/auth'
 import { alertas } from '../utils/alertas'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +44,7 @@ const router = createRouter({
     ...Agenda,
     ...Cliente,
     ...Impuestos,
+    ...Contratos,
   ],
 })
 

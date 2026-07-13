@@ -128,12 +128,23 @@
                     <option value="U$D">U$D</option>
                   </select>
                 </div>
-                <div class="col-md-8">
+
+                <div class="col-md-4">
                   <input type="number" class="form-control form-control-sm" v-model="montoReserva"
                     :disabled="selectoresActivos === false || resPermiso2 === true" />
                 </div>
+
+
               </div>
             </div>
+
+            <div class="col-md-2">
+              <label for="" class="form-label">Meses Contrato</label>
+              <input type="text" class="form-control form-control-sm" v-model="mesesContrato"
+                :disabled="selectoresActivos === false || resPermiso2 === true">
+            </div>
+
+
 
             <div class="col-md-3">
               <div class="row">
@@ -381,6 +392,7 @@ const habilitarCambioEstado = ref(false)
 const filtroPorMes = ref('Actual')
 const precioFolio = ref(null)
 const monedaPrecioFolio = ref(null)
+const mesesContrato = ref(null)
 //const aceptarMonto = ref(false)
 
 const abrirModalObservacion = (item) => {
@@ -565,6 +577,7 @@ const handleAceptarMonto = async () => {
     id: idProcesoPropiedad.value
   }
   try {
+    //console.log('aca');
     await guardarReservaIdentificada(data)
     showSuccess('Reserva confirmada exitosamente')
 
@@ -728,7 +741,9 @@ const resetForm = () => {
   ignorarWatchTelefono.value = false
   precioFolio.value = null
   monedaPrecioFolio.value = null
+  mesesContrato.value = null
   resetComprobanteField()
+
 }
 //enviar los datos al backend
 const reservar = async () => {
@@ -752,6 +767,7 @@ const reservar = async () => {
   formData.append('moneda', moneda.value)
   formData.append('montoReserva', montoReserva.value)
   formData.append('precioFolio', precioFolio.value)
+  formData.append('mesesContrato', mesesContrato.value)
 
 
 
@@ -869,19 +885,13 @@ const seleccionarReserva = (item) => {
   rutaComprobante.value = item.proceso_propiedad?.documentacion
   rutaComprobanteFoto.value = item.proceso_propiedad?.documentacion
   precioFolio.value = item.proceso_propiedad?.precio_alquiler
+  mesesContrato.value = item.proceso_propiedad?.meses_contrato
 
+  if (item.estado?.id == 3 || item.estado?.id == 4) {
+    habilitarCambioEstado.value = false
+  }
 
-  /* if (item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_pesos != null || item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_pesos != 0) {
-    precioFolio.value = item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_pesos
-    monedaPrecioFolio.value = '$'
-  } else if (item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_dolares != null || item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_dolares != 0) {
-    precioFolio.value = item.proceso_propiedad?.propiedad?.precio_actual.moneda_alquiler_dolares
-    monedaPrecioFolio.value = 'U$S'
-  } else {
-    precioFolio.value = 0
-    monedaPrecioFolio.value = '$'
-  } */
-  console.log(item)
+  //console.log(item)
 
 
 }
