@@ -4,12 +4,7 @@
       <img :src="logo" alt="Logo" class="img-fluid" />
     </router-link>
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -28,16 +23,9 @@
             </a>
 
             <ul class="dropdown-menu navbar-dropdown-menu">
-              <li
-                v-for="seccion in nav.secciones"
-                :key="seccion.nombre"
-                class="dropdown navbar-dropdown-submenu"
-              >
-                <a
-                  class="dropdown-item dropdown-toggle d-flex justify-content-between align-items-center"
-                  href="#"
-                  @click.prevent="toggleSubmenuClick($event)"
-                >
+              <li v-for="seccion in nav.secciones" :key="seccion.nombre" class="dropdown navbar-dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle d-flex justify-content-between align-items-center" href="#"
+                  @click.prevent="toggleSubmenuClick($event)">
                   <!--  {{ seccion }} -->{{ seccion.nombre }}
                   <span class="navbar-dropdown-arrow">›</span>
                 </a>
@@ -56,21 +44,38 @@
 
         <!-- Notificaciones -->
         <li class="nav-item">
-          <a
-            class="nav-link dropdown-toggle navbar-notificaciones position-relative"
-            href="#"
-            data-bs-toggle="dropdown"
-          >
+          <a class="nav-link dropdown-toggle navbar-notificaciones position-relative" href="#"
+            data-bs-toggle="dropdown">
             <i class="bi bi-bell"></i>
             <span v-if="notificacionCount !== '0'" class="navbar-notificaciones-contador">
               {{ notificacionCount }}
             </span>
           </a>
-          <ul
-            class="dropdown-menu navbar-notificaciones_dropdown dropdown-menu-end navbar-dropdown-menu"
-          >
+          <ul class="dropdown-menu navbar-notificaciones_dropdown dropdown-menu-end navbar-dropdown-menu">
             <li v-for="notificacion in notificaciones" :key="notificacion.id">
-              <a href="#" @click.prevent="redirijirAsesores(notificacion)">
+              <!--  {{ notificacion }} -->
+              <a href="#" v-if="notificacion.data.pertenece == 'asesores'"
+                @click.prevent="redirigirAsesores(notificacion)">
+                <div class="navbar-notificacion-nombre">
+                  <i class="bi bi-person-workspace"></i>
+                  {{ notificacion.data.descripcion }}
+                </div>
+                <div class="navbar-notificacion-fecha">
+                  {{ notificacion.data.fecha }} | {{ notificacion.data.hora }}hs
+                </div>
+              </a>
+              <a href="#" v-if="notificacion.data.pertenece == 'reserva'"
+                @click.prevent="redirigirReservas(notificacion)">
+                <div class="navbar-notificacion-nombre">
+                  <i class="bi bi-person-workspace"></i>
+                  {{ notificacion.data.descripcion }}
+                </div>
+                <div class="navbar-notificacion-fecha">
+                  {{ notificacion.data.fecha }} | {{ notificacion.data.hora }}hs
+                </div>
+              </a>
+              <a href="#" v-if="notificacion.data.pertenece == 'contratoNuevo'"
+                @click.prevent="redirigirContratoNuevo(notificacion)">
                 <div class="navbar-notificacion-nombre">
                   <i class="bi bi-person-workspace"></i>
                   {{ notificacion.data.descripcion }}
@@ -94,22 +99,17 @@
           </a>
           <ul class="dropdown-menu navbar-admin_dropdown dropdown-menu-end navbar-dropdown-menu">
             <li v-if="isUserAdmin">
-              <router-link class="dropdown-item" :to="{ name: 'register' }"
-                >Registro Usuarios</router-link
-              >
+              <router-link class="dropdown-item" :to="{ name: 'register' }">Registro Usuarios</router-link>
             </li>
             <li v-if="isUserAdmin">
-              <router-link class="dropdown-item" :to="{ name: 'update-user' }"
-                >Actualizar Usuario</router-link
-              >
+              <router-link class="dropdown-item" :to="{ name: 'update-user' }">Actualizar Usuario</router-link>
             </li>
             <li>
               <hr class="dropdown-divider" />
             </li>
             <li>
               <a class="dropdown-item" href="#" @click.prevent="authStore.logout()">
-                <i class="bi bi-door-open"></i>Logout</a
-              >
+                <i class="bi bi-door-open"></i>Logout</a>
             </li>
           </ul>
         </li>
@@ -183,16 +183,42 @@ const toggleSubmenuClick = (event) => {
 
 const getItemUrl = (item) => (item.ruta ? `/${item.ruta}` : '#')
 
-const redirijirAsesores = async (data) => {
+const redirigirAsesores = async (data) => {
   const id_notificacion = data.id
   const cliente_id = data.data.cliente_id
   const criterio_id = data.data.id_criterio_venta
-  console.log(data)
-  console.log(id_notificacion)
+  //console.log(data)
+  //console.log(id_notificacion)
   try {
     await notificacionLeida(id_notificacion)
     showSuccess('Notificación marcada como leída')
     router.push({ name: 'asesores', query: { clienteId: cliente_id, criterioId: criterio_id } })
+  } catch (error) {
+    console.error('Error al marcar notificación como leída:', error)
+    showError('Error al marcar notificación como leída')
+  }
+}
+
+const redirigirReservas = async (data) => {
+  const id_notificacion = data.id
+  console.log(data)
+  try {
+    await notificacionLeida(id_notificacion)
+    showSuccess('Notificación marcada como leída')
+    router.push({ name: 'reserva' })
+  } catch (error) {
+    console.error('Error al marcar notificación como leída:', error)
+    showError('Error al marcar notificación como leída')
+  }
+}
+
+const redirigirContratoNuevo = async (data) => {
+  const id_notificacion = data.id
+  const folio = data.data.folio
+  try {
+    await notificacionLeida(id_notificacion)
+    showSuccess('Notificación marcada como leída')
+    router.push({ name: 'contratos_nuevos', query: { folio: folio } })
   } catch (error) {
     console.error('Error al marcar notificación como leída:', error)
     showError('Error al marcar notificación como leída')

@@ -54,8 +54,9 @@
             <label class="form-label">Tirilla entregada a</label>
             <select v-model="form.tirilla_entregada_a" class="form-control form-control-sm">
               <option value="">Seleccionar</option>
-              <option v-for="usuario in usuarioTirilla" :key="usuario.id" :value="usuario.id">
-                {{ usuario.username }}
+              <option v-for="usuario in usuarioTirilla" :key="getUsuarioOptionValue(usuario)"
+                :value="getUsuarioOptionValue(usuario)">
+                {{ getUsuarioLabel(usuario) }}
               </option>
             </select>
           </div>
@@ -69,8 +70,9 @@
             <label class="form-label">Tirilla controlada por</label>
             <select v-model="form.tirilla_controlada_por" class="form-control form-control-sm">
               <option value="">Seleccionar</option>
-              <option v-for="usuario in usuarioControlaTirilla" :key="usuario.id" :value="usuario.id">
-                {{ usuario.username }}
+              <option v-for="usuario in usuarioControlaTirilla" :key="getUsuarioOptionValue(usuario)"
+                :value="getUsuarioOptionValue(usuario)">
+                {{ getUsuarioLabel(usuario) }}
               </option>
             </select>
           </div>
@@ -122,6 +124,7 @@
 import { ref, watch, defineProps, defineEmits, onMounted } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { verificarPermisoUsuario } from '@/Services/api/Contrato/Contrato'
+import { useDateFormatter } from '@/composables/useDateFormatter'
 const props = defineProps({
   show: { type: Boolean, default: false },
   contrato: { type: Object, default: null },
@@ -131,60 +134,73 @@ const props = defineProps({
 const emit = defineEmits(['close', 'guardar'])
 const usuarioTirilla = ref([])
 const usuarioControlaTirilla = ref([])
-const form = ref({
-  id_estado: '',
-  fecha_inventario: '',
-  fecha_comercial_presenta_carpeta: '',
-  fecha_preaprobada: '',
-  fecha_reserva: '',
-  gastos_administrativos: '',
-  tirilla_entregada_a: '',
-  fecha_tirilla_entregada: '',
-  tirilla_controlada_por: '',
-  fecha_tirilla_controlada: '',
-  fecha_contrato: '',
-  fecha_autorizacion: '',
-  fecha_finalizacion_firma_cobro: '',
-  observaciones: ''
-})
+const { formatDateForInput } = useDateFormatter()
 
-watch(() => props.contrato, (newContrato) => {
-  if (newContrato && newContrato.historial_estado_contrato) {
-    const hc = newContrato.historial_estado_contrato
-    form.value = {
+const normalizarFecha = (valor) => {
+  if (!valor) return ''
+  return formatDateForInput(valor) || ''
+}
+
+const getUsuarioOptionValue = (usuario) => {
+  if (!usuario) return ''
+  if (typeof usuario === 'object') {
+    return usuario.usuario_id ?? usuario.id ?? usuario.usuario?.id ?? ''
+  }
+  return usuario
+}
+
+const getUsuarioLabel = (usuario) => {
+  if (!usuario) return ''
+  if (typeof usuario === 'object') {
+    return usuario.username ?? usuario.name ?? usuario.usuario?.username ?? ''
+  }
+  return usuario
+}
+
+const getFormFromContrato = (contrato) => {
+  const hc = contrato?.historial_estado_contrato
+
+  if (hc) {
+    return {
       id_estado: hc.id_estado || '',
-      fecha_inventario: hc.fecha_inventario || '',
-      fecha_comercial_presenta_carpeta: hc.fecha_comercial_presenta_carpeta || '',
-      fecha_preaprobada: hc.fecha_preaprobada || '',
-      fecha_reserva: hc.fecha_reserva || '',
+      fecha_inventario: normalizarFecha(hc.fecha_inventario),
+      fecha_comercial_presenta_carpeta: normalizarFecha(hc.fecha_comercial_presenta_carpeta),
+      fecha_preaprobada: normalizarFecha(hc.fecha_preaprobada),
+      fecha_reserva: normalizarFecha(hc.fecha_reserva),
       gastos_administrativos: hc.gastos_administrativos || '',
-      tirilla_entregada_a: hc.tirilla_entregada_a || '',
-      fecha_tirilla_entregada: hc.fecha_tirilla_entregada || '',
-      tirilla_controlada_por: hc.tirilla_controlada_por || '',
-      fecha_tirilla_controlada: hc.fecha_tirilla_controlada || '',
-      fecha_contrato: hc.fecha_contrato || '',
-      fecha_autorizacion: hc.fecha_autorizacion || '',
-      fecha_finalizacion_firma_cobro: hc.fecha_finalizacion_firma_cobro || '',
+      tirilla_entregada_a: getUsuarioOptionValue(hc.tirilla_entregada_a),
+      fecha_tirilla_entregada: normalizarFecha(hc.fecha_tirilla_entregada),
+      tirilla_controlada_por: getUsuarioOptionValue(hc.tirilla_controlada_por),
+      fecha_tirilla_controlada: normalizarFecha(hc.fecha_tirilla_controlada),
+      fecha_contrato: normalizarFecha(hc.fecha_contrato),
+      fecha_autorizacion: normalizarFecha(hc.fecha_autorizacion),
+      fecha_finalizacion_firma_cobro: normalizarFecha(hc.fecha_finalizacion_firma_cobro),
       observaciones: hc.observaciones || ''
     }
-  } else {
-    form.value = {
-      id_estado: '',
-      fecha_inventario: '',
-      fecha_comercial_presenta_carpeta: '',
-      fecha_preaprobada: '',
-      fecha_reserva: '',
-      gastos_administrativos: '',
-      tirilla_entregada_a: '',
-      fecha_tirilla_entregada: '',
-      tirilla_controlada_por: '',
-      fecha_tirilla_controlada: '',
-      fecha_contrato: '',
-      fecha_autorizacion: '',
-      fecha_finalizacion_firma_cobro: '',
-      observaciones: ''
-    }
   }
+
+  return {
+    id_estado: '',
+    fecha_inventario: '',
+    fecha_comercial_presenta_carpeta: '',
+    fecha_preaprobada: '',
+    fecha_reserva: '',
+    gastos_administrativos: '',
+    tirilla_entregada_a: '',
+    fecha_tirilla_entregada: '',
+    tirilla_controlada_por: '',
+    fecha_tirilla_controlada: '',
+    fecha_contrato: '',
+    fecha_autorizacion: '',
+    fecha_finalizacion_firma_cobro: '',
+    observaciones: ''
+  }
+}
+
+const form = ref(getFormFromContrato(props.contrato))
+
+watch(() => props.contrato, (newContrato) => {
+  form.value = getFormFromContrato(newContrato)
 }, { immediate: true })
 
 const formatearFolio = (folios) => {

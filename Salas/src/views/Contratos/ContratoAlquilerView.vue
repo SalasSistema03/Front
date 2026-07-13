@@ -77,28 +77,24 @@
             <th>Fecha controlada</th>
             <th>Fecha Contrato</th>
             <th>Fecha Autorizacion</th>
-            <th>Finalizacion firma cobro</th>
-            <th>Observaciones</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in historial" :key="item.id">
-            <td>-</td>
+            <td>{{ formatearFolio(item.propiedad?.folios) }}</td>
             <td>{{ item.historial_estado_contrato?.estado?.estado }}</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>?</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_inventario) }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_comercial_presenta_carpeta) }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_preaprobada) }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_reserva) }}</td>
+            <td>???</td>
+            <td>{{ item.historial_estado_contrato.tirilla_entregada_por?.username }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_tirilla_entregada) }}</td>
+            <td>{{ item.historial_estado_contrato.tirilla_controlada_por?.username || '-' }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_tirilla_controlada) }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_contrato) }}</td>
+            <td>{{ formatDate(item.historial_estado_contrato?.fecha_autorizacion) }}</td>
             <td>
               <div class=" ">
                 <button class="btn btn-secondary btn-sm p-0" type="button" data-bs-toggle="dropdown"
@@ -127,12 +123,16 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import NavComponent from '@/components/NavComponent.vue'
 import ModalContrato from '@/components/Contrato/Contrato Nuevo/ModalContrato.vue'
 import { getEstadosContrato, getHistorialContrato, ActualizarEstadoContrato } from '@/Services/api/Contrato/Contrato'
 import { asesoresAlquiler } from '@/Services/api/Atcl/Alquiler/Alquiler'
 import { useToast } from '@/composables/useToast'
+import { useDateFormatter } from '@/composables/useDateFormatter'
 
+const route = useRoute()
+const { formatDate } = useDateFormatter()
 
 const historial = ref([])
 const mes = ref(new Date().getMonth() + 1)
@@ -202,6 +202,7 @@ const listado = async (form) => {
 }
 
 const abrirModalContrato = (item) => {
+  //console.log('Contrato seleccionado:', item)
   contratoSeleccionado.value = item
   showModalContrato.value = true
 }
@@ -245,7 +246,13 @@ onMounted(() => {
   asignarEstadoContrato()
   obtenerAsesores()
 
+  // Leer query params desde la notificación
+  if (route.query.folio) {
+    folio.value = route.query.folio
+    mes.value = ''
+  }
 
   listado(form)
+
 })
 </script>

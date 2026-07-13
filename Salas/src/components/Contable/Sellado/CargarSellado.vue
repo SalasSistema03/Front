@@ -10,23 +10,37 @@
             <form @submit.prevent="handleSubmit" class="container-fluid px-0">
 
               <div class="row g-3 ">
-                <div class="col-12 col-md-2 form-group">
+                <div class="col-md-3  form-group">
+
                   <label class="form-label fw-bold small  text-muted">Folio</label>
-                  <input type="number" v-model="form.folio" class="form-control form-control-sm shadow-sm" required />
+                  <div class="d-flex gap-1">
+                    <div class="col-5">
+                      <select name="" id="" class="form-select form-select-sm shadow-sm">
+                        <option value="1">-</option>
+                        <option value="2">C</option>
+                        <option value="3">T</option>
+                      </select>
+                    </div>
+                    <div class="col-7">
+                      <input type="number" v-model="form.folio" class="form-control form-control-sm shadow-sm"
+                        required />
+                    </div>
+                  </div>
+
                 </div>
 
-                <div class="col-12 col-md-4 form-group">
+                <div class="col-md-4 form-group">
                   <label class="form-label fw-bold small  text-muted">Nombre del Inquilino</label>
                   <input type="text" v-model="form.nombre" class="form-control form-control-sm shadow-sm" required />
                 </div>
 
-                <div class="col-12 col-md-3 form-group">
+                <div class="col-md-2 form-group">
                   <label class="form-label fw-bold small  text-muted">C/Meses</label>
                   <input type="number" v-model="form.cantidad_meses" class="form-control form-control-sm shadow-sm"
                     required />
                 </div>
 
-                <div class="col-12 col-md-3 form-group">
+                <div class="col-md-3 form-group">
                   <label class="form-label fw-bold small  text-muted">Monto Alquiler</label>
                   <div class="input-group input-group-sm shadow-sm">
                     <input type="number" v-model="form.monto_alquiler" class="form-control" required />
@@ -258,7 +272,7 @@ const handleSubmit = async () => {
     hojas: Number(form.value.hojas),
     cantidad_informes: Number(form.value.cantidad_informes),
     // Agregamos campos que faltaban pero que Postman pide
-    inq_prop:  form.value.inq_prop === 'SI' ? 'SI' : 'NO',
+    inq_prop: form.value.inq_prop === 'SI' ? 'SI' : 'NO',
     // Mapeo de tipo_contrato si es necesario (ejemplo: Vivienda = 1 comercio = 2, cochera = 3)
     tipo_contrato: form.value.tipo_contrato === 'Vivienda' ? 1 : form.value.tipo_contrato === 'Comercio' ? 2 : 3
   };
