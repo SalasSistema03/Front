@@ -118,7 +118,9 @@
                 <option value="TRANSFERENCIA">Transferencia</option>
               </select>
             </div>
-            <div class="col-md-6">
+
+
+            <div class="col-md-4">
               <label for="monto_reserva" class="form-label">Monto de Reserva</label>
               <div class="row">
                 <div class="col-md-4">
@@ -129,12 +131,10 @@
                   </select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-8">
                   <input type="number" class="form-control form-control-sm" v-model="montoReserva"
                     :disabled="selectoresActivos === false || resPermiso2 === true" />
                 </div>
-
-
               </div>
             </div>
 
@@ -267,7 +267,6 @@
               <input type="text" v-model="montoReserva" disabled class="form-control form-control-sm">
             </div>
             <div class="col-md-4 form-group">
-              <!-- <button class="btn btn-primary btn-sm mt-4">Aceptar Monto</button> -->
               <button class="btn btn-primary btn-sm mt-4" @click="handleAceptarMonto"
                 :disabled="reservaIdentificada == 1">Aceptar Monto</button>
             </div>

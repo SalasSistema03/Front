@@ -48,14 +48,7 @@
         <label for="">Folio</label>
         <input type="text" v-model="folio" class="form-control form-control-sm">
       </div>
-      <!-- <div class="col-md-1">
-        <label for="">Inventario</label>
-        <select v-model="inventario" class="form-control form-control-sm">
-          <option value="">Todos</option>
-          <option value="1">Si</option>
-          <option value="2">No</option>
-        </select>
-      </div> -->
+
 
     </div>
 
