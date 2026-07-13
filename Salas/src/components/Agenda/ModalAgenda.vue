@@ -27,11 +27,13 @@
         </div>
 
         <div class="row d-flex align-items-center justify-content-center">
-          <div class="col-md-3" v-if="props.sector?.nombre === 'Alquiler'">
+          <div class="col-md-3" v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas'">
             <label>Nombre Cliente</label>
-            <input type="text" class="form-control" v-model="nombreCliente" :readonly="nota" />
+            <input type="text" class="form-control" v-model="nombreCliente" :readonly="nota"
+              :disabled="props.sector?.nombre === 'Ventas'" />
           </div>
-          <div class="col-md-2 position-relative" v-if="props.sector?.nombre === 'Alquiler'">
+          <div class="col-md-2 position-relative"
+            v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas'">
             <label>Telefono</label>
             <input type="text" class="form-control" v-model="telefono"
               @focus="mostrandoResultadosClientes = resultadosClientes.length > 0" :readonly="nota" />
@@ -433,7 +435,7 @@ const seleccionarPropiedad = (propiedad) => {
 
 // Seleccionar cliente de los resultados
 const seleccionarCliente = (item) => {
-  ignorarWatchTelefono.value = true   // ← evita que el watcher relance la búsqueda
+  ignorarWatchTelefono.value = true
   telefono.value = item.cliente.telefono
   nombreCliente.value = item.cliente.nombre
   clienteSeleccionado.value = item.cliente
