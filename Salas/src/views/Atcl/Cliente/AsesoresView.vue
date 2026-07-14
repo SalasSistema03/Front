@@ -193,7 +193,7 @@
               Fecha:
             </div>
             <div class="col-10 criterio-texto-asesores pl-0 d-flex justify-content-star align-items-center">
-              {{formatDate(criterio.fecha_criterio_venta) }}
+              {{ formatDate(criterio.fecha_criterio_venta) }}
             </div>
             <div class="col-2 criterio-titulos-asesores p-0 d-flex justify-content-star align-items-center">
               Precio:
@@ -288,8 +288,8 @@
               @click="abirBusquedaPropiedadVentaModal">
               <i class="bi bi-search"></i>
             </button>
-            <button type="button" class="btn btn-sm px-2 ms-2 btn-adds-conversacion-asesores" @click="abrirModalAgenda()"><i
-                class="bi bi-calendar-plus"></i></button>
+            <button type="button" class="btn btn-sm px-2 ms-2 btn-adds-conversacion-asesores"
+              @click="abrirModalAgenda()"><i class="bi bi-calendar-plus"></i></button>
 
             <input type="text" name="mensaje" class="form-control px-1 ms-1 input-texto ms-2"
               placeholder="Escribe un mensaje..." v-model="mensaje" autocomplete="off">
@@ -395,8 +395,9 @@
   <ModalDevolucion :show="showDevolucionModal" @close="showDevolucionModal = false" :item="itemActual"
     @mensajeDevolucion="recibirDevolucion" />
 
-   <ModalAgenda :show="showModalAgenda" :username="usuarioAgenda" :sector="selectedSector"
-    @close="showModalAgenda = false"  :criterioSeleccionado ="criterioSeleccionado" @nota-guardada="recargarMensajeYCódigos"/>
+  <ModalAgenda :show="showModalAgenda" :username="usuarioAgenda" :sector="selectedSector"
+    @close="showModalAgenda = false" :criterioSeleccionado="criterioSeleccionado"
+    @nota-guardada="recargarMensajeYCódigos" />
 
 
 </template>
@@ -442,7 +443,7 @@ export default {
     const filtroSinDevolucion = false;
     const showModalAgenda = false;
     const usuarioAgenda = null;
-    const selectedSector = { nombre: 'Ventas' , id:2}
+    const selectedSector = { nombre: 'Ventas', id: 2 }
 
 
     return {
@@ -503,11 +504,21 @@ export default {
 
       // Filtrar por nombre si hay texto de búsqueda
       // Filtrar por nombre si hay texto de búsqueda
-if (this.buscar.trim() !== '') {
-  clientesFiltrados = clientesFiltrados.filter(cliente =>
-    (cliente.nombre ?? '').toLowerCase().includes(this.buscar.toLowerCase())
-  );
-}
+      /* if (this.buscar.trim() !== '') {
+        clientesFiltrados = clientesFiltrados.filter(cliente =>
+          (cliente.nombre ?? '').toLowerCase().includes(this.buscar.toLowerCase())
+        );
+      } */
+      if (this.buscar.trim() !== '') {
+        const busqueda = this.buscar.toLowerCase().trim();
+
+        clientesFiltrados = clientesFiltrados.filter(cliente =>
+          (cliente.nombre ?? '').toLowerCase().includes(busqueda) ||
+          (cliente.telefono ?? '').toLowerCase().includes(busqueda)
+        );
+
+        console.log('Clientes filtrados por búsqueda:', clientesFiltrados);
+      }
 
 
       if (this.filtroSinDevolucion) {

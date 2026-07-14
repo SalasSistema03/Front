@@ -479,7 +479,15 @@ const seleccionarPropiedad = (propiedad) => {
   ignorarWatchCodigo.value = true
   idPropiedad.value = propiedad.id || ''
   codigo.value = propiedad.cod_alquiler || ''
-  direccion.value = `${propiedad.calle || ''} ${propiedad.numero || ''} ${propiedad.piso ? 'P' + propiedad.piso : ''} ${propiedad.departamento ? 'Dpto' + propiedad.departamento : ''}`.trim()
+  //direccion.value = `${propiedad.calle || ''} ${propiedad.numero || ''} ${propiedad.piso ? 'P' + propiedad.piso : ''} ${propiedad.departamento ? 'Dpto' + propiedad.departamento : ''}`.trim()
+  direccion.value = [
+    propiedad.calle,
+    propiedad.numero,
+    propiedad.piso ? `P${propiedad.piso}` : null,
+    propiedad.departamento ? `Dpto ${propiedad.departamento}` : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
   folio.value = propiedad.folio || ''
   if (propiedad?.precio?.moneda_alquiler_pesos != null || propiedad?.precio?.moneda_alquiler_pesos != 0) {
     precioFolio.value = propiedad.precio.moneda_alquiler_pesos
@@ -866,10 +874,19 @@ const seleccionarReserva = (item) => {
 
   // Asignamos la información de la propiedad
   codigo.value = item.proceso_propiedad?.propiedad?.cod_alquiler || ''
-  direccion.value = `${item.proceso_propiedad?.propiedad?.calle?.name || ''}
+  /* direccion.value = `${item.proceso_propiedad?.propiedad?.calle?.name || ''}
                      ${item.proceso_propiedad?.propiedad?.numero_calle || ''}
                      ${item.proceso_propiedad?.propiedad?.piso ? 'P' + item.proceso_propiedad?.propiedad?.piso : ''}
-                     ${item.proceso_propiedad?.propiedad?.departamento ? 'Dpto' + item.proceso_propiedad?.propiedad?.departamento : ''}`.trim()
+                     ${item.proceso_propiedad?.propiedad?.departamento ? 'Dpto' + item.proceso_propiedad?.propiedad?.departamento : ''}`.trim() */
+
+  direccion.value = [
+    item.proceso_propiedad?.propiedad?.calle?.name || '',
+    item.proceso_propiedad?.propiedad?.numero_calle || '',
+    item.proceso_propiedad?.propiedad?.piso ? `P${item.proceso_propiedad?.propiedad?.piso}` : null,
+    item.proceso_propiedad?.propiedad?.departamento ? `Dpto ${item.proceso_propiedad?.propiedad?.departamento}` : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
   folio.value = formatearFolio(item.proceso_propiedad?.propiedad?.folios)
 
   // Asignamos la información de la reserva
