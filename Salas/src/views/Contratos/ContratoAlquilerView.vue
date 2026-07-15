@@ -81,7 +81,7 @@
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_comercial_presenta_carpeta) }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_preaprobada) }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_reserva) }}</td>
-            <td>???</td>
+            <td>{{ item.historial_estado_contrato?.gastos_administrativos || '-' }}</td>
             <td>{{ item.historial_estado_contrato.tirilla_entregada_por?.username }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_tirilla_entregada) }}</td>
             <td>{{ item.historial_estado_contrato.tirilla_controlada_por?.username || '-' }}</td>
