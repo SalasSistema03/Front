@@ -197,7 +197,9 @@ const guardarCambios = async () => {
     emit('success')
 
   } catch (error) {
-    showError('Error al cargar manualmente')
+    const mensaje = error.response?.data?.message || 'Error al cargar manualmente'
+    showError(mensaje)
+    //console.error(error)
   }
   emit('close')
 }
