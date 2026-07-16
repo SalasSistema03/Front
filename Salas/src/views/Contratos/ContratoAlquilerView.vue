@@ -98,7 +98,11 @@
                   <li>
                     <button type="button" class="dropdown-item text-options-impuestos_lista"
                       @click="abrirModalContrato(item)">
-                      Editar Folio
+                      Editar
+                    </button>
+                    <button type="button" class="dropdown-item text-options-impuestos_lista"
+                      @click="abrirModalObservacionesContrato(item)">
+                      Observaciones
                     </button>
                   </li>
                 </ul>
@@ -112,6 +116,9 @@
 
   <ModalContrato :show="showModalContrato" :contrato="contratoSeleccionado" :estados="estadoContrato"
     @close="cerrarModalContrato" @guardar="guardarModalContrato" />
+
+  <ModalObservacionesContrato :show="showModalObservacionesContrato" :contrato="contratoSeleccionado"
+    :estados="estadoContrato" @close="cerrarModalObservacionesContrato" @guardar="guardarObservacionesContrato" />
 </template>
 
 <script setup>
@@ -119,6 +126,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import NavComponent from '@/components/NavComponent.vue'
 import ModalContrato from '@/components/Contrato/Contrato Nuevo/ModalContrato.vue'
+import ModalObservacionesContrato from '@/components/Contrato/Contrato Nuevo/ModalObservacionesContrato.vue'
 import { getEstadosContrato, getHistorialContrato, ActualizarEstadoContrato } from '@/Services/api/Contrato/Contrato'
 import { asesoresAlquiler } from '@/Services/api/Atcl/Alquiler/Alquiler'
 import { useToast } from '@/composables/useToast'
@@ -138,6 +146,7 @@ const folio = ref('')
 const inventario = ref('')
 const { showError, showSuccess } = useToast()
 const showModalContrato = ref(false)
+const showModalObservacionesContrato = ref(false)
 const contratoSeleccionado = ref(null)
 const form = {
   mes: mes.value,
@@ -200,9 +209,33 @@ const abrirModalContrato = (item) => {
   showModalContrato.value = true
 }
 
+const abrirModalObservacionesContrato = (item) => {
+  //console.log('Contrato seleccionado para observaciones:', item)
+  contratoSeleccionado.value = item
+  showModalObservacionesContrato.value = true
+}
+
 const cerrarModalContrato = () => {
   showModalContrato.value = false
   contratoSeleccionado.value = null
+}
+
+const cerrarModalObservacionesContrato = () => {
+  showModalObservacionesContrato.value = false
+  contratoSeleccionado.value = null
+}
+
+const guardarObservacionesContrato = async (formData) => {
+  try {
+    await ActualizarEstadoContrato(formData)
+    showSuccess('Observaciones guardadas correctamente')
+    showModalObservacionesContrato.value = false
+    listado(form)
+  }
+  catch (error) {
+    console.log(error)
+    showError('Error al guardar las observaciones')
+  }
 }
 
 const guardarModalContrato = async (formData) => {

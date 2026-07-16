@@ -21,37 +21,32 @@
               </option>
             </select>
           </div>
-
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Fecha Inventario ----</label>
+            <label class="form-label">Inventario</label>
             <input type="date" v-model="form.fecha_inventario" class="form-control form-control-sm" />
           </div>
-
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Carpeta Presentada</label>
             <input type="date" v-model="form.fecha_comercial_presenta_carpeta" class="form-control form-control-sm" />
           </div>
-
-
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Preaprobado ------</label>
+            <label class="form-label">Preaprobado</label>
             <input type="date" v-model="form.fecha_preaprobada" class="form-control form-control-sm" />
           </div>
-
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Fecha Reserva</label>
+            <label class="form-label">Reserva</label>
             <input type="date" v-model="form.fecha_reserva" class="form-control form-control-sm" />
-          </div>
-
-          <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Gastos Administrativos</label>
-            <input type="number" v-model="form.gastos_administrativos" class="form-control form-control-sm" />
           </div>
         </div>
 
-        <div class="row d-flex justify-content-around">
+        <div class="row d-flex justify-content-center">
+
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Tirilla entregada a</label>
+            <label class="form-label">Gasto Administrativo</label>
+            <input type="number" v-model="form.gastos_administrativos" class="form-control form-control-sm" />
+          </div>
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Tirilla entregada a:</label>
             <select v-model="form.tirilla_entregada_a" class="form-control form-control-sm">
               <option value="">Seleccionar</option>
               <option v-for="usuario in usuarioTirilla" :key="getUsuarioOptionValue(usuario)"
@@ -60,14 +55,12 @@
               </option>
             </select>
           </div>
-
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Fecha tirilla entregada</label>
+            <label class="form-label">Tirilla entregada</label>
             <input type="date" v-model="form.fecha_tirilla_entregada" class="form-control form-control-sm" />
           </div>
-
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Tirilla controlada por</label>
+            <label class="form-label">Tirilla controlada por:</label>
             <select v-model="form.tirilla_controlada_por" class="form-control form-control-sm">
               <option value="">Seleccionar</option>
               <option v-for="usuario in usuarioControlaTirilla" :key="getUsuarioOptionValue(usuario)"
@@ -78,12 +71,12 @@
           </div>
 
           <div class="col-md-2 form-group mt-0">
-            <label class="form-label">Fecha tirilla controlada</label>
+            <label class="form-label">Tirilla controlada</label>
             <input type="date" v-model="form.fecha_tirilla_controlada" class="form-control form-control-sm" />
           </div>
         </div>
 
-        <div class="row d-flex justify-content-around">
+        <div class="row d-flex justify-content-center">
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Fecha Contrato</label>
             <input type="date" v-model="form.fecha_contrato" class="form-control form-control-sm" />
@@ -175,7 +168,7 @@ const getFormFromContrato = (contrato) => {
       fecha_contrato: normalizarFecha(hc.fecha_contrato),
       fecha_autorizacion: normalizarFecha(hc.fecha_autorizacion),
       fecha_finalizacion_firma_cobro: normalizarFecha(hc.fecha_finalizacion_firma_cobro),
-      observaciones: hc.observaciones || ''
+
     }
   }
 
