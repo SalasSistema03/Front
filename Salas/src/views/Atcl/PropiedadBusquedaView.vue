@@ -1,7 +1,7 @@
 <template>
   <NavComponent titulo="Busqueda Propiedad"></NavComponent>
   <div>
-    <div class="px-3 pb-3 atcl_contenedor_busqueda_propiedad">
+    <div class="px-3 pb-3 ">
       <form class="row" autocomplete="off" @submit.prevent="filtrar">
 
         <div class="form-group col-md-2 px-1">
@@ -79,8 +79,8 @@
         <div class="form-group col-md-2 px-1">
           <label for="input-zona" class="form-label">Zona</label>
           <div class="position-relative">
-            <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..." v-model="valorInputZonas"
-              @focus="abrirZonas" @blur="cerrarZonas">
+            <input type="text" class="form-control form-control-sm" placeholder="Buscar zona..."
+              v-model="valorInputZonas" @focus="abrirZonas" @blur="cerrarZonas">
 
             <div v-if="mostrarZonas"
               class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm"
@@ -161,7 +161,12 @@
               'atcl_tabla_busqueda_propiedad_estados_reset': propiedad.estado_alquiler === 'RESET',
               'atcl_tabla_busqueda_propiedad_estados_en_alquiler_compartido': propiedad.estado_alquiler === 'EN ALQUILER COMPARTIDO'
             }">{{ propiedad.cod_alquiler || '-' }}</td>
-            <td class="atcl_tabla_busqueda_propiedad_calle">{{ propiedad.calle || '-' }} {{ propiedad.numero_calle || '-' }}</td>
+            <td class="atcl_tabla_busqueda_propiedad_calle">
+              {{ propiedad.calle || '-' }}
+              {{ propiedad.numero_calle || '-' }}
+              {{ propiedad.piso ? `- P ${propiedad.piso}` : '' }}
+              {{ propiedad.departamento ? `Dpto. ${propiedad.departamento}` : '' }}
+            </td>
             <td>{{ propiedad.zona || '' }}</td>
             <td>{{ propiedad.tipo || '' }}</td>
             <td>{{ propiedad.cantidad_dormitorios ?? '' }}</td>
