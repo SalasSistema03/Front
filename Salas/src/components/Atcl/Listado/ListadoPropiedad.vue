@@ -168,6 +168,7 @@
                   <option value="zona">Zona</option>
                   <option value="calle">Calle</option>
                   <option value="codigo">Código</option>
+                  <option value="autorizacion">Autorizacion</option>
                 </select>
               </div>
 
@@ -569,6 +570,7 @@ if (props.sector === 'Alquiler') {
     { key: 'flyer', label: 'Flyer' },
     { key: 'captador', label: 'Captador' },
     { key: 'web', label: 'Web' },
+    { key: 'autorizacion', label: 'Autorizacion' },
   ]
 } else {
   informacionMostrar.value = [
