@@ -229,8 +229,7 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
-                  >
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler">
                   Listar
                 </button>
               </div>
@@ -602,6 +601,7 @@ if (props.sector === 'Alquiler') {
     { key: 'zonaprop', label: 'ZonaProp' },
     { key: 'web', label: 'Web' },
     { key: 'vendedor', label: 'Vendedor' },
+    { key: 'novedades', label: 'Novedades' },
   ]
 }
 
