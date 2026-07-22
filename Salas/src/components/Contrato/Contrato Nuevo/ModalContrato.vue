@@ -91,12 +91,79 @@
             <label class="form-label">Entrega de Llaves</label>
             <input type="date" v-model="form.fecha_finalizacion_firma_cobro" class="form-control form-control-sm" />
           </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Cant Meses</label>
+            <input type="number" v-model="form.cant_meses" class="form-control form-control-sm" />
+          </div>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Monto Documentacion</label>
+            <input type="number" v-model="form.monto" class="form-control form-control-sm" />
+          </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Monto Contrato</label>
+            <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm" />
+          </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Hojas</label>
+            <input type="number" v-model="form.chojas" class="form-control form-control-sm" />
+          </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Informe</label>
+            <select v-model="form.informe" class="form-control form-control-sm">
+              <option value="">Seleccionar</option>
+              <option value="SI">SI</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Cant. Inf</label>
+            <input type="number" v-model="form.CantInforme" class="form-control form-control-sm" />
+          </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Contrato</label>
+            <select v-model="form.tipo_contrato" class="form-control form-control-sm">
+              <option value="">Seleccionar</option>
+              <option value="Vivienda">Vivienda</option>
+              <option value="Comercio">Comercio</option>
+              <option value="Cochera">Cochera</option>
+            </select>
+          </div>
+
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Inq-Prop</label>
+            <select v-model="form.inquilino_propietario" class="form-control form-control-sm">
+              <option value="">Seleccionar</option>
+              <option value="NO">NO</option>
+              <option value="SI">SI</option>
+
+            </select>
+          </div>
+
+          <div class="col-md-2 form-group mt-0">
+            <label class="form-label">Monto Alquiler</label>
+            <input type="number" v-model="form.precio_alquiler" class="form-control form-control-sm" />
+          </div>
+
+
+
+
+
         </div>
 
         <div class="row d-flex justify-content-around">
           <div class="col-md-12 form-group mt-0">
             <label class="form-label">Observaciones</label>
-            <textarea v-model="form.observaciones" class="form-control form-control-sm" rows="3"></textarea>
+            <textarea v-model="form.observaciones" class="form-control form-control-sm" rows="3">¨¨</textarea>
           </div>
         </div>
       </form>
@@ -129,6 +196,7 @@ const usuarioTirilla = ref([])
 const usuarioControlaTirilla = ref([])
 const { formatDateForInput } = useDateFormatter()
 
+
 const normalizarFecha = (valor) => {
   if (!valor) return ''
   return formatDateForInput(valor) || ''
@@ -152,6 +220,20 @@ const getUsuarioLabel = (usuario) => {
 
 const getFormFromContrato = (contrato) => {
   const hc = contrato?.historial_estado_contrato
+  const meses = contrato?.meses_contrato
+  const precio_alquiler = contrato?.precio_alquiler
+  let folio = []
+  folio = contrato?.propiedad?.folios ?? []
+  let monto_documento = contrato?.registro_sellado?.monto_documento
+  let monto_contrato = contrato?.registro_sellado?.monto_contrato
+  let chojas = contrato?.registro_sellado?.hojas
+  let informe = contrato?.registro_sellado?.informe
+  let CantInforme = contrato?.registro_sellado?.cantidad_informes
+  let tipo_contrato = contrato?.registro_sellado?.tipo_contrato
+  let inquilino_propietario = contrato?.registro_sellado?.inq_prop
+
+  //console.log('registroSellado', registro_sellado)
+  //console.log('historial_estado_contrato', contrato)
 
   if (hc) {
     return {
@@ -168,7 +250,16 @@ const getFormFromContrato = (contrato) => {
       fecha_contrato: normalizarFecha(hc.fecha_contrato),
       fecha_autorizacion: normalizarFecha(hc.fecha_autorizacion),
       fecha_finalizacion_firma_cobro: normalizarFecha(hc.fecha_finalizacion_firma_cobro),
-
+      cant_meses: meses || '',
+      precio_alquiler: precio_alquiler || '',
+      folio: folio || '',
+      monto: monto_documento || '',
+      monto_contrato: monto_contrato || '',
+      chojas: chojas || '',
+      informe: informe || '',
+      CantInforme: CantInforme || '',
+      tipo_contrato: tipo_contrato || '',
+      inquilino_propietario: inquilino_propietario || '',
     }
   }
 
