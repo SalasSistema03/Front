@@ -14,17 +14,16 @@
 
                   <label class="form-label fw-bold small  text-muted">Folio</label>
                   <div class="d-flex gap-1">
-                    <div class="col-5">
+                    <!-- <div class="col-5">
                       <select name="" id="" class="form-select form-select-sm shadow-sm">
                         <option value="1">-</option>
                         <option value="2">C</option>
                         <option value="3">T</option>
                       </select>
-                    </div>
-                    <div class="col-7">
-                      <input type="number" v-model="form.folio" class="form-control form-control-sm shadow-sm"
-                        required />
-                    </div>
+                    </div> -->
+
+                    <input type="number" v-model="form.folio" class="form-control form-control-sm shadow-sm" required />
+
                   </div>
 
                 </div>
@@ -172,7 +171,7 @@
           <div class="card-body p-2">
             <div class="table-responsive table-scroll-container">
               <table class="table table-striped table-hover w-100" id="tablaDatos">
-              <thead>
+                <thead>
                   <tr>
                     <th>Folio</th>
                     <th>Nombre</th>
@@ -191,16 +190,16 @@
                     <td>{{ item.folio }}</td>
                     <td class="td_nombre">{{ item.nombre }}</td>
                     <td class="text-center">{{ item.cantidad_meses }}</td>
-                    
+
                     <td class="text-end fw-semibold">{{ formatearMoneda(item.monto_contrato) }}</td>
-                    
+
                     <td class="text-center">{{ item.hojas }}</td>
                     <td class="text-center">{{ item.informe }}</td>
                     <td>{{ item.tipo_contrato }}</td>
                     <td class="text-center">{{ item.inq_prop }}</td>
-                    
+
                     <td class="text-end fw-bold text-primary">{{ formatearMoneda(item.sellado) }}</td>
-                    
+
                     <td>{{ item.usuario.username || "-" }}</td>
                   </tr>
                 </tbody>
@@ -224,7 +223,7 @@ import ResultadoSellado from './ResultadoSellado.vue';
 import ModalDatosCalculos from './Modales/ModalDatosCalculos.vue';
 import ModalAcciones from './Modales/ModalAcciones.vue';
 import { alertas } from '../../../utils/alertas.js'
-import { calcularSelladoService, guardarResultadoService, getRegistrosService } from '../../../Services/api/Contable/selladoApi.js'
+import { calcularSelladoService, guardarResultadoService, getRegistrosService, getSelladoPrecarcadoService } from '../../../Services/api/Contable/selladoApi.js'
 
 
 const mostrarModal = ref(false);
@@ -283,7 +282,7 @@ const handleSubmit = async () => {
 
   try {
     const response = await calcularSelladoService(payload);
-    console.log("Respuesta del servidor:", response.data);
+    //console.log("Respuesta del servidor:", response.data);
     resultado.value = response.data;
   } catch (err) {
     // Si el error es 500, ahora podremos ver el mensaje del servidor
