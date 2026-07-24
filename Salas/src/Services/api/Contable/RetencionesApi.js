@@ -92,7 +92,7 @@ export const guardarPersonaService = (data) => {
 export const modificarRetencionService = (id, data) => {
   const token = localStorage.getItem('token');
   return axios.put(`${API_URL}/v1/retenciones/modificarRegistro/${id}`, data, {
-    headers: {  
+    headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json' // Recomendado para que Laravel responda errores en JSON
     },
@@ -102,28 +102,41 @@ export const modificarRetencionService = (id, data) => {
 
 
 export const obtenerSumaQuincenaService = (anio, mes) => {
-    const token = localStorage.getItem('token');
-    
-    // Agregué un console.log para que veas en la consola si sigue siendo undefined
-    console.log("URL de la API:", API_URL); 
+  const token = localStorage.getItem('token');
 
-    return axios.get(`${API_URL}/v1/retenciones/suma-quincena`, {
-        params: { anio, mes },
-        headers: { 
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json'
-        }
-    });
+  // Agregué un console.log para que veas en la consola si sigue siendo undefined
+  console.log("URL de la API:", API_URL);
+
+  return axios.get(`${API_URL}/v1/retenciones/suma-quincena`, {
+    params: { anio, mes },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json'
+    }
+  });
 };
 
 
 export const exportarRetencionesTxt = () => {
-    const token = localStorage.getItem('token');
-    return axios.get(`${API_URL}/v1/retenciones/exportar-retenciones`, {
-        headers: { 
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json'
-        },
-        responseType: 'blob' // Obligatorio para que Axios no corrompa el archivo
-    });
+  const token = localStorage.getItem('token');
+  return axios.get(`${API_URL}/v1/retenciones/exportar-retenciones`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json'
+    },
+    responseType: 'blob' // Obligatorio para que Axios no corrompa el archivo
+  });
 };
+
+export const exportarRetencion = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/retenciones/exportar_retenciones_cuit`, {
+    params: {
+      ...data,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob',
+  })
+}
