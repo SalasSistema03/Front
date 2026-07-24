@@ -680,64 +680,66 @@ const formInformeNovedades = ref({
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
-  // Cargamos los asesores para el selector del formulario de criterios activos
-
-  isUserAdmin.value = await isAdmin()
-  //console.log(isUserAdmin.value)
-
-  const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
-    getEstadoAlquiler(),
-    PropietariosActivos(),
-    getEstadoVenta(),
-    getAsesor(),
-  ])
-
-  let resPermiso = null
-  let resPermisoOfrecimiento = null
-  let resPropietariosVenta = null
-  let resPropietariosAlquiler = null
-  let resDevoluciones = null
-  let resPermisoCriteriosPorFecha = null
-  let resConversacionVenta = null
-  let respermisoNovedades = null
-
-  if (props.sector === 'Alquiler') {
-    //console.log('holaaaaaaaa')
-    resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
-    resPropietariosAlquiler = await verificarPermiso('listarPropietarioAlquiler')
-    respermisoNovedades = await verificarPermiso('listarInformeNovedades')
-  } else {
-    resPermiso = await verificarPermiso('listarPropiedadesVenta')
-    resPermisoOfrecimiento = await verificarPermiso('listarOfrecimientoVenta')
-    resPropietariosVenta = await verificarPermiso('listarPropietarioVenta')
-    resDevoluciones = await verificarPermiso('listarDevolucionesVenta')
-    resPermisoCriteriosPorFecha = await verificarPermiso('listarCriteriosPorFecha')
-    resConversacionVenta = await verificarPermiso('listarConversacionesVenta')
-  }
-  estados.value = resEstados.data
-  estadosVenta.value = resEstadoVenta.data
-  permiso.value = resPermiso?.data ?? false
-  propietario.value = resPropietarios.data
-  permisoOfrecimiento.value = resPermisoOfrecimiento?.data ?? false
-  propietariosVenta.value = resPropietariosVenta?.data ?? false
-  propietariosAlquiler.value = resPropietariosAlquiler?.data ?? false
-  devolucionesVenta.value = resDevoluciones?.data ?? false
-  asesores.value = resAsesores.data ?? false
-  permisoConversacion.value = resConversacionVenta?.data ?? false
-  permisoInformeNovedades.value = respermisoNovedades?.data ?? false
-  //console.log(propietariosVenta.value)
-
-  //console.log(asesores.value)
-
-  //si el usuario es admin que saque el id_usuario:3 del  asesores.value
-  if (isUserAdmin.value === false) {
-    asesores.value = asesores.value.filter(
-      (a) => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18,
-    )
+  try {
+    isUserAdmin.value = await isAdmin()
+  } catch (error) {
+    console.error('Error al verificar admin:', error)
   }
 
-  permisoCriteriosPorFecha.value = resPermisoCriteriosPorFecha?.data ?? false
-  //console.log('asesires', asesores.value)
+  // 1. Obtener Permisos primero para que la interfaz se habilite rápido
+  try {
+    if (props.sector === 'Alquiler') {
+      const [resPermiso, resPropAlq, resNovedades] = await Promise.all([
+        verificarPermiso('listarPropiedadesAlquiler'),
+        verificarPermiso('listarPropietarioAlquiler'),
+        verificarPermiso('listarInformeNovedades'),
+      ])
+      permiso.value = resPermiso?.data ?? false
+      propietariosAlquiler.value = resPropAlq?.data ?? false
+      permisoInformeNovedades.value = resNovedades?.data ?? false
+    } else {
+      const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resConversacion] = await Promise.all([
+        verificarPermiso('listarPropiedadesVenta'),
+        verificarPermiso('listarOfrecimientoVenta'),
+        verificarPermiso('listarPropietarioVenta'),
+        verificarPermiso('listarDevolucionesVenta'),
+        verificarPermiso('listarCriteriosPorFecha'),
+        verificarPermiso('listarConversacionesVenta'),
+      ])
+      permiso.value = resPermiso?.data ?? false
+      permisoOfrecimiento.value = resOfrecimiento?.data ?? false
+      propietariosVenta.value = resPropVenta?.data ?? false
+      devolucionesVenta.value = resDev?.data ?? false
+      permisoCriteriosPorFecha.value = resCriterios?.data ?? false
+      permisoConversacion.value = resConversacion?.data ?? false
+    }
+  } catch (error) {
+    console.error('Error al obtener permisos:', error)
+  }
+
+  // 2. Obtener datos de selectores y tablas
+  try {
+    const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
+      getEstadoAlquiler(),
+      PropietariosActivos(),
+      getEstadoVenta(),
+      getAsesor(),
+    ])
+
+    estados.value = resEstados?.data || []
+    estadosVenta.value = resEstadoVenta?.data || []
+    propietario.value = resPropietarios?.data || []
+    asesores.value = resAsesores?.data || []
+
+    //si el usuario es admin que saque el id_usuario:3 del asesores.value
+    if (isUserAdmin.value === false && asesores.value.length > 0) {
+      asesores.value = asesores.value.filter(
+        (a) => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18,
+      )
+    }
+  } catch (error) {
+    console.error('Error al cargar datos principales:', error)
+  }
 })
 
 // Lógica de búsqueda de propietarios
