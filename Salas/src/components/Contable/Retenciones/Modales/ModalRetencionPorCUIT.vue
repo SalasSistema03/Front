@@ -7,9 +7,7 @@
         <div class="col-md-4">
           <input type="text" class="form-control" v-model="form.cuit" placeholder="Ingrese CUIT (sin guiones)">
         </div>
-        <div class="form-group ">
-
-        </div>
+       
         <div class="col-md-4">
           <button class="btn btn-primary" @click="obtenerRetenciones">Buscar</button>
         </div>
