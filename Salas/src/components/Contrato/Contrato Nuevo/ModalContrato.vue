@@ -23,7 +23,7 @@
           </div>
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Inventario</label>
-            <input type="date" v-model="form.fecha_inventario" class="form-control form-control-sm" />
+            <input type="date" v-model="form.fecha_inventario" class="form-control form-control-sm" disabled />
           </div>
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Carpeta Presentada</label>
