@@ -130,10 +130,10 @@ export const exportarRetencionesTxt = () => {
 
 export const exportarRetencion = (data) => {
   const token = localStorage.getItem('token')
-  return axios.get(`${API_URL}/v1/retenciones/exportar_retenciones_cuit`, {
-    params: {
+  return axios.post(`${API_URL}/v1/retenciones/exportar_retenciones_cuit`, data, {
+    /* params: {
       ...data,
-    },
+    }, */
     headers: {
       Authorization: `Bearer ${token}`,
     },
