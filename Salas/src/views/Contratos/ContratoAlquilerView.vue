@@ -58,6 +58,7 @@
         <thead>
           <tr class="text-center">
             <th>Folio</th>
+            <th>Comercial</th>
             <th>Estado</th>
             <th>Inventario</th>
             <th>Comercial presento carpeta</th>
@@ -76,6 +77,7 @@
         <tbody>
           <tr v-for="item in historial" :key="item.id">
             <td>{{ formatearFolio(item.propiedad?.folios) }}</td>
+            <td>{{ item.asesor_usuario?.username }}</td>
             <td>{{ item.historial_estado_contrato?.estado?.estado }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_inventario) }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_comercial_presenta_carpeta) }}</td>
@@ -143,7 +145,7 @@ const asesores = ref([])
 const filtroEstado = ref('')
 const filtroAsesor = ref('')
 const folio = ref('')
-const inventario = ref('')
+//const inventario = ref('')
 const { showError, showSuccess } = useToast()
 const showModalContrato = ref(false)
 const showModalObservacionesContrato = ref(false)
@@ -210,7 +212,7 @@ const abrirModalContrato = (item) => {
 }
 
 const abrirModalObservacionesContrato = (item) => {
-  //console.log('Contrato seleccionado para observaciones:', item)
+  console.log('Contrato seleccionado para observaciones:', item)
   contratoSeleccionado.value = item
   showModalObservacionesContrato.value = true
 }
@@ -247,8 +249,8 @@ const guardarModalContrato = async (formData) => {
     listado(form)
   }
   catch (error) {
-    console.log(error)
-    showError('Error al guardar los datos del contrato')
+    //console.log('acaaaaa', error)
+    showError(error.response.data.error)
   }
 }
 
