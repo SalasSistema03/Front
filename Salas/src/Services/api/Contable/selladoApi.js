@@ -93,14 +93,15 @@ export const exportarRegistrosService = () => {
 }
 
 
-export const getSelladoPrecarcadoService = (folio) => {
+export const getSelladoPrecarcadoService = (folio, empresa) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/getSelladoPrecargado`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     params: {
-      folio: folio
+      folio: folio,
+      empresa: empresa
     }
   })
 }

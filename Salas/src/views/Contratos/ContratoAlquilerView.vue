@@ -249,8 +249,8 @@ const guardarModalContrato = async (formData) => {
     listado(form)
   }
   catch (error) {
-    console.log(error)
-    showError('Error al guardar los datos del contrato')
+    //console.log('acaaaaa', error)
+    showError(error.response.data.error)
   }
 }
 

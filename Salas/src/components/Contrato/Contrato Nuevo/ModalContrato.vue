@@ -94,29 +94,33 @@
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Cant Meses</label>
-            <input type="number" v-model="form.cant_meses" class="form-control form-control-sm" />
+            <input type="number" v-model="form.cant_meses" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1" />
           </div>
         </div>
 
         <div class="row d-flex justify-content-center">
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Monto Documentacion</label>
-            <input type="number" v-model="form.monto" class="form-control form-control-sm" />
+            <input type="number" v-model="form.monto" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1" />
           </div>
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Monto Contrato</label>
-            <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm" />
+            <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1" />
           </div>
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Hojas</label>
-            <input type="number" v-model="form.chojas" class="form-control form-control-sm" />
+            <input type="number" v-model="form.chojas" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1" />
           </div>
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Informe</label>
-            <select v-model="form.informe" class="form-control form-control-sm">
+            <select v-model="form.informe" class="form-control form-control-sm" :disabled="form.bloqueado == 1">
               <option value="">Seleccionar</option>
               <option value="SI">SI</option>
               <option value="NO">NO</option>
@@ -125,12 +129,13 @@
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Cant. Inf</label>
-            <input type="number" v-model="form.CantInforme" class="form-control form-control-sm" />
+            <input type="number" v-model="form.CantInforme" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1" />
           </div>
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Contrato</label>
-            <select v-model="form.tipo_contrato" class="form-control form-control-sm">
+            <select v-model="form.tipo_contrato" class="form-control form-control-sm" :disabled="form.bloqueado == 1">
               <option value="">Seleccionar</option>
               <option value="Vivienda">Vivienda</option>
               <option value="Comercio">Comercio</option>
@@ -141,7 +146,8 @@
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Inq-Prop</label>
-            <select v-model="form.inquilino_propietario" class="form-control form-control-sm">
+            <select v-model="form.inquilino_propietario" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1">
               <option value="">Seleccionar</option>
               <option value="NO">NO</option>
               <option value="SI">SI</option>
@@ -151,12 +157,9 @@
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Monto Alquiler</label>
-            <input type="number" v-model="form.precio_alquiler" class="form-control form-control-sm" />
+            <input type="number" v-model="form.precio_alquiler" class="form-control form-control-sm"
+              :disabled="form.bloqueado == 1" />
           </div>
-
-
-
-
 
         </div>
 
@@ -232,6 +235,9 @@ const getFormFromContrato = (contrato) => {
   let tipo_contrato = contrato?.registro_sellado?.tipo_contrato
   let inquilino_propietario = contrato?.registro_sellado?.inq_prop
 
+  //console.log(contrato)
+  const bloqueado = contrato?.registro_sellado?.mostrar
+  console.log(bloqueado)
   //console.log('registroSellado', registro_sellado)
   //console.log('historial_estado_contrato', contrato)
 
@@ -260,6 +266,7 @@ const getFormFromContrato = (contrato) => {
       CantInforme: CantInforme || '',
       tipo_contrato: tipo_contrato || '',
       inquilino_propietario: inquilino_propietario || '',
+      bloqueado: bloqueado,
     }
   }
 
@@ -277,7 +284,8 @@ const getFormFromContrato = (contrato) => {
     fecha_contrato: '',
     fecha_autorizacion: '',
     fecha_finalizacion_firma_cobro: '',
-    observaciones: ''
+    observaciones: '',
+    bloqueado: null
   }
 }
 

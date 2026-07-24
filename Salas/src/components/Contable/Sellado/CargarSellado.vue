@@ -14,15 +14,16 @@
 
                   <label class="form-label fw-bold small  text-muted">Folio</label>
                   <div class="d-flex gap-1">
-                    <!-- <div class="col-5">
-                      <select name="" id="" class="form-select form-select-sm shadow-sm">
+                    <div class="col-5">
+                      <select name="" id="" class="form-select form-select-sm shadow-sm" v-model="form.empresa">
                         <option value="1">-</option>
                         <option value="2">C</option>
                         <option value="3">T</option>
                       </select>
-                    </div> -->
+                    </div>
 
-                    <input type="number" v-model="form.folio" class="form-control form-control-sm shadow-sm" required />
+                    <input type="number" v-model="form.folio" @blur="buscarFolioPrecargado"
+                      @keyup.enter="buscarFolioPrecargado" class="form-control form-control-sm shadow-sm" required />
 
                   </div>
 
@@ -222,15 +223,17 @@ import { ref, onMounted } from 'vue';
 import ResultadoSellado from './ResultadoSellado.vue';
 import ModalDatosCalculos from './Modales/ModalDatosCalculos.vue';
 import ModalAcciones from './Modales/ModalAcciones.vue';
-import { alertas } from '../../../utils/alertas.js'
+//import { alertas } from '../../../utils/alertas.js'
 import { calcularSelladoService, guardarResultadoService, getRegistrosService, getSelladoPrecarcadoService } from '../../../Services/api/Contable/selladoApi.js'
-
+import { useToast } from '@/composables/useToast.js';
 
 const mostrarModal = ref(false);
 const mostrarModalAcciones = ref(false);
 const cargando = ref(false);
+const { showSuccess, showError } = useToast();
 
 const form = ref({
+  empresa: '1',
   folio: '',
   nombre: '',
   cantidad_meses: '',
@@ -257,6 +260,39 @@ const error = ref(null);
 
 /* const showModal = ref(false);
  */
+
+const buscarFolioPrecargado = async () => {
+  if (!form.value.folio) return;
+  try {
+    // console.log("Buscando folio:", form.value.folio);
+    const response = await getSelladoPrecarcadoService(form.value.folio, form.value.empresa);
+    const datos = response.data?.data || response.data;
+
+    if (datos) {
+      // Aquí mapeas los datos que te devuelva la API a tu formulario
+      if (datos.nombre) form.value.nombre = datos.nombre;
+      if (datos.cantidad_meses) form.value.cantidad_meses = datos.cantidad_meses;
+      if (datos.proceso_monto) form.value.monto_alquiler = datos.proceso_monto;
+      if (datos.monto_documento) form.value.monto_documento = datos.monto_documento;
+      if (datos.monto_contrato) form.value.monto_contrato = datos.monto_contrato;
+      if (datos.hojas) form.value.hojas = datos.hojas;
+      if (datos.informe) form.value.informe = datos.informe === 1 ? 'SI' : 'NO';
+      if (datos.cantidad_informes) form.value.cantidad_informes = datos.cantidad_informes;
+      if (datos.inq_prop) form.value.inq_prop = datos.inq_prop;
+      if (datos.tipo_contrato) form.value.tipo_contrato = datos.tipo_contrato;
+      if (datos.fecha_inicio) form.value.fecha_inicio = datos.fecha_inicio;
+
+      //alertas.success('Datos del folio encontrados y precargados');
+      showSuccess('Datos del folio encontrados y precargados');
+    }
+  } catch (err) {
+    // Si no lo encuentra, lo ignoramos o mostramos un mensaje sutil
+    //console.log("No se encontraron datos precargados para este folio");
+    showError('No se encontraron datos precargados para este folio');
+  }
+
+};
+
 const handleSubmit = async () => {
   loading.value = true;
   error.value = null;
@@ -304,7 +340,7 @@ const guardarRegistro = async () => {
     //Formatear formulario y resultado para que el usuario vea que se guardó correctamente
     resetForm();
 
-    alertas.success('Registro guardado correctamente');
+    showSuccess('Registro guardado correctamente');
     // 3. Ejecutar al guardar el registro
     obtenerRegistros();
   } catch (err) {
@@ -316,14 +352,14 @@ const obtenerRegistros = async () => {
   cargando.value = true;
   try {
     const response = await getRegistrosService();
-    console.log(response.data.data.registros);
-    console.log(response.data.permisos);
+    //console.log(response.data.data.registros);
+    //console.log(response.data.permisos);
     if (response.data.permisos) {
       permisos.value = response.data.permisos;
     }
     registros.value = response.data.data.registros || response.data;
   } catch (err) {
-    alertas.error('Error De conexion ' + (err.response?.data?.message || err.message));
+    showError('Error De conexion ' + (err.response?.data?.message || err.message));
     //alert("Error al obtener registros: " + (err.response?.data?.message || err.message));
   } finally {
     cargando.value = false;
