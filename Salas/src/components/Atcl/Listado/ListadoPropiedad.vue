@@ -146,15 +146,20 @@
                 </select>
               </div>
 
-              <div class="from-group col-md-3 px-1">
+              <div class="from-group col-md-2 px-1">
                 <label class="form-label">Importe desde</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_minimo"
                   min="0" placeholder="Importe mínimo" />
               </div>
-              <div class="from-group col-md-3 px-1">
+              <div class="from-group col-md-2 px-1">
                 <label class="form-label">Importe hasta</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_maximo"
                   min="0" placeholder="Importe máximo" />
+              </div>
+              <div class="from-group col-md-2 px-1">
+                <label class="form-label">Cant. Dormitorios</label>
+                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.cant_dorm"
+                  min="0" placeholder="Cant. Dormitorios" />
               </div>
 
               <div class="col-md-6 mt-2">
@@ -622,6 +627,7 @@ const formPropiedades = ref({
   informacionMostrar: [],
   sector: props.sector,
   cartel: '',
+  cant_dorm: '',
 })
 
 const formPropietarios = ref({
