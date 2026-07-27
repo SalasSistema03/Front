@@ -106,11 +106,11 @@
               :disabled="form.bloqueado == 1" />
           </div>
 
-          <div class="col-md-2 form-group mt-0">
+          <!-- <div class="col-md-2 form-group mt-0">
             <label class="form-label">Monto Contrato</label>
             <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm"
               :disabled="form.bloqueado == 1" />
-          </div>
+          </div> -->
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Hojas</label>
