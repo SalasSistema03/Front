@@ -35,7 +35,7 @@
           </div>
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Reserva</label>
-            <input type="date" v-model="form.fecha_reserva" class="form-control form-control-sm" />
+            <input type="date" v-model="form.fecha_reserva" class="form-control form-control-sm" disabled/>
           </div>
         </div>
 
@@ -106,11 +106,11 @@
               :disabled="form.bloqueado == 1" />
           </div>
 
-          <div class="col-md-2 form-group mt-0">
+         <!--  <div class="col-md-2 form-group mt-0">
             <label class="form-label">Monto Contrato</label>
             <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm"
               :disabled="form.bloqueado == 1" />
-          </div>
+          </div> -->
 
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Hojas</label>
@@ -237,7 +237,7 @@ const getFormFromContrato = (contrato) => {
 
   //console.log(contrato)
   const bloqueado = contrato?.registro_sellado?.mostrar
-  console.log(bloqueado)
+  //console.log(bloqueado)
   //console.log('registroSellado', registro_sellado)
   //console.log('historial_estado_contrato', contrato)
 
@@ -247,7 +247,7 @@ const getFormFromContrato = (contrato) => {
       fecha_inventario: normalizarFecha(hc.fecha_inventario),
       fecha_comercial_presenta_carpeta: normalizarFecha(hc.fecha_comercial_presenta_carpeta),
       fecha_preaprobada: normalizarFecha(hc.fecha_preaprobada),
-      fecha_reserva: normalizarFecha(hc.fecha_reserva),
+      fecha_reserva: normalizarFecha(hc?.fecha_reserva ?? contrato?.fecha_reserva),
       gastos_administrativos: hc.gastos_administrativos || '',
       tirilla_entregada_a: getUsuarioOptionValue(hc.tirilla_entregada_a),
       fecha_tirilla_entregada: normalizarFecha(hc.fecha_tirilla_entregada),
@@ -269,7 +269,6 @@ const getFormFromContrato = (contrato) => {
       bloqueado: bloqueado,
     }
   }
-
   return {
     id_estado: '',
     fecha_inventario: '',
