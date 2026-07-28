@@ -280,6 +280,8 @@ const iconMap = {
   3: 'bi-calendar4',
   5: 'bi-display',
   6: 'bi-journal-text',
+  7: 'bi-layout-text-sidebar',
+  8: 'bi bi-tools',
   10: 'bi-collection',
   // Ajustes
   default: 'bi-app-indicator', // Icono por defecto si no coincide ninguno
