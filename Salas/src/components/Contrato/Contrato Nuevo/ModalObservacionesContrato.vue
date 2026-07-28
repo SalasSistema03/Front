@@ -6,7 +6,7 @@
         <table class="table table-striped table-hover proceso_reserva_table">
           <thead class="text-center">
             <tr>
-              <th>Fecha de Cargaaaa</th>
+              <th>Fecha de Carga</th>
               <th>Estado</th>
               <th>Observación</th>
               <th>Cargado Por</th>
@@ -60,10 +60,15 @@ const traerObservacionesContrato = async () => {
     }
 
     const response = await observacionescontrato(idProceso)
-    resultado.value = response.data.resultado || []
-    console.log('Observaciones del contrato:', resultado.value)
+    const observaciones = response.data.resultado || []
+
+    resultado.value = observaciones.filter((item) => {
+      const observacion = item?.observaciones
+      return observacion !== null && observacion !== undefined && String(observacion).trim() !== ''
+    })
+    //console.log('Observaciones del contrato:', resultado.value)
   } catch (error) {
-    console.error('Error al traer las observaciones del contrato:', error)
+    //console.error('Error al traer las observaciones del contrato:', error)
     showError('Error al traer las observaciones del contrato')
   }
 }

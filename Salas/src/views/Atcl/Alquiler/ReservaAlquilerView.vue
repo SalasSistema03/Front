@@ -251,7 +251,6 @@
                 <select class="form-select form-select-sm" v-model="reservaIdentificada">
                   <option value="0">NO</option>
                   <option value="1">SI</option>
-
                 </select>
               </div>
             </div>
