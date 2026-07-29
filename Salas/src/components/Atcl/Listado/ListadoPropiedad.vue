@@ -158,8 +158,8 @@
               </div>
               <div class="from-group col-md-2 px-1">
                 <label class="form-label">Cant. Dormitorios</label>
-                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.cant_dorm"
-                  min="0" placeholder="Cant. Dormitorios" />
+                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.cant_dorm" min="0"
+                  placeholder="Cant. Dormitorios" />
               </div>
 
               <div class="col-md-6 mt-2">
@@ -432,13 +432,22 @@
             <div class="row">
               <div class="col-md-4 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.desde"
+                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.hasta"
                   v-model="formConsultasIngresadas.desde" />
               </div>
               <div class="col-md-4 p-1">
                 <label class="form-label">Hasta</label>
                 <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde"
                   v-model="formConsultasIngresadas.hasta" />
+              </div>
+
+              <div class="col-md-3 p-1">
+                <label class="form-label">Consultas</label>
+                <select class="form-select form-select-sm" v-model="formConsultasIngresadas.consulta">
+                  <option value="">Seleccione un Consulta</option>
+                  <option value="Consultas Nuevas">Consultas Nuevas</option>
+                  <option value="Reconsultas">Reconsultas</option>
+                </select>
               </div>
 
               <div class="col-md-12 mt-2">
@@ -837,6 +846,10 @@ const submitCriteriosActivos = async () => {
 
 const submitConsultasIngresadas = async () => {
   formActual.value = formConsultasIngresadas.value
+  if (!formActual.value.consulta) {
+    showError('Debe seleccionar un tipo de consulta')
+    return
+  }
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
