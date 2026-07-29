@@ -447,6 +447,8 @@
                   <option value="">Seleccione un Consulta</option>
                   <option value="Consultas Nuevas">Consultas Nuevas</option>
                   <option value="Reconsultas">Reconsultas</option>
+                  <option value="Generales">Generales</option>
+
                 </select>
               </div>
 
