@@ -33,7 +33,7 @@ import BaseModal from '@/components/base/BaseModal.vue'
 import { observacionescontrato } from '@/Services/api/Contrato/Contrato'
 import { useToast } from '@/composables/useToast'
 
-const { showError, showSuccess } = useToast()
+const { showError } = useToast()
 
 
 
@@ -68,7 +68,7 @@ const traerObservacionesContrato = async () => {
     })
     //console.log('Observaciones del contrato:', resultado.value)
   } catch (error) {
-    //console.error('Error al traer las observaciones del contrato:', error)
+    console.error('Error al traer las observaciones del contrato:', error)
     showError('Error al traer las observaciones del contrato')
   }
 }
