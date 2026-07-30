@@ -10,6 +10,7 @@
             <option value="">-Seleccione-</option>
             <option value="1">Venta</option>
             <option value="2">Alquiler</option>
+            <option value="3">Folio</option>
           </select>
         </div>
         <div class="form-group col-md-2 px-1">
@@ -139,6 +140,7 @@
           <tr>
             <th>C.V</th>
             <th>C.A</th>
+            <th>Folio</th>
             <th>Direccion</th>
             <th>Zona</th>
             <th>Inmueble</th>
@@ -161,6 +163,13 @@
               'atcl_tabla_busqueda_propiedad_estados_reset': propiedad.estado_alquiler === 'RESET',
               'atcl_tabla_busqueda_propiedad_estados_en_alquiler_compartido': propiedad.estado_alquiler === 'EN ALQUILER COMPARTIDO'
             }">{{ propiedad.cod_alquiler || '-' }}</td>
+            <td>
+              {{ 
+                propiedad.folio && propiedad.folio.length > 0 
+                  ? propiedad.folio.map(f => f.empresa_id === 2 ? 'C ' + f.folio : f.empresa_id === 3 ? 'T ' + f.folio : f.folio).join(', ') 
+                  : '-' 
+              }}
+            </td>
             <td class="atcl_tabla_busqueda_propiedad_calle">
               {{ propiedad.calle || '-' }}
               {{ propiedad.numero_calle || '-' }}
