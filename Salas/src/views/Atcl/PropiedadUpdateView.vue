@@ -273,11 +273,11 @@
               <input type="file" class="form-control" id="documentos" accept="image/*,application/pdf" multiple
                 @change="agregarDocumentosPendientes">
             </div>
-            <div class="col-md-3 mb-2">
+            <!-- <div class="col-md-3 mb-2">
               <button type="button" class="btn btn-primary btn-sm w-100" @click="confirmarDocumentosPendientes">
                 Subir Documento
               </button>
-            </div>
+            </div> -->
           </div>
 
           <!-- Documentos pendientes -->
@@ -367,11 +367,11 @@
               <input type="file" class="form-control" id="videos" accept="video/*" multiple
                 @change="agregarVideosPendientes">
             </div>
-            <div class="col-md-3 mb-2">
+            <!-- <div class="col-md-3 mb-2">
               <button type="button" class="btn btn-primary btn-sm w-100" @click="confirmarVideosPendientes">
                 Subir Video
               </button>
-            </div>
+            </div> -->
           </div>
 
           <!-- Videos pendientes -->
@@ -1069,7 +1069,7 @@ export default {
             orden: v.orden ?? '',
             comentario: v.comentario ?? ''
           }))
-          console.log('videos_nuevos metadata:', metaData)
+          //console.log('videos_nuevos metadata:', metaData)
           formData.append('videos_nuevos_data', JSON.stringify(metaData))
         }
 
