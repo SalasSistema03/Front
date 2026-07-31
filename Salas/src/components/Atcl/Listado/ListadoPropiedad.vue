@@ -219,7 +219,8 @@
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
-              <div class="col-md-12 p-1 position-relative">
+              <div class="col-md-8 position-relative">
+                <label class="form-label"> Listar Propietarios</label>
                 <input type="text" class="form-control form-control-sm" id="input-propietarios"
                   placeholder="Buscar por apellido o DNI..." v-model="busqueda" @input="buscar" autocomplete="off" />
                 <ul v-if="sugerencias.length > 0" class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
@@ -232,6 +233,21 @@
                   </li>
                 </ul>
               </div>
+
+              <div class="col-md-4">
+                <label class="form-label" for="orden">Ordenar por</label>
+                <select id="orden" class="form-control form-control-sm" v-model="formPropietarios.orden">
+                  <option value="">Sin orden</option>
+                  <option value="precio_asc">Precio (menor a mayor)</option>
+                  <option value="precio_desc">Precio (mayor a menor)</option>
+                  <option value="estado">Estado</option>
+                  <option value="tipo">Tipo de inmueble</option>
+                  <option value="zona">Zona</option>
+                  <option value="calle">Calle</option>
+                </select>
+              </div>
+
+
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler">
@@ -646,6 +662,7 @@ const formPropiedades = ref({
 const formPropietarios = ref({
   propietario: '',
   sector: props.sector,
+  orden: '',
   pertenece: 'estadoPropietario',
 })
 
@@ -805,7 +822,8 @@ const submitPropiedadesAlquiler = async () => {
 
 const submitPropietariosAlquiler = async () => {
   formPropietarios.value.propietario = personaSeleccionada.value?.id ?? null
-  formActual.value = formPropietarios.value
+  formActual.value = { ...formPropietarios.value }
+  console.log('Datos enviados al PDF:', formActual.value) // Agregado para que veas en consola que sí se envía
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
