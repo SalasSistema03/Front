@@ -577,6 +577,7 @@ if (props.sector === 'Alquiler') {
     { key: 'estado', label: 'Estado' },
     { key: 'precio', label: 'Precio' },
     { key: 'cartel', label: 'Cartel' },
+    { key: 'comentarioCartel', label: 'Comentario Cartel' },
     { key: 'foto', label: 'Foto' },
     { key: 'video', label: 'Videos' },
     { key: 'documentacion', label: 'Documentacion' },
