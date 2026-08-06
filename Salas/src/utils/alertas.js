@@ -33,7 +33,7 @@ export const alertas = {
         });
     },
 
-    async confirmar(title = '¿Estás seguro?', text = 'Esta acción no se puede deshacer') {
+ async confirmar(title = '¿Estás seguro?', text = 'Esta acción no se puede deshacer', confirmText = 'Sí, continuar') {
         return Swal.fire({
             title: title,
             text: text,
@@ -41,9 +41,9 @@ export const alertas = {
             showCancelButton: true,
             confirmButtonColor: '#0055b9',
             cancelButtonColor: '#ff0000',
-            confirmButtonText: 'Sí, eliminar',
+            confirmButtonText: confirmText,
             cancelButtonText: 'Cancelar',
-            reverseButtons: true // Pone el botón de cancelar a la izquierda (estilo Windows/Web estándar)
+            reverseButtons: true 
         });
     }
 };
