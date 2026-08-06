@@ -604,6 +604,7 @@ if (props.sector === 'Alquiler') {
     { key: 'web', label: 'Web' },
     { key: 'autorizacion', label: 'Autorizacion' },
     { key: 'novedades', label: 'Novedades' },
+    { key: 'antiguedad', label: 'Antiguedad'}
   ]
 } else {
   informacionMostrar.value = [
