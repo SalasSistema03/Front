@@ -106,6 +106,15 @@ const routesImpuestos = [
       requiresAuth: true,
       vistaId: 52
     }
+  },
+  {
+    path: '/fideicomiso_consorcio',
+    name: '/fideicomiso',
+    component: () => import('../views/Impuestos/FIDEICOMISO/FideicomisosView.vue'), // Se importa solo cuando se necesita
+    meta: {
+      requiresAuth: true,
+      vistaId: 65
+    }
   }
 
 ]
