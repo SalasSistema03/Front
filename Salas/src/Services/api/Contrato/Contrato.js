@@ -8,9 +8,7 @@ export const getHistorialContrato = (form = {}) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    params: {
-      form,
-    },
+    params: form,
   })
 }
 
