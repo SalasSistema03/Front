@@ -151,3 +151,10 @@ export const editarBrocheService = (id, data) => {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
+
+export const cargaMasivaImpuestosService = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/fideicomiso/carga-masiva`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+}
