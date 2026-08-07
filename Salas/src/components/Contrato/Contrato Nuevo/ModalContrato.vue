@@ -35,7 +35,7 @@
           </div>
           <div class="col-md-2 form-group mt-0">
             <label class="form-label">Reserva</label>
-            <input type="date" v-model="form.fecha_reserva" class="form-control form-control-sm" disabled/>
+            <input type="date" v-model="form.fecha_reserva" class="form-control form-control-sm" disabled />
           </div>
         </div>
 
@@ -106,7 +106,7 @@
               :disabled="form.bloqueado == 1" />
           </div>
 
-         <!--  <div class="col-md-2 form-group mt-0">
+          <!--  <div class="col-md-2 form-group mt-0">
             <label class="form-label">Monto Contrato</label>
             <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm"
               :disabled="form.bloqueado == 1" />
@@ -234,6 +234,7 @@ const getFormFromContrato = (contrato) => {
   let CantInforme = contrato?.registro_sellado?.cantidad_informes
   let tipo_contrato = contrato?.registro_sellado?.tipo_contrato
   let inquilino_propietario = contrato?.registro_sellado?.inq_prop
+  let fecha_inventario = contrato?.historial_estado_dpto?.fecha_inventario
 
   //console.log(contrato)
   const bloqueado = contrato?.registro_sellado?.mostrar
@@ -244,7 +245,7 @@ const getFormFromContrato = (contrato) => {
   if (hc) {
     return {
       id_estado: hc.id_estado || '',
-      fecha_inventario: normalizarFecha(hc.fecha_inventario),
+      fecha_inventario: normalizarFecha(fecha_inventario) ?? '',
       fecha_comercial_presenta_carpeta: normalizarFecha(hc.fecha_comercial_presenta_carpeta),
       fecha_preaprobada: normalizarFecha(hc.fecha_preaprobada),
       fecha_reserva: normalizarFecha(hc?.fecha_reserva ?? contrato?.fecha_reserva),

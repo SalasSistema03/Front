@@ -84,6 +84,16 @@
                   {{ notificacion.data.fecha }} | {{ notificacion.data.hora }}hs
                 </div>
               </a>
+              <a href="#" v-if="notificacion.data.pertenece == 'departamentoTecnico'"
+                @click.prevent="redirigirDptoTecnico(notificacion)">
+                <div class="navbar-notificacion-nombre">
+                  <i class="bi bi-person-workspace"></i>
+                  {{ notificacion.data.descripcion }}
+                </div>
+                <div class="navbar-notificacion-fecha">
+                  {{ notificacion.data.fecha }} | {{ notificacion.data.hora }}hs
+                </div>
+              </a>
             </li>
             <li v-if="notificaciones.length === 0">
               <a class="dropdown-item text-muted" href="#">
@@ -219,6 +229,18 @@ const redirigirContratoNuevo = async (data) => {
     await notificacionLeida(id_notificacion)
     showSuccess('Notificación marcada como leída')
     router.push({ name: 'contratos_nuevos', query: { folio: folio } })
+  } catch (error) {
+    console.error('Error al marcar notificación como leída:', error)
+    showError('Error al marcar notificación como leída')
+  }
+}
+
+const redirigirDptoTecnico = async (data) => {
+  const id_notificacion = data.id
+  try {
+    await notificacionLeida(id_notificacion)
+    showSuccess('Notificación marcada como leída')
+    router.push({ name: '/dpto/inventario' })
   } catch (error) {
     console.error('Error al marcar notificación como leída:', error)
     showError('Error al marcar notificación como leída')
