@@ -21,6 +21,11 @@
           Informe de Novedades
         </div>
 
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'listado_ofrecimiento' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'listado_ofrecimiento'" v-if="sector === 'Alquiler'">
+          Listado Tiempo de Ofrecimiento
+        </div>
+
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'ofrecimiento_venta' ? 'btn-primary' : 'btn-light'"
           @click="currentForm = 'ofrecimiento_venta'" v-if="sector === 'Venta'">
           Listar Ofrecimiento
@@ -507,6 +512,51 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'listado_ofrecimiento'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listado de Ofrecimiento</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+
+              <div class="form-group col-md-3 px-1" v-if="props.sector === 'Alquiler'">
+                <label class="form-label">Estado</label>
+                <select v-model="formTiempoOfrecimiento.estado_id" class="form-control form-control-sm">
+                  <option value="">Seleccione un estado</option>
+                  <option v-for="estado in estados.filter(e => e.id === 1 || e.id === 2)" :key="estado.id"
+                    :value="estado.id">
+                    {{ estado.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-6 ">
+                <label class="form-label" for="orden">Ordenar por</label>
+                <select id="orden" class="form-control form-control-sm" v-model="formTiempoOfrecimiento.orden">
+                  <option value="">Sin orden</option>
+                  <option value="precio_asc">Precio (menor a mayor)</option>
+                  <option value="precio_desc">Precio (mayor a menor)</option>
+                  <option value="estado">Estado</option>
+                  <option value="tipo">Tipo de inmueble</option>
+                  <option value="zona">Zona</option>
+                  <option value="calle">Calle</option>
+                  <option value="codigo">Código</option>
+                  <option value="autorizacion">Autorizacion</option>
+                </select>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitTiempoOfrecimiento()"
+                  :disabled="!permisoTiempoOfrecimiento">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
     </div>
   </div>
@@ -577,6 +627,7 @@ const permisoCriteriosPorFecha = ref(false)
 const permisoConversacion = ref(false)
 const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
+const permisoTiempoOfrecimiento = ref(false)
 
 // Si es alquiler muestra un conjunto de columnas
 // Si es venta muestra otro más amplio
@@ -604,7 +655,6 @@ if (props.sector === 'Alquiler') {
     { key: 'web', label: 'Web' },
     { key: 'autorizacion', label: 'Autorizacion' },
     { key: 'novedades', label: 'Novedades' },
-    { key: 'antiguedad', label: 'Antiguedad'}
   ]
 } else {
   informacionMostrar.value = [
@@ -658,6 +708,13 @@ const formPropiedades = ref({
   sector: props.sector,
   cartel: '',
   cant_dorm: '',
+})
+
+const formTiempoOfrecimiento = ref({
+  orden: 'estado',
+  estado_id: '1',
+  sector: props.sector,
+  pertenece: 'tiempoOfrecimiento',
 })
 
 const formPropietarios = ref({
@@ -726,14 +783,16 @@ onMounted(async () => {
   // 1. Obtener Permisos primero para que la interfaz se habilite rápido
   try {
     if (props.sector === 'Alquiler') {
-      const [resPermiso, resPropAlq, resNovedades] = await Promise.all([
+      const [resPermiso, resPropAlq, resNovedades, resTiempoOfrecimiento] = await Promise.all([
         verificarPermiso('listarPropiedadesAlquiler'),
         verificarPermiso('listarPropietarioAlquiler'),
         verificarPermiso('listarInformeNovedades'),
+        verificarPermiso('listarTiempoOfrecimiento'),
       ])
       permiso.value = resPermiso?.data ?? false
       propietariosAlquiler.value = resPropAlq?.data ?? false
       permisoInformeNovedades.value = resNovedades?.data ?? false
+      permisoTiempoOfrecimiento.value = resTiempoOfrecimiento?.data ?? false
     } else {
       const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resConversacion] = await Promise.all([
         verificarPermiso('listarPropiedadesVenta'),
@@ -879,6 +938,12 @@ const submitConsultasIngresadas = async () => {
 
 const submitConversaciones = async () => {
   formActual.value = formConversaciones.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+const submitTiempoOfrecimiento = async () => {
+  formActual.value = formTiempoOfrecimiento.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
