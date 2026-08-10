@@ -452,7 +452,9 @@ const eliminarImpuesto = async (item) => {
   }
   try {
     const response = await EliminarImpuesto(form)
-    console.log(response)
+    await filtrar()
+
+    //console.log(response)
   } catch (error) {
     console.error(error)
   }
