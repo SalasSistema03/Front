@@ -181,6 +181,12 @@
               </select>
             </div>
 
+            <div class=" form-group px-1 col-md-2 ">
+              <label class=" text-center form-label" id="basic-addon1">Fecha Ofrecimiento</label>
+              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.fecha_ofrecimiento" readonly>
+              <input v-else type="date" class="form-control text-center" v-model="alquiler.fecha_ofrecimiento">
+            </div>
+
             <div class="form-group px-1 col-md-4 "
               v-show="mostrarDescripcion || propiedad?.historial_estados_alquiler?.comentario_alquiler"
               id="descripcion_container_alquiler">
@@ -303,6 +309,8 @@ watch(() => props.propiedadUpdate, (newValue) => {
     alquiler.reel_a = newValue.reel_a || ''
     alquiler.web_a = newValue.web_a || ''
     alquiler.captador_interno_a = newValue.captador_int_a || ''
+    alquiler.fecha_ofrecimiento = newValue.fecha_ofrecimiento || ''
+
 
     // Precargar folios si existen
     if (newValue.folios && newValue.folios.length > 0) {
@@ -420,6 +428,7 @@ const alquiler = reactive({
   reel_a: '',
   web_a: '',
   captador_interno_a: '',
+  fecha_ofrecimiento: ''
 })
 
 // Lógica equivalente al toggleDescripcion del blade
