@@ -17,20 +17,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in data" :key="item.id">
+              <tr v-if="data.length === 0">
+                <td colspan="4" class="text-center alerta-agenda-home">"No hay eventos ni tareas registradas para esta semana."</td>
+              </tr>
+              <tr v-else v-for="item in data" :key="item.id">
                 <td>{{ item.fecha }}</td>
                 <td>{{ item.hora_inicio }} hs.</td>
                 <td>{{ item.descripcion ?? '-' }}</td>
                 <td>{{ item.propiedad?.calle?.name ?? '-' }} {{ item.propiedad?.numero_calle ?? '-' }}</td>
               </tr>
-
             </tbody>
-
           </table>
-
         </div>
-
-
       </div>
 
       <div class="col-md-6 card p-0 home-card-all">
@@ -48,32 +46,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in semanales" :key="item.id">
+              <tr v-if="semanales.length === 0">
+                <td colspan="4" class="text-center">"No hay eventos ni tareas registradas para esta semana."</td>
+              </tr>
+              <tr v-else v-for="item in semanales" :key="item.id">
                 <td>{{ item.fecha }}</td>
                 <td>{{ item.hora_inicio }} hs.</td>
                 <td>{{ item.descripcion ?? '-' }}</td>
                 <td>{{ item.propiedad?.calle?.name ?? '-' }} {{ item.propiedad?.numero_calle ?? '-' }}</td>
               </tr>
-
             </tbody>
-
           </table>
-
         </div>
-
-
       </div>
-
     </div>
-
-
-
   </div>
-
-
-
-
-
 </template>
 <script setup>
 import NavComponent from '../components/NavComponent.vue'

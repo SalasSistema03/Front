@@ -11,11 +11,11 @@
           <label>Calle</label>
           <input v-model="filtroCalle" type="text" class="form-control" @keyup.enter="buscar">
         </div>
-        <div class="col-md-2" v-if="vistaAsesores">
+        <div class="col-md-1" v-if="vistaAsesores">
           <label>Dorm</label>
           <input v-model="filtroDorm" type="text" class="form-control" @keyup.enter="buscar">
         </div>
-        <div class="col-md-2" v-if="vistaAsesores">
+        <div class="col-md-1" v-if="vistaAsesores">
           <label>Baños</label>
           <input v-model="filtroBaños" type="text" class="form-control" @keyup.enter="buscar">
         </div>
@@ -27,6 +27,10 @@
             <option value="NO">NO</option>
           </select>
         </div>
+        <div class="col-1 mt-4 ps-0">
+                  <i class="bi bi-arrow-counterclockwise ms-2" role="button" title="Limpiar formulario"
+                    @click="resetForm" style="cursor: pointer;"></i>
+                </div>
         <div class="col-md-4 mt-4">
           <button class="btn btn-primary btn-sm w-50" @click="buscar" :disabled="cargando">
             <span v-if="cargando">
@@ -128,6 +132,17 @@ const propiedades = ref([])
 const cargando = ref(false)
 const error = ref('')
 const buscado = ref(false)
+
+const resetForm = () => {
+  filtroCodigo.value = ''
+  filtroCalle.value = ''
+  filtroDorm.value = ''
+  filtroBaños.value = ''
+  filtroCochera.value = ''
+  propiedades.value = []
+  error.value = ''
+  buscado.value = false
+}
 
 const buscar = async () => {
 
