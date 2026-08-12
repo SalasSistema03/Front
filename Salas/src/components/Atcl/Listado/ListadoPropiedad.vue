@@ -535,14 +535,14 @@
                 <label class="form-label" for="orden">Ordenar por</label>
                 <select id="orden" class="form-control form-control-sm" v-model="formTiempoOfrecimiento.orden">
                   <option value="">Sin orden</option>
-                  <option value="precio_asc">Precio (menor a mayor)</option>
-                  <option value="precio_desc">Precio (mayor a menor)</option>
+                  <!-- <option value="precio_asc">Precio (menor a mayor)</option>
+                  <option value="precio_desc">Precio (mayor a menor)</option> -->
                   <option value="estado">Estado</option>
-                  <option value="tipo">Tipo de inmueble</option>
+                  <!-- <option value="tipo">Tipo de inmueble</option>
                   <option value="zona">Zona</option>
                   <option value="calle">Calle</option>
                   <option value="codigo">Código</option>
-                  <option value="autorizacion">Autorizacion</option>
+                  <option value="autorizacion">Autorizacion</option> -->
                 </select>
               </div>
 
