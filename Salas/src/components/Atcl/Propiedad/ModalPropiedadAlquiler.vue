@@ -182,7 +182,7 @@
               v-if="mostrarFechaOfrecimiento">
               <label class=" text-center form-label" id="basic-addon1">Fecha Ofrecimiento</label>
               <input v-if="propiedad" type="date" class="form-control text-center"
-                :value="propiedad.historial_estados_alquiler?.fecha_alquiler?.split(' ')[0]" readonly>
+                :value="propiedad.fecha_ofrecimiento" readonly>
               <input v-else type="date" class="form-control text-center" v-model="alquiler.fecha_ofrecimiento" @change="fechaOfrecimientoTouched = true">
             </div>
             <!--  <div>
@@ -312,9 +312,9 @@ watch(() => props.propiedadUpdate, (newValue) => {
     alquiler.reel_a = newValue.reel_a || ''
     alquiler.web_a = newValue.web_a || ''
     alquiler.captador_interno_a = newValue.captador_int_a || ''
-    alquiler.fecha_ofrecimiento = newValue.historial_estados_alquiler?.fecha_alquiler?.split(' ')[0] || ''
-    initialFechaOfrecimiento.value = alquiler.fecha_ofrecimiento
-    fechaOfrecimientoTouched.value = false
+    alquiler.fecha_ofrecimiento = newValue.fecha_ofrecimiento || ''
+    //initialFechaOfrecimiento.value = alquiler.fecha_ofrecimiento
+    //fechaOfrecimientoTouched.value = false
 
 
     // Precargar folios si existen
