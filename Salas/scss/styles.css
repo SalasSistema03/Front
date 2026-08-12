@@ -1099,6 +1099,11 @@
   max-width: 13rem;
 }
 
+.alerta-agenda-home {
+  color: rgb(0, 85, 185);
+  font-weight: 600;
+}
+
 .listar_boton_selector {
   text-align: center;
   border-radius: 5px !important;
