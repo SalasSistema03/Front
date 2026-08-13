@@ -282,7 +282,6 @@ const buscarFolioPrecargado = async () => {
       if (datos.tipo_contrato) form.value.tipo_contrato = datos.tipo_contrato;
       if (datos.fecha_inicio) form.value.fecha_inicio = datos.fecha_inicio;
 
-      //alertas.success('Datos del folio encontrados y precargados');
       showSuccess('Datos del folio encontrados y precargados');
     }
   } catch (err) {

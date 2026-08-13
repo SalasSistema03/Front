@@ -5,20 +5,23 @@
     <template #body>
       <div class="form-group row mb-3">
         <div class="col-md-4">
-          <input type="text" class="form-control" v-model="form.cuit" placeholder="Ingrese CUIT (sin guiones)">
+          <input
+            type="text"
+            class="form-control"
+            v-model="form.cuit"
+            placeholder="Ingrese CUIT (sin guiones)"
+          />
         </div>
-       
+
         <div class="col-md-4">
           <button class="btn btn-primary" @click="obtenerRetenciones">Buscar</button>
         </div>
         <div class="col-md-4">
-          <button class="btn btn-primary" @click="exportaRetencionesCuit()"> Exportar </button>
+          <button class="btn btn-primary" @click="exportaRetencionesCuit()">Exportar</button>
         </div>
       </div>
 
-
-
-      <div class=" table-responsive table-scroll-container">
+      <div class="table-responsive table-scroll-container">
         <table class="table table-striped table-hover w-100" id="tablaDatos">
           <thead>
             <tr>
@@ -41,48 +44,48 @@
           </tbody>
         </table>
       </div>
-
-
     </template>
 
-    <template #footer>
-    </template>
+    <template #footer> </template>
   </BaseModal>
 </template>
 
 <script setup>
-import BaseModal from '@/components/base/BaseModal.vue';
-import { retencionPorCUITService, exportarRetencion } from '@/Services/api/Contable/RetencionesApi.js';
-import { ref } from 'vue';
+import BaseModal from '@/components/base/BaseModal.vue'
+import {
+  retencionPorCUITService,
+  exportarRetencion,
+} from '@/Services/api/Contable/RetencionesApi.js'
+import { ref } from 'vue'
 
 const props = defineProps({
-  modalRetencionPorCUIT: Boolean
-});
-const emit = defineEmits(['cerrarModalRetencionPorCUIT']);
+  modalRetencionPorCUIT: Boolean,
+})
+const emit = defineEmits(['cerrarModalRetencionPorCUIT'])
 
-const form = ref({ cuit: '' });
-const registros = ref([]);
-
+const form = ref({ cuit: '' })
+const registros = ref([])
+const nombreArchivo = ref('retenciones_cuit.xlsx')
 
 async function obtenerRetenciones() {
   try {
     //console.log("CUIT:", form.value.cuit);
-    const response = await retencionPorCUITService(form.value.cuit);
+    const response = await retencionPorCUITService(form.value.cuit)
     //console.log("response", response);
 
     if (response.data.status === 'success') {
-      registros.value = response.data.data;
+      registros.value = response.data.data
     }
   } catch (error) {
-    console.error("Error al obtener retenciones:", error);
+    console.error('Error al obtener retenciones:', error)
     // Aquí podrías usar una alerta (SweetAlert o similar)
   }
 }
 
-async function exportaRetencionesCuit() {
+/* async function exportaRetencionesCuit() {
   try {
     const response = await exportarRetencion({
-      registros: registros.value
+      registros: registros.value,
     })
     // Descarga automática del archivo
     const blob = new Blob([response.data], { type: 'text/plain' })
@@ -99,10 +102,46 @@ async function exportaRetencionesCuit() {
   } catch (error) {
     console.log(error)
   }
+} */
+
+async function exportaRetencionesCuit() {
+  try {
+    const razonSocial = registros.value[0]?.razon_social_retencion || 'retenciones_cuit'
+    const nombreBase = `${razonSocial.replace(/[^a-zA-Z0-9 _-]/g, '').trim() || 'retenciones_cuit'}`
+    const nombreArchivo = `${nombreBase}_retenciones.xlsx`
+
+    const response = await exportarRetencion({
+      registros: registros.value,
+      nombreArchivo,
+    })
+
+    const disposition = response.headers['content-disposition']
+    let fileName = nombreArchivo
+
+    if (disposition) {
+      const match = disposition.match(/filename="(.+)"/)
+      if (match?.[1]) {
+        fileName = match[1]
+      }
+    }
+
+    const blob = new Blob([response.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    })
+
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = fileName
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error(error)
+  }
 }
-
 </script>
-
 
 <style scoped>
 /* Contenedor para el scroll vertical (opcional) */

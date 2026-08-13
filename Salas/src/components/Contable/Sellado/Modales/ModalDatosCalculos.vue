@@ -144,7 +144,9 @@
 import { ref, defineEmits, onMounted } from "vue";
 import BaseModal from '../../../base/BaseModal.vue';
 import { getDatosCalculosService, guardarValoresRegistrales, guardarValoresSellado, guardarValoresAdministrativo, guardarValoresHoja } from '../../../../Services/api/Contable/selladoApi.js'
-import { alertas } from '../../../../utils/alertas.js'
+import { useToast } from '@/composables/useToast'
+
+const { showSuccess, showError } = useToast()
 
 defineProps({
     estaAbiertoDatosCalculos: Boolean
@@ -167,7 +169,7 @@ const getDatosRegistrales = async () => {
     try {
         const response = await getDatosCalculosService()
 
-        console.log('Datos de configuracion:', response.data.configuracion)
+        //console.log('Datos de configuracion:', response.data.configuracion)
         // Asignamos todo el objeto "configuracion" de un solo golpe
         configuracion.value = response.data.configuracion
     } catch (err) {
@@ -201,12 +203,13 @@ const guardarRegistrales = async () => {
         const response = await guardarValoresRegistrales(payload);
 
         if (response.status === 200) {
-            alertas.success('Datos guardados correctamente');
+           
+            showSuccess('Datos guardados correctamente');
         }
 
     } catch (err) {
         //console.error('Error al guardar:', err);
-        alertas.error('Error al guardar los datos');
+        showError('Error', 'No se pudieron guardar los datos');
     } finally {
         guardando.value = false;
     }
@@ -228,12 +231,12 @@ const guardarValorAdministrativo = async () => {
         const response = await guardarValoresAdministrativo(payload);
 
         if (response.status === 200) {
-            alertas.success('Datos guardados correctamente');
+            showSuccess('Datos guardados correctamente');
         }
 
     } catch (err) {
         //console.error('Error al guardar:', err);
-        alertas.error('Hubo un error al guardar los cambios');
+        showError('Error', 'No se pudieron guardar los datos');
     } finally {
         guardando.value = false;
     }
@@ -254,12 +257,12 @@ const guardarPrecioHoja = async () => {
         const response = await guardarValoresHoja(payload);
 
         if (response.status === 200) {
-            alertas.success('Datos guardados correctamente');
+            showSuccess('Datos guardados correctamente');
         }
 
     } catch (err) {
         //console.error('Error al guardar:', err);
-        alertas.error('Hubo un error al guardar los cambios');
+        showError('Error', 'No se pudieron guardar los datos');
     } finally {
         guardando.value = false;
     }
@@ -278,11 +281,11 @@ const guardarSellado = async () => {
         const response = await guardarValoresSellado(payload);
 
         if (response.status === 200) {
-            alertas.success('Datos guardados correctamente');
+            showSuccess('Datos guardados correctamente');
         }
     } catch (err) {
         // ... error
-        alertas.error('Hubo un error al guardar los cambios');
+        showError('Error', 'No se pudieron guardar los datos');
     } finally {
         guardando.value = false;
     }

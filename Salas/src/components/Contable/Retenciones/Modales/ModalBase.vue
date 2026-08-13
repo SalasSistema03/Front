@@ -48,6 +48,9 @@ import BaseModal from '@/components/base/BaseModal.vue';
 import { onMounted, reactive, ref } from 'vue';
 import { getBasePorcentualService, modificarBasePorcentualService } from '@/Services/api/Contable/RetencionesApi.js';
 import { alertas } from '@/utils/alertas';
+import { useToast } from '@/composables/useToast'
+
+const { showSuccess, showError } = useToast()
 
 defineProps({
     modaleBase: Boolean
@@ -66,11 +69,11 @@ const obtenerBasePorcentual = async () => {
     loadingDatos.value = true;
     try {
         const response = await getBasePorcentualService();
-        console.log(response.data.data);
+        //console.log(response.data.data);
         form.base_dato = response.data.data[0].dato;
         form.porcentual_dato = response.data.data[1].dato;
     } catch (err) {
-        alertas.error('Error', 'No se pudo obtener los datos de la base y el porcentual');
+        showError('Error', 'No se pudo obtener los datos de la base y el porcentual');
     } finally {
         loadingDatos.value = false;
     }
@@ -79,13 +82,13 @@ const obtenerBasePorcentual = async () => {
 async function guardarBasePorcentual() {
     loading.value = true;
     try {
-        console.log(form);
+        //console.log(form);
         const response = await modificarBasePorcentualService(form);
-        console.log(response.data);
-        alertas.success('Guardado', 'Se ha guardado correctamente');
+       // console.log(response.data);
+        showSuccess('Guardado', 'Se ha guardado correctamente');
         emit('cerrarModalBase');
     } catch (err) {
-        alertas.error('Error', 'No se pudo guardar la configuración de base y porcentual');
+        showError('Error', 'No se pudo guardar la configuración de base y porcentual');
     } finally {
         loading.value = false;
     }

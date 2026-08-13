@@ -53,7 +53,7 @@
     </div>
 
 
-    <div class="proceso_reserva_tabla_contenedor mt-2">
+    <div class="proceso_reserva_tabla_contenedor_contrato mt-2">
       <table class="table table-striped table-hover proceso_reserva_table">
         <thead>
           <tr class="text-center">
