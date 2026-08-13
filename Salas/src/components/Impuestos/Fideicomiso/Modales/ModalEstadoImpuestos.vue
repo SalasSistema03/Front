@@ -108,6 +108,7 @@ import { getRegistrosPorUnidadService, modificarRegistroMensualService, GenerarP
 import PdfComprobantes from '../pdfComprobantes.vue';
 import ModalModificarRegistro from './ModalModificarRegistro.vue';
 
+
 const props = defineProps({
     modalEstado: Boolean,
     datosUnidad: {

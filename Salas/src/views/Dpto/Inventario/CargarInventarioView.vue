@@ -152,9 +152,10 @@
 
 
   </div>
-  <ModalInventario :show="showModalInventario" :inventario="inventarioSeleccionado" @close="cerrarModalInventario"
-    @guardar="guardarModalInventario" />
-  <ModalObservacionesInventario :show="showModalObservaciones" :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" />
+  <ModalInventario v-if="showModalInventario" :show="showModalInventario" :inventario="inventarioSeleccionado"
+    @close="cerrarModalInventario" @guardar="guardarModalInventario" />
+  <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones" :inventario="inventarioSeleccionado"
+    @close="cerrarModalObservaciones" />
 </template>
 <script setup>
 import NavComponent from '../../../components/NavComponent.vue'
