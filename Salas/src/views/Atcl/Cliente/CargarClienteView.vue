@@ -236,6 +236,7 @@ export default {
   name: 'CargarClienteView',
   components: {
     NavComponent,
+    
     ModalBusquedaPropiedadVenta
   },
 
