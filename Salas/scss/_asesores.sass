@@ -138,7 +138,6 @@ $verdeSalas: colorSalas.$verdeSalas
   .mensaje-resaltado
     box-shadow: 0px -5px 9px lighten($azulSalas, 57%) inset !important
 
-
 .btn-adds-conversacion-asesores
   font-size: 0.8rem !important
   border: 1px solid $azulSalas !important
@@ -206,3 +205,110 @@ $verdeSalas: colorSalas.$verdeSalas
   border-radius: 10px !important
   border: 0px solid !important
   border-bottom: 1px solid $azulSalas !important
+
+.barras-asesores
+  height: 30.2rem
+
+  .tipo-potabiliadad-asesores
+    color: red
+    font-size: 0.7rem
+    font-weight: 700
+
+  .selector_potabilidad-asesores
+
+    button
+      font-size: 0.7rem !important
+      color: $azulSalas !important
+      background-color: white !important
+
+    i
+      color: $azulSalas
+      font-size: 0.7rem !important
+
+    .texto-seleccionado
+      color: $azulSalas !important
+      font-size: 0.7rem !important
+  .lista-contacto-asesores
+    border-radius: 5px !important
+    box-shadow: 0 0 3px $azulSalas !important
+    font-size: 0.7rem !important
+    color: red !important
+    height: 24rem
+    overflow-y: auto
+    overflow-x: hidden
+    .nombre-contacto-asesores
+      color: $azulSalas !important
+      text-align: left
+      &:hover
+        color: $verdeSalas !important
+    .telefono-contacto-asesores
+      font-size: 0.6rem
+      text-align: left
+      color: black !important
+    .fecha-contacto-asesores
+      font-size: 0.5rem
+      text-align: right
+      color: black !important
+    .boton-editar-clientes-asesores
+      color: $azulSalas !important
+      text-align: right
+      font-size: 0.7rem
+      margin-left: 0.4rem
+      &:hover
+        color: $verdeSalas !important
+        text-align: right
+        font-size: 0.8rem
+        margin-left: 0.4rem
+    .boton-whatsapp-clientes-asesores
+      color: $azulSalas !important
+      text-align: left
+      font-size: 0.6rem
+      margin-right: 0.5rem
+      &:hover
+        color: $verdeSalas !important
+        text-align: left
+        font-size: 0.5rem
+        margin-right: 0.5rem
+    .pertenece-inmobiliaria-asesores
+      font-size: 0.6rem !important
+      text-align: center
+      border-radius: 5px !important
+      box-shadow: 0 0 0px $azulSalas !important
+      background-color: lighten($azulSalas, 50%) !important
+      color: black
+
+  .titulo-columna-asesores
+    font-size: 0.8rem
+    color: $azulSalas !important
+    border-bottom: 1px solid $azulSalas
+    font-weight: 600 // extra bold
+    // hacer que el texto se corte a la derecha
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  .creterio-asesores
+    font-size: 0.8rem
+    //quiero el borde gris claro no azul predeterminado
+    border-bottom: 1px solid #cccccc
+
+    border-bottom-left-radius: 5px !important
+    border-bottom-right-radius: 5px !important
+    /* box-shadow: 0 0 3px $azulSalas !important */
+
+    .criterio-titulos-asesores
+      font-weight: 700
+      font-size: 0.5rem
+      color: $azulSalas
+    .criterio-texto-asesores
+      font-size: 0.65rem
+      color: $azulSalas
+    .boton-editar-criterio-asesores
+      color: $azulSalas !important
+      text-align: right
+      font-size: 0.6rem
+      margin-left: 0.4rem
+      &:hover
+        color: $verdeSalas !important
+        font-size: 0.7rem
+        margin-left: 0.4rem

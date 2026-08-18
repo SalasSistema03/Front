@@ -517,13 +517,15 @@ export default {
           (cliente.telefono ?? '').toLowerCase().includes(busqueda)
         );
 
-        console.log('Clientes filtrados por búsqueda:', clientesFiltrados);
+        //console.log('Clientes filtrados por búsqueda:', clientesFiltrados);
       }
 
 
       if (this.filtroSinDevolucion) {
         clientesFiltrados = clientesFiltrados.filter(cliente => this.clienteTieneDevolucionesPendientes(cliente))
+        //console.log('aca', clientesFiltrados)
       }
+      console.log('Clientes finales:', clientesFiltrados[0]);
 
       return clientesFiltrados;
     },
