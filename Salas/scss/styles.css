@@ -963,6 +963,8 @@
 
 .barras-asesores {
   height: 30.2rem;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 10px;
 }
 .barras-asesores .tipo-potabiliadad-asesores {
   color: red;
