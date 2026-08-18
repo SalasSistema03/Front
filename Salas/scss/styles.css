@@ -961,6 +961,122 @@
   border-bottom: 1px solid rgb(0, 85, 185) !important;
 }
 
+.barras-asesores {
+  height: 30.2rem;
+}
+.barras-asesores .tipo-potabiliadad-asesores {
+  color: red;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.barras-asesores .selector_potabilidad-asesores button {
+  font-size: 0.7rem !important;
+  color: rgb(0, 85, 185) !important;
+  background-color: white !important;
+}
+.barras-asesores .selector_potabilidad-asesores i {
+  color: rgb(0, 85, 185);
+  font-size: 0.7rem !important;
+}
+.barras-asesores .selector_potabilidad-asesores .texto-seleccionado {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+}
+.barras-asesores .lista-contacto-asesores {
+  border-radius: 5px !important;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+  color: red !important;
+  height: 24rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.barras-asesores .lista-contacto-asesores .nombre-contacto-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+}
+.barras-asesores .lista-contacto-asesores .nombre-contacto-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.barras-asesores .lista-contacto-asesores .telefono-contacto-asesores {
+  font-size: 0.6rem;
+  text-align: left;
+  color: black !important;
+}
+.barras-asesores .lista-contacto-asesores .fecha-contacto-asesores {
+  font-size: 0.5rem;
+  text-align: right;
+  color: black !important;
+}
+.barras-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+}
+.barras-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  text-align: right;
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+}
+.barras-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+  font-size: 0.6rem;
+  margin-right: 0.5rem;
+}
+.barras-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  text-align: left;
+  font-size: 0.5rem;
+  margin-right: 0.5rem;
+}
+.barras-asesores .lista-contacto-asesores .pertenece-inmobiliaria-asesores {
+  font-size: 0.6rem !important;
+  text-align: center;
+  border-radius: 5px !important;
+  box-shadow: 0 0 0px rgb(0, 85, 185) !important;
+  background-color: rgb(185, 217.1621621622, 255) !important;
+  color: black;
+}
+.barras-asesores .titulo-columna-asesores {
+  font-size: 0.8rem;
+  color: rgb(0, 85, 185) !important;
+  border-bottom: 1px solid rgb(0, 85, 185);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.barras-asesores .creterio-asesores {
+  font-size: 0.8rem;
+  border-bottom: 1px solid #cccccc;
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  /* box-shadow: 0 0 3px $azulSalas !important */
+}
+.barras-asesores .creterio-asesores .criterio-titulos-asesores {
+  font-weight: 700;
+  font-size: 0.5rem;
+  color: rgb(0, 85, 185);
+}
+.barras-asesores .creterio-asesores .criterio-texto-asesores {
+  font-size: 0.65rem;
+  color: rgb(0, 85, 185);
+}
+.barras-asesores .creterio-asesores .boton-editar-criterio-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+}
+.barras-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+}
+
 .titulo-impuestos {
   font-size: 2.5vh;
   color: rgb(0, 85, 185);
@@ -1067,6 +1183,7 @@
 
 .home-card-all {
   width: 45vw !important;
+  height: 45vh;
 }
 
 .card-header-home {
@@ -1113,6 +1230,11 @@
 
 .proceso_reserva_tabla_contenedor {
   height: 34vh;
+  overflow-y: auto;
+}
+
+.proceso_reserva_tabla_contenedor_contrato {
+  height: auto;
   overflow-y: auto;
 }
 

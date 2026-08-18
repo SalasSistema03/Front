@@ -73,6 +73,8 @@ export const getAsesor = () => {
   })
 }
 
+
+
 export const getCaptadorInterno = () => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/captador-interno`, {

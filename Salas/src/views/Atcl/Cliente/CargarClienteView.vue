@@ -229,7 +229,7 @@ import ModalBusquedaPropiedadVenta from '@/components/Atcl/Cliente/ModalBusqueda
 import { useToast } from '@/composables/useToast'
 import { guardarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi'
 import { getClientePorTelefono, verificarPermisoSeleccionarAsesor } from '@/Services/api/Atcl/Cliente/ClienteApi';
-/* import { watch } from 'vue'; */
+
 
 export default {
 
@@ -305,7 +305,7 @@ export default {
     async getUserData() {
       const token = localStorage.getItem('token')
       const user = await getUser(token)
-      console.log(user)
+      //console.log('usuario', user)
       this.usuario_id = user.data.id
       this.username = user.data.username
       // Si no tiene permiso para seleccionar asesor, usar su propio ID
@@ -439,7 +439,7 @@ export default {
     async buscarClientePorTelefono(telefono) {
       try {
         const response = await getClientePorTelefono(telefono)
-        console.log('Response:', response)
+        //console.log('Response:', response)
         const cliente = response.data.cliente
         //console.log('Cliente:', cliente)
 

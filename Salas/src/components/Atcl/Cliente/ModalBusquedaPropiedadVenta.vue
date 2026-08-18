@@ -52,7 +52,7 @@
         <table class="table table-sm">
           <thead>
             <tr>
-              <th>Codigo</th>
+              <th>{{ props.tipo === 'alquiler' ? 'Cod. Alquiler' : 'Cod. Venta' }}</th>
               <th>Direccion</th>
               <th>Zona</th>
               <th v-if="vistaAsesores">Dorm.</th>
@@ -78,7 +78,7 @@
 
             <!-- Resultados -->
             <tr v-for="prop in propiedades" :key="prop.id">
-              <td>{{ prop.cod_venta }}</td>
+              <td>{{ props.tipo === 'alquiler' ? prop.cod_alquiler : prop.cod_venta }}</td>
               <td>{{ prop.calle ?? 'Sin DATOS' }}</td>
               <td>{{ prop.zona ?? 'Sin DATOS'}}</td>
               <td v-if="vistaAsesores">{{ prop.cantidad_dormitorios ?? 'Sin DATOS'}}</td>
@@ -118,6 +118,10 @@ const props = defineProps({
   vistaAsesores: {
     type: Boolean,
     default: false
+  },
+  tipo: {
+    type: String,
+    default: 'venta'
   }
 })
 
@@ -151,7 +155,7 @@ const buscar = async () => {
     error.value = ''
     buscado.value = true
 
-    const { data } = await getPropiedadesVenta(filtroCodigo.value, filtroCalle.value, filtroDorm.value, filtroBaños.value, filtroCochera.value)
+    const { data } = await getPropiedadesVenta(filtroCodigo.value, filtroCalle.value, filtroDorm.value, filtroBaños.value, filtroCochera.value, props.tipo)
     propiedades.value = data.data ?? []
     //console.log('este es el filtrado', propiedades.value)
 
