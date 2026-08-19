@@ -187,8 +187,9 @@
         @close="showBusquedaPropiedadVentaModal = false" @seleccionar="agregarPropiedad" />
 
       <div class="col-md-4 d-flex justify-content-center px-5 mt-2">
-        <button type="submit" class="btn btn-primary btn-sm w-50" @click="handleGuardar">
-          Guardar
+        <button type="submit" class="btn btn-primary btn-sm w-50" @click="handleGuardar" :disabled="isSaving">
+          <span v-if="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isSaving ? 'Guardando...' : 'Guardar' }}
         </button>
       </div>
     </div>
@@ -223,6 +224,7 @@ const propiedadesAsignadas = ref([])
 const showBusquedaPropiedadVentaModal = ref(false)
 const currentUserId = ref(null)
 const isClienteNuevo = ref(true)
+const isSaving = ref(false)
 
 const { showWarning, showSuccess, showError } = useToast()
 
@@ -470,6 +472,7 @@ const handleGuardar = async () => {
     propiedades_alquiler: propiedadesAsignadas.value
   }
 
+  isSaving.value = true
   try {
     await guardarCliente(data)
     showSuccess('Cliente guardado correctamente')
@@ -477,6 +480,8 @@ const handleGuardar = async () => {
   } catch (error) {
     console.error('Error al guardar el cliente:', error)
     showError('Error al guardar el cliente')
+  } finally {
+    isSaving.value = false
   }
 }
 
