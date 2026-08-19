@@ -86,7 +86,12 @@ watch(
       form.nombre = nuevoCliente.nombre
       form.telefono = nuevoCliente.telefono
       form.observaciones = nuevoCliente.observaciones ?? ''
-      form.observaciones_alq = nuevoCliente.observaciones_alq ?? nuevoCliente.observaciones ?? ''
+      // En modo Home mostramos exclusivamente observaciones_alq (si es null mostramos '')
+      if (props.modoHome) {
+        form.observaciones_alq = nuevoCliente.observaciones_alq ?? ''
+      } else {
+        form.observaciones_alq = nuevoCliente.observaciones_alq ?? nuevoCliente.observaciones ?? ''
+      }
       form.nombre_de_inmobiliaria = nuevoCliente.nombre_de_inmobiliaria
       form.estado_cliente = props.modoHome ? (nuevoCliente.estado_alq || 'Pendiente') : (nuevoCliente.estado_cliente || nuevoCliente.estado || 'Pendiente')
       form.estado = form.estado_cliente
@@ -121,7 +126,11 @@ onMounted(async () => {
     form.nombre = props.cliente.nombre
     form.telefono = props.cliente.telefono
     form.observaciones = props.cliente.observaciones ?? ''
-    form.observaciones_alq = props.cliente.observaciones_alq ?? props.cliente.observaciones ?? ''
+    if (props.modoHome) {
+      form.observaciones_alq = props.cliente.observaciones_alq ?? ''
+    } else {
+      form.observaciones_alq = props.cliente.observaciones_alq ?? props.cliente.observaciones ?? ''
+    }
     form.nombre_de_inmobiliaria = props.cliente.nombre_de_inmobiliaria
     form.estado_cliente = props.modoHome ? (props.cliente.estado_alq || 'Pendiente') : (props.cliente.estado_cliente || props.cliente.estado || 'Pendiente')
     form.estado = form.estado_cliente
