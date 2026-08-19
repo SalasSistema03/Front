@@ -227,19 +227,13 @@ const isClienteNuevo = ref(true)
 const { showWarning, showSuccess, showError } = useToast()
 
 const asesoresToShow = computed(() => {
-  if (!isClienteNuevo.value) {
-    // Si el cliente ya existe, mostrar asesores con alquiler = S
+  // Si es admin (id 36) mostrar asesores con alquiler = 'S'
+  if (Number(currentUserId.value) === 36 || Number(currentUserId.value) === 32) {
     return asesores.value.filter(asesor => asesor.alquiler === 'S')
   }
-  
-  // Si es cliente nuevo
-  if (currentUserId.value === 36) {
-    // Usuario admin (36) puede seleccionar asesores con alquiler = S
-    return asesores.value.filter(asesor => asesor.alquiler === 'S')
-  } else {
-    // Otros usuarios ven su propio asesor (sin importar alquiler status)
-    return asesores.value.filter(asesor => Number(asesor.id_usuario) === Number(currentUserId.value))
-  }
+
+  // Si no es admin, mostrar únicamente el asesor correspondiente al usuario conectado
+  return asesores.value.filter(asesor => Number(asesor.id_usuario) === Number(currentUserId.value))
 })
 
 const getAsesores = async () => {
