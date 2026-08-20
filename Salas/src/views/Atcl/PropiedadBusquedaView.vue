@@ -153,7 +153,22 @@
             <th>Detalle</th>
           </tr>
         </thead>
-        <tbody v-for="propiedad in propiedades" :key="propiedad.id">
+        <tbody v-if="buscando">
+          <tr>
+            <td colspan="13" class="busqueda-propiedad-estado">
+              <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+              <span>Buscando propiedades...</span>
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else-if="haBuscado && !propiedades.length">
+          <tr>
+            <td colspan="13" class="busqueda-propiedad-estado text-muted">
+              No se encontraron propiedades con los filtros seleccionados.
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else v-for="propiedad in propiedades" :key="propiedad.id">
           <tr>
             <td class="">{{ propiedad.cod_venta || '' }}</td>
             <td :class="{
