@@ -97,7 +97,7 @@
         </button>
       </div>
 
-      <div v-if="showMasOpciones" class="col-md-4 px-1 d-flex align-items-end justify-content-end">
+      <div v-if="showMasOpciones" class="col-md-2 px-1 d-flex align-items-end justify-content-end">
         <div class="dropdown">
           <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuOpciones"
             data-bs-toggle="dropdown" aria-expanded="false">

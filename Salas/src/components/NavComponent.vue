@@ -195,17 +195,44 @@ const getItemUrl = (item) => (item.ruta ? `/${item.ruta}` : '#')
 
 const redirigirAsesores = async (data) => {
   const id_notificacion = data.id
-  const cliente_id = data.data.cliente_id
-  const criterio_id = data.data.id_criterio_venta
-  //console.log(data)
-  //console.log(id_notificacion)
+  const notificationData = data?.data || {}
+  const cliente_id =
+    notificationData.cliente_id ??
+    notificationData.id_cliente ??
+    notificationData.clienteId
+  const criterio_id =
+    notificationData.id_criterio_venta ??
+    notificationData.criterio_id ??
+    notificationData.id_criterio ??
+    notificationData.criterioId
+
+  if (cliente_id == null || criterio_id == null) {
+    console.error('Notificación de asesor sin cliente o criterio:', data)
+    showError('La notificación no contiene un cliente válido')
+    return
+  }
+
+  console.log('Abriendo asesor desde notificación:', { cliente_id, criterio_id })
+
   try {
-    await notificacionLeida(id_notificacion)
-    showSuccess('Notificación marcada como leída')
-    router.push({ name: 'asesores', query: { clienteId: cliente_id, criterioId: criterio_id } })
+    await router.push({
+      name: 'asesores',
+      query: {
+        clienteId: String(cliente_id),
+        criterioId: String(criterio_id),
+        notificacionId: `${id_notificacion}-${Date.now()}`,
+      },
+    })
+
+    try {
+      await notificacionLeida(id_notificacion)
+      showSuccess('Notificación marcada como leída')
+    } catch (error) {
+      console.error('Error al marcar notificación como leída:', error)
+    }
   } catch (error) {
-    console.error('Error al marcar notificación como leída:', error)
-    showError('Error al marcar notificación como leída')
+    console.error('Error al abrir asesor:', error)
+    showError('Error al abrir el cliente del asesor')
   }
 }
 
