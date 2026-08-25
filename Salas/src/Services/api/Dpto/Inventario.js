@@ -41,3 +41,12 @@ export const ActualizarInventario = (form = {}) => {
 }
 
 
+export const getComentariosInventario = (form = {}) => {
+   const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/getComentariosInventario`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: form,
+  })
+}

@@ -127,3 +127,12 @@ export const obtenerHistorialCod = (id) => {
     }
   })
 }
+
+export const getCantidadClientes = () =>{
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/cantidadClientesPorAsesor`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}

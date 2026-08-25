@@ -26,7 +26,7 @@
                 <select class="form-control form-control-sm" id="asesor" v-model="id_asesor" v-if="tienePermiso">
                   <option value="">Seleccione</option>
                   <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
-                    {{ asesor.username }}
+                    {{ asesor.username }} ({{ cantidadClientesPorAsesor[asesor.id_usuario] ?? 0 }})
                   </option>
                 </select>
                 <input type="text" class="form-control form-control-sm" id="asesor" :value="username" readonly v-else>
@@ -228,7 +228,7 @@ import { useZona } from '@/composables/atcl/useZona';
 import ModalBusquedaPropiedadVenta from '@/components/Atcl/Cliente/ModalBusquedaPropiedadVenta.vue';
 import { useToast } from '@/composables/useToast'
 import { guardarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi'
-import { getClientePorTelefono, verificarPermisoSeleccionarAsesor } from '@/Services/api/Atcl/Cliente/ClienteApi';
+import { getClientePorTelefono, verificarPermisoSeleccionarAsesor, getCantidadClientes } from '@/Services/api/Atcl/Cliente/ClienteApi';
 
 
 export default {
@@ -271,6 +271,7 @@ export default {
       usuario_id: '',
       username: '',
       tienePermiso: false,
+      cantidadClientesPorAsesor: {},
 
       /* CRITERIO DE BUSQUEDA */
       id_sector_asesor: 'Venta',
@@ -550,12 +551,15 @@ export default {
       try {
 
         await guardarCliente(data)
+        if (this.tienePermiso) {
+          await this.cantidadCliente()
+        }
 
         this.showSuccess("Cliente guardado correctamente")
         this.limpiarFormulario()
         //console.log(response.data)
 
-      } catch (error) {
+      } catch {
 
         //console.error(error)
         this.showError("Error al guardar el cliente")
@@ -573,6 +577,26 @@ export default {
         this.tienePermiso = false
         console.log('¿El usuario tiene permiso para seleccionar asesor erro?', false)
       }
+    },
+    async cantidadCliente(){
+
+      try{
+        const response = await getCantidadClientes()
+        console.log('Cantidades por asesor:', response.data)
+        const cantidades = response.data || []
+        this.cantidadClientesPorAsesor = cantidades.reduce((resultado, item) => {
+          const idAsesor = item.id_usuario ?? item.id_asesor ?? item.id_asesor_venta ?? item.usuario_id ?? item.asesor_id ?? item.id
+          const cantidad = item.cantidad ?? item.cantidad_clientes ?? item.total_clientes ?? item.total ?? 0
+
+          if (idAsesor != null) {
+            resultado[idAsesor] = cantidad
+          }
+
+          return resultado
+        }, {})
+      }catch(error){
+        console.log(error)
+      }
     }
   },
 
@@ -582,6 +606,9 @@ export default {
     this.cargarZonas()
     this.verificarPermiso().then(() => {
       this.getUserData()
+      if (this.tienePermiso) {
+        this.cantidadCliente()
+      }
     })
   }
 }

@@ -59,17 +59,17 @@
     <div class="row">
       <div class="col-md-2 form-group">
         <label for="">T. Inventarios</label>
-        <input type="number" class="form-control form-control-sm" v-model="totalInventarios" />
+        <input type="number" class="form-control form-control-sm" v-model="totalInventarios" readonly/>
       </div>
 
       <div class="col-md-2 form-group">
         <label for="">Inv. Realizados</label>
-        <input type="number" class="form-control form-control-sm" v-model="inventariosRealizados" />
+        <input type="number" class="form-control form-control-sm" v-model="inventariosRealizados" readonly/>
       </div>
 
       <div class="col-md-2 form-group">
         <label for="">Inv. Restantes</label>
-        <input type="number" class="form-control form-control-sm" v-model="inventariosRestantes" />
+        <input type="number" class="form-control form-control-sm" v-model="inventariosRestantes" readonly/>
       </div>
     </div>
 
@@ -255,6 +255,7 @@ const cerrarModalInventario = () => {
 }
 
 const abrirModalObservacionesContrato = (item) => {
+  console.log(item)
   inventarioSeleccionado.value = item
   showModalObservaciones.value = true
 }
