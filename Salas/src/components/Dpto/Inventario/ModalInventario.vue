@@ -82,6 +82,7 @@ const form = ref({
   verificado_por: '',
   fecha_inventario: '',
   inventario_id: '',
+  id_proceso_propiedad: '',
   estado_id: '',
   observaciones: '',
 })
@@ -99,6 +100,11 @@ watch(() => props.inventario, (newVal) => {
     form.value.verificado_por = verificadoPor?.id ?? ''
 
     form.value.inventario_id = newVal.historial_estado_dpto?.id
+    form.value.id_proceso_propiedad =
+      newVal.historial_estado_dpto?.id_proceso_propiedad ??
+      newVal.id_proceso_propiedad ??
+      newVal.proceso_propiedad?.id ??
+      ''
   }
 }, { immediate: true })
 

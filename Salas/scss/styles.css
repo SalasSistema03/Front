@@ -1230,6 +1230,30 @@
   font-size: 0.8rem !important;
 }
 
+/* Mejora el botón selector */
+.listar_boton_selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listar_boton_selector .badge {
+  font-size: 0.7rem;
+}
+
+/* Checkboxes más grandes y con mejor contraste */
+.campo-checkbox {
+  width: 1.1em;
+  height: 1.1em;
+  margin-top: 0.15em;
+}
+
+/* Hover en los items del dropdown */
+.dropdown-menu .form-check:hover {
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
 .proceso_reserva_tabla_contenedor {
   height: 34vh;
   overflow-y: auto;

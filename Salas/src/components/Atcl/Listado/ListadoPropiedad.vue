@@ -182,29 +182,71 @@
                 </select>
               </div>
 
+              <!-- ======== MEJORA DEL BOTÓN INFORMACIÓN A MOSTRAR ======== -->
               <div class="col-md-6 mt-2">
-                <label for="" class="form-label">Información a mostrar</label>
+                <label class="form-label">Información a mostrar</label>
                 <div class="dropdown w-100">
-                  <button class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
-                    type="text" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-                    id="infoDropdownBtn">
-                    Selecciona la información a mostrar
+                  <button
+                    class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
+                    id="infoDropdownBtn"
+                  >
+                    <span>
+                      Mostrando <strong>{{ camposSeleccionados.length }}</strong> de
+                      <strong>{{ informacionMostrar.length }}</strong> campos
+                    </span>
+                    <span class="badge bg-primary rounded-pill ms-2" v-if="camposSeleccionados.length < informacionMostrar.length">
+                      {{ informacionMostrar.length - camposSeleccionados.length }} ocultos
+                    </span>
                   </button>
-                  <div class="dropdown-menu p-3 w-100" style="max-height: 280px; overflow: auto; min-width: 300px">
+                  <div class="dropdown-menu p-3 w-100" style="max-height: 300px; overflow: auto; min-width: 300px">
+                    <!-- Filtro de búsqueda -->
+                    <div class="mb-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Filtrar campos..."
+                        v-model="filtroCampos"
+                      />
+                    </div>
+                    <!-- Botones de selección masiva -->
+                    <div class="d-flex gap-2 mb-2">
+                      <button class="btn btn-sm btn-outline-primary w-50" @click="seleccionarTodos">Seleccionar todo</button>
+                      <button class="btn btn-sm btn-outline-secondary w-50" @click="deseleccionarTodos">Deseleccionar todo</button>
+                    </div>
+                    <hr />
+                    <!-- Lista de checkboxes -->
                     <div class="row" id="infoList">
-                      <div v-for="campo in informacionMostrar" :key="campo.key" class="col-md-6 mb-2">
+                      <div
+                        v-for="campo in camposFiltrados"
+                        :key="campo.key"
+                        class="col-md-6 mb-2"
+                      >
                         <div class="form-check">
-                          <input class="form-check-input campo-checkbox" type="checkbox" :value="campo.key"
-                            v-model="camposSeleccionados" :id="`campo-${campo.key}`" />
+                          <input
+                            class="form-check-input campo-checkbox"
+                            type="checkbox"
+                            :value="campo.key"
+                            v-model="camposSeleccionados"
+                            :id="`campo-${campo.key}`"
+                          />
                           <label class="form-check-label" :for="`campo-${campo.key}`">
                             {{ campo.label }}
                           </label>
                         </div>
                       </div>
                     </div>
+                    <!-- Mensaje si no hay coincidencias -->
+                    <div v-if="camposFiltrados.length === 0" class="text-muted text-center py-2">
+                      No hay campos que coincidan con el filtro
+                    </div>
                   </div>
                 </div>
               </div>
+              <!-- ======== FIN MEJORA ======== -->
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropiedadesAlquiler"
@@ -251,8 +293,6 @@
                   <option value="calle">Calle</option>
                 </select>
               </div>
-
-
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler">
@@ -535,14 +575,7 @@
                 <label class="form-label" for="orden">Ordenar por</label>
                 <select id="orden" class="form-control form-control-sm" v-model="formTiempoOfrecimiento.orden">
                   <option value="">Sin orden</option>
-                  <!-- <option value="precio_asc">Precio (menor a mayor)</option>
-                  <option value="precio_desc">Precio (mayor a menor)</option> -->
                   <option value="estado">Estado</option>
-                  <!-- <option value="tipo">Tipo de inmueble</option>
-                  <option value="zona">Zona</option>
-                  <option value="calle">Calle</option>
-                  <option value="codigo">Código</option>
-                  <option value="autorizacion">Autorizacion</option> -->
                 </select>
               </div>
 
@@ -563,7 +596,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, defineProps } from 'vue'
+import { ref, nextTick, onMounted, defineProps, computed } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
@@ -629,6 +662,37 @@ const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 const permisoTiempoOfrecimiento = ref(false)
 
+// === NUEVAS VARIABLES PARA EL FILTRO Y SELECCIÓN ===
+const filtroCampos = ref('')
+
+// Computed para campos filtrados
+const camposFiltrados = computed(() => {
+  if (!filtroCampos.value.trim()) {
+    return informacionMostrar.value
+  }
+  const query = filtroCampos.value.toLowerCase().trim()
+  return informacionMostrar.value.filter(campo =>
+    campo.label.toLowerCase().includes(query)
+  )
+})
+
+// Funciones de selección masiva (operan sobre los campos filtrados)
+const seleccionarTodos = () => {
+  // Agrega todos los campos visibles (filtrados) a los seleccionados
+  const keysFiltradas = camposFiltrados.value.map(c => c.key)
+  const nuevos = new Set([...camposSeleccionados.value, ...keysFiltradas])
+  camposSeleccionados.value = Array.from(nuevos)
+}
+
+const deseleccionarTodos = () => {
+  // Remueve solo los campos visibles (filtrados) de los seleccionados
+  const keysFiltradas = new Set(camposFiltrados.value.map(c => c.key))
+  camposSeleccionados.value = camposSeleccionados.value.filter(
+    key => !keysFiltradas.has(key)
+  )
+}
+// === FIN NUEVAS VARIABLES ===
+
 // Si es alquiler muestra un conjunto de columnas
 // Si es venta muestra otro más amplio
 if (props.sector === 'Alquiler') {
@@ -655,6 +719,7 @@ if (props.sector === 'Alquiler') {
     { key: 'web', label: 'Web' },
     { key: 'autorizacion', label: 'Autorizacion' },
     { key: 'novedades', label: 'Novedades' },
+    { key: 'propietario', label: 'Propietario' },
   ]
 } else {
   informacionMostrar.value = [
@@ -692,7 +757,7 @@ if (props.sector === 'Alquiler') {
 
 // Inicializar campos seleccionados
 // toma todas las keys y las deja tildadas por defecto
-camposSeleccionados.value = informacionMostrar.value.map((campo) => campo.key)
+//camposSeleccionados.value = informacionMostrar.value.map((campo) => campo.key)
 
 //Variables para guardar los datos del formulario
 const formPropiedades = ref({
