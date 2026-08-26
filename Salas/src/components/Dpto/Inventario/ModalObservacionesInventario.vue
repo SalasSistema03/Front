@@ -13,17 +13,16 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-if="!observaciones.length">
+            <tr v-if="!observaciones.length">
               <td colspan="4" class="text-center">No hay observaciones</td>
             </tr>
-            <td>{{ inventario }}</td> -->
-            
-           <!-- <tr v-for="(observacion, index) in observaciones" :key="`${index}-${observacion.fecha_carga ?? 'sin-fecha'}-${observacion.estado ?? 'sin-estado'}`">
-            <td class="text-center">{{ observacion.fecha_carga }}</td>
-              <td class="text-center">{{ observacion.estado }}</td>
-              <td class="text-center">{{ observacion.observacion }}</td>
-              <td class="text-center">{{ observacion.cargado_por }}</td> 
-            </tr>  -->
+            <tr v-for="(observacion, index) in observaciones"
+              :key="`${index}-${observacion.fecha_carga ?? 'sin-fecha'}-${observacion.estado ?? 'sin-estado'}`">
+              <td class="text-center">{{ observacion.fecha_carga }}</td>
+              <td class="text-center">{{ observacion.estado?.estado }}</td>
+              <td class="text-center">{{ observacion.observaciones }}</td>
+              <td class="text-center">{{ observacion.verificado_por?.username }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -33,21 +32,22 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits, onMounted } from 'vue'
+import { computed, defineProps, defineEmits, onMounted, ref } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
-import {getComentariosInventario} from '@/Services/api/Dpto/Inventario'
+import { getComentariosInventario } from '@/Services/api/Dpto/Inventario'
 
 const props = defineProps({
   show: { type: Boolean, default: false },
   inventario: { type: Object, default: () => ({}) },
 })
-
+const observaciones = ref([])
 const emit = defineEmits(['close'])
-const traerComentariosInventarios = async ()=> {
+const traerComentariosInventarios = async () => {
   try {
     const response = await getComentariosInventario(props.inventario)
+    observaciones.value = response.data.data
 
-    console.log(response)
+    console.log('datas', response.data.data)
     //showSuccess('Inventario actualizado correctamente')
     //showModalInventario.value = false
     //buscar()
