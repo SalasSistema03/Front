@@ -233,6 +233,10 @@
 .navbar-notificaciones_dropdown i {
   color: black;
 }
+.navbar-notificaciones_dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+}
 .navbar-notificaciones_dropdown .navbar-notificacion-nombre {
   font-size: 12px !important;
   text-decoration: none !important;

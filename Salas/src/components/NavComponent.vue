@@ -51,7 +51,7 @@
               {{ notificacionCount }}
             </span>
           </a>
-          <ul class="dropdown-menu navbar-notificaciones_dropdown dropdown-menu-end navbar-dropdown-menu">
+          <ul class="dropdown-menu navbar-notificaciones_dropdown dropdown-menu-end navbar-dropdown-menu mt-2">
             <li v-for="notificacion in notificaciones" :key="notificacion.id">
               <!--  {{ notificacion }} -->
               <a href="#" v-if="notificacion.data.pertenece == 'asesores'"
