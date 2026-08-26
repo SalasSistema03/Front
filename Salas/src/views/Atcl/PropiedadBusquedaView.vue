@@ -283,8 +283,8 @@
             <td>{{ propiedad.banios || '' }}</td>
             <td>{{ propiedad.cochera || '-' }}</td>
             <td>{{ propiedad.mascota || '-' }}</td>
-            <td>{{ propiedad.precio_alquiler || '-' }}</td>
-            <td>{{ propiedad.precio_venta || '-' }}</td>
+            <td>{{ formatMoneda(propiedad.precio_alquiler_pesos, propiedad.precio_alquiler_dolar) }}</td>
+<td>{{ formatMoneda(propiedad.precio_venta_pesos, propiedad.precio_venta_dolar) }}</td>
             <td>
               <button class="btn btn-primary btn-sm w-100" @click="verPropiedad(propiedad)">
                 Ver
@@ -323,6 +323,11 @@ export default {
       mostrarInmuebles.value = true
     }
 
+    const formatMoneda = (pesos, dolar) => {
+  if (pesos) return `$${new Intl.NumberFormat('es-AR').format(pesos)}`
+  if (dolar) return `U$D ${new Intl.NumberFormat('es-AR').format(dolar)}`
+  return ''
+}
     const onFilaInmuebleClick = (event, id) => {
       const tag = event.target.tagName.toLowerCase()
       // Si el click fue justo sobre el checkbox o el label, el navegador ya lo maneja solo (evita doble toggle)
@@ -385,6 +390,7 @@ export default {
       zonaDropdownRef,
       abrirZonas,
       onFilaZonaClick,
+       formatMoneda
     }
   },
 }

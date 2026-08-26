@@ -68,7 +68,7 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
         const esDNI = /^\d+$/.test(texto)
         const params = esDNI ? { dni: texto } : { apellido: texto }
         const response = await buscaPersona(params)
-        sugerencias.value = response.data.slice(0, 10)
+        sugerencias.value = response.data.slice(0, 100)
       } catch (error) {
         console.error('Error buscando persona:', error)
         sugerencias.value = []
