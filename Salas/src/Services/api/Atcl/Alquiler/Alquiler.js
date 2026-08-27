@@ -108,3 +108,12 @@ export const buscarComprobanteReserva = (data) => {
 }
 
 
+export const traerClientesAsignados = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/traerClientesAsignados`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+

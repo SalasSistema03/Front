@@ -181,30 +181,6 @@
             -->
 
           </div>
-
-
-          <!-- Filtro por devolución -->
-          <!--
-          <div class="col-6 pb-1 px-2 d-flex">
-            <label
-              for="devolucionescheck"
-              class="form-label devolucionT p-1"
-            >
-              Devolucion
-            </label>
-
-            <input
-              class="form-check-input mt-2 p-1"
-              type="checkbox"
-              value=""
-              aria-label="Checkbox for following text input"
-              id="devolucionescheck"
-              v-model="filtroSinDevolucion"
-            >
-          </div>
-          -->
-
-
           <!-- Buscador -->
           <div class="col-12 pb-1 px-2">
             <input type="text" id="buscarInput" class="form-control py-1" placeholder="Buscar" v-model="buscar"
@@ -369,17 +345,14 @@
 
           </ul>
 
-          <ModalEditarCliente
-            :show="showEditarClienteModal"
-            :cliente="clienteSeleccionado"
-            :modo-home="true"
-            @close="showEditarClienteModal = false"
-            @criterio-actualizado="recargarListaCompleta"
-          />
+          <ModalEditarCliente :show="showEditarClienteModal" :cliente="clienteSeleccionado" :modo-home="true"
+            @close="showEditarClienteModal = false" @criterio-actualizado="recargarListaCompleta" />
 
         </div>
 
       </div>
+
+
 
     </div>
   </div>
@@ -422,38 +395,24 @@ const { formatDate } = useDateFormatter()
 // =====================================================
 // VARIABLES
 // =====================================================
-
 const data = ref([])
-
 const semanales = ref([])
-
-
 // Barra de contactos
 const clientes = ref([])
-
 const clienteSeleccionado = ref(null)
 const showEditarClienteModal = ref(false)
-
 const currentUserId = ref(null)
-
 const buscar = ref('')
-
 const textoSeleccionado = ref('Todos')
-
 /* const iconoSeleccionado = ref('bi bi-card-checklist') */
-
 const filtroSinDevolucion = ref(false)
-
 const recargando = ref(false)
-
-
 // Lista de asesores
 const listaAsesoresAlquiler = ref([])
-
-
 // NUEVO:
 // Indica si el usuario actual tiene alquiler = S
 const usuarioTieneAlquiler = ref(false)
+
 
 
 // =====================================================
@@ -498,24 +457,22 @@ const cargarAsesoresYUsuario = async () => {
       console.warn('No existe token de sesión')
       return
     }
-
-
     // -------------------------------------------------
     // 1. OBTENER USUARIO ACTUAL
     // -------------------------------------------------
 
     const userRes = await getUser(token)
-
     currentUserId.value =
       userRes.data.id ||
       userRes.data.usuario_id ||
       userRes.data.usuario?.id
 
 
-    console.log(
+    /* console.log(
       'ID usuario actual:',
       currentUserId.value
-    )
+    ) */
+
 
 
     // -------------------------------------------------
@@ -524,10 +481,10 @@ const cargarAsesoresYUsuario = async () => {
 
     const response = await asesoresAlquiler()
 
-    console.log(
+    /* console.log(
       'asesoresAlquiler:',
       response
-    )
+    ) */
 
 
     listaAsesoresAlquiler.value =
@@ -546,10 +503,10 @@ const cargarAsesoresYUsuario = async () => {
       )
 
 
-    console.log(
-      'Asesor actual:',
-      asesorActual
-    )
+    /*  console.log(
+       'Asesor actual:',
+       asesorActual
+     ) */
 
 
     // -------------------------------------------------
@@ -560,10 +517,10 @@ const cargarAsesoresYUsuario = async () => {
       asesorActual?.alquiler === 'S'
 
 
-    console.log(
+    /* console.log(
       'Usuario tiene alquiler:',
       usuarioTieneAlquiler.value
-    )
+    ) */
 
 
     // -------------------------------------------------
@@ -596,7 +553,7 @@ const cargarAsesoresYUsuario = async () => {
 // =====================================================
 // POTABILIDAD
 // =====================================================
-/* 
+/*
 const seleccionarPotabilidad = (
   texto,
   icono
@@ -633,15 +590,15 @@ const ordenarClientesPorEstado = (clientes) => {
   return [...clientes].sort((a, b) => {
     const estadoA = a.estado_alq || 'Pendiente'
     const estadoB = b.estado_alq || 'Pendiente'
-    
+
     // Pendiente primero
     if (estadoA === 'Pendiente' && estadoB !== 'Pendiente') return -1
     if (estadoA !== 'Pendiente' && estadoB === 'Pendiente') return 1
-    
+
     // Finalizado al final
     if (estadoA === 'Finalizado' && estadoB !== 'Finalizado') return 1
     if (estadoA !== 'Finalizado' && estadoB === 'Finalizado') return -1
-    
+
     return 0
   })
 }
