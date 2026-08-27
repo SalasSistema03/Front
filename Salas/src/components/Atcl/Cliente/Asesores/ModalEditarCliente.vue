@@ -4,32 +4,35 @@
     <template #body>
       <div class="row form-group">
 
-        <div class="col-md-4">
+        <div class="col-md-5">
           <label for="nombre" class="form-label">Nombre</label>
           <input type="text" class="form-control form-control-sm" id="nombre" v-model="form.nombre">
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-3">
           <label for="telefono" class="form-label">Telefono</label>
           <input type="text" class="form-control form-control-sm" id="telefono" v-model="form.telefono">
         </div>
 
-        <div class="col-md-3">
-          <label for="observaciones" class="form-label">Observaciones</label>
-          <input type="text" class="form-control form-control-sm" id="observaciones" v-model="observacionVisible">
+
+
+        <div v-if="!modoHome" class="col-md-4">
+          <label for="nombre_inmobiliaria" class="form-label">Inmobiliaria</label>
+          <input type="text" class="form-control form-control-sm" id="nombre_inmobiliaria"
+            v-model="form.nombre_de_inmobiliaria">
         </div>
 
-        <div v-if="!modoHome" class="col-md-5">
-          <label for="nombre_inmobiliaria" class="form-label">Nombre de la Inmobiliaria</label>
-          <input type="text" class="form-control form-control-sm" id="nombre_inmobiliaria" v-model="form.nombre_de_inmobiliaria">
-        </div>
-
-        <div v-else class="col-md-5">
+        <div v-else class="col-md-4">
           <label for="estado_cliente" class="form-label">Estado</label>
           <select class="form-select form-select-sm" id="estado_cliente" v-model="form.estado_cliente">
             <option value="Pendiente">Pendiente</option>
             <option value="Finalizado">Finalizado</option>
           </select>
+        </div>
+
+        <div class="col-md-12">
+          <label for="observaciones" class="form-label">Observaciones</label>
+          <input type="text" class="form-control form-control-sm" id="observaciones" v-model="observacionVisible">
         </div>
       </div>
       <br>

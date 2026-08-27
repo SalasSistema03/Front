@@ -12,11 +12,12 @@
           <div class="card-body-cliente-datos form-group row px-3 py-0 mb-2">
             <div class="col-4">
               <label for="telefono">Telefono</label>
-              <input type="number" class="form-control form-control-sm" id="telefono" v-model="telefono" />
+              <input type="number" class="form-control form-control-sm" id="telefono" v-model="telefono"
+                autocomplete="off" />
             </div>
             <div class="col-4">
               <label for="nombre">Nombre</label>
-              <input type="text" class="form-control form-control-sm" id="nombre" v-model="nombre" />
+              <input type="text" class="form-control form-control-sm" id="nombre" v-model="nombre" autocomplete="off" />
             </div>
             <!-- ASESOR -->
             <div class="col-4">
@@ -43,8 +44,8 @@
 
             <div class="col-8">
               <label for="observaciones">Observaciones</label>
-              <textarea class="form-control form-control-sm" id="observaciones" rows="1"
-                v-model="observaciones"></textarea>
+              <textarea class="form-control form-control-sm" id="observaciones" rows="1" v-model="observaciones"
+                autocomplete="off"></textarea>
             </div>
           </div>
         </div>
@@ -96,7 +97,7 @@
       </div>
 
       <!-- PROPiedad Asignada -->
-      <div class="col-md-6 mb-1">
+      <div :class="asignadorAsesor ? 'col-md-4 mb-1' : 'col-md-6 mb-1'">
         <div class="card">
           <div class="row card-header card-header-cliente">
             <div class="col-10">
@@ -116,7 +117,7 @@
                     <tr>
                       <th>Cod - Alquiler</th>
                       <th>Direccion</th>
-                      <th>Fecha Asignacion</th>
+                      <!-- <th>Fecha Asignacion</th> -->
                       <th></th>
                     </tr>
                   </thead>
@@ -124,7 +125,7 @@
                     <tr v-for="(prop, index) in propiedadesAsignadas" :key="prop.id">
                       <td>{{ prop.cod_alquiler }}</td>
                       <td>{{ prop.calle }}</td>
-                      <td>{{ prop.fecha_asignacion }}</td>
+                      <!-- <td>{{ prop.fecha_asignacion }}</td> -->
                       <td>
                         <button class="btn btn-danger btn-sm mx-1" @click="eliminarPropiedad(index)"
                           v-if="!prop.id_con_prop_alquiler">
@@ -140,7 +141,7 @@
         </div>
       </div>
 
-      <div class="col-md-6 mb-1">
+      <div :class="asignadorAsesor ? 'col-md-4 mb-1' : 'col-md-6 mb-1'">
         <div class="card">
           <div class="card-header card-header-cliente">
             <h5>Lista criterio de búsqueda</h5>
@@ -182,6 +183,36 @@
           </div>
         </div>
       </div>
+      <div v-if="asignadorAsesor" class="col-md-4 mb-1">
+        <div class="card">
+          <div class="card-header card-header-cliente">
+            <h5>Clientes Asignados</h5>
+          </div>
+          <div class="form-group row card-body-cliente">
+            <div class="col-12">
+              <div class="tabla_clientes">
+                <table class="table table-sm titulo_tabla">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Asesor</th>
+                      <th>Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in clientesAsignadosAsignador" :key="index">
+                      <td>{{ item.cliente?.nombre }}</td>
+                      <td>{{ item.cliente?.asesor_alquiler?.usuario?.username }}</td>
+                      <td>{{ item.fecha_consulta_propiedad }}</td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <ModalBusquedaPropiedadVenta :show="showBusquedaPropiedadVentaModal" tipo="alquiler"
         @close="showBusquedaPropiedadVentaModal = false" @seleccionar="agregarPropiedad" />
@@ -200,7 +231,7 @@ import NavComponent from '@/components/NavComponent.vue'
 import { ref, watch, onMounted, computed } from 'vue'
 import { getClientePorTelefono, guardarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi';
 import { getUser } from '@/Services/api/Usuario/userApi';
-import { asesoresAlquiler } from '@/Services/api/Atcl/Alquiler/Alquiler';
+import { asesoresAlquiler, traerClientesAsignados } from '@/Services/api/Atcl/Alquiler/Alquiler';
 import { getInmueble, getZonas } from '@/Services/api/Atcl/AtclApi'
 import ModalBusquedaPropiedadVenta from '@/components/Atcl/Cliente/ModalBusquedaPropiedadVenta.vue';
 import { useToast } from '@/composables/useToast'
@@ -225,8 +256,45 @@ const showBusquedaPropiedadVentaModal = ref(false)
 const currentUserId = ref(null)
 const isClienteNuevo = ref(true)
 const isSaving = ref(false)
+const asignadorAsesor = ref(false)
+const clientesAsignadosAsignador = ref([])
 
 const { showWarning, showSuccess, showError } = useToast()
+
+const cargarClientesAsignados = async () => {
+  if (asignadorAsesor.value || Number(currentUserId.value) === 36) {
+    try {
+      const response = await traerClientesAsignados()
+      clientesAsignadosAsignador.value = response.data || []
+    } catch (error) {
+      console.error('Error al traer clientes asignados:', error)
+    }
+  }
+}
+
+const PersonaAsignaAsesor = async () => {
+  try {
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+      console.warn('No existe token de sesión')
+      return
+    }
+
+    const userRes = await getUser(token)
+    currentUserId.value =
+      userRes.data.id ||
+      userRes.data.usuario_id ||
+      userRes.data.usuario?.id
+
+    if (Number(currentUserId.value) === 36) {
+      asignadorAsesor.value = true
+      await cargarClientesAsignados()
+    }
+  } catch (error) {
+    console.error('Error al inicializar usuario y clientes asignados:', error)
+  }
+}
 
 const asesoresToShow = computed(() => {
   // Si es admin (id 36) mostrar asesores con alquiler = 'S'
@@ -281,13 +349,18 @@ const existeCriterioDuplicado = (criterio) => {
 }
 
 const asignarCriterio = () => {
+  if (!id_tipo_inmueble.value || !id_zona.value) {
+    showWarning('Debe seleccionar un tipo de inmueble y una zona')
+    return
+  }
+
   const inmueble = inmuebles.value.find(i => i.id === Number(id_tipo_inmueble.value))
   const zona = zonas.value.find(z => z.id === Number(id_zona.value))
 
   const criterio = {
     id_tipo_inmueble: Number(id_tipo_inmueble.value),
     tipo_inmueble_nombre: inmueble ? inmueble.inmueble : '',
-    cant_dormitorios: Number(cant_dormitorios.value),
+    cant_dormitorios: cant_dormitorios.value !== '' ? Number(cant_dormitorios.value) : 0,
     cochera: cochera.value,
     id_zona: Number(id_zona.value),
     zona_nombre: zona ? zona.name : '',
@@ -298,10 +371,6 @@ const asignarCriterio = () => {
 
   if (existeCriterioDuplicado(criterio)) {
     showWarning('Ya existe una propiedad con el mismo criterio')
-    return
-  }
-  if (criterio.id_tipo_inmueble === '' || criterio.id_zona === '') {
-    showWarning('Debe seleccionar un tipo de inmueble y una zona')
     return
   }
 
@@ -315,10 +384,24 @@ const asignarCriterio = () => {
 }
 
 const eliminarCriterio = (index) => {
+  const criterioAEliminar = listaCriterios.value[index]
+  if (criterioAEliminar && criterioAEliminar.id_propiedad) {
+    const propIndex = propiedadesAsignadas.value.findIndex(p => p.id_propiedad === criterioAEliminar.id_propiedad)
+    if (propIndex !== -1 && !propiedadesAsignadas.value[propIndex].id_con_prop_alquiler) {
+      propiedadesAsignadas.value.splice(propIndex, 1)
+    }
+  }
   listaCriterios.value.splice(index, 1)
 }
 
 const eliminarPropiedad = (index) => {
+  const propiedadAEliminar = propiedadesAsignadas.value[index]
+  if (propiedadAEliminar && propiedadAEliminar.id_propiedad) {
+    const critIndex = listaCriterios.value.findIndex(c => c.id_propiedad === propiedadAEliminar.id_propiedad)
+    if (critIndex !== -1 && !listaCriterios.value[critIndex].id_criterio_alquiler) {
+      listaCriterios.value.splice(critIndex, 1)
+    }
+  }
   propiedadesAsignadas.value.splice(index, 1)
 }
 
@@ -441,23 +524,35 @@ const limpiarFormulario = () => {
 }
 
 // Envía los datos ordenados al backend
-// NOTA: se reutiliza el mismo endpoint/payload que la vista de Venta
-// (criterios_venta / propiedades_venta) porque guardarCliente() es un único
-// endpoint compartido; si el backend espera claves distintas para alquiler
-// (p. ej. criterios_alquiler / propiedades_alquiler) hay que ajustarlas acá.
 const handleGuardar = async () => {
+  if (!telefono.value || String(telefono.value).trim() === '') {
+    showError('Debe ingresar el teléfono')
+    return
+  }
+
+  if (!nombre.value || String(nombre.value).trim() === '') {
+    showError('Debe ingresar el nombre')
+    return
+  }
+
+  if (!id_asesor.value) {
+    showError('Debe seleccionar un asesor')
+    return
+  }
+
+  if (!ingreso_seleccionado.value) {
+    showError('Debe seleccionar por dónde ingresó el cliente')
+    return
+  }
+
   const cliente = {
     telefono: telefono.value,
     nombre: nombre.value,
     id_asesor_alquiler: id_asesor.value,
     ingreso: ingreso_seleccionado.value,
-    observaciones: observaciones.value,
-    sector_asesor: 'alquiler'
-  }
-
-  if (!cliente.ingreso) {
-    showError('Debe seleccionar por donde ingreso la persona')
-    return
+    observaciones_alq: observaciones.value,
+    sector_asesor: 'alquiler',
+    usuario_id: currentUserId.value
   }
 
   const data = {
@@ -471,6 +566,7 @@ const handleGuardar = async () => {
     await guardarCliente(data)
     showSuccess('Cliente guardado correctamente')
     limpiarFormulario()
+    await cargarClientesAsignados()
   } catch (error) {
     console.error('Error al guardar el cliente:', error)
     showError('Error al guardar el cliente')
@@ -499,10 +595,10 @@ watch(() => telefono.value, async (nuevoValor) => {
 
       if (cliente) {
         isClienteNuevo.value = false
-        nombre.value = cliente.nombre
-        ingreso_seleccionado.value = cliente.ingreso
-        observaciones.value = cliente.observaciones
-        id_asesor.value = cliente.id_asesor_alquiler
+        nombre.value = cliente.nombre || ''
+        ingreso_seleccionado.value = cliente.ingreso || ''
+        observaciones.value = cliente.observaciones_alq || cliente.observaciones || ''
+        id_asesor.value = cliente.id_asesor_alquiler || ''
 
         // Cargar los criterios de alquiler ya existentes del cliente
         // (equivalente a cliente.criterio_busqueda_venta en la vista de Venta)
@@ -554,9 +650,10 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error al obtener usuario actual:', error)
   }
-  
+
   getAsesores()
   getInmuebles()
   getZona()
+  PersonaAsignaAsesor()
 })
 </script>
