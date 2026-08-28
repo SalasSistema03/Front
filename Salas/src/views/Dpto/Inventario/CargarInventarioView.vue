@@ -1,89 +1,131 @@
 <template>
   <NavComponent />
 
-  <div class="px-2">
+  <div class="px-3">
 
-    <div class="row">
-      <div class="col-md-1 form-group">
-        <label>Mes</label>
-        <select v-model="mes" class="form-control form-control-sm">
-          <option value="">Todos</option>
-          <option :value="1">Enero</option>
-          <option :value="2">Febrero</option>
-          <option :value="3">Marzo</option>
-          <option :value="4">Abril</option>
-          <option :value="5">Mayo</option>
-          <option :value="6">Junio</option>
-          <option :value="7">Julio</option>
-          <option :value="8">Agosto</option>
-          <option :value="9">Septiembre</option>
-          <option :value="10">Octubre</option>
-          <option :value="11">Noviembre</option>
-          <option :value="12">Diciembre</option>
-        </select>
+    <div class="row ">
+      <!-- Filtro -->
+      <div class="mb-3 col-md-6">
+        <div class="card ">
+          <div class="card-header "> <strong>Filtros de búsqueda</strong> </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3 form-group">
+                <label>Mes</label>
+                <select v-model="mes" class="form-control">
+                  <option value="">Todos</option>
+                  <option :value="1">Enero</option>
+                  <option :value="2">Febrero</option>
+                  <option :value="3">Marzo</option>
+                  <option :value="4">Abril</option>
+                  <option :value="5">Mayo</option>
+                  <option :value="6">Junio</option>
+                  <option :value="7">Julio</option>
+                  <option :value="8">Agosto</option>
+                  <option :value="9">Septiembre</option>
+                  <option :value="10">Octubre</option>
+                  <option :value="11">Noviembre</option>
+                  <option :value="12">Diciembre</option>
+                </select>
+              </div>
+
+              <div class="col-md-2 form-group">
+                <label>Año</label>
+                <select v-model="anio" class="form-control">
+                  <option v-for="año in obtenerAñoMenos3()" :key="año" :value="año">{{ año }}</option>
+                </select>
+              </div>
+
+              <div class="col-md-3 form-group">
+                <label for="">Estado</label>
+                <select v-model="filtroEstado" class="form-control">
+                  <option value="">Todos</option>
+                  <option v-for="estado in estadoDpto" :key="estado.id" :value="estado.id">
+                    {{ estado.estado }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-2 form-group">
+                <label for="">Usuario</label>
+                <select v-model="filtroAsesor" class="form-control">
+                  <option value="">Todos</option>
+                  <option v-for="asesor in usuariosDpto" :key="asesor.id" :value="asesor.id">
+                    {{ asesor.username }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-2 form-group">
+                <label for="">Folio</label>
+                <input type="text" placeholder="Buscar" v-model="folio" class="form-control" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div class="mb-3 col-md-6 ">
+        <div class="card">
+          <div class="card-header "> <strong>Inventarios realizados por usuario</strong> </div>
+          <div class="card-body">
+            <div v-if="usuariosDpto.length" class="row g-2">
+              <div v-for="asesor in usuariosDpto" :key="asesor.id" class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="border rounded p-1 bg-light text-center h-100">
+                  <div class="text-muted text-truncate" style="font-size: 0.75rem;" :title="asesor.username"> {{
+                    asesor.username }} </div>
+                  <div class="fw-bold fs-6"> {{ inventariosPorAsesor[asesor.id] ?? 0 }} </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="text-muted small"> No hay usuarios disponibles. </div>
 
-      <div class="col-md-1 form-group">
-        <label>Año</label>
-        <select v-model="anio" class="form-control form-control-sm">
-          <option v-for="año in obtenerAñoMenos3()" :key="año" :value="año">{{ año }}</option>
-        </select>
-      </div>
 
-      <div class="col-md-2 form-group">
-        <label for="">Estado</label>
-        <select v-model="filtroEstado" class="form-control form-control-sm">
-          <option value="">Todos</option>
-          <option v-for="estado in estadoDpto" :key="estado.id" :value="estado.id">
-            {{ estado.estado }}
-          </option>
-        </select>
-      </div>
-
-      <div class="col-md-1 form-group">
-        <label for="">Usuario</label>
-        <select v-model="filtroAsesor" class="form-control form-control-sm">
-          <option value="">Todos</option>
-          <option v-for="asesor in usuariosDpto" :key="asesor.id" :value="asesor.id">
-            {{ asesor.username }}
-          </option>
-        </select>
-      </div>
-
-      <div class="col-md-1 form-group">
-        <label for="">Folio</label>
-        <input type="text" v-model="folio" class="form-control form-control-sm" />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-2 form-group">
-        <label for="">T. Inventarios</label>
-        <input type="number" class="form-control form-control-sm" v-model="totalInventarios" readonly/>
-      </div>
-
-      <div class="col-md-2 form-group">
-        <label for="">Inv. Realizados</label>
-        <input type="number" class="form-control form-control-sm" v-model="inventariosRealizados" readonly/>
-      </div>
-
-      <div class="col-md-2 form-group">
-        <label for="">Inv. Restantes</label>
-        <input type="number" class="form-control form-control-sm" v-model="inventariosRestantes" readonly/>
-      </div>
-    </div>
-
-    <div class="row mt-2">
-      <div v-for="asesor in usuariosDpto" :key="asesor.id" class="col-md-2 form-group">
-        <label :for="`restantes-${asesor.id}`">{{ asesor.username }}</label>
-        <div :id="`restantes-${asesor.id}`" class="form-control form-control-sm">
-          {{ inventariosPorAsesor[asesor.id] ?? 0 }}
+          </div>
         </div>
       </div>
     </div>
 
 
+    <div class="row ">
 
+      <div class="mb-3 col-md-6">
+        <div class="card">
+
+
+          <div class="card-header"><strong>Total Inventarios</strong></div>
+          <div class="card-body">
+            <!-- Resultados -->
+            <div class="row g-2 text-center">
+              <!-- Total -->
+              <div class="col-4">
+                <div class="border rounded p-1 bg-light h-100">
+                  <div class="text-muted" style="font-size: 0.75rem;"> Total </div>
+                  <div class="fw-bold fs-6"> {{ totalInventarios }} </div>
+                </div>
+              </div>
+              <!-- Realizados -->
+              <div class="col-4">
+                <div class="border rounded p-1 bg-light h-100">
+                  <div class="text-muted" style="font-size: 0.75rem;"> Realizados </div>
+                  <div class="fw-bold fs-6"> {{ inventariosRealizados }} </div>
+                </div>
+              </div>
+              <!-- Restantes -->
+              <div class="col-4">
+                <div class="border rounded p-1 bg-light h-100">
+                  <div class="text-muted" style="font-size: 0.75rem;"> Restantes </div>
+                  <div class="fw-bold fs-6"> {{ inventariosRestantes }} </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Tabla -->
     <div class="proceso_reserva_tabla_contenedor mt-2">
       <table class="table table-striped table-hover proceso_reserva_table">
         <thead>
@@ -104,9 +146,14 @@
             <td>{{ item.propiedad?.folios?.[0]?.folio }}</td>
             <!-- Domicilio -->
             <td>
-              {{ item.propiedad?.calle?.name }} {{ item.propiedad?.numero_calle }}
+              <div> {{ item.propiedad?.calle?.name }} {{ item.propiedad?.numero_calle }} </div> <small
+                v-if="item.propiedad?.piso || item.propiedad?.departamento" class="text-muted"> <span
+                  v-if="item.propiedad?.piso"> Piso {{ item.propiedad.piso }} </span> <span
+                  v-if="item.propiedad?.piso && item.propiedad?.departamento"> - </span> <span
+                  v-if="item.propiedad?.departamento"> Dpto {{ item.propiedad.departamento }} </span> </small>
+              <!--  {{ item.propiedad?.calle?.name }} {{ item.propiedad?.numero_calle }}
               <span v-if="item.propiedad?.piso">Piso {{ item.propiedad.piso }}</span>
-              <span v-if="item.propiedad?.departamento">Dpto {{ item.propiedad.departamento }}</span>
+              <span v-if="item.propiedad?.departamento">Dpto {{ item.propiedad.departamento }}</span> -->
             </td>
             <td>{{ item.historial_estado_dpto?.estado.estado }}</td>
 
@@ -154,8 +201,8 @@
   </div>
   <ModalInventario v-if="showModalInventario" :show="showModalInventario" :inventario="inventarioSeleccionado"
     @close="cerrarModalInventario" @guardar="guardarModalInventario" />
-  <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones" :inventario="inventarioSeleccionado"
-    @close="cerrarModalObservaciones" />
+  <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones"
+    :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" />
 </template>
 <script setup>
 import NavComponent from '../../../components/NavComponent.vue'

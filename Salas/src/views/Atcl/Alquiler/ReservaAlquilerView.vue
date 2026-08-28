@@ -51,11 +51,14 @@
                 v-model="telefono" @focus="mostrandoResultadosClientes = resultadosClientes.length > 0"
                 :disabled="selectoresActivos === false || resPermiso2 === true" />
               <div v-if="mostrandoResultadosClientes && resultadosClientes.length > 0"
-                class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
+                class="position-absolute bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
                 style="z-index: 1000; max-height: 240px; overflow-y: auto">
-                <div v-for="item in resultadosClientes" :key="item.cliente.id_cliente" class="px-2 py-1 cursor-pointer"
+                <div v-for="item in resultadosClientes" :key="item.cliente.id_cliente" class="px-2 py-1"
                   @click="seleccionarCliente(item)">
-                  <div class="small">{{ item.cliente.telefono }} - {{ item.cliente.nombre }}</div>
+                  <div style="cursor: pointer; font-size: 0.9rem;" class="dropdown-item-custom">{{
+                    item.cliente.telefono }} - {{
+                      item.cliente.nombre }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -79,11 +82,12 @@
                 @focus="mostrandoResultadosPropiedad = resultadosPropiedades.length > 0"
                 :disabled="selectoresActivos === false || resPermiso2 === true" />
               <div v-if="mostrandoResultadosPropiedad && resultadosPropiedades.length > 0"
-                class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1"
+                class="position-absolute bg-white border border-top-0 rounded-bottom shadow-sm m-0 p-0"
                 style="z-index: 1000; max-height: 240px; overflow-y: auto">
-                <div v-for="propiedad in resultadosPropiedades" :key="propiedad.id" class="px-2 py-1 cursor-pointer"
+                <div v-for="propiedad in resultadosPropiedades" :key="propiedad.id"
+                  class="px-2 py-1 dropdown-item-custom" style="cursor: pointer;"
                   @click="seleccionarPropiedad(propiedad)">
-                  <div class="small">
+                  <div style="font-size: 0.65rem;">
                     {{ propiedad.cod_alquiler }} - {{ propiedad.calle }} {{ propiedad.numero }}
                   </div>
                 </div>
@@ -959,3 +963,14 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.dropdown-item-custom {
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.dropdown-item-custom:hover {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+}
+</style>
