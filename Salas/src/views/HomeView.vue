@@ -102,97 +102,15 @@
             <div>
               <label>Clientes Asignados</label>
             </div>
-            <!--
-            <div class="dropdown selector_potabilidad-asesores">
-              <button
-                class="btn btn-outline-secondary dropdown-toggle w-100 d-flex align-items-center justify-content-between"
-                type="button"
-                id="potabilidadDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <span class="d-flex align-items-center icons">
-                  <i :class="iconoSeleccionado" class="me-2"></i>
-                  <div class="small">{{ textoSeleccionado }}</div>
-                </span>
-              </button>
-
-              <ul
-                class="dropdown-menu w-100"
-                aria-labelledby="potabilidadDropdown"
-              >
-                <li>
-                  <a
-                    class="dropdown-item d-flex align-items-center"
-                    href="#"
-                    @click.prevent="seleccionarPotabilidad(
-                      'Todos',
-                      'bi bi-card-checklist text-primary'
-                    )"
-                  >
-                    <i class="me-2 bi bi-card-checklist"></i>
-                    <div class="texto-seleccionado">Todos</div>
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    class="dropdown-item d-flex align-items-center"
-                    href="#"
-                    @click.prevent="seleccionarPotabilidad(
-                      'Potable',
-                      'bi bi-emoji-smile text-success'
-                    )"
-                  >
-                    <i class="bi bi-emoji-smile me-2 text-success"></i>
-                    <div class="texto-seleccionado">Potable</div>
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    class="dropdown-item d-flex align-items-center"
-                    href="#"
-                    @click.prevent="seleccionarPotabilidad(
-                      'Medio',
-                      'bi bi-emoji-expressionless text-warning'
-                    )"
-                  >
-                    <i class="bi bi-emoji-expressionless me-2 text-warning"></i>
-                    <div class="texto-seleccionado">Medio</div>
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    class="dropdown-item d-flex align-items-center"
-                    href="#"
-                    @click.prevent="seleccionarPotabilidad(
-                      'No Potable',
-                      'bi bi-emoji-frown text-danger'
-                    )"
-                  >
-                    <i class="bi bi-emoji-frown me-2 text-danger"></i>
-                    <div class="texto-seleccionado">No Potable</div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            -->
-
           </div>
           <!-- Buscador -->
           <div class="col-12 pb-1 px-2">
             <input type="text" id="buscarInput" class="form-control py-1" placeholder="Buscar" v-model="buscar"
               autocomplete="off">
           </div>
-
         </div>
-
-
         <!-- Lista contactos -->
         <div>
-
           <!-- Cargando -->
           <div v-if="recargando" class="text-center p-3">
             <div class="spinner-border text-primary" role="status">
@@ -206,7 +124,6 @@
             </p>
           </div>
 
-
           <!-- Clientes -->
           <ul v-else class="list-group list-group-flush scroll lista-contacto-asesores">
 
@@ -214,13 +131,10 @@
               class="list-group-item list-group-item-action pt-0 pb-1 px-2">
 
               <div class="row">
-
                 <!-- Datos del cliente -->
-
                 <div class="d-flex justify-content-between align-items-center col-12 nombre-contacto-asesores">
-
                   <!-- Nombre -->
-                  <div class="col-10">
+                  <div class="col-9">
                     <strong :class="obtenerColorCliente(cliente)">
                       {{ cliente.nombre }}
                     </strong>
@@ -231,52 +145,11 @@
                       <i class="bi bi-pencil-fill boton-editar-clientes-asesores"></i>
                     </button>
                   </div>
-
-
-                  <!--
-                  <div class="col-1 tipo-potabiliadad-asesores" v-if="
-                    cliente.criterios_ordenados?.some(
-                      c => c.estado_criterio_venta === 'Activo'
-                    )
-                  ">
-
-                    <div class="col-1 tipo-potabiliadad-asesores" v-if="getPotabilidadCliente(cliente) === 'o'">
-                      <i class="bi bi-pencil-square text-secondary"></i>
-                    </div>
-
-                    <div class="col-1 tipo-potabiliadad-asesores" v-else-if="getPotabilidadCliente(cliente) === 'p'">
-                      <i class="bi bi-emoji-smile text-success"></i>
-                    </div>
-
-                    <div class="col-1 tipo-potabiliadad-asesores" v-else-if="getPotabilidadCliente(cliente) === 'm'">
-                      <i class="bi bi-emoji-neutral text-warning"></i>
-                    </div>
-
-                    <div class="col-1 tipo-potabiliadad-asesores" v-else-if="getPotabilidadCliente(cliente) === 'np'">
-                      <i class="bi bi-emoji-frown text-danger"></i>
-                    </div>
-
+                  <div class="col-1">
+                    <button type="button" class="btn p-0 border-0" @click="MasInformacion(cliente)">
+                     <i class="bi bi-info-circle-fill boton-editar-clientes-asesores"></i>
+                    </button>
                   </div>
-
-
-
-                  <div class="col-1 tipo-potabiliadad-asesores" v-else-if="
-                    cliente.criterios_ordenados?.some(
-                      c => c.estado_criterio_venta === 'Inactivo'
-                    )
-                  ">
-                    <i class="bi bi-folder2-open text-dark"></i>
-                  </div>
-
-
-
-                  <div class="col-1 tipo-potabiliadad-asesores" v-else-if="
-                    cliente.criterios_ordenados?.some(
-                      c => c.estado_criterio_venta === 'Finalizado'
-                    )
-                  ">
-                    <i class="bi bi-clipboard-check text-primary"></i>
-                  </div> -->
 
                 </div>
 
@@ -285,20 +158,16 @@
                 <div class="d-flex justify-content-between align-items-center col-12 telefono-contacto-asesores">
 
                   <div class="col-6">
-
                     {{ cliente.telefono }}
-
                     <a :href="`https://web.whatsapp.com/send?phone=${cliente.telefono}&text=Hola%20${cliente.nombre?.split(',')[0] || ''}`"
                       target="_blank" class="boton-whatsapp-clientes-asesores text-decoration-none" @click.stop>
                       <i class="bi bi-whatsapp"></i>
                     </a>
-
                   </div>
 
 
                   <!-- Fecha mas alta del array -->
                   <div class="col-4 fecha-contacto-asesores">
-
                     {{
                       cliente.criterios_ordenados?.some(
                         c => c.fecha_criterio_venta
@@ -319,34 +188,15 @@
                   </div>
 
                 </div>
-
-
-                <!-- Nombre de la inmobiliaria -->
-                <!-- <div class="d-flex justify-content-start align-items-center col-12"
-                  v-if="cliente.nombre_de_inmobiliaria">
-
-                  <span class="badge pertenece-inmobiliaria-asesores">
-
-                    <div class="bi bi-houses">
-
-                      <span class="ms-1">
-                        {{ cliente.nombre_de_inmobiliaria }}
-                      </span>
-
-                    </div>
-
-                  </span>
-
-                </div> -->
-
               </div>
-
             </li>
-
           </ul>
 
           <ModalEditarCliente :show="showEditarClienteModal" :cliente="clienteSeleccionado" :modo-home="true"
             @close="showEditarClienteModal = false" @criterio-actualizado="recargarListaCompleta" />
+
+          <ModalInformacionCliente :show="showMasInformacionClienteModal" :cliente="clienteSeleccionado" 
+            @close="showMasInformacionClienteModal = false" @criterio-actualizado="recargarListaCompleta" />
 
         </div>
 
@@ -363,6 +213,7 @@
 
 import NavComponent from '../components/NavComponent.vue'
 import ModalEditarCliente from '../components/Atcl/Cliente/Asesores/ModalEditarCliente.vue'
+import ModalInformacionCliente from '../components/ModalInformacionCliente.vue'
 
 import { traerAgendaDiaria } from '../Services/api/Agenda/AgendaApi'
 
@@ -401,11 +252,10 @@ const semanales = ref([])
 const clientes = ref([])
 const clienteSeleccionado = ref(null)
 const showEditarClienteModal = ref(false)
+const showMasInformacionClienteModal = ref(false)
 const currentUserId = ref(null)
 const buscar = ref('')
-const textoSeleccionado = ref('Todos')
 /* const iconoSeleccionado = ref('bi bi-card-checklist') */
-const filtroSinDevolucion = ref(false)
 const recargando = ref(false)
 // Lista de asesores
 const listaAsesoresAlquiler = ref([])
@@ -550,20 +400,6 @@ const cargarAsesoresYUsuario = async () => {
 }
 
 
-// =====================================================
-// POTABILIDAD
-// =====================================================
-/*
-const seleccionarPotabilidad = (
-  texto,
-  icono
-) => {
-
-  textoSeleccionado.value = texto
-
-  iconoSeleccionado.value = icono
-
-} */
 
 
 // =====================================================
@@ -573,6 +409,11 @@ const seleccionarPotabilidad = (
 const editarCliente = (cliente) => {
   clienteSeleccionado.value = cliente
   showEditarClienteModal.value = true
+}
+
+const MasInformacion = (cliente) =>{
+  clienteSeleccionado.value = cliente
+  showMasInformacionClienteModal.value = true
 }
 
 const recargarListaCompleta = async () => {
@@ -603,136 +444,6 @@ const ordenarClientesPorEstado = (clientes) => {
   })
 }
 
-/* const getPotabilidadCliente = (cliente) => {
-
-  if (
-    !cliente.criterios_ordenados ||
-    cliente.criterios_ordenados.length === 0
-  ) {
-    return 'nul'
-  }
-
-
-  const criteriosActivos =
-    cliente.criterios_ordenados.filter(
-      c =>
-        c.estado_criterio_venta === 'Activo'
-    )
-
-
-  if (criteriosActivos.length === 0) {
-    return 'nul'
-  }
-
-
-  const categorias =
-    criteriosActivos.map(
-      c => c.id_categoria
-    )
-
-
-  if (categorias.includes(null)) {
-    return 'o'
-  }
-
-  else if (categorias.includes('Potable')) {
-    return 'p'
-  }
-
-  else if (categorias.includes('Medio')) {
-    return 'm'
-  }
-
-  else if (categorias.includes('No Potable')) {
-    return 'np'
-  }
-
-  else {
-    return 'o'
-  }
-
-} */
-
-
-// =====================================================
-// DEVOLUCIONES PENDIENTES
-// =====================================================
-
-const clienteTieneDevolucionesPendientes = (
-  cliente
-) => {
-
-  const criterios =
-    Array.isArray(
-      cliente?.criterios_ordenados
-    )
-      ? cliente.criterios_ordenados
-      : []
-
-
-  const criteriosActivos =
-    criterios.filter(
-      c =>
-        c?.estado_criterio_venta === 'Activo'
-    )
-
-
-  const criteriosARevisar =
-    criteriosActivos.length
-      ? criteriosActivos
-      : criterios
-
-
-  return criteriosARevisar.some(
-    criterio => {
-
-      const consultas =
-        Array.isArray(
-          criterio?.historial_consultas
-        )
-          ? criterio.historial_consultas
-          : []
-
-
-      const ofrecimientos =
-        Array.isArray(
-          criterio?.historial_ofrecimientos
-        )
-          ? criterio.historial_ofrecimientos
-          : []
-
-
-      const muestras =
-        Array.isArray(
-          criterio?.historial_muestras
-        )
-          ? criterio.historial_muestras
-          : []
-
-
-      const hayPendiente = (arr) =>
-        arr.some(
-          x =>
-            x &&
-            (
-              x.devolucion === null ||
-              x.devolucion === undefined ||
-              String(x.devolucion).trim() === ''
-            )
-        )
-
-
-      return (
-        hayPendiente(consultas) ||
-        hayPendiente(ofrecimientos) ||
-        hayPendiente(muestras)
-      )
-
-    }
-  )
-
-}
-
 
 // =====================================================
 // CLIENTES FILTRADOS
@@ -741,104 +452,14 @@ const clienteTieneDevolucionesPendientes = (
 const clientesFiltrados = computed(() => {
 
   // Solo clientes del usuario actual
-
-  let filtrados =
-    clientes.value.filter(
-      c =>
-        c.id_asesor_alquiler ==
-        currentUserId.value
-    )
-
-
-  // Filtro potabilidad
-
-  if (
-    textoSeleccionado.value !== 'Todos'
-  ) {
-
-    filtrados =
-      filtrados.filter(
-        cliente => {
-
-          const potabilidad =
-            getPotabilidadCliente(
-              cliente
-            )
-
-
-          switch (
-          textoSeleccionado.value
-          ) {
-
-            case 'Potable':
-              return potabilidad === 'p'
-
-            case 'Medio':
-              return potabilidad === 'm'
-
-            case 'No Potable':
-              return potabilidad === 'np'
-
-            default:
-              return true
-
-          }
-
-        }
-      )
-
-  }
-
+  let filtrados = clientes.value.filter(c => c.id_asesor_alquiler == currentUserId.value)
 
   // Buscador
 
-  if (
-    buscar.value.trim() !== ''
-  ) {
-
-    const busqueda =
-      buscar.value
-        .toLowerCase()
-        .trim()
-
-
-    filtrados =
-      filtrados.filter(
-        cliente =>
-
-          (cliente.nombre ?? '')
-            .toLowerCase()
-            .includes(busqueda)
-
-          ||
-
-          String(
-            cliente.telefono ?? ''
-          )
-            .toLowerCase()
-            .includes(busqueda)
-
-      )
-
+  if (buscar.value.trim() !== '' ) {
+    const busqueda = buscar.value.toLowerCase().trim()
+    filtrados = filtrados.filter( cliente => (cliente.nombre ?? '').toLowerCase().includes(busqueda) || String( cliente.telefono ?? '' ).toLowerCase().includes(busqueda))
   }
-
-
-  // Devoluciones pendientes
-
-  if (
-    filtroSinDevolucion.value
-  ) {
-
-    filtrados =
-      filtrados.filter(
-        cliente =>
-          clienteTieneDevolucionesPendientes(
-            cliente
-          )
-      )
-
-  }
-
   // Ordenar por estado: Pendiente primero, Finalizado al último
   filtrados = ordenarClientesPorEstado(filtrados)
 
@@ -852,9 +473,7 @@ const clientesFiltrados = computed(() => {
 // =====================================================
 
 onMounted(() => {
-
   listadoDiario()
-
   cargarAsesoresYUsuario()
 
 })
