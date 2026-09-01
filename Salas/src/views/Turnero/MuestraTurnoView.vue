@@ -34,15 +34,47 @@
 <script setup>
 import NavComponentSin from '../../components/NavComponent-sin.vue'
 import { useTurnos } from '@/composables/turnero/useTurnos'
-import { onMounted, onUnmounted } from 'vue'
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue'
+import notificationSound from '@/assets/notification.wav'
 
 let intervalId = null
 const { turnosLlamados, loadAllTurnos } = useTurnos()
+const turnosLlamadosIds = ref(new Set())
+const isInitialLoad = ref(true)
+
+const reproducirSonido = () => {
+  try {
+    const audio = new Audio(notificationSound)
+    audio.play().catch((err) => {
+      console.warn('Audio play bloqueado por el navegador o no interactuado aún:', err)
+    })
+  } catch (error) {
+    console.error('Error al reproducir audio:', error)
+  }
+}
+
+const actualizarTurnosYNotificar = async () => {
+  await loadAllTurnos()
+
+  const nuevosIds = new Set((turnosLlamados.value || []).map(t => t.id))
+
+  // Si no es la primera carga inicial, verificar si hay turnos nuevos que no estaban antes
+  if (!isInitialLoad.value) {
+    const hayTurnoNuevo = (turnosLlamados.value || []).some(t => !turnosLlamadosIds.value.has(t.id))
+    if (hayTurnoNuevo) {
+      reproducirSonido()
+    }
+  } else {
+    isInitialLoad.value = false
+  }
+
+  turnosLlamadosIds.value = nuevosIds
+}
+
 onMounted(async () => {
-  await loadAllTurnos() // Espera a que cargue
+  await actualizarTurnosYNotificar()
   intervalId = setInterval(() => {
-    loadAllTurnos()
+    actualizarTurnosYNotificar()
   }, 5000)
 })
 
@@ -52,12 +84,11 @@ onUnmounted(() => {
   }
 })
 
-
 // 1. Para un video local en la carpeta assets (usando Vite)
-const videoLocal = new URL('../../assets/video.mp4', import.meta.url).href;
+const videoLocal = new URL('../../assets/video.mp4', import.meta.url).href
 
 // 2. Para un video remoto (opcional)
 //const videoRemoto = ref('https://tu-servidor.com/video-publicitario.mp4');
 // Elegimos cuál usar
-const videoUrl = ref(videoLocal);
+const videoUrl = ref(videoLocal)
 </script>

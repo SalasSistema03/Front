@@ -56,7 +56,9 @@
 import BaseModal from '@/components/base/BaseModal.vue';
 import { onMounted, reactive, ref } from 'vue';
 import { obtenerProvinciasService, guardarPersonaService } from '@/Services/api/Contable/RetencionesApi';
-import { alertas } from '@/utils/alertas';
+import { useToast } from '@/composables/useToast'
+
+const { showSuccess, showError } = useToast()
 
 defineProps({
     modalPersona: Boolean
@@ -77,26 +79,26 @@ const form = reactive({
 
 async function guardarPersona() {
     loadingForm.value = true;
-    console.log('Datos a guardar:', form);
+    //console.log('Datos a guardar:', form);
 
     //creo una variable que convierte el CUIT a un numero sin guiones ni espacios para validar que tenga 11 digitos
     const cuitSinFormato = form.cuit_retencion.replace(/[-\s]/g, '');
     if (cuitSinFormato.length !== 11) {
-        alertas.error('Error', 'El CUIT debe tener 11 digitos');
+        showError('Error', 'El CUIT debe tener 11 digitos');
         loadingForm.value = false;
         return;
     }
     if (!form.razon_social_retencion || !form.domicilio_retencion || !form.id_provincia_retencion || !form.codigo_postal_retencion || !form.localidad_retencion) {
-        alertas.error('Error', 'Completa todos los campos');
+        showError('Error', 'Completa todos los campos');
         loadingForm.value = false;
         return;
     }
     try {
         await guardarPersonaService(form);
-        alertas.success('Guardado', 'Se ha guardado correctamente');
+        showSuccess('Guardado', 'Se ha guardado correctamente');
         emit('cerrarModalPersona');
     } catch (err) {
-        alertas.error('Error', 'No se pudo guardar la persona');
+        showError('Error', 'No se pudo guardar la persona');
         console.error('Error al guardar:', err);
     } finally {
         loadingForm.value = false;

@@ -93,12 +93,21 @@
 <script>
 import { cargarPadron } from '../../../Services/api/Atcl/AtclApi.js'
 import { getUser } from '../../../Services/api/Usuario/userApi.js'
+import { useToast } from '@/composables/useToast.js';
 
 
 export default {
   props: {
     personaData: { type: Object, default: null },
     ocultarBotones: { type: Boolean, default: false }
+  },
+  setup() {
+    const { showError, showSuccess } = useToast()
+
+    return {
+      showError,
+      showSuccess
+    }
   },
   data() {
     return {
@@ -158,38 +167,89 @@ export default {
       this.provincia = ''; this.comentarios = ''; this.telefonos = [{ phone_number: '', notes: '' }]
     },
     async handleSubmit() {
-      this.isSubmitting = true
-      const formDataToSend = new FormData()
-      if (this.id) formDataToSend.append('id', this.id)
-      formDataToSend.append('nombre', this.nombre)
-      formDataToSend.append('apellido', this.apellido)
-      formDataToSend.append('dni', this.dni)
-      formDataToSend.append('fecha_nacimiento', this.fecha_nacimiento)
-      formDataToSend.append('calle', this.calle)
-      formDataToSend.append('numero_calle', this.numero_calle)
-      formDataToSend.append('piso', this.piso)
-      formDataToSend.append('ciudad', this.ciudad)
-      formDataToSend.append('provincia', this.provincia)
-      formDataToSend.append('comentarios', this.comentarios)
-      formDataToSend.append('usuario_id', this.usuario_id)
 
-      const telefonosFiltrados = this.telefonos
-        .filter(t => t.phone_number.trim() !== '')
-        .map(t => ({ phone_number: t.phone_number.trim(), notes: t.notes.trim() }))
-      formDataToSend.append('telefonos', JSON.stringify(telefonosFiltrados))
+    // Validar que los teléfonos contengan solamente números
+    const telefonoInvalido = this.telefonos.find(t => {
+        const telefono = t.phone_number.trim();
 
-      try {
-        // Aquí se usa cargarPadron tanto para crear como para editar (según tu API)
-        await cargarPadron(formDataToSend)
-        //this.$emit('persona-guardada', { id: this.id, nombre: this.nombre, apellido: this.apellido })
+        // Ignorar teléfonos vacíos
+        if (telefono === '') return false;
 
-        this.volverAModalPropietarios()
-      } catch (error) {
-        console.error('Error al procesar persona:', error)
-      } finally {
-        this.isSubmitting = false
-      }
+        // Solo permite números del 0 al 9
+        return !/^\d+$/.test(telefono);
+    });
+
+    if (telefonoInvalido) {
+        this.showError(
+            `El teléfono "${telefonoInvalido.phone_number}" no es válido. Solo se permiten números.`
+        );
+        return;
     }
+
+    this.isSubmitting = true;
+
+    const formDataToSend = new FormData();
+
+    if (this.id) formDataToSend.append('id', this.id);
+
+    formDataToSend.append('nombre', this.nombre);
+    formDataToSend.append('apellido', this.apellido);
+    formDataToSend.append('dni', this.dni);
+    formDataToSend.append('fecha_nacimiento', this.fecha_nacimiento);
+    formDataToSend.append('calle', this.calle);
+    formDataToSend.append('numero_calle', this.numero_calle);
+    formDataToSend.append('piso', this.piso);
+    formDataToSend.append('ciudad', this.ciudad);
+    formDataToSend.append('provincia', this.provincia);
+    formDataToSend.append('comentarios', this.comentarios);
+    formDataToSend.append('usuario_id', this.usuario_id);
+
+    const telefonosFiltrados = this.telefonos
+        .filter(t => t.phone_number.trim() !== '')
+        .map(t => ({
+            phone_number: t.phone_number.trim(),
+            notes: t.notes.trim()
+        }));
+
+    formDataToSend.append(
+        'telefonos',
+        JSON.stringify(telefonosFiltrados)
+    );
+
+    try {
+
+        // Aquí se usa cargarPadron tanto para crear como para editar
+        await cargarPadron(formDataToSend);
+
+        this.showSuccess(
+            this.id
+                ? 'Persona actualizada correctamente'
+                : 'Persona cargada correctamente'
+        );
+
+        // this.$emit('persona-guardada', {
+        //     id: this.id,
+        //     nombre: this.nombre,
+        //     apellido: this.apellido
+        // });
+
+        this.volverAModalPropietarios();
+
+    } catch (error) {
+
+        this.showError('Error al procesar la persona');
+
+        console.error(
+            'Error al procesar persona:',
+            error
+        );
+
+    } finally {
+
+        this.isSubmitting = false;
+
+    }
+}
   },
   async mounted() {
     const token = localStorage.getItem('token')

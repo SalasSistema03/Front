@@ -317,7 +317,8 @@ export default {
       botones: null,
       showDescripcionModal: false,
       showModal: false,
-      modalIndex: 0
+      modalIndex: 0,
+      popovers: []
     }
   },
   computed: {
@@ -336,15 +337,33 @@ export default {
   },
   async mounted() {
     await this.mostrarPropiedad()
-    // Inicializar popovers después de que el DOM esté listo
     this.$nextTick(() => {
-      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-      popoverTriggerList.map(function (popoverTriggerEl) {
-        return new window.bootstrap.Popover(popoverTriggerEl)
-      })
+      this.initPopovers()
     })
   },
+  beforeUnmount() {
+    this.destroyPopovers()
+  },
   methods: {
+    initPopovers() {
+      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+      this.popovers = popoverTriggerList.map((popoverTriggerEl) => {
+        return new window.bootstrap.Popover(popoverTriggerEl, {
+          trigger: 'focus',
+          container: 'body'
+        })
+      })
+    },
+    destroyPopovers() {
+      if (Array.isArray(this.popovers)) {
+        this.popovers.forEach((popover) => {
+          if (popover && typeof popover.dispose === 'function') {
+            popover.dispose()
+          }
+        })
+        this.popovers = []
+      }
+    },
     abrirDescripcionModal() {
       this.showDescripcionModal = true
     },

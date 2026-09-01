@@ -150,6 +150,9 @@ import {
     verificaComprobanteService,
     guardarRetencionService
 } from '@/Services/api/Contable/RetencionesApi.js';
+import { useToast } from '@/composables/useToast'
+
+const { showSuccess, showError } = useToast()
 
 // --- 1. ESTADO REACTIVO (Variables y Referencias) ---
 const form = reactive({
@@ -262,14 +265,15 @@ const guardarComprobante = async () => {
     try {
         const response = await guardarRetencionService(form);
         if (response.data.status === 'success') {
-            alertas.success(response.data.message);
+           
+            showSuccess(response.data.message || "Retención guardada correctamente");
             // Llamamos a la función que está DENTRO del componente hijo
             if (referenciaTabla.value) {
                 referenciaTabla.value.obtenerRetenciones();
             }
             resetForm();
         } else {
-            alertas.error(response.data.message || "Error inesperado");
+            showError(response.data.message || "Error inesperado");
         }
     } catch (err) {
         const mensajeBack = err.response?.data?.message || "Error al conectar con el servidor";

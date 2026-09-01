@@ -39,6 +39,9 @@ export function usePropiedadBusqueda() {
   const orden = ref('')
   const ampliar = ref('')
   const propiedades = ref([])
+  const buscando = ref(false)
+  const haBuscado = ref(false)
+  const { handleApiError } = useToast()
 
   const zonasFiltradas = computed(() => {
     if (!busquedaZonas.value) return zonas.value
@@ -129,6 +132,8 @@ export function usePropiedadBusqueda() {
   }
 
   const filtrar = async () => {
+    if (buscando.value) return
+
     const filtros = {
       busqueda: busqueda.value || null,
       codigo: codigo.value || null,
@@ -144,9 +149,18 @@ export function usePropiedadBusqueda() {
       ampliar: ampliar.value ? 1 : 0
     }
 
-    const response = await buscarPropiedad(filtros)
-    //console.log('Respuesta recibida:', response)
-    propiedades.value = response.data
+    buscando.value = true
+    haBuscado.value = true
+    propiedades.value = []
+
+    try {
+      const response = await buscarPropiedad(filtros)
+      propiedades.value = Array.isArray(response.data) ? response.data : []
+    } catch (error) {
+      handleApiError(error)
+    } finally {
+      buscando.value = false
+    }
   }
 
   const limpiarCampos = () => {
@@ -204,6 +218,8 @@ export function usePropiedadBusqueda() {
     orden,
     ampliar,
     propiedades,
+    buscando,
+    haBuscado,
     zonasFiltradas,
     inmuebleFiltrados,
     valorInputZonas,

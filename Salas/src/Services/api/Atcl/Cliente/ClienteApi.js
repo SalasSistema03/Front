@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_AUTH_URL
 
-export const getPropiedadesVenta = (codigo = '', calle = '', dorm = '', baños = '', cochera = '') => {
+export const getPropiedadesVenta = (codigo = '', calle = '', dorm = '', baños = '', cochera = '', tipo = 'venta') => {
   const token = localStorage.getItem('token')
 
   return axios.get(`${API_URL}/v1/propiedades/buscar-venta`, {
@@ -14,7 +14,8 @@ export const getPropiedadesVenta = (codigo = '', calle = '', dorm = '', baños =
       ...(calle && { calle }),
       ...(dorm && { dorm }),
       ...(baños && { baños }),
-      ...(cochera && { cochera })
+      ...(cochera && { cochera }),
+      tipo
     }
   })
 }
@@ -37,6 +38,15 @@ export const getClientePorTelefono = (telefono) => {
   })
 }
 
+export const getAsesorAlquiler = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/asesor-alquiler`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 export const verificarPermisoSeleccionarAsesor = () => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/verificaPermisoAsesor/seleccionarAsesor`, {
@@ -55,16 +65,25 @@ export const getAsesores = () => {
   })
 }
 
-export const modificarCriterio = (data) =>{
+export const getAsesoresAlq = () => {
   const token = localStorage.getItem('token')
-  return axios.put(`${API_URL}/v1/clientes/modificar-criterio`, data,{
+  return axios.get(`${API_URL}/v1/asesoresAlq`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
 }
 
-export const modificarCliente = (data) =>{
+export const modificarCriterio = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.put(`${API_URL}/v1/clientes/modificar-criterio`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const modificarCliente = (data) => {
   const token = localStorage.getItem('token')
   return axios.put(`${API_URL}/v1/clientes/modificar-datos-personales`, data, {
     headers: {
@@ -103,6 +122,15 @@ export const devolucionMensaje = (data) => {
 export const obtenerHistorialCod = (id) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/historialCodOfrecimiento/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getCantidadClientes = () =>{
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/cantidadClientesPorAsesor`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
