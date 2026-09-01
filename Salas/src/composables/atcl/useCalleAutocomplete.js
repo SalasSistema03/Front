@@ -26,7 +26,8 @@ export function useCalleAutocomplete() {
      */
     const filtrarCalles = () => {
         const texto = calleSeleccionada.value.toLowerCase()
-        
+        calleId.value = null   // 👈 invalida la selección anterior mientras escribe
+
         if (texto.length === 0) {
             callesFiltradas.value = []
             return
@@ -80,7 +81,7 @@ export function useCalleAutocomplete() {
         mostrarSugerencias,
         calleSeleccionada,
         calleId,
-        
+
         // Methods
         cargarCalles,
         filtrarCalles,
