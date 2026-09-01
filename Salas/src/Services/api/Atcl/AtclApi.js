@@ -210,3 +210,47 @@ export const verificarPermiso = (botonNombre) => {
     }
   })
 }
+
+
+
+// Función para obtener las propiedades del mapa con filtros
+export const getPropiedadesMapaService = (filtros) => {
+  const token = localStorage.getItem('token')
+
+  return axios.get(`${API_URL}/v1/mapa-propiedades`, { // Ajusta la ruta a la que definiste en api.php
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: filtros
+  })
+}
+
+export const getCatalogosMapaService = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/mapa/catalogos-filtros`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+}
+
+
+// Agrega esto en tu archivo AtclApi.js
+export const validarUbicacionDuplicada = (data) => {
+  const token = localStorage.getItem('token');
+  return axios.post(`${API_URL}/v1/propiedad/validar-ubicacion`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+export const verificarCoordenadasService = (data) => {
+  const token = localStorage.getItem('token');
+  return axios.post(`${API_URL}/v1/propiedad/verificar-coordenadas`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+export const getLocalidades = () => {
+  const token = localStorage.getItem('token');
+  return axios.get(`${API_URL}/v1/localidades`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
