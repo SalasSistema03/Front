@@ -55,7 +55,17 @@ const routesAtcl = [
         meta: {
             requiresAuth: true,
         },
-    }
+    },
+    {
+        path: '/propiedad-busqueda-mapa',
+        alias: '/atcl/propiedad-busqueda-mapa',
+        name: 'propiedad-busqueda-mapa',
+        component: () => import('../views/Atcl/PropiedadBusquedaMapView.vue'),
+        meta: {
+            requiresAuth: true,
+            vistaId: 64,
+        },
+    },
 ]
 
 export default routesAtcl

@@ -15,9 +15,10 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
-    "axios": "^1.13.2",
+    "axios": "^1.19.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.0",
+    "leaflet": "^1.9.4",
     "pinia": "^3.0.4",
     "sweetalert2": "^11.26.17",
     "vue": "^3.5.26",
