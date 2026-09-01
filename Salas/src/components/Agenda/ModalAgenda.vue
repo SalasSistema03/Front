@@ -27,13 +27,13 @@
         </div>
 
         <div class="row d-flex align-items-center justify-content-center">
-          <div class="col-md-3" v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas'">
+          <div class="col-md-3" v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
             <label>Nombre Cliente</label>
             <input type="text" class="form-control" v-model="nombreCliente" :readonly="nota"
               :disabled="props.sector?.nombre === 'Ventas'" />
           </div>
           <div class="col-md-2 position-relative"
-            v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas'">
+            v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
             <label>Telefono</label>
             <input type="text" class="form-control" v-model="telefono"
               @focus="mostrandoResultadosClientes = resultadosClientes.length > 0" :readonly="nota" />
@@ -539,6 +539,8 @@ watch(horaInicioEfectiva, (nuevaHora) => {
   horaFin.value = calculada > HORA_MAX ? HORA_MAX : calculada
 }, { immediate: true })
 
+console.log('criterioSeleccionado:', props.criterioSeleccionado)
+console.log('nota:', props.nota)
 watch(
   () => props.show,
   () => {

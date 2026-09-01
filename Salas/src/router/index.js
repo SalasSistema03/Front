@@ -13,6 +13,7 @@ import Impuestos from '../router/impuestos'
 import Contratos from '../router/contrato'
 import { useAuthStore } from '@/stores/auth'
 import { alertas } from '../utils/alertas'
+import dpto from '../router/dpto'
 
 
 const router = createRouter({
@@ -45,6 +46,7 @@ const router = createRouter({
     ...Cliente,
     ...Impuestos,
     ...Contratos,
+    ...dpto
   ],
 })
 

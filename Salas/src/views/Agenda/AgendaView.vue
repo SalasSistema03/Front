@@ -212,7 +212,7 @@ export default {
     textoCelda(username, hora) {
       //console.log(hora)
       const nota = this.notaEnCelda(username, hora)
-      console.log('acaa', nota)
+      //console.log('acaa', nota)
 
       return nota?.propiedad_calle ? nota.propiedad_calle + ' ' + nota?.propiedad_numero_calle : ''
     }

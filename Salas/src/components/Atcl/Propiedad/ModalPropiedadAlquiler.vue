@@ -38,22 +38,19 @@
 
             <div class="form-group  px-1 col-md-2 ">
               <label class="text-center form-label" id="basic-addon1">Flyer IG</label>
-              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.flyer_a"
-                readonly>
+              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.flyer_a" readonly>
               <input v-else type="date" class="form-control text-center" v-model="alquiler.flyer_a">
             </div>
 
             <div class="form-group  px-1 col-md-2 ">
               <label class="text-center form-label" id="basic-addon1">Reel IG</label>
-              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.reel_a"
-                readonly>
+              <input v-if="propiedad" type="date" class="form-control text-center" :value="propiedad.reel_a" readonly>
               <input v-else type="date" class="form-control text-center" v-model="alquiler.reel_a">
             </div>
 
             <div class="form-group  px-1 col-md-1 ">
               <label class="text-center form-label" id="basic-addon1">Web</label>
-              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.web_a"
-                readonly>
+              <input v-if="propiedad" type="text" class="form-control text-center" :value="propiedad.web_a" readonly>
               <select v-else class="form-select" aria-label="Default select example" v-model="alquiler.web_a">
                 <option value="">-</option>
                 <option value="SI">SI</option>
@@ -181,6 +178,17 @@
               </select>
             </div>
 
+            <div class=" form-group px-1 col-md-2 "
+              v-if="mostrarFechaOfrecimiento">
+              <label class=" text-center form-label" id="basic-addon1">Fecha Ofrecimiento</label>
+              <input v-if="propiedad" type="date" class="form-control text-center"
+                :value="propiedad.fecha_ofrecimiento" readonly>
+              <input v-else type="date" class="form-control text-center" v-model="alquiler.fecha_ofrecimiento" @change="fechaOfrecimientoTouched = true">
+            </div>
+            <!--  <div>
+              <textarea name="" id="">{{ propiedad }}</textarea>
+            </div> -->
+
             <div class="form-group px-1 col-md-4 "
               v-show="mostrarDescripcion || propiedad?.historial_estados_alquiler?.comentario_alquiler"
               id="descripcion_container_alquiler">
@@ -250,8 +258,7 @@
 <script setup>
 // Recibir las props del componente padre
 import ModalNovedades from './ModalNovedades.vue'
-import { reactive, watch, defineEmits, computed } from 'vue'
-import { ref } from 'vue'
+import { reactive, watch, defineEmits, computed, ref } from 'vue'
 import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
 
 
@@ -276,6 +283,8 @@ const props = defineProps({
 })
 const fichaPdfRef = ref(null)
 const fichaReservaPdfRef = ref(null)
+const fechaOfrecimientoTouched = ref(false)
+const initialFechaOfrecimiento = ref('')
 
 
 // Definir los emits
@@ -303,6 +312,10 @@ watch(() => props.propiedadUpdate, (newValue) => {
     alquiler.reel_a = newValue.reel_a || ''
     alquiler.web_a = newValue.web_a || ''
     alquiler.captador_interno_a = newValue.captador_int_a || ''
+    alquiler.fecha_ofrecimiento = newValue.fecha_ofrecimiento || ''
+    //initialFechaOfrecimiento.value = alquiler.fecha_ofrecimiento
+    //fechaOfrecimientoTouched.value = false
+
 
     // Precargar folios si existen
     if (newValue.folios && newValue.folios.length > 0) {
@@ -420,6 +433,7 @@ const alquiler = reactive({
   reel_a: '',
   web_a: '',
   captador_interno_a: '',
+  fecha_ofrecimiento: ''
 })
 
 // Lógica equivalente al toggleDescripcion del blade
@@ -439,10 +453,36 @@ const mostrarBajaTemporal = computed(() =>
   estadoSeleccionadoTexto.value === 'BAJA TEMPORAL'
 )
 
+// Mostrar Fecha Ofrecimiento cuando el estado seleccionado sea '1' en una propiedad existente o de actualización.
+// No se muestra en el modo de carga de propiedad nueva.
+const mostrarFechaOfrecimiento = computed(() => {
+  const cargaNueva = !props.propiedad && !props.propiedadUpdate
+  if (cargaNueva) return false
+  return (
+    (props.propiedad && props.propiedad?.id_estado_alquiler === 1) ||
+    Number(alquiler.estado_alquiler) === 1 ||
+    (props.propiedadUpdate && props.propiedadUpdate?.id_estado_alquiler === 1)
+  )
+})
+
+// Limpiar `fecha_ofrecimiento` al ocultarse (comportamiento consistente con otros campos)
+watch(mostrarFechaOfrecimiento, (val) => {
+  if (!val) alquiler.fecha_ofrecimiento = ''
+})
+
+// Detectar cambios reales en el valor de fecha_ofrecimiento (aunque @change falle)
+watch(() => alquiler.fecha_ofrecimiento, (newVal, oldVal) => {
+  if (newVal === undefined) return
+  if (newVal !== initialFechaOfrecimiento.value) {
+    fechaOfrecimientoTouched.value = true
+  }
+})
+
 // Limpiar campos al ocultarse (igual que el JS original)
 watch(mostrarDescripcion, (val) => {
   if (!val) alquiler.descripcion_estado_alquiler = ''
 })
+
 
 watch(mostrarBajaTemporal, (val) => {
   if (!val) alquiler.fecha_baja_temporal_alquiler = ''
@@ -450,7 +490,10 @@ watch(mostrarBajaTemporal, (val) => {
 
 // Observar cambios y emitir automáticamente
 watch(alquiler, (newValue) => {
-  emit('update:alquiler', { ...newValue })
+  const payload = { ...newValue }
+  // Si el usuario no tocó fecha_ofrecimiento, enviarla vacía para mantener comportamiento consistente
+  if (!fechaOfrecimientoTouched.value) payload.fecha_ofrecimiento = ''
+  emit('update:alquiler', payload)
 }, { deep: true })
 
 </script>

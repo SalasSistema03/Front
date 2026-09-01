@@ -53,8 +53,9 @@
 import { ref, watch, onMounted } from 'vue'; // Importa watch para detectar cambios
 import BaseModal from '@/components/base/BaseModal.vue';
 import { modificarRetencionService } from '@/Services/api/Contable/RetencionesApi.js';
+import { useToast } from '@/composables/useToast'
 
-import { alertas } from '@/utils/alertas.js';
+const { showSuccess, showError } = useToast()
 
 // 1. ASIGNAR A CONST PROPS (Esto era lo que faltaba)
 const props = defineProps({
@@ -95,11 +96,11 @@ const guardarCambios = async () => {
         console.log("id_comprobante", form.value.id_comprobante);
         console.log("data", form.value);
         await modificarRetencionService(form.value.id_comprobante, form.value);
-        alertas.success('Registro actualizado');
+        showSuccess('Registro actualizado', 'Se ha modificado correctamente la retención');
         emit('registroActualizado'); 
         emit('cerrarModalModificar');
     } catch (err) {
-        alertas.error('Error al actualizar');
+        showError('Error', 'No se pudo actualizar el registro');
         console.error(err);
     } finally {
         enviando.value = false;

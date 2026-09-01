@@ -147,7 +147,10 @@
 
       </div>
       <div class="col-md-12 row mt-4 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary w-50" @click="actualizarPropiedad">Editar Propiedad</button>
+        <button type="button" class="btn btn-primary w-50" :disabled="!canSubmitPropertyUpdate"
+          @click="actualizarPropiedad">
+          {{ submitting ? 'Guardando...' : 'Editar Propiedad' }}
+        </button>
       </div>
     </form>
   </div>
@@ -273,11 +276,11 @@
               <input type="file" class="form-control" id="documentos" accept="image/*,application/pdf" multiple
                 @change="agregarDocumentosPendientes">
             </div>
-            <div class="col-md-3 mb-2">
+            <!-- <div class="col-md-3 mb-2">
               <button type="button" class="btn btn-primary btn-sm w-100" @click="confirmarDocumentosPendientes">
                 Subir Documento
               </button>
-            </div>
+            </div> -->
           </div>
 
           <!-- Documentos pendientes -->
@@ -367,11 +370,11 @@
               <input type="file" class="form-control" id="videos" accept="video/*" multiple
                 @change="agregarVideosPendientes">
             </div>
-            <div class="col-md-3 mb-2">
+            <!-- <div class="col-md-3 mb-2">
               <button type="button" class="btn btn-primary btn-sm w-100" @click="confirmarVideosPendientes">
                 Subir Video
               </button>
-            </div>
+            </div> -->
           </div>
 
           <!-- Videos pendientes -->
@@ -494,6 +497,7 @@ import { useCaptadorInterno } from '../../composables/atcl/useCaptadorInterno'
 import { useAsesores } from '../../composables/atcl/useAsesores'
 import { useToast } from '../../composables/useToast'
 import { getUser } from '../../Services/api/Usuario/userApi'
+import { canSubmitPropertyUpdate } from '../../utils/propertyUpdateGuard'
 
 export default {
   name: 'PropiedadUpdateView',
@@ -536,6 +540,8 @@ export default {
     return {
       propiedad_update: null,
       loading: true,
+      loadFailed: false,
+      submitting: false,
       numero_calle: '',
       piso: '',
       departamento: '',
@@ -564,6 +570,14 @@ export default {
     }
   },
   computed: {
+    canSubmitPropertyUpdate() {
+      return canSubmitPropertyUpdate({
+        loading: this.loading,
+        submitting: this.submitting,
+        loadFailed: this.loadFailed,
+        property: this.propiedad_update
+      })
+    },
     fotosOrdenadas() {
       if (!this.propiedad_update || !this.propiedad_update.fotos) return [];
 
@@ -655,6 +669,7 @@ export default {
       return { valido: true }
     },
     async mostrarPropiedad() {
+      this.loadFailed = false
       try {
         // Obtiene el ID de la URL
         const id = this.$route.params.id
@@ -717,7 +732,7 @@ export default {
         }
 
         // Guardar propietarios originales
-        this.propietariosOriginales = response.data.propietarios.map(p => ({
+        this.propietariosOriginales = (response.data.data.propietarios || []).map(p => ({
           id: p.id,
           pivot: {
             observaciones: p.pivot.observaciones,
@@ -727,6 +742,7 @@ export default {
         //console.log('Propiedad encontrada:', this.propiedad_update)
       } catch (error) {
         console.error('Error cargando propiedad:', error)
+        this.loadFailed = true
         this.error = 'No se pudo cargar la propiedad'
       } finally {
         this.loading = false
@@ -906,6 +922,12 @@ export default {
       //console.log('Condicion actualizada:', this.propiedad_update.condicion)
     },
     async actualizarPropiedad() {
+      if (!this.canSubmitPropertyUpdate) {
+        this.showWarning('Esperá a que termine de cargarse la propiedad antes de guardar.')
+        return
+      }
+
+      this.submitting = true
       try {
         // Validar que no haya números de orden duplicados
         const validacion = this.validarOrdenFotos()
@@ -1069,7 +1091,7 @@ export default {
             orden: v.orden ?? '',
             comentario: v.comentario ?? ''
           }))
-          console.log('videos_nuevos metadata:', metaData)
+          //console.log('videos_nuevos metadata:', metaData)
           formData.append('videos_nuevos_data', JSON.stringify(metaData))
         }
 
@@ -1121,6 +1143,8 @@ export default {
         console.error('Error actualizando propiedad:', error)
         /*  alert('Error al actualizar la propiedad: ' + (error.response?.data?.message || error.message)) */
         this.showError( (error.response?.data?.message || error.message))
+      } finally {
+        this.submitting = false
       }
     },
   },

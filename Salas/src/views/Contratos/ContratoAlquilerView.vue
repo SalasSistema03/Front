@@ -53,7 +53,7 @@
     </div>
 
 
-    <div class="proceso_reserva_tabla_contenedor mt-2">
+    <div class="proceso_reserva_tabla_contenedor_contrato mt-2">
       <table class="table table-striped table-hover proceso_reserva_table">
         <thead>
           <tr class="text-center">
@@ -82,7 +82,7 @@
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_inventario) }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_comercial_presenta_carpeta) }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_preaprobada) }}</td>
-            <td>{{ formatDate(item.historial_estado_contrato?.fecha_reserva) }}</td>
+            <td>{{ formatDate(item.fecha_reserva) }}</td>
             <td>{{ item.historial_estado_contrato?.gastos_administrativos || '-' }}</td>
             <td>{{ item.historial_estado_contrato.tirilla_entregada_por?.username }}</td>
             <td>{{ formatDate(item.historial_estado_contrato?.fecha_tirilla_entregada) }}</td>

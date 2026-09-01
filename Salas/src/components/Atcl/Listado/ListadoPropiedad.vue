@@ -21,6 +21,11 @@
           Informe de Novedades
         </div>
 
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'listado_ofrecimiento' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'listado_ofrecimiento'" v-if="sector === 'Alquiler'">
+          Listado Tiempo de Ofrecimiento
+        </div>
+
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'ofrecimiento_venta' ? 'btn-primary' : 'btn-light'"
           @click="currentForm = 'ofrecimiento_venta'" v-if="sector === 'Venta'">
           Listar Ofrecimiento
@@ -146,15 +151,20 @@
                 </select>
               </div>
 
-              <div class="from-group col-md-3 px-1">
+              <div class="from-group col-md-2 px-1">
                 <label class="form-label">Importe desde</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_minimo"
                   min="0" placeholder="Importe mínimo" />
               </div>
-              <div class="from-group col-md-3 px-1">
+              <div class="from-group col-md-2 px-1">
                 <label class="form-label">Importe hasta</label>
                 <input type="number" class="form-control form-control-sm" v-model="formPropiedades.importe_maximo"
                   min="0" placeholder="Importe máximo" />
+              </div>
+              <div class="from-group col-md-2 px-1">
+                <label class="form-label">Cant. Dormitorios</label>
+                <input type="number" class="form-control form-control-sm" v-model="formPropiedades.cant_dorm" min="0"
+                  placeholder="Cant. Dormitorios" />
               </div>
 
               <div class="col-md-6 mt-2">
@@ -172,29 +182,71 @@
                 </select>
               </div>
 
+              <!-- ======== MEJORA DEL BOTÓN INFORMACIÓN A MOSTRAR ======== -->
               <div class="col-md-6 mt-2">
-                <label for="" class="form-label">Información a mostrar</label>
+                <label class="form-label">Información a mostrar</label>
                 <div class="dropdown w-100">
-                  <button class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
-                    type="text" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-                    id="infoDropdownBtn">
-                    Selecciona la información a mostrar
+                  <button
+                    class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
+                    id="infoDropdownBtn"
+                  >
+                    <span>
+                      Mostrando <strong>{{ camposSeleccionados.length }}</strong> de
+                      <strong>{{ informacionMostrar.length }}</strong> campos
+                    </span>
+                    <span class="badge bg-primary rounded-pill ms-2" v-if="camposSeleccionados.length < informacionMostrar.length">
+                      {{ informacionMostrar.length - camposSeleccionados.length }} ocultos
+                    </span>
                   </button>
-                  <div class="dropdown-menu p-3 w-100" style="max-height: 280px; overflow: auto; min-width: 300px">
+                  <div class="dropdown-menu p-3 w-100" style="max-height: 300px; overflow: auto; min-width: 300px">
+                    <!-- Filtro de búsqueda -->
+                    <div class="mb-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Filtrar campos..."
+                        v-model="filtroCampos"
+                      />
+                    </div>
+                    <!-- Botones de selección masiva -->
+                    <div class="d-flex gap-2 mb-2">
+                      <button class="btn btn-sm btn-outline-primary w-50" @click="seleccionarTodos">Seleccionar todo</button>
+                      <button class="btn btn-sm btn-outline-secondary w-50" @click="deseleccionarTodos">Deseleccionar todo</button>
+                    </div>
+                    <hr />
+                    <!-- Lista de checkboxes -->
                     <div class="row" id="infoList">
-                      <div v-for="campo in informacionMostrar" :key="campo.key" class="col-md-6 mb-2">
+                      <div
+                        v-for="campo in camposFiltrados"
+                        :key="campo.key"
+                        class="col-md-6 mb-2"
+                      >
                         <div class="form-check">
-                          <input class="form-check-input campo-checkbox" type="checkbox" :value="campo.key"
-                            v-model="camposSeleccionados" :id="`campo-${campo.key}`" />
+                          <input
+                            class="form-check-input campo-checkbox"
+                            type="checkbox"
+                            :value="campo.key"
+                            v-model="camposSeleccionados"
+                            :id="`campo-${campo.key}`"
+                          />
                           <label class="form-check-label" :for="`campo-${campo.key}`">
                             {{ campo.label }}
                           </label>
                         </div>
                       </div>
                     </div>
+                    <!-- Mensaje si no hay coincidencias -->
+                    <div v-if="camposFiltrados.length === 0" class="text-muted text-center py-2">
+                      No hay campos que coincidan con el filtro
+                    </div>
                   </div>
                 </div>
               </div>
+              <!-- ======== FIN MEJORA ======== -->
 
               <div class="col-md-12 mt-2">
                 <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropiedadesAlquiler"
@@ -214,7 +266,8 @@
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
-              <div class="col-md-12 p-1 position-relative">
+              <div class="col-md-8 position-relative">
+                <label class="form-label"> Listar Propietarios</label>
                 <input type="text" class="form-control form-control-sm" id="input-propietarios"
                   placeholder="Buscar por apellido o DNI..." v-model="busqueda" @input="buscar" autocomplete="off" />
                 <ul v-if="sugerencias.length > 0" class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
@@ -226,6 +279,19 @@
                     {{ persona.documento || 'Sin DNI' }}
                   </li>
                 </ul>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label" for="orden">Ordenar por</label>
+                <select id="orden" class="form-control form-control-sm" v-model="formPropietarios.orden">
+                  <option value="">Sin orden</option>
+                  <option value="precio_asc">Precio (menor a mayor)</option>
+                  <option value="precio_desc">Precio (mayor a menor)</option>
+                  <option value="estado">Estado</option>
+                  <option value="tipo">Tipo de inmueble</option>
+                  <option value="zona">Zona</option>
+                  <option value="calle">Calle</option>
+                </select>
               </div>
 
               <div class="col-md-12 mt-2">
@@ -427,13 +493,24 @@
             <div class="row">
               <div class="col-md-4 p-1">
                 <label class="form-label">Desde</label>
-                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.desde"
+                <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.hasta"
                   v-model="formConsultasIngresadas.desde" />
               </div>
               <div class="col-md-4 p-1">
                 <label class="form-label">Hasta</label>
                 <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde"
                   v-model="formConsultasIngresadas.hasta" />
+              </div>
+
+              <div class="col-md-3 p-1">
+                <label class="form-label">Consultas</label>
+                <select class="form-select form-select-sm" v-model="formConsultasIngresadas.consulta">
+                  <option value="">Seleccione un Consulta</option>
+                  <option value="Consultas Nuevas">Consultas Nuevas</option>
+                  <option value="Reconsultas">Reconsultas</option>
+                  <option value="Generales">Generales</option>
+
+                </select>
               </div>
 
               <div class="col-md-12 mt-2">
@@ -475,13 +552,51 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'listado_ofrecimiento'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listado de Ofrecimiento</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+
+              <div class="form-group col-md-3 px-1" v-if="props.sector === 'Alquiler'">
+                <label class="form-label">Estado</label>
+                <select v-model="formTiempoOfrecimiento.estado_id" class="form-control form-control-sm">
+                  <option value="">Seleccione un estado</option>
+                  <option v-for="estado in estados.filter(e => e.id === 1 || e.id === 2)" :key="estado.id"
+                    :value="estado.id">
+                    {{ estado.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-6 ">
+                <label class="form-label" for="orden">Ordenar por</label>
+                <select id="orden" class="form-control form-control-sm" v-model="formTiempoOfrecimiento.orden">
+                  <option value="">Sin orden</option>
+                  <option value="estado">Estado</option>
+                </select>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitTiempoOfrecimiento()"
+                  :disabled="!permisoTiempoOfrecimiento">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, defineProps } from 'vue'
+import { ref, nextTick, onMounted, defineProps, computed } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
@@ -545,6 +660,38 @@ const permisoCriteriosPorFecha = ref(false)
 const permisoConversacion = ref(false)
 const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
+const permisoTiempoOfrecimiento = ref(false)
+
+// === NUEVAS VARIABLES PARA EL FILTRO Y SELECCIÓN ===
+const filtroCampos = ref('')
+
+// Computed para campos filtrados
+const camposFiltrados = computed(() => {
+  if (!filtroCampos.value.trim()) {
+    return informacionMostrar.value
+  }
+  const query = filtroCampos.value.toLowerCase().trim()
+  return informacionMostrar.value.filter(campo =>
+    campo.label.toLowerCase().includes(query)
+  )
+})
+
+// Funciones de selección masiva (operan sobre los campos filtrados)
+const seleccionarTodos = () => {
+  // Agrega todos los campos visibles (filtrados) a los seleccionados
+  const keysFiltradas = camposFiltrados.value.map(c => c.key)
+  const nuevos = new Set([...camposSeleccionados.value, ...keysFiltradas])
+  camposSeleccionados.value = Array.from(nuevos)
+}
+
+const deseleccionarTodos = () => {
+  // Remueve solo los campos visibles (filtrados) de los seleccionados
+  const keysFiltradas = new Set(camposFiltrados.value.map(c => c.key))
+  camposSeleccionados.value = camposSeleccionados.value.filter(
+    key => !keysFiltradas.has(key)
+  )
+}
+// === FIN NUEVAS VARIABLES ===
 
 // Si es alquiler muestra un conjunto de columnas
 // Si es venta muestra otro más amplio
@@ -561,6 +708,7 @@ if (props.sector === 'Alquiler') {
     { key: 'estado', label: 'Estado' },
     { key: 'precio', label: 'Precio' },
     { key: 'cartel', label: 'Cartel' },
+    { key: 'comentarioCartel', label: 'Comentario Cartel' },
     { key: 'foto', label: 'Foto' },
     { key: 'video', label: 'Videos' },
     { key: 'documentacion', label: 'Documentacion' },
@@ -570,6 +718,8 @@ if (props.sector === 'Alquiler') {
     { key: 'captador', label: 'Captador' },
     { key: 'web', label: 'Web' },
     { key: 'autorizacion', label: 'Autorizacion' },
+    { key: 'novedades', label: 'Novedades' },
+    { key: 'propietario', label: 'Propietario' },
   ]
 } else {
   informacionMostrar.value = [
@@ -607,7 +757,7 @@ if (props.sector === 'Alquiler') {
 
 // Inicializar campos seleccionados
 // toma todas las keys y las deja tildadas por defecto
-camposSeleccionados.value = informacionMostrar.value.map((campo) => campo.key)
+//camposSeleccionados.value = informacionMostrar.value.map((campo) => campo.key)
 
 //Variables para guardar los datos del formulario
 const formPropiedades = ref({
@@ -622,11 +772,20 @@ const formPropiedades = ref({
   informacionMostrar: [],
   sector: props.sector,
   cartel: '',
+  cant_dorm: '',
+})
+
+const formTiempoOfrecimiento = ref({
+  orden: 'estado',
+  estado_id: '1',
+  sector: props.sector,
+  pertenece: 'tiempoOfrecimiento',
 })
 
 const formPropietarios = ref({
   propietario: '',
   sector: props.sector,
+  orden: '',
   pertenece: 'estadoPropietario',
 })
 
@@ -680,64 +839,68 @@ const formInformeNovedades = ref({
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
-  // Cargamos los asesores para el selector del formulario de criterios activos
-
-  isUserAdmin.value = await isAdmin()
-  //console.log(isUserAdmin.value)
-
-  const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
-    getEstadoAlquiler(),
-    PropietariosActivos(),
-    getEstadoVenta(),
-    getAsesor(),
-  ])
-
-  let resPermiso = null
-  let resPermisoOfrecimiento = null
-  let resPropietariosVenta = null
-  let resPropietariosAlquiler = null
-  let resDevoluciones = null
-  let resPermisoCriteriosPorFecha = null
-  let resConversacionVenta = null
-  let respermisoNovedades = null
-
-  if (props.sector === 'Alquiler') {
-    //console.log('holaaaaaaaa')
-    resPermiso = await verificarPermiso('listarPropiedadesAlquiler')
-    resPropietariosAlquiler = await verificarPermiso('listarPropietarioAlquiler')
-    respermisoNovedades = await verificarPermiso('listarInformeNovedades')
-  } else {
-    resPermiso = await verificarPermiso('listarPropiedadesVenta')
-    resPermisoOfrecimiento = await verificarPermiso('listarOfrecimientoVenta')
-    resPropietariosVenta = await verificarPermiso('listarPropietarioVenta')
-    resDevoluciones = await verificarPermiso('listarDevolucionesVenta')
-    resPermisoCriteriosPorFecha = await verificarPermiso('listarCriteriosPorFecha')
-    resConversacionVenta = await verificarPermiso('listarConversacionesVenta')
-  }
-  estados.value = resEstados.data
-  estadosVenta.value = resEstadoVenta.data
-  permiso.value = resPermiso?.data ?? false
-  propietario.value = resPropietarios.data
-  permisoOfrecimiento.value = resPermisoOfrecimiento?.data ?? false
-  propietariosVenta.value = resPropietariosVenta?.data ?? false
-  propietariosAlquiler.value = resPropietariosAlquiler?.data ?? false
-  devolucionesVenta.value = resDevoluciones?.data ?? false
-  asesores.value = resAsesores.data ?? false
-  permisoConversacion.value = resConversacionVenta?.data ?? false
-  permisoInformeNovedades.value = respermisoNovedades?.data ?? false
-  //console.log(propietariosVenta.value)
-
-  //console.log(asesores.value)
-
-  //si el usuario es admin que saque el id_usuario:3 del  asesores.value
-  if (isUserAdmin.value === false) {
-    asesores.value = asesores.value.filter(
-      (a) => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18,
-    )
+  try {
+    isUserAdmin.value = await isAdmin()
+  } catch (error) {
+    console.error('Error al verificar admin:', error)
   }
 
-  permisoCriteriosPorFecha.value = resPermisoCriteriosPorFecha?.data ?? false
-  //console.log('asesires', asesores.value)
+  // 1. Obtener Permisos primero para que la interfaz se habilite rápido
+  try {
+    if (props.sector === 'Alquiler') {
+      const [resPermiso, resPropAlq, resNovedades, resTiempoOfrecimiento] = await Promise.all([
+        verificarPermiso('listarPropiedadesAlquiler'),
+        verificarPermiso('listarPropietarioAlquiler'),
+        verificarPermiso('listarInformeNovedades'),
+        verificarPermiso('listarTiempoOfrecimiento'),
+      ])
+      permiso.value = resPermiso?.data ?? false
+      propietariosAlquiler.value = resPropAlq?.data ?? false
+      permisoInformeNovedades.value = resNovedades?.data ?? false
+      permisoTiempoOfrecimiento.value = resTiempoOfrecimiento?.data ?? false
+    } else {
+      const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resConversacion] = await Promise.all([
+        verificarPermiso('listarPropiedadesVenta'),
+        verificarPermiso('listarOfrecimientoVenta'),
+        verificarPermiso('listarPropietarioVenta'),
+        verificarPermiso('listarDevolucionesVenta'),
+        verificarPermiso('listarCriteriosPorFecha'),
+        verificarPermiso('listarConversacionesVenta'),
+      ])
+      permiso.value = resPermiso?.data ?? false
+      permisoOfrecimiento.value = resOfrecimiento?.data ?? false
+      propietariosVenta.value = resPropVenta?.data ?? false
+      devolucionesVenta.value = resDev?.data ?? false
+      permisoCriteriosPorFecha.value = resCriterios?.data ?? false
+      permisoConversacion.value = resConversacion?.data ?? false
+    }
+  } catch (error) {
+    console.error('Error al obtener permisos:', error)
+  }
+
+  // 2. Obtener datos de selectores y tablas
+  try {
+    const [resEstados, resPropietarios, resEstadoVenta, resAsesores] = await Promise.all([
+      getEstadoAlquiler(),
+      PropietariosActivos(),
+      getEstadoVenta(),
+      getAsesor(),
+    ])
+
+    estados.value = resEstados?.data || []
+    estadosVenta.value = resEstadoVenta?.data || []
+    propietario.value = resPropietarios?.data || []
+    asesores.value = resAsesores?.data || []
+
+    //si el usuario es admin que saque el id_usuario:3 del asesores.value
+    if (isUserAdmin.value === false && asesores.value.length > 0) {
+      asesores.value = asesores.value.filter(
+        (a) => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18,
+      )
+    }
+  } catch (error) {
+    console.error('Error al cargar datos principales:', error)
+  }
 })
 
 // Lógica de búsqueda de propietarios
@@ -784,7 +947,8 @@ const submitPropiedadesAlquiler = async () => {
 
 const submitPropietariosAlquiler = async () => {
   formPropietarios.value.propietario = personaSeleccionada.value?.id ?? null
-  formActual.value = formPropietarios.value
+  formActual.value = { ...formPropietarios.value }
+  console.log('Datos enviados al PDF:', formActual.value) // Agregado para que veas en consola que sí se envía
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
@@ -829,12 +993,22 @@ const submitCriteriosActivos = async () => {
 
 const submitConsultasIngresadas = async () => {
   formActual.value = formConsultasIngresadas.value
+  if (!formActual.value.consulta) {
+    showError('Debe seleccionar un tipo de consulta')
+    return
+  }
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
 
 const submitConversaciones = async () => {
   formActual.value = formConversaciones.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+const submitTiempoOfrecimiento = async () => {
+  formActual.value = formTiempoOfrecimiento.value
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }

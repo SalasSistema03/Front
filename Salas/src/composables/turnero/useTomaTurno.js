@@ -3,7 +3,6 @@ import { putFinalizarTurno, putLlamarTurno } from '@/Services/api/Turnero/turner
 import { useToast } from '@/composables/useToast'
 import { useUsuario } from './useUsuario'
 import { useTurnos } from './useTurnos'
-import notificationSound from '@/assets/notification.wav'
 
 export function useTomaTurno() {
     const turnoLlamado = ref(null)
@@ -83,9 +82,6 @@ export function useTomaTurno() {
 
             // Llamar a la API para llamar el turno pasando el ID del usuario
             await putLlamarTurno(primerTurno.id, usuario.id)
-
-            const notification = new Audio(notificationSound)
-            await notification.play()
 
             // Asignar el turno llamado
             turnoLlamado.value = primerTurno

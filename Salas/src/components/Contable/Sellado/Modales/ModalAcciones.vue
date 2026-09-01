@@ -35,6 +35,7 @@ import { alertas } from '../../../../utils/alertas.js'
 const registros = ref([]);
 const cargando = ref(false);
 
+
 defineProps({
     estaAbierto: Boolean
 });
