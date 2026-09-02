@@ -94,7 +94,12 @@
           </button>
         </div>
 
-        <div class="col-md-12 row mt-3 d-flex justify-content-center align-items-center">
+        <div class="col-md-4 mt-3 text-center">
+          <button type="button" class="btn btn-secondary btn-sm w-100" @click="abrirImpuestoModal">
+            Impuestos
+          </button>
+        </div>
+        <div class="col-md-8 row mt-3 d-flex justify-content-center align-items-center">
           <div class="col-md-6  text-center">
             <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target=""
               @click="descargarFotos">
@@ -168,8 +173,9 @@
               <div class="tab-pane fade show active " id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
 
                 <!-- Carrusel cuando HAY fotos -->
-                <div v-if="propiedad?.fotos && propiedad.fotos.length > 0" id="carouselFotos" class="carousel slide atcl_card_body_panel_fotos_documentos_videos"
-                  data-bs-ride="carousel" style="height: 345px;">
+                <div v-if="propiedad?.fotos && propiedad.fotos.length > 0" id="carouselFotos"
+                  class="carousel slide atcl_card_body_panel_fotos_documentos_videos" data-bs-ride="carousel"
+                  style="height: 345px;">
 
                   <!-- Indicadores -->
                   <div class="carousel-indicators">
@@ -277,17 +283,20 @@
   </div>
   <ModalPropiedadComodidades :propiedad="propiedad" />
   <ModalPropiedadDescripcion :propiedad="propiedad" :show="showDescripcionModal" @close="cerrarDescripcionModal" />
+  <ModalImpuestoPropiedad :propiedad="propiedad" :show="showImpuestoModal" @close="cerrarImpuestoModal" />
   <ModalPropiedadVenta :propiedad="propiedad" />
   <ModalPropiedadAlquiler :propiedad="propiedad" />
   <ModalCondicionAlquiler :propiedad="propiedad" />
   <ModalPropiedadPropietario :propiedad="propiedad" :mostrar-buscador="false" :ocultar-botones="true" />
-  <ModalImagenesPropiedad :propiedad="propiedad" :fotos="propiedad?.fotos" :index="modalIndex" :show="showModal" @close="showModal = false" />
+  <ModalImagenesPropiedad :propiedad="propiedad" :fotos="propiedad?.fotos" :index="modalIndex" :show="showModal"
+    @close="showModal = false" />
 </template>
 <script>
 import NavComponent from '../../components/NavComponent.vue'
 import { muestraPropiedad } from '../../Services/api/Atcl/AtclApi'
 import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalPropiedadComodidades.vue'
 import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
+import ModalImpuestoPropiedad from '../../components/Atcl/Propiedad/ModalImpuestoPropiedad.vue'
 import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadVenta.vue'
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
@@ -307,8 +316,9 @@ export default {
     ModalPropiedadAlquiler,
     ModalCondicionAlquiler,
     ModalPropiedadPropietario,
-    ModalImagenesPropiedad
-},
+    ModalImagenesPropiedad,
+    ModalImpuestoPropiedad
+  },
   data() {
     return {
       propiedad: null,
@@ -316,6 +326,7 @@ export default {
       error: null,
       botones: null,
       showDescripcionModal: false,
+      showImpuestoModal: false,
       showModal: false,
       modalIndex: 0,
       popovers: []
@@ -367,8 +378,15 @@ export default {
     abrirDescripcionModal() {
       this.showDescripcionModal = true
     },
+
     cerrarDescripcionModal() {
       this.showDescripcionModal = false
+    },
+    abrirImpuestoModal() {
+      this.showImpuestoModal = true
+    },
+    cerrarImpuestoModal() {
+      this.showImpuestoModal = false
     },
     async mostrarPropiedad() {
       try {
@@ -380,10 +398,10 @@ export default {
         // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data.data
-        console.log('Propiedad encontrada:', this.propiedad)
+        //console.log('Propiedad encontrada:', this.propiedad)
         this.botones = response.data.botones
         //console.log('console de propiedad', this.botones)
-        console.log('esto me devuelve response', response)
+        //console.log('esto me devuelve response', response)
       } catch (error) {
         console.error('Error cargando propiedad:', error)
         this.error = 'No se pudo cargar la propiedad'
