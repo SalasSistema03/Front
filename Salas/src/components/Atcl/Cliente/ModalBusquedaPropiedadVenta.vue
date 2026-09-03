@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 import { getPropiedadesVenta } from '@/Services/api/Atcl/Cliente/ClienteApi'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useToast } from '@/composables/useToast'
@@ -147,6 +147,15 @@ const resetForm = () => {
   error.value = ''
   buscado.value = false
 }
+
+watch(
+  () => props.show,
+  (newVal) => {
+    if (newVal) {
+      resetForm()
+    }
+  }
+)
 
 const buscar = async () => {
 

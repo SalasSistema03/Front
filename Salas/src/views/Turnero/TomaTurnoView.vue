@@ -63,14 +63,12 @@
                       </tr>
                     </thead>
 
-                    <tbody v-for="turno in turnosFiltrados" :key="turno.id">
-                      <tr>
+                    <tbody>
+                      <tr v-for="turno in turnosFiltrados" :key="turno.id">
                         <th>{{ turno.numero_identificador }}</th>
                         <th>{{ turno.tipo_identificador }}</th>
                         <th>{{ turno.fecha_carga.substring(11, 16) }}</th>
                       </tr>
-
-
                     </tbody>
 
                   </table>
@@ -138,7 +136,6 @@ let intervalId = null
 onMounted(() => {
   loadSectores()
   setsectorSeleccionado()
-  submitForm()
 
   // Actualizar turnos pendientes cada 5 segundos
   intervalId = setInterval(() => {
