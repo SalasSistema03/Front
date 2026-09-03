@@ -5,10 +5,19 @@ import { useUsuario } from './useUsuario'
 import { useTurnos } from './useTurnos'
 
 export function useTomaTurno() {
-    const turnoLlamado = ref(null)
+    const getTurnoGuardado = () => {
+        try {
+            const guardado = localStorage.getItem('turnoLlamado')
+            return guardado ? JSON.parse(guardado) : null
+        } catch {
+            return null
+        }
+    }
+
+    const turnoLlamado = ref(getTurnoGuardado())
     const loadingTurnos = ref(false)
-    const selectedSector = ref('')
-    const sectorSeleccionado = ref('')
+    const selectedSector = ref(localStorage.getItem('selectedSectorTurnero') || '')
+    const sectorSeleccionado = ref(localStorage.getItem('selectedSectorTurnero') || '')
     const turnosFiltrados = ref([])
 
     const { handleApiError, showError, showSuccess } = useToast()
@@ -17,6 +26,12 @@ export function useTomaTurno() {
 
     const setsectorSeleccionado = async () => {
         sectorSeleccionado.value = selectedSector.value
+        if (selectedSector.value) {
+            localStorage.setItem('selectedSectorTurnero', selectedSector.value)
+        } else {
+            localStorage.removeItem('selectedSectorTurnero')
+        }
+
         if (sectorSeleccionado.value) {
             loadingTurnos.value = true
 
@@ -50,6 +65,7 @@ export function useTomaTurno() {
 
                 // Limpiar el turno llamado
                 turnoLlamado.value = null
+                localStorage.removeItem('turnoLlamado')
 
                 // Actualizar lista de turnos pendientes
                 await loadTurnosPendientes()
@@ -83,8 +99,9 @@ export function useTomaTurno() {
             // Llamar a la API para llamar el turno pasando el ID del usuario
             await putLlamarTurno(primerTurno.id, usuario.id)
 
-            // Asignar el turno llamado
+            // Asignar el turno llamado y persistirlo
             turnoLlamado.value = primerTurno
+            localStorage.setItem('turnoLlamado', JSON.stringify(primerTurno))
 
             // Mostrar mensaje de éxito
             showSuccess(`Turno ${primerTurno.tipo_identificador}: ${primerTurno.numero_identificador} llamado correctamente`)

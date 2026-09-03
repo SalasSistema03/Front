@@ -349,8 +349,8 @@ const existeCriterioDuplicado = (criterio) => {
 }
 
 const asignarCriterio = () => {
-  if (!id_tipo_inmueble.value || !id_zona.value) {
-    showWarning('Debe seleccionar un tipo de inmueble y una zona')
+  if (!id_tipo_inmueble.value) {
+    showWarning('Debe seleccionar un tipo de inmueble ')
     return
   }
 
@@ -545,13 +545,13 @@ const handleGuardar = async () => {
     return
   }
 
-  const tieneCriterios = Array.isArray(listaCriterios.value) && listaCriterios.value.length > 0
-  const tienePropiedades = Array.isArray(propiedadesAsignadas.value) && propiedadesAsignadas.value.length > 0
+  /* const tieneCriterios = Array.isArray(listaCriterios.value) && listaCriterios.value.length > 0
+  const tienePropiedades = Array.isArray(propiedadesAsignadas.value) && propiedadesAsignadas.value.length > 0 */
 
-  if (!tieneCriterios && !tienePropiedades) {
+  /* if (!tieneCriterios && !tienePropiedades) {
     showError('Debe cargar al menos un criterio de búsqueda o una propiedad asignada')
     return
-  }
+  } */
 
   const cliente = {
     telefono: telefono.value,
@@ -627,7 +627,7 @@ watch(() => telefono.value, async (nuevoValor) => {
           listaCriterios.value.push(criterio)
         })
       }
-      console.log('Cliente:', cliente)
+      //console.log('Cliente:', cliente)
       if (!cliente) {
         isClienteNuevo.value = true
       }
