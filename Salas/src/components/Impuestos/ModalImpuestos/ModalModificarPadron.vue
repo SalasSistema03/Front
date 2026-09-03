@@ -13,26 +13,16 @@
         </div>
         <div class="col-md-8">
           <label for="edit-partida" class="form-label">Partida</label>
-          <input
-            type="text"
-            class="form-control"
-            autocomplete="off"
-            v-model="localPadron.partida"
-          />
+          <input type="text" class="form-control" autocomplete="off" v-model="localPadron.partida" />
         </div>
         <div class="col-md-4">
           <label for="edit-clave" class="form-label" v-if="props.impuesto === 'tgi'">Clave</label>
           <label for="edit-clave" class="form-label" v-if="props.impuesto === 'gas'">Cliente</label>
           <label for="edit-clave" class="form-label" v-if="props.impuesto === 'agua'">Punto</label>
-          <input
-            type="text"
-            class="form-control"
-            autocomplete="off"
-            v-model="localPadron.clave"
-            v-if="props.impuesto != 'api'"
-          />
+          <input type="text" class="form-control" autocomplete="off" v-model="localPadron.clave"
+            v-if="props.impuesto != 'api'" />
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="edit-estado" class="form-label">Estado</label>
           <select class="form-select" autocomplete="off" v-model="localPadron.estado">
             <option value="ACTIVO">ACTIVO</option>
@@ -42,13 +32,22 @@
             <option value="INACTIVO">INACTIVO</option>
           </select>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="edit-administra" class="form-label">Administra</label>
           <select class="form-select" autocomplete="off" v-model="localPadron.administra">
             <option value="P">Propietario</option>
             <option value="L">Inmobiliario</option>
             <option value="I">Inquilino</option>
           </select>
+        </div>
+        <div class="col-md-4">
+          <label for="edit-administra" class="form-label">Seguir Pagando</label>
+          <select class="form-select" autocomplete="off" v-model="localPadron.seguir_pagando">
+            <option value="">Seleccionar</option>
+            <option value="S">SI</option>
+            <option value="N">NO</option>
+          </select>
+
         </div>
       </div>
     </template>
@@ -103,11 +102,27 @@ const guardarCambios = async () => {
   emit('close')
 }
 
+/* watch(
+  () => props.show,
+  (isShown) => {
+    if (isShown) {
+      console.log('Información de props.padron al abrir modal:', props.padron)
+      localPadron.value = props.padron
+        ? { ...props.padron, seguir_pagando: props.padron.seguir_pagando ?? '' }
+        : {}
+    }
+  },
+  { immediate: true },
+)
+ */
 watch(
   () => props.padron,
   (newPadron) => {
     if (newPadron) {
-      localPadron.value = { ...newPadron }
+      localPadron.value = {
+        ...newPadron,
+        seguir_pagando: newPadron.seguir_pagando ?? '',
+      }
     }
   },
   { immediate: true },
