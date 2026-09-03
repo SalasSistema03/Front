@@ -545,11 +545,19 @@ const handleGuardar = async () => {
     return
   }
 
+  const tieneCriterios = Array.isArray(listaCriterios.value) && listaCriterios.value.length > 0
+  const tienePropiedades = Array.isArray(propiedadesAsignadas.value) && propiedadesAsignadas.value.length > 0
+
+  if (!tieneCriterios && !tienePropiedades) {
+    showError('Debe cargar al menos un criterio de búsqueda o una propiedad asignada')
+    return
+  }
+
   const cliente = {
     telefono: telefono.value,
     nombre: nombre.value,
     id_asesor_alquiler: id_asesor.value,
-    ingreso: ingreso_seleccionado.value,
+    ingreso_alq: ingreso_seleccionado.value,
     observaciones_alq: observaciones.value,
     sector_asesor: 'alquiler',
     usuario_id: currentUserId.value
