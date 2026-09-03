@@ -1187,6 +1187,15 @@
   font-size: 2vh;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-check:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
 .home-card-all {
   width: 45vw !important;
   height: 45vh;

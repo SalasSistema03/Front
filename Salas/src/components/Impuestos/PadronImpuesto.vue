@@ -3,11 +3,7 @@
     <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
       <div class="col-auto">
-        <button
-          class="btn btn-sm btn-primary"
-          @click="actualizarPadron()"
-          :disabled="!puedeActualizarPadron"
-        >
+        <button class="btn btn-sm btn-primary" @click="actualizarPadron()" :disabled="!puedeActualizarPadron">
           Actualizar Padrón {{ props.impuesto?.toUpperCase() }}
         </button>
       </div>
@@ -16,12 +12,8 @@
         <!-- Input que filtra solo por FOLIO -->
         <div class="col-md-2 px-1">
           <label class="form-label">Folio</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="Buscar por folio..."
-            v-model="search_folio"
-          />
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por folio..."
+            v-model="search_folio" />
         </div>
 
         <!-- Input que filtra por todo menos por FOLIO -->
@@ -30,80 +22,66 @@
           <label class="form-label" v-if="props.impuesto === 'agua'">Partida/Punto</label>
           <label class="form-label" v-if="props.impuesto === 'gas'">Persona/Cliente</label>
           <label class="form-label" v-if="props.impuesto === 'api'">Partida</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="Buscar por calle, partida, clave..."
-            v-model="search_all"
-            v-if="props.impuesto === 'tgi'"
-          />
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="Buscar por calle, partida, punto..."
-            v-model="search_all"
-            v-if="props.impuesto === 'agua'"
-          />
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="Buscar por calle, persona, cliente..."
-            v-model="search_all"
-            v-if="props.impuesto === 'gas'"
-          />
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="Buscar por calle, partida..."
-            v-model="search_all"
-            v-if="props.impuesto === 'api'"
-          />
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, clave..."
+            v-model="search_all" v-if="props.impuesto === 'tgi'" />
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, punto..."
+            v-model="search_all" v-if="props.impuesto === 'agua'" />
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, persona, cliente..."
+            v-model="search_all" v-if="props.impuesto === 'gas'" />
+          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida..."
+            v-model="search_all" v-if="props.impuesto === 'api'" />
         </div>
 
         <div class="col-md-3 d-flex align-items-end justify-content-center">
-          <button
-            class="btn btn-secondary dropdown-toggle w-100 btn-sm"
-            type="button"
-            data-bs-toggle="dropdown"
-            data-bs-auto-close="outside"
-            aria-expanded="false"
-          >
+          <button class="btn btn-secondary dropdown-toggle w-100 btn-sm   " type="button" data-bs-toggle="dropdown"
+            data-bs-auto-close="outside" aria-expanded="false">
             Filtrar opciones
           </button>
           <div class="dropdown-menu p-3" style="min-width: 25px">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="ACTIVO" v-model="filtros" />
-              <label class="form-check-label">Activos</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-activo" value="ACTIVO"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-activo">Activos</label>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="INACTIVO" v-model="filtros" />
-              <label class="form-check-label">Inactivos</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-inactivo" value="INACTIVO"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-inactivo">Inactivos</label>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="PENDIENTE" v-model="filtros" />
-              <label class="form-check-label">Pendientes</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-pendiente" value="PENDIENTE"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-pendiente">Pendientes</label>
             </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="MODIFICADO"
-                v-model="filtros"
-              />
-              <label class="form-check-label">Modificados</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-modificado" value="MODIFICADO"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none"
+                for="filtro-modificado">Modificados</label>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="L" v-model="filtros" />
-              <label class="form-check-label">Adm inmobiliario</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-l" value="L"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-l">Adm inmobiliario</label>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="P" v-model="filtros" />
-              <label class="form-check-label">Adm propietario</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-p" value="P"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-p">Adm propietario</label>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="I" v-model="filtros" />
-              <label class="form-check-label">Adm inquilino</label>
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-i" value="I"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-i">Adm inquilino</label>
             </div>
+
+            <div class="form-check cursor-pointer">
+              <input class="form-check-input cursor-pointer" type="checkbox" id="Seguir_pagando" value="SEGUIR-PAGANDO"
+                v-model="filtros" />
+              <label class="form-check-label cursor-pointer user-select-none" for="Seguir_pagando">Seguir
+                pagando</label>
+            </div>
+
           </div>
         </div>
 
@@ -121,11 +99,9 @@
           <tr>
             <th>Folio</th>
             <th>Calle</th>
-            <th
-              v-if="
-                props.impuesto === 'tgi' || props.impuesto === 'agua' || props.impuesto === 'api'
-              "
-            >
+            <th v-if="
+              props.impuesto === 'tgi' || props.impuesto === 'agua' || props.impuesto === 'api'
+            ">
               Partida
             </th>
 
@@ -141,11 +117,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="padron in PadronCompleto?.original?.data"
-            :key="padron.id"
-            :class="{ 'table-danger': padron.estado === 'INACTIVO' }"
-          >
+          <tr v-for="padron in PadronCompleto?.original?.data" :key="padron.id"
+            :class="{ 'table-danger': padron.estado === 'INACTIVO' }">
             <td>{{ padron.folio }}</td>
             <td>{{ padron.calle }}</td>
             <td>{{ padron.partida }}</td>
@@ -155,11 +128,7 @@
             <td>{{ formatDate(padron.comienza) }}</td>
             <td>{{ formatDate(padron.rescicion) }}</td>
             <td>
-              <button
-                type="button"
-                class="btn btn-sm btn-primary"
-                @click="openModalModificar(padron)"
-              >
+              <button type="button" class="btn btn-sm btn-primary" @click="openModalModificar(padron)">
                 Modificar
               </button>
             </td>
@@ -169,13 +138,8 @@
     </div>
   </div>
 
-  <ModalModificarPadron
-    :show="showModificarModal"
-    :padron="selectedPadron"
-    :impuesto="props.impuesto"
-    @close="closeModalModificar"
-    @success="handleSuccess"
-  />
+  <ModalModificarPadron :show="showModificarModal" :padron="selectedPadron" :impuesto="props.impuesto"
+    @close="closeModalModificar" @success="handleSuccess" />
 </template>
 <script setup>
 import { useToast } from '@/composables/useToast'
@@ -220,12 +184,13 @@ const filtrar = async () => {
     search_folio: search_folio.value,
   }
   try {
+    console.log(filtros.value)
     const padron = await getPadron(form)
     PadronCompleto.value = padron?.data?.resultado
     puedeActualizarPadron.value = Boolean(
       padron?.data?.botones?.[`actualizaPadron_${props.impuesto}`],
     )
-    console.log(padron)
+    //console.log(padron)
     showSuccess('Padrón filtrado correctamente')
     return padron
   } catch (error) {
