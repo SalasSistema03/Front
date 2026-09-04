@@ -14,7 +14,7 @@
 
     <template #footer>
       <button type="button" class="btn btn-secondary btn-sm" @click="emit('close')">Cancelar</button>
-      <button type="button" class="btn btn-danger btn-sm" @click="confirmar">Aceptar</button>
+      <button type="button" class="btn btn-primary btn-sm" @click="confirmar">Aceptar</button>
     </template>
   </BaseModal>
 </template>
