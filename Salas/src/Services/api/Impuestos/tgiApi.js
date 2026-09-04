@@ -135,6 +135,18 @@ export const guardarBrochesSalas = (data) => {
   })
 }
 
+export const guardarBrochesSeguirPagando = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/guardar_num_broche_seguir_pagando`, {
+    params: {
+      ...data,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 export const exportarBroches = (data) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/exportar_broches`, {
@@ -150,6 +162,18 @@ export const exportarBroches = (data) => {
 export const exportarBrochesSalas = (data) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/exportar_broches_salas`, {
+    params: {
+      ...data,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const exportarBrochesSP = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/exportar_broches_sp`, {
     params: {
       ...data,
     },

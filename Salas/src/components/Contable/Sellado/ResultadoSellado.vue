@@ -76,6 +76,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { alertas } from '@/utils/alertas';
+import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters.js';
 
 const props = defineProps({
   datos: {
@@ -119,13 +120,7 @@ const guardarRegistro = async () => {
   cargando.value = false;
 }
 
-const formatearMoneda = (valor) => {
-  if (valor === undefined || valor === null) return '$ 0,00';
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-  }).format(valor);
-};
+const formatearMoneda = (valor) => formatearMonedaHelper(valor, true);
 </script>
 <style scoped>
 input[disabled] {

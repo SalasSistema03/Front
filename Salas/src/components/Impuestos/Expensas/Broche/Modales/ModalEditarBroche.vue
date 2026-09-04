@@ -66,6 +66,7 @@
 import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
 import BaseModal from '@/components/base/BaseModal.vue';
 import { alertas } from '@/utils/alertas';
+import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters';
 import { editarBrocheService } from '@/Services/api/Impuestos/expensasApi.js';
 
 const props = defineProps({
@@ -106,11 +107,8 @@ const calcularTotal = () => {
     form.value.total = (extra + ord).toFixed(2);
 };
 
-// Nueva función de formateo
-const formatearMoneda = (valor) => {
-    if (!valor) return '$ 0,00';
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(valor);
-};
+// Función de formateo reutilizable
+const formatearMoneda = (valor) => formatearMonedaHelper(valor, true);
 
 const guardarCambios = async () => {
     if (!form.value.vencimiento || !form.value.periodo || !form.value.anio) {

@@ -129,6 +129,12 @@
                 <i class="bi bi-file-earmark-pdf"></i> Exportar broches SALAS
               </button>
             </li>
+            <li v-if="props.impuesto !== 'gas'">
+              <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos" target="_blank"
+                @click="exportarBrochesPdfSP">
+                <i class="bi bi-file-earmark-pdf"></i> Exportar broches SP
+              </button>
+            </li>
 
             <li v-if="
               props.impuesto === 'gas' || props.impuesto === 'api' || props.impuesto === 'agua'
@@ -230,6 +236,8 @@
 
   <BrochePdfSalas ref="brochePdfSalasRef" :broches="brochesDataSalas" :anio="anio" :mes="mes" :impuesto="impuesto" />
 
+  <BrochePdfSP ref="brochePdfSpRef" :broches="brochesDataSP" :anio="anio" :mes="mes" :impuesto="impuesto" />
+
   <ModalModificarEstado :show="showModificarEstadoModal" @close="showModificarEstadoModal = false" :impuesto="impuesto"
     :padron="selectedEstadoItem" @success="filtrar"></ModalModificarEstado>
 
@@ -250,10 +258,12 @@ import ModalArmarBroche from '@/components/Impuestos/ModalImpuestos/ModalArmarBr
 import ModalControlBroches from '@/components/Impuestos/ModalImpuestos/ModalControlBroches.vue'
 import BrochePdf from '@/components/Impuestos/Pdfs/BrochePdf.vue'
 import BrochePdfSalas from '@/components/Impuestos/Pdfs/BrochePdfSalas.vue'
+import BrochePdfSP from '@/components/Impuestos/Pdfs/BrochePdfSP.vue'
 import { cargaNuevoImpuesto } from '@/Services/api/Impuestos/tgiApi'
 import { exportarFaltantes } from '@/Services/api/Impuestos/tgiApi'
 import { exportarBroches } from '@/Services/api/Impuestos/tgiApi'
 import { exportarBrochesSalas } from '@/Services/api/Impuestos/tgiApi'
+import { exportarBrochesSP } from '@/Services/api/Impuestos/tgiApi'
 /* import { ModificarBajado } from '@/Services/api/Impuestos/tgiApi' */
 import ModalModificarEstado from '@/components/Impuestos/ModalImpuestos/ModalModificarEstado.vue'
 import { EliminarImpuesto } from '@/Services/api/Impuestos/tgiApi'
@@ -286,6 +296,8 @@ const brochePdfRef = ref(null)
 const brochesData = ref([])
 const brochePdfSalasRef = ref(null)
 const brochesDataSalas = ref([])
+const brochePdfSpRef = ref(null)
+const brochesDataSP = ref([])
 const showModificarEstadoModal = ref(false)
 const selectedEstadoItem = ref(null)
 
@@ -409,6 +421,25 @@ const exportarBrochesPdfSalas = async () => {
   }
 }
 
+const exportarBrochesPdfSP = async () => {
+  const form = {
+    impuesto: props.impuesto,
+    mes: mes.value,
+    anio: anio.value,
+  }
+  try {
+    const response = await exportarBrochesSP(form)
+    brochesDataSP.value = response.data.broches
+    console.log('Broches data SP:', brochesDataSP.value)
+    await nextTick()
+    await brochePdfSpRef.value.generarPdf()
+    showSuccess('Exportación de broches exitosa')
+  } catch (error) {
+    console.error(error)
+    showError('Error al exportar broches')
+  }
+}
+
 const parseCompartidos = (compartidos) => {
   try {
     if (compartidos && typeof compartidos === 'string') {
@@ -451,7 +482,7 @@ const eliminarImpuesto = async (item) => {
     busqueda: busqueda.value,
   }
   try {
-    const response = await EliminarImpuesto(form)
+    await EliminarImpuesto(form)
     await filtrar()
 
     //console.log(response)
