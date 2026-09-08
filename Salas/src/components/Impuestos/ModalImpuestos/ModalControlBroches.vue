@@ -3,27 +3,22 @@
     <template #title>Control</template>
 
     <template #body>
-      <div
-        v-for="(item, index) in listaBroches"
-        :key="index"
-        class="input-group mb-3 form-group form-control"
-      >
-        <input
-          type="text"
-          class="form-control"
-          :value="item.nombre + ' Cantidad de Broches (' + item.cantidad + ')'"
-          readonly
-        />
+      <div class="modal-control-impuesto">
+        <div v-for="(item, index) in listaBroches" :key="index" class="input-group mb-3 form-group form-control">
+          <input type="text" class="form-control"
+            :value="'Nº Broche: ' + item.nombre + ' Cantidad de Broches (' + item.cantidad + ')'" readonly />
 
-        <div class="input-group-append px-2">
-          <button class="btn btn-sm btn-primary mx-1" @click="onBajado(item)">Bajado</button>
-          <button class="btn btn-sm btn-outline-danger mx-1" @click="onRechazar(item)">
-            Rechazar
-          </button>
+          <div class="input-group-append px-2">
+            <button class="btn btn-sm btn-primary mx-1" @click="onBajado(item)">Bajado</button>
+            <button class="btn btn-sm btn-outline-danger mx-1" @click="onRechazar(item)">
+              Rechazar
+            </button>
+          </div>
         </div>
+
+        <div v-if="listaBroches.length === 0" class="text-center">No hay broches para mostrar.</div>
       </div>
 
-      <div v-if="listaBroches.length === 0" class="text-center">No hay broches para mostrar.</div>
     </template>
 
     <template #footer>
@@ -96,7 +91,8 @@ const onBajado = async (item) => {
     })
     showSuccess('Broche bajado correctamente')
     emit('success')
-    emit('close')
+    await cargarBroches()
+    //emit('close')
   } catch (error) {
     console.error('Error al bajado:', error)
     showError('Error al bajado el broche')
@@ -104,7 +100,7 @@ const onBajado = async (item) => {
 }
 
 const onRechazar = async (item) => {
-  console.log('Rechazar:', item)
+  //console.log('Rechazar:', item)
   try {
     await GasRechazar({
       fecha_vencimiento: item.fecha_vencimiento,
@@ -113,7 +109,8 @@ const onRechazar = async (item) => {
     })
     showSuccess('Broche rechazado correctamente')
     emit('success')
-    emit('close')
+    await cargarBroches()
+    //emit('close')
   } catch (error) {
     console.error('Error al rechazar:', error)
     showError('Error al rechazar el broche')

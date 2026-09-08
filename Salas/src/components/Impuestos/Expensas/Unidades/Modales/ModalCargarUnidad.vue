@@ -1,9 +1,9 @@
 <template>
   <BaseModal :show="show" size="lg" @close="cerrarModal" :backdrop="'static'">
-    
+
     <template #title>
       <span v-if="!modoComentario">
-        <i class="bi bi-building-gear me-2 text-primary"></i> Editar Unidad y Padrones
+        <i class="bi bi-building-gear me-2 text-primary"></i> Padrones
       </span>
       <span v-else>
         <i class="bi bi-chat-left-dots text-info me-2"></i> Observaciones del Padrón
@@ -11,16 +11,18 @@
     </template>
 
     <template #body>
-      
+
       <div v-show="!modoComentario">
         <div class="row g-2 mb-3 bg-light p-2 rounded shadow-sm border border-light form-group form-group-sm">
           <div class="col-md-2 ">
             <label class="form-label x-small text-muted fw-bold mb-0">Folio</label>
-            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none" :value="unidad.folio" readonly>
+            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none" :value="unidad.folio"
+              readonly>
           </div>
           <div class="col-md-7">
             <label class="form-label x-small text-muted fw-bold mb-0">Ubicación</label>
-            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none" :value="unidad.ubicacion" readonly>
+            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none"
+              :value="unidad.ubicacion" readonly>
           </div>
           <div class="col-md-3">
             <label class="form-label x-small text-muted fw-bold mb-0">Estado General</label>
@@ -31,11 +33,13 @@
           </div>
           <div class="col-md-2 mt-2">
             <label class="form-label x-small text-muted fw-bold mb-0">Comisión</label>
-            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none" :value="unidad.comision" readonly>
+            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none"
+              :value="unidad.comision" readonly>
           </div>
           <div class="col-md-2 mt-2">
             <label class="form-label x-small text-muted fw-bold mb-0">Adm</label>
-            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none" :value="unidad.administra" readonly>
+            <input type="text" class="form-control form-control-sm bg-white border-0 shadow-none"
+              :value="unidad.administra" readonly>
           </div>
           <div class="col-md-8 mt-2">
             <label class="form-label x-small text-muted fw-bold mb-0">Consorcio/Edificio Asignado</label>
@@ -52,13 +56,15 @@
 
         <div class="d-flex justify-content-between align-items-center mb-2 ">
           <h6 class="mb-0 text-secondary fw-bold" style="font-size: 0.9rem;">Desglose de Unidades (Padrones)</h6>
-          <button type="button" @click="agregarPadronVacio" class="btn btn-sm py-0 btn-outline-primary shadow-sm" style="font-size: 0.8rem;">
+          <button type="button" @click="agregarPadronVacio" class="btn btn-sm py-0 btn-outline-primary shadow-sm"
+            style="font-size: 0.8rem;">
             <i class="bi bi-plus-circle me-1"></i> Añadir Padrón
           </button>
         </div>
 
         <div class="lista-padrones table-scroll-container px-1 form-group">
-          <div v-for="(padron, index) in padronesLocales" :key="index" class="card mb-2 border-0 shadow-sm border-start border-3 border-primary">
+          <div v-for="(padron, index) in padronesLocales" :key="index"
+            class="card mb-2 border-0 shadow-sm border-start border-3 border-primary">
             <div class="card-body p-2 bg-white">
               <div class="row g-2 align-items-end mb-1">
                 <div class="col-md-4">
@@ -76,26 +82,27 @@
                 </div>
                 <div class="col-md-3">
                   <label class="form-label x-small text-muted mb-0">Estado</label>
-                  <select class="form-select form-select-sm shadow-none border-secondary-subtle" v-model="padron.estado">
+                  <select class="form-select form-select-sm shadow-none border-secondary-subtle"
+                    v-model="padron.estado">
                     <option value="Activo">ACTIVO</option>
                     <option value="Inactivo">INACTIVO</option>
                   </select>
                 </div>
                 <div class="col-md-4">
-                  <button type="button" 
-                          class="btn btn-sm w-100 position-relative py-1 shadow-none" 
-                          :class="padron.observaciones ? 'btn-info text-white' : 'btn-outline-secondary'"
-                          style="font-size: 0.8rem;"
-                          @click="abrirModoComentario(index)">
-                    <i class="bi bi-chat-text me-1"></i> 
+                  <button type="button" class="btn btn-sm w-100 position-relative py-1 shadow-none"
+                    :class="padron.observaciones ? 'btn-info text-white' : 'btn-outline-secondary'"
+                    style="font-size: 0.8rem;" @click="abrirModoComentario(index)">
+                    <i class="bi bi-chat-text me-1"></i>
                     {{ padron.observaciones ? 'Ver Comentario' : 'Comentario' }}
-                    <span v-if="padron.observaciones" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span v-if="padron.observaciones"
+                      class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                       <span class="visually-hidden">Comentario activo</span>
                     </span>
                   </button>
                 </div>
                 <div class="col-md-1 text-end">
-                  <button type="button" class="btn btn-sm btn-outline-danger w-100 py-1 shadow-none" @click="eliminarPadron(index)">
+                  <button type="button" class="btn btn-sm btn-outline-danger w-100 py-1 shadow-none"
+                    @click="eliminarPadron(index)">
                     <i class="bi bi-trash3"></i>
                   </button>
                 </div>
@@ -103,15 +110,21 @@
               <div class="row g-2">
                 <div class="col-md-3">
                   <label class="form-label x-small text-muted mb-0">Nº Unidad</label>
-                  <input type="text" class="form-control form-control-sm shadow-none border-secondary-subtle" v-model="padron.unidad">
+                  <input type="text" class="form-control form-control-sm shadow-none border-secondary-subtle"
+                    v-model="padron.unidad">
                 </div>
                 <div class="col-md-3">
                   <label class="form-label x-small text-muted mb-0">Piso</label>
-                  <input type="text" class="form-control form-control-sm shadow-none border-secondary-subtle" v-model="padron.piso">
+                  <input type="text" class="form-control form-control-sm shadow-none border-secondary-subtle"
+                    v-model="padron.piso">
                 </div>
                 <div class="col-md-3">
-                  <label class="form-label x-small text-muted mb-0">Depto</label>
-                  <input type="text" class="form-control form-control-sm text-uppercase shadow-none border-secondary-subtle" v-model="padron.depto">
+                  <label v-if="padron.tipo === 'COCHERA' || padron.tipo === 'LOCAL_COMERCIAL'"
+                    class="form-label x-small text-muted mb-0">Nº</label>
+                  <label v-else class="form-label x-small text-muted mb-0">Depto</label>
+                  <input type="text"
+                    class="form-control form-control-sm text-uppercase shadow-none border-secondary-subtle"
+                    v-model="padron.depto">
                 </div>
               </div>
             </div>
@@ -123,12 +136,15 @@
       </div>
 
       <div v-if="modoComentario" class="p-3 bg-white rounded">
-        <label class="form-label small text-muted fw-bold">Escriba un comentario o detalle interno para este padrón:</label>
-        <textarea class="form-control shadow-sm border-secondary-subtle mb-4" rows="6" v-model="comentarioTemporal" placeholder="Ej: Unidad en refacción, consultar con el propietario..."></textarea>
-        
+        <label class="form-label small text-muted fw-bold">Escriba un comentario o detalle interno para este
+          padrón:</label>
+        <textarea class="form-control shadow-sm border-secondary-subtle mb-4" rows="6" v-model="comentarioTemporal"
+          placeholder="Ej: Unidad en refacción, consultar con el propietario..."></textarea>
+
         <div class="d-flex justify-content-end gap-2">
           <button class="btn btn-secondary px-3 shadow-sm" @click="modoComentario = false">Cancelar</button>
-          <button class="btn btn-info text-white px-3 shadow-sm" @click="guardarComentarioEnMemoria">Aplicar y Volver</button>
+          <button class="btn btn-info text-white px-3 shadow-sm" @click="guardarComentarioEnMemoria">Aplicar y
+            Volver</button>
         </div>
       </div>
 
@@ -138,12 +154,13 @@
       <button type="button" class="btn btn-secondary btn-sm px-4 shadow-sm" @click="cerrarModal" :disabled="guardando">
         Cerrar
       </button>
-      <button type="button" class="btn btn-primary btn-sm px-4 shadow-sm" @click="confirmarGuardado" :disabled="guardando">
+      <button type="button" class="btn btn-primary btn-sm px-4 shadow-sm" @click="confirmarGuardado"
+        :disabled="guardando">
         <span v-if="guardando" class="spinner-border spinner-border-sm me-2"></span>
         <i v-else class="bi bi-cloud-check me-2"></i> {{ guardando ? 'Guardando...' : 'Guardar Cambios' }}
       </button>
     </template>
-    
+
   </BaseModal>
 </template>
 
@@ -155,9 +172,9 @@ import { completarCargaUnidadesService, eliminarUnidadService } from '@/Services
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-  unidad: { type: Object, required: true }, 
+  unidad: { type: Object, required: true },
   padrones: { type: Array, required: true },
-  edificiosLista: { type: Array, required: true } 
+  edificiosLista: { type: Array, required: true }
 });
 
 const emit = defineEmits(['close', 'recargar']);
@@ -168,14 +185,14 @@ const edificioSeleccionado = ref('');
 const padronesLocales = ref([]);
 
 // NUEVO: Variable para controlar la vista interna
-const modoComentario = ref(false); 
-const indexPadronActivo = ref(null); 
+const modoComentario = ref(false);
+const indexPadronActivo = ref(null);
 const comentarioTemporal = ref('');
 
 onMounted(() => {
   const estadoRaw = props.unidad.estado || 'Activo';
   estadoSys.value = estadoRaw.charAt(0).toUpperCase() + estadoRaw.slice(1).toLowerCase();
-  
+
   edificioSeleccionado.value = '';
   if (props.padrones && props.padrones.length > 0 && props.padrones[0].id_edificio != null) {
     edificioSeleccionado.value = String(props.padrones[0].id_edificio);
@@ -197,7 +214,7 @@ const agregarPadronVacio = () => {
     unidad: '',
     piso: '',
     depto: '',
-    observaciones: '' 
+    observaciones: ''
   });
 };
 
@@ -238,7 +255,7 @@ const confirmarGuardado = async () => {
   }
 
   const payload = {
-    id: props.unidad.casa, 
+    id: props.unidad.casa,
     edificio: edificioSeleccionado.value,
     estado: estadoSys.value,
     repetir: padronesLocales.value.map(p => ({
@@ -247,7 +264,7 @@ const confirmarGuardado = async () => {
       depto: p.depto,
       unidad: p.unidad,
       tipo: p.tipo,
-      comentario: p.observaciones, 
+      comentario: p.observaciones,
       estado: p.estado
     }))
   };
@@ -256,6 +273,7 @@ const confirmarGuardado = async () => {
   try {
     const response = await completarCargaUnidadesService(payload);
     alertas.success(response.data.message || 'Datos guardados exitosamente.');
+    guardando.value = false; // Liberar la bandera antes de cerrar
     emit('recargar');
     cerrarModal();
   } catch (error) {
@@ -284,18 +302,19 @@ const cerrarModal = () => {
 
 .table-scroll-container {
   /* Bajamos de 45vh a 30vh para asegurar que el botón Guardar siempre quede a la vista */
-  max-height: 30vh; 
+  max-height: 30vh;
   overflow-y: auto;
   overflow-x: hidden;
-  
+
   /* Un pequeño padding extra abajo para que el último botón de eliminar no quede pegado al borde */
-  padding-bottom: 10px; 
+  padding-bottom: 10px;
 }
 
 /* Opcional: Para que la barra de scroll se vea más fina y elegante (estilo moderno) */
 .table-scroll-container::-webkit-scrollbar {
   width: 6px;
 }
+
 .table-scroll-container::-webkit-scrollbar-thumb {
   background-color: #cbd5e1;
   border-radius: 10px;

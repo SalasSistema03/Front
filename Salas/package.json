@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && del ..\\..\\backEnd\\resources\\views\\app.blade.php /Q & ren ..\\..\\backEnd\\public\\index.html app.blade.php & move ..\\..\\backEnd\\public\\app.blade.php ..\\..\\backEnd\\resources\\views\\",
+    "clean-assets": "node -e \"const fs=require('fs'); const path='../../backEnd/public/assets'; if(fs.existsSync(path)){fs.rmSync(path,{recursive:true,force:true});} fs.mkdirSync(path,{recursive:true});\"",
+    "build": "npm run clean-assets && vite build && npm run actualizar-blade",
+    "actualizar-blade": "del ..\\..\\backEnd\\resources\\views\\app.blade.php /Q 2>nul & ren ..\\..\\backEnd\\public\\index.html app.blade.php & move ..\\..\\backEnd\\public\\app.blade.php ..\\..\\backEnd\\resources\\views\\",
     "lint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/"
   },
