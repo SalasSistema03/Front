@@ -54,8 +54,9 @@ export function useTurnos() {
     }
 
     const filtrarTurnosPorSector = (sectorId) => {
+        if (!sectorId) return []
         return turnosPendientes.value
-            .filter(turno => turno.sector.id === sectorId)
+            .filter(turno => turno.sector && String(turno.sector.id) === String(sectorId))
             .sort((a, b) => new Date(a.fecha_carga) - new Date(b.fecha_carga))
     }
 

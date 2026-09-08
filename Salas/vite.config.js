@@ -1,37 +1,53 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   plugins: [
     vue(),
-
   ],
+
   server: {
+    
+
     proxy: {
       '/imagenes': {
         target: 'http://localhost',
         changeOrigin: true,
-      }
-    }
-  },
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      },
     },
   },
-  // --- AGREGAMOS ESTO ---
+
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+
   build: {
-    sourcemap: false, // Esto evita que el código original sea legible en la pestaña "Sources"
+    sourcemap: false,
+
+    // Vue está en un proyecto separado de Laravel.
+    // Salimos del proyecto Vue y entramos en backEnd/public.
     outDir: '../../backEnd/public',
-    emptyOutDir: false, 
-    rollupOptions:{
-      output:{
-        entryFileNames: 'assets/index.js',
-        chunkFileNames: 'assets/index-[name].js',
-        assetFileNames: 'assets/index.[ext]'
-      }
-    }
+
+    // IMPORTANTE:
+    // No borrar todo public/, porque Laravel puede tener
+    // otros archivos que no pertenecen a Vue.
+    emptyOutDir: false,
+
+    rollupOptions: {
+      output: {
+        // Hash para evitar que el navegador utilice
+        // un JS viejo desde la caché.
+        entryFileNames: 'assets/index-[hash].js',
+
+        // Los chunks también tendrán hash.
+        chunkFileNames: 'assets/index-[name]-[hash].js',
+
+        // CSS, imágenes, fuentes, etc.
+        assetFileNames: 'assets/index-[hash][extname]',
+      },
+    },
   },
 })

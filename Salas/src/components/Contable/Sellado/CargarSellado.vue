@@ -224,6 +224,7 @@ import ResultadoSellado from './ResultadoSellado.vue';
 import ModalDatosCalculos from './Modales/ModalDatosCalculos.vue';
 import ModalAcciones from './Modales/ModalAcciones.vue';
 //import { alertas } from '../../../utils/alertas.js'
+import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters.js'
 import { calcularSelladoService, guardarResultadoService, getRegistrosService, getSelladoPrecarcadoService } from '../../../Services/api/Contable/selladoApi.js'
 import { useToast } from '@/composables/useToast.js';
 
@@ -374,13 +375,7 @@ const resetForm = () => {
 };
 
 // Función para formatear a pesos argentinos
-const formatearMoneda = (valor) => {
-  if (valor === undefined || valor === null || valor === '') return '$ 0,00';
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-  }).format(valor);
-};
+const formatearMoneda = (valor) => formatearMonedaHelper(valor, true);
 
 // 3. EJECUTAR AL CARGAR EL COMPONENTE
 onMounted(() => {

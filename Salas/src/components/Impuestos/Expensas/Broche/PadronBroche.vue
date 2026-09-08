@@ -151,6 +151,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { alertas } from '@/utils/alertas';
+import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters';
 import { getBrochesService, eliminarBrocheService } from '@/Services/api/Impuestos/expensasApi.js';
 import ModalCargarBroche from './Modales/ModalCargarBroche.vue';
 import ModalExportarBroche from './Modales/ModalExportarBroche.vue';
@@ -226,10 +227,7 @@ const eliminarBroche = async (idBroche) => {
 };
 
 // 3. Helpers
-const formatearMoneda = (valor) => {
-    if (!valor) return '$ 0,00';
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(valor);
-};
+const formatearMoneda = (valor) => formatearMonedaHelper(valor, true);
 
 // 4. Modales
 const abrirModalCarga = () => mostrarModalCarga.value = true;
