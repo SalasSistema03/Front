@@ -1,30 +1,65 @@
 <template>
-  <div class="">
+  <div class="h-100">
     <div class="row p-0 m-0 h-100">
 
-      <!-- IZQUIERDA: FORMULARIO DE FILTROS -->
-      <div class="col-2 cuadromapabusqueda">
-        <div class="card shadow-sm ">
-          <div class="card-body p-3">
-            <h6 class="fw-bold mb-3 text-primary border-bottom pb-2">
-              <i class="bi bi-funnel"></i> Filtros de Búsqueda
+      <!-- IZQUIERDA: FORMULARIO DE FILTROS COMPACTO -->
+      <div class="col-2 cuadromapabusqueda h-100 d-flex flex-column">
+        <div class="card shadow-sm border-0 flex-grow-1">
+          <div class="card-body p-2 d-flex flex-column">
+            
+            <h6 class="fw-bold mb-2 text-primary border-bottom pb-1 small text-uppercase">
+              <i class="bi bi-funnel-fill"></i> Filtros
             </h6>
             
-            <form @submit.prevent="aplicarFiltros" class="row">              
-              <!-- Operación -->
-              <div class="col-12 form-group mb-2">
-                <label class="form-label fw-bold small text-muted mb-1">Operación</label>
-                <select v-model="filtros.busqueda" class="form-select form-select-sm shadow-sm" @change="aplicarFiltros">
-                  <option value="">Todas</option>
-                  <option value="1">Venta</option>
-                  <option value="2">Alquiler</option>
+            <form @submit.prevent="aplicarFiltros" class="row g-1 flex-grow-1 align-content-start">              
+              
+              <!-- Operación (Ocupa todo el ancho) -->
+              <div class="col-12 mb-1">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">Operación</label>
+                <select v-model="filtros.busqueda" class="form-select form-select-sm shadow-sm text-center fw-bold" @change="onOperacionChange">
+                  <option value="">TODAS</option>
+                  <option value="1">VENTA</option>
+                  <option value="2">ALQUILER</option>
                 </select>
               </div>
 
-              <!-- Tipo de Inmueble (Catálogo Dinámico) -->
-              <div class="col-12 form-group mb-2">
-                <label class="form-label fw-bold small text-muted mb-1">Tipo de Inmueble</label>
-                <!-- Tu scope permite array, lo mandamos en la posición 0 -->
+              <!-- Estado Dinámico (Solo se muestra si seleccionó Venta o Alquiler) -->
+              <!-- Estado Dinámico (Solo se muestra si seleccionó Venta o Alquiler) -->
+              <div class="col-12 mb-1" v-if="filtros.busqueda !== ''">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">
+                  Estado de {{ filtros.busqueda == '1' ? 'Venta' : 'Alquiler' }}
+                </label>
+                <select v-model="filtros.estado_operacion" class="form-select form-select-sm shadow-sm" @change="aplicarFiltros">
+                  <!-- Por defecto (value=""), el script enviará los arrays [1, 2] -->
+                  <option value="">Activos (1 y 2)</option>
+
+                  <!-- Opciones exactas de estado_ventas -->
+                  <template v-if="filtros.busqueda == '1'">
+                    <option value="1">1 - EN VENTA</option>
+                    <option value="2">2 - EN VENTA COMPARTIDA</option>
+                    <option value="3">3 - FINALIZADA</option>
+                    <option value="4">4 - BAJA TEMPORAL</option>
+                    <option value="5">5 - RESET</option>
+                    <option value="6">6 - RETIRADA</option>
+                    <option value="7">7 - BAJA</option>
+                  </template>
+
+                  <!-- Opciones exactas de estado_alquileres -->
+                  <template v-if="filtros.busqueda == '2'">
+                    <option value="1">1 - EN ALQUILER</option>
+                    <option value="2">2 - EN ALQUILER COMPARTIDO</option>
+                    <option value="3">3 - ALQUILADA</option>
+                    <option value="4">4 - BAJA TEMPORAL</option>
+                    <option value="5">5 - RESET</option>
+                    <option value="6">6 - PENDIENTE</option>
+                    <option value="7">7 - BAJA</option>
+                  </template>
+                </select>
+              </div>
+
+              <!-- Tipo de Inmueble -->
+              <div class="col-12 mb-1">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">Inmueble</label>
                 <select v-model="filtros.inmuebles[0]" class="form-select form-select-sm shadow-sm" @change="aplicarFiltros">
                   <option value="">Todos</option>
                   <option v-for="tipo in catalogos.tipos_inmueble" :key="tipo.id" :value="tipo.id">
@@ -33,67 +68,43 @@
                 </select>
               </div>
 
-              <!-- Zona (Catálogo Dinámico) -->
-              <div class="col-12 form-group mb-2">
-                <label class="form-label fw-bold small text-muted mb-1">Zona</label>
-                <!-- Tu scope permite array, lo mandamos en la posición 0 -->
-                <select v-model="filtros.zonas[0]" class="form-select form-select-sm shadow-sm" @change="aplicarFiltros">
-                  <option value="">Todas las zonas</option>
-                  <option v-for="zona in catalogos.zonas" :key="zona.id" :value="zona.id">
-                    {{ zona.name }}
-                  </option>
+              <!-- Fila dividida: Dormitorios y Cartel -->
+              <div class="col-6 mb-1">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">Dorms.</label>
+                <input type="number" v-model="filtros.habitaciones" class="form-control form-control-sm shadow-sm text-center" placeholder="Ej: 2" @keyup.enter="aplicarFiltros"/>
+              </div>
+              <div class="col-6 mb-1">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">Cartel</label>
+                <select v-model="filtros.cartel" class="form-select form-select-sm shadow-sm text-center" @change="aplicarFiltros">
+                  <option value="">-</option>
+                  <option value="SI">Sí</option>
+                  <option value="NO">No</option>
+                  <option value="PENDIENTE">Pendiente</option>
                 </select>
               </div>
 
-              <!-- Habitaciones y Cochera -->
-              <div class="col-12 row form-group g-2 mb-2">
-                <div class="col-6">
-                  <label class="form-label fw-bold small text-muted mb-1">Dormitorios</label>
-                  <input type="number" v-model="filtros.habitaciones" class="form-control form-control-sm shadow-sm" placeholder="Ej: 2" @keyup.enter="aplicarFiltros"/>
-                </div>
-                <div class="col-6">
-                  <label class="form-label fw-bold small text-muted mb-1">Cochera</label>
-                  <select v-model="filtros.cochera" class="form-select form-select-sm shadow-sm" @change="aplicarFiltros">
-                    <option value="">-</option>
-                    <option value="1">Sí</option>
-                    <option value="0">No</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Mascotas -->
-              <!-- <div class="form-group mb-2">
-                <label class="form-label fw-bold small text-muted mb-1">Mascotas permitidas</label>
-                <select v-model="filtros.mascotas" class="form-select form-select-sm shadow-sm" @change="aplicarFiltros">
-                  <option value="">Indistinto</option>
-                  <option value="1">Sí</option>
-                  <option value="0">No</option>
+              <!-- Fila dividida: Moneda y Precio Máximo -->
+              <div class="col-5 mb-2">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">Moneda</label>
+                <select v-model="filtros.moneda" class="form-select form-select-sm shadow-sm text-center" @change="aplicarFiltros">
+                  <option value="">-</option>
+                  <option value="USD">USD</option>
+                  <option value="ARS">ARS</option>
                 </select>
-              </div> -->
-
-              <!-- Rango de Precios -->
-              <div class="form-group mb-3">
-                <label class="form-label fw-bold small text-muted mb-1">Precio Hasta</label>
-                <!-- <div class="input-group input-group-sm mb-1 shadow-sm">
-                  <span class="input-group-text">$</span>
-                  <input type="number" v-model="filtros.desde" class="form-control" placeholder="Desde" @keyup.enter="aplicarFiltros">
-                </div> -->
-                <div class="input-group input-group-sm shadow-sm">
-                  <span class="input-group-text">$</span>
-                  <input type="number" v-model="filtros.hasta" class="form-control" placeholder="Hasta" @keyup.enter="aplicarFiltros">
-                </div>
+              </div>
+              <div class="col-7 mb-2">
+                <label class="form-label fw-bold mb-0 text-muted" style="font-size: 0.7rem;">Precio Máx</label>
+                <input type="number" v-model="filtros.hasta" class="form-control form-control-sm shadow-sm text-center" placeholder="Ej: 50000" @keyup.enter="aplicarFiltros">
               </div>
 
-              <!-- Botones de Acción -->
-              <div class="row g-2 mt-1 border-top pt-1">
-                <div class="col-12">
+              <!-- Botones de Acción (Pegados al fondo) -->
+              <div class="col-12 mt-auto pt-2 border-top">
+                <div class="d-flex flex-column gap-1">
                   <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold shadow-sm" :disabled="cargando">
-                    {{ cargando ? 'Buscando...' : 'Aplicar Filtros' }}
+                    <i class="bi bi-search"></i> {{ cargando ? 'Buscando...' : 'Aplicar' }}
                   </button>
-                </div>
-                <div class="col-12">
-                  <button type="button" class="btn btn-outline-secondary btn-sm w-100" @click="limpiarFiltros">
-                    Limpiar Filtros
+                  <button type="button" class="btn btn-outline-secondary btn-sm w-100 shadow-sm" @click="limpiarFiltros">
+                    <i class="bi bi-eraser"></i> Limpiar
                   </button>
                 </div>
               </div>
@@ -103,8 +114,8 @@
         </div>
       </div>
 
-      <!-- DERECHA: MAPA (Aquí va el código de Leaflet que ya teníamos) -->
-      <div class="col-10 cuadromapabusquedamap">
+      <!-- DERECHA: MAPA -->
+      <div class="col-10 cuadromapabusquedamap p-0 m-0">
          <div id="mapa-inmuebles" class="w-100 h-100"></div>
       </div>
 
@@ -114,18 +125,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getPropiedadesMapaService, getCatalogosMapaService } from '../../../Services/api/Atcl/AtclApi.js'; // Ajusta la ruta
-// import { useToast } from '@/composables/useToast.js'; // Usa su composable de alertas si lo necesitas
+import { getPropiedadesMapaService, getCatalogosMapaService } from '../../../Services/api/Atcl/AtclApi.js'; 
 
-// Importaciones de Leaflet
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-
-
-
-// Fix para los iconos de Leaflet en Vite
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
 const DefaultIcon = L.icon({
   iconUrl: iconUrl,
   shadowUrl: iconShadow,
@@ -134,45 +140,37 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Estado del componente
-// const { showError } = useToast();
 const cargando = ref(false);
 const propiedades = ref([]);
 
-// Estado para guardar las zonas y tipos de inmueble de la DB
 const catalogos = ref({
-  zonas: [],
   tipos_inmueble: []
 });
 
-// Filtros mapeados exactamente a tu scopeFiltrar de Laravel
+// NUEVO: Filtros adaptados a tus peticiones
 const filtros = ref({
   busqueda: '',
-  inmuebles: [], // Lo enviamos como array porque tu scope usa whereIn
-  zonas: [],     // Lo enviamos como array porque tu scope usa whereIn
+  inmuebles: [], 
+  estado_operacion: '', // Controla el estado específico (1 o 2)
   habitaciones: '',
-  cochera: '',
-  mascotas: '',
-  desde: '',
-  hasta: '',
-  ampliar: 1 // Para evitar que oculte las que no tienen estado definido
+  cartel: '',
+  moneda: '',
+  hasta: ''
 });
 
-// Variables globales del mapa
 let map = null;
 let marcadoresLayer = null;
 
 onMounted(async () => {
   inicializarMapa();
-  await cargarCatalogos(); // Primero traemos las zonas e inmuebles
-  aplicarFiltros();        // Luego cargamos los pines en el mapa
+  await cargarCatalogos(); 
+  aplicarFiltros();        
 });
 
 const cargarCatalogos = async () => {
   try {
     const response = await getCatalogosMapaService();
     if (response.data.success) {
-      catalogos.value.zonas = response.data.zonas;
       catalogos.value.tipos_inmueble = response.data.tipos_inmueble;
     }
   } catch (error) {
@@ -181,23 +179,53 @@ const cargarCatalogos = async () => {
 };
 
 const inicializarMapa = () => {
-  // Centrado en Santa Fe
   map = L.map('mapa-inmuebles').setView([-31.637321, -60.694612], 13);
-
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
-
   marcadoresLayer = L.layerGroup().addTo(map);
 };
+
+// Se ejecuta al cambiar la operación (Venta o Alquiler)
+const onOperacionChange = () => {
+  filtros.value.estado_operacion = ''; // Resetea el combo dinámico
+  aplicarFiltros();
+};
+
 
 const aplicarFiltros = async () => {
   cargando.value = true;
   try {
-    // Clonamos los filtros para limpiar los arrays vacíos y no enviar basura en la URL
     const payload = { ...filtros.value };
-    if (payload.inmuebles.length > 0 && !payload.inmuebles[0]) payload.inmuebles = [];
-    if (payload.zonas.length > 0 && !payload.zonas[0]) payload.zonas = [];
+    
+    // Formatear array de inmuebles (si está vacío, limpiarlo)
+    if (payload.inmuebles.length > 0 && !payload.inmuebles[0]) {
+      payload.inmuebles = [];
+    }
+
+    // ESTADOS POR DEFECTO (Activos)
+    payload.estados_venta = [1, 2];
+    payload.estados_alquiler = [1, 2];
+
+    // LÓGICA DE ESTADOS ESPECÍFICOS SEGÚN LA OPERACIÓN:
+    if (payload.busqueda == '1') { // Si es solo VENTA
+      payload.estados_alquiler = []; // Vaciamos los alquileres para evitar choques
+      if (payload.estado_operacion) {
+        payload.estados_venta = [parseInt(payload.estado_operacion)];
+      }
+    } else if (payload.busqueda == '2') { // Si es solo ALQUILER
+      payload.estados_venta = []; // Vaciamos las ventas para evitar choques
+      if (payload.estado_operacion) {
+        payload.estados_alquiler = [parseInt(payload.estado_operacion)];
+      }
+    }
+    
+    // LIMPIEZA DE PAYLOAD: Eliminamos campos vacíos para no mandar basura al backend
+    Object.keys(payload).forEach(key => {
+      if (payload[key] === '' || payload[key] === null || (Array.isArray(payload[key]) && payload[key].length === 0)) {
+        delete payload[key];
+      }
+    });
 
     const response = await getPropiedadesMapaService(payload);
     propiedades.value = response.data.data;
@@ -208,8 +236,6 @@ const aplicarFiltros = async () => {
     cargando.value = false;
   }
 };
-
-
 
 const dibujarPines = () => {
   marcadoresLayer.clearLayers();
@@ -222,18 +248,15 @@ const dibujarPines = () => {
     let marcador;
     let popupHTML = '';
 
-    // ESCENARIO A: Múltiples propiedades (Mostramos el globo con el número)
     if (listaProps.length > 1) {
-      // 1. Creamos el ícono personalizado con HTML
       const iconoAgrupado = L.divIcon({
-        className: 'icono-transparente', // Le quitamos el fondo por defecto de Leaflet
+        className: 'icono-transparente',
         html: `<div class="pin-numero">${listaProps.length}</div>`,
-        iconSize: [36, 36], // Tamaño del contenedor
-        iconAnchor: [18, 18], // Centro del marcador
-        popupAnchor: [0, -18] // Donde se abre el popup
+        iconSize: [36, 36],
+        iconAnchor: [18, 18],
+        popupAnchor: [0, -18]
       });
 
-      // 2. Asignamos ese ícono al marcador
       marcador = L.marker([lat, lng], { icon: iconoAgrupado });
       
       const calleEdificio = listaProps[0].calle ? listaProps[0].calle.name : 'Dirección';
@@ -261,12 +284,10 @@ const dibujarPines = () => {
           </li>
         `;
       });
-      
       popupHTML += `</ul></div>`;
     } 
-    // ESCENARIO B: Una sola propiedad (Mostramos el pin normal)
     else {
-      marcador = L.marker([lat, lng]); // Usa el pin azul por defecto
+      marcador = L.marker([lat, lng]);
       
       const prop = listaProps[0];
       const tipo = prop.tipo_inmueble ? prop.tipo_inmueble.inmueble : 'Propiedad';
@@ -295,53 +316,33 @@ const dibujarPines = () => {
   }
 };
 
-
-
 const limpiarFiltros = () => {
   filtros.value = {
     busqueda: '',
     inmuebles: [],
-    zonas: [],
+    estado_operacion: '',
     habitaciones: '',
-    cochera: '',
-    mascotas: '',
-    desde: '',
-    hasta: '',
-    ampliar: 1
+    cartel: '',
+    moneda: '',
+    hasta: ''
   };
   aplicarFiltros();
 };
 
-// 1. Función auxiliar para agrupar propiedades con la misma lat/lng
 const agruparPorCoordenadas = (propiedadesArray) => {
   const agrupadas = {};
-  
   propiedadesArray.forEach(prop => {
     if (prop.latitud && prop.longitud) {
-      // Creamos una llave única con la latitud y longitud
       const key = `${prop.latitud},${prop.longitud}`;
-      
-      if (!agrupadas[key]) {
-        agrupadas[key] = [];
-      }
-      // Metemos la propiedad en el grupo correspondiente
+      if (!agrupadas[key]) agrupadas[key] = [];
       agrupadas[key].push(prop);
     }
   });
-  
   return agrupadas;
 };
 </script>
 
 <style scoped>
-/* Aseguramos que el mapa ocupe todo el espacio disponible y no se ponga por encima del navbar */
-/* #mapa-inmuebles {
-  min-height: 500px;
-  z-index: 1;
-} */
-
-
-/* Ajustes menores para los estilos del popup de Leaflet integrado con Bootstrap */
 :deep(.leaflet-popup-content-wrapper) {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -349,17 +350,12 @@ const agruparPorCoordenadas = (propiedadesArray) => {
 :deep(.leaflet-popup-content) {
   margin: 15px;
 }
-
-
-/* Limpia el estilo por defecto que Leaflet le pone a los divIcons */
 :deep(.icono-transparente) {
   background: transparent;
   border: none;
 }
-
-/* El diseño del círculo con el número */
 :deep(.pin-numero) {
-  background-color: #007bff; /* Color primario (Azul) */
+  background-color: #007bff; 
   color: white;
   border-radius: 50%;
   width: 36px;
@@ -369,13 +365,11 @@ const agruparPorCoordenadas = (propiedadesArray) => {
   align-items: center;
   font-weight: bold;
   font-size: 16px;
-  border: 3px solid white; /* Borde blanco para que resalte sobre las calles */
+  border: 3px solid white; 
   box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   cursor: pointer;
   transition: transform 0.2s;
 }
-
-/* Pequeño efecto al pasar el mouse por encima */
 :deep(.pin-numero:hover) {
   transform: scale(1.15);
   background-color: #0056b3;
