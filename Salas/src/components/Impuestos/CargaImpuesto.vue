@@ -136,9 +136,7 @@
               </button>
             </li>
 
-            <li v-if="
-              props.impuesto === 'gas' || props.impuesto === 'api' || props.impuesto === 'agua'
-            ">
+            <li>
               <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos"
                 @click="ControlDeBroches()" :disabled="!botonesPadron?.[`modificarBajado_${props.impuesto}`]">
                 <i class="bi bi-clipboard2-check-fill"></i> Control
