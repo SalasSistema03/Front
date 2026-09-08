@@ -115,7 +115,16 @@ const routesImpuestos = [
       requiresAuth: true,
       vistaId: 65
     }
-  }
+  },
+  {
+    path: '/carga_epe',
+    alias: '/impuestos/cargaepe',
+    name: 'cargaepe',
+    component: () => import('../views/Impuestos/EPE/CargarEpeView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
 ]
 

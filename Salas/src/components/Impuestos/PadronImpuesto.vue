@@ -2,7 +2,7 @@
   <div class="px-3">
     <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
-      <div class="col-auto">
+      <div v-if="props.impuesto !== 'epe'" class="col-auto">
         <button class="btn btn-sm btn-primary" @click="actualizarPadron()" :disabled="!puedeActualizarPadron">
           Actualizar Padrón {{ props.impuesto?.toUpperCase() }}
         </button>

@@ -1196,6 +1196,16 @@
   border-radius: 4px;
 }
 
+.modal-control-impuesto {
+  max-height: 40vh !important;
+  overflow-y: scroll;
+}
+
+.contenedor-tabla-epe {
+  height: 70vh;
+  overflow-y: auto;
+}
+
 .home-card-all {
   width: 45vw !important;
   height: 45vh;

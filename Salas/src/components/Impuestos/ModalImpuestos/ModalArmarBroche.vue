@@ -150,8 +150,7 @@
         </button>
       </div>
       <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
-        <button type="submit" class="btn btn-danger btn-sm" id="btn_guardar_broches_salas"
-          @click="guardarSeguirPagando">
+        <button type="submit" class="btn btn-danger btn-sm" @click="guardarSeguirPagando">
           <i class="bi bi-save"></i> Guardar Broche {{ props.impuesto.toUpperCase() }} - SP
         </button>
       </div>
