@@ -1,299 +1,305 @@
 <template>
-  <NavComponent titulo="Propiedad Carga"></NavComponent>
-  <div class="px-3">
-    <div class="row">
-      <div class="col-md-6 row form-group d-flex align-items-end justify-content-center">
-        <div class="col-md-5 mt-0">
-          <label class="form-label " for="input-calle">
-            Calle
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="- - -" readonly
-            :value="propiedad?.calle?.name">
-        </div>
-        <div class="col-md-3 mt-0">
-          <label class="form-label " for="input-altura">
-            N°
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="-" readonly
-            :value="propiedad?.numero_calle">
-        </div>
-        <div class="col-md-2 mt-0">
-          <label class="form-label " for="input-piso">
-            PH
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="-" readonly :value="propiedad?.ph">
-        </div>
-        <div class="col-md-2 mt-0">
-          <label class="form-label " for="input-piso">
-            Piso
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="-" readonly :value="propiedad?.piso">
-        </div>
+  <!-- 1. CONTENEDOR PADRE AL 100% DE ALTO (vh-100) Y SIN SCROLL GLOBAL (overflow-hidden) -->
+  <div class="d-flex flex-column vh-100 overflow-hidden bg-white">
 
-        <div class="col-md-3 mt-0">
-          <label class="form-label " for="input-numero-propiedad">
-            Dto
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="-" readonly
-            :value="propiedad?.departamento">
-        </div>
-        <div class="col-md-4 mt-0">
-          <label class="form-label " for="input-numero-propiedad">
-            Inmueble
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="- -" readonly
-            :value="propiedad?.tipo_inmueble?.inmueble">
-        </div>
-        <div class="col-md-5 mt-0">
-          <label class="form-label " for="input-numero-propiedad">
-            Zona
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="- - - -" readonly
-            :value="propiedad?.zona?.name">
-        </div>
+    <NavComponent titulo="Detalle de Propiedad"></NavComponent>
 
-        <div class="col-md-4 mt-0">
-          <label class="form-label " for="input-numero-propiedad">
-            Provincia
-          </label>
-          <input type="text" class="form-control form-control-sm" placeholder="Buenos Aires" readonly
-            :value="propiedad?.provincia?.name">
-        </div>
+    <!-- 2. CONTENEDOR PRINCIPAL QUE ABSORBE EL ESPACIO RESTANTE (flex-grow-1) -->
+    <div class="container-fluid px-3 py-2 d-flex flex-column flex-grow-1 overflow-hidden">
 
-        <div class="col-md-4 px-1">
-          <button type="button" class="btn btnSalas btn-mx mt-3 w-100" data-bs-toggle="popover"
-            data-bs-placement="right" data-bs-custom-class="custom-popover" :data-bs-title="'Comentario Cartel'"
-            :data-bs-content="comentarioCartel">
-            <i class="bi bi-info-circle"></i> Cartel - {{ cartelDisplay }}
-
-          </button>
-        </div>
-
-        <div class="col-md-4 px-1">
-          <button type="button" class="btn btnSalas btn-mx mt-3 w-100" data-bs-toggle="popover"
-            data-bs-placement="right" data-bs-custom-class="custom-popover" :data-bs-title="'Comentario Llave'"
-            :data-bs-content="comentarioLlave">
-            <i class="bi bi-info-circle"></i> Llave - {{ llaveDisplay }}
-          </button>
-        </div>
-        <div class="col-md-4 mt-3 text-center">
-          <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-            data-bs-target="#modalPropietarios" :disabled="!botones?.propietario">
-            Propietarios
-          </button>
-        </div>
-        <div class="col-md-4 mt-3 text-center">
-          <button type="button" class="btn btn-secondary btn-sm w-100" @click="abrirDescripcionModal">
-            Descripcion
-          </button>
-        </div>
-        <div class="col-md-4 mt-3 text-center">
-          <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
-            data-bs-target="#modalComodidades">
-            Comodidades
-          </button>
-        </div>
-
-        <div class="col-md-4 mt-3 text-center">
-          <button type="button" class="btn btn-secondary btn-sm w-100" @click="abrirImpuestoModal">
-            Impuestos
-          </button>
-        </div>
-        <div class="col-md-8 row mt-3 d-flex justify-content-center align-items-center">
-          <div class="col-md-6  text-center">
-            <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target=""
-              @click="descargarFotos">
-              Descargar
-            </button>
-          </div>
-          <div class="col-md-6  text-center">
-            <button type="button" class="btn btn-light btn-sm w-100" data-bs-toggle="modal" data-bs-target="#"
-              @click="modificarDatosPropiedad" :disabled="!botones?.modificar">
-              Modificar
-            </button>
-          </div>
-        </div>
-        <div class="col-md-12 row mt-3 d-flex justify-content-center align-items-center">
-          <div class="col-md-3  text-center">
-            <label for="">Codigo V. </label>
-          </div>
-          <div class="col-md-3  text-center">
-            <input type="text " class="form-control form-control-sm" placeholder="Sin Codigo" readonly
-              :value="propiedad?.cod_venta">
-          </div>
-          <div class="col-md-6  text-center">
-
-            <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-              data-bs-target="#modalVentas" :disabled="!botones?.informacion_venta">
-              Informacion Ventas
-            </button>
-          </div>
-        </div>
-
-        <div class="col-md-12 row mt-3 d-flex justify-content-center align-items-center">
-          <div class="col-md-3  text-center">
-            <label for="">Codigo A. </label>
-          </div>
-          <div class="col-md-3  text-center">
-            <input type="text " class="form-control form-control-sm" placeholder="Sin Codigo" readonly
-              :value="propiedad?.cod_alquiler">
-          </div>
-          <div class="col-md-6  text-center">
-
-            <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal"
-              data-bs-target="#modalAlquiler" :disabled="!botones?.informacion_alquiler">
-              Informacion Alquiler
-            </button>
-          </div>
-        </div>
+      <!-- SPINNER DE CARGA -->
+      <div v-if="loading" class="d-flex flex-column justify-content-center align-items-center flex-grow-1">
+        <div class="spinner-border text-primary mb-2" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
+        <h6 class="text-muted fw-bold">Cargando datos...</h6>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="fotos-tab" data-bs-toggle="tab" href="#fotos" role="tab"
-                  aria-controls="fotos" aria-selected="true">Fotos</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="documentos-tab" data-bs-toggle="tab" href="#documentos" role="tab"
-                  aria-controls="documentos" aria-selected="false">Documentación</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="videos-tab" data-bs-toggle="tab" href="#videos" role="tab"
-                  aria-controls="videos" aria-selected="false">Videos</a>
-              </li>
-            </ul>
+
+      <!-- 3. FILA QUE SE EXPANDE (flex-grow-1) -->
+      <div v-else class="row flex-grow-1 overflow-hidden m-0">
+
+        <!-- ========================================== -->
+        <!-- COLUMNA IZQUIERDA: DETALLES (h-100 con scroll interno) -->
+        <!-- ========================================== -->
+        <div class="col-lg-7 h-100 overflow-auto pe-lg-3 pb-3 custom-scrollbar border-end form-group">
+
+          <!-- ENCABEZADO ÚNICO COMPACTO -->
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-2 mt-1">
+            <h6 class="fw-bold text-primary mb-0 small text-uppercase">
+              <i class="bi bi-info-square-fill"></i> Ficha de la Propiedad
+            </h6>
           </div>
 
-          <div class="card-body atcl_card_body p-0">
-            <div class="tab-content" id="myTabContent">
+          <!-- FILA 1: GEOGRAFÍA E INMUEBLE -->
+          <div class="row g-1 mb-1">
+            <div class="col-md-3">
+              <label class="form-label compact-label text-muted">Provincia</label>
+              <input type="text" class="form-control compact-input bg-light" readonly
+                :value="propiedad?.provincia?.name">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label compact-label text-muted">Localidad</label>
+              <input type="text" class="form-control compact-input bg-light" readonly
+                :value="propiedad?.localidad?.name || '- - -'">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label compact-label text-muted">Zona</label>
+              <input type="text" class="form-control compact-input bg-light" readonly :value="propiedad?.zona?.name">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label compact-label text-muted">Inmueble</label>
+              <input type="text" class="form-control compact-input bg-light" readonly
+                :value="propiedad?.tipo_inmueble?.inmueble">
+            </div>
+          </div>
 
-              <!-- ==================== SECCIÓN DE FOTOS ==================== -->
-              <div class="tab-pane fade show active " id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
+          <!-- FILA 2: DIRECCIÓN EXACTA -->
+          <div class="row g-1 mb-1">
+            <div class="col-md-5">
+              <label class="form-label compact-label text-muted">Calle</label>
+              <input type="text" class="form-control compact-input bg-light" readonly :value="propiedad?.calle?.name">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label compact-label text-muted">N°</label>
+              <input type="text" class="form-control compact-input bg-light text-center" readonly
+                :value="propiedad?.numero_calle">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label compact-label text-muted">Piso</label>
+              <input type="text" class="form-control compact-input bg-light text-center" readonly
+                :value="propiedad?.piso">
+            </div>
+            <div class="col-md-1">
+              <label class="form-label compact-label text-muted">Dto</label>
+              <input type="text" class="form-control compact-input bg-light text-center" readonly
+                :value="propiedad?.departamento">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label compact-label text-muted">PH</label>
+              <input type="text" class="form-control compact-input bg-light text-center" readonly
+                :value="propiedad?.ph">
+            </div>
+          </div>
 
-                <!-- Carrusel cuando HAY fotos -->
-                <div v-if="propiedad?.fotos && propiedad.fotos.length > 0" id="carouselFotos"
-                  class="carousel slide atcl_card_body_panel_fotos_documentos_videos" data-bs-ride="carousel"
-                  style="height: 345px;">
 
-                  <!-- Indicadores -->
-                  <div class="carousel-indicators">
-                    <button v-for="(foto, index) in propiedad.fotos" :key="'indicator-' + index" type="button"
-                      data-bs-target="#carouselFotos" :data-bs-slide-to="index" :class="{ 'active': index === 0 }">
-                    </button>
+          <!-- PANEL DE CONTROL (MODALES) -->
+          <h6 class="fw-bold text-primary border-bottom pb-1 mb-2 mt-3 small text-uppercase">
+            <i class="bi bi-ui-checks-grid"></i> Gestión
+          </h6>
+
+          <div class="row g-1 mb-2">
+            <div class="col-3">
+              <button class="btn btn-primary w-100 compact-btn shadow-sm" data-bs-toggle="modal"
+                data-bs-target="#modalComodidades">Comodidades</button>
+            </div>
+            <div class="col-3">
+              <button class="btn btn-primary w-100 compact-btn shadow-sm"
+                @click="abrirDescripcionModal">Descripción</button>
+            </div>
+            <div class="col-3">
+              <button class="btn btn-primary w-100 compact-btn shadow-sm" @click="showModalPropietarios = true"
+                :disabled="!botones?.propietario">Propietarios</button>
+            </div>
+            <div class="col-3">
+              <button class="btn btn-primary w-100 compact-btn shadow-sm" @click="descargarFotos">
+                <i class="bi bi-download"></i> Descargar Multi.
+              </button>
+            </div>
+          </div>
+
+          <div class="row g-1 mb-3">
+            <div class="col-3">
+              <button type="button" class="btn btn-outline-secondary w-100 compact-btn bg-white shadow-sm"
+                data-bs-toggle="popover" data-bs-placement="top" :data-bs-content="comentarioLlave">
+                <i class="bi bi-key"></i> Llave: <strong>{{ llaveDisplay }}</strong>
+              </button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-outline-secondary w-100 compact-btn bg-white shadow-sm"
+                data-bs-toggle="popover" data-bs-placement="top" :data-bs-content="comentarioCartel">
+                <i class="bi bi-signpost-2"></i> Cartel: <strong>{{ cartelDisplay }}</strong>
+              </button>
+            </div>
+            <div class="col-3">
+              <button class="btn btn-secondary w-100 compact-btn shadow-sm"
+                @click="abrirImpuestoModal">Impuestos</button>
+            </div>
+            <div class="col-3">
+              <button class="btn btn-secondary w-100 compact-btn shadow-sm" @click="modificarDatosPropiedad"
+                :disabled="!botones?.modificar">
+                <i class="bi bi-pencil-square"></i> Modificar Ficha
+              </button>
+            </div>
+          </div>
+
+          <!-- ACCIONES FINALES -->
+          <div class="mt-4 pt-3 border-top">
+            <!-- BOTONES DE VENTA Y ALQUILER -->
+
+            <div class="row g-3 mb-4">
+
+              <!-- Tarjeta Venta -->
+              <div class="col-md-6">
+                <div
+                  class="d-flex justify-content-between align-items-center p-3 rounded-3 border border-primary border-opacity-25 bg-primary bg-opacity-10 shadow-sm h-100 transition-hover">
+                  <div>
+                    <span class="d-block fw-bold text-primary mb-1"
+                      style="font-size: 0.7rem; letter-spacing: 0.5px;">CÓDIGO VENTA</span>
+                    <span class="fs-5 fw-bolder text-dark" style="letter-spacing: 1px;">{{ propiedad?.cod_venta || 'S/C'
+                      }}</span>
                   </div>
-
-                  <!-- Items del carrusel -->
-                  <div class="carousel-inner h-100">
-                    <div v-for="(foto, index) in propiedad.fotos" :key="'foto-' + index" class="carousel-item h-100"
-                      :class="{ 'active': index === 0 }">
-
-                      <div class="d-flex flex-column h-100">
-                        <div class="flex-grow-1" style="overflow: hidden;">
-                          <img :src="'http://10.10.10.191' + foto.url" class="w-100 h-100"
-                            :alt="'Imagen de propiedad ' + (index + 1)" style="object-fit: cover; cursor: pointer;"
-                            @click="openModal(index)">
-                        </div>
-
-                        <div class="p-2 bg-white" v-if="foto.notes">
-                          <input type="text" class="form-control" :value="foto.notes" disabled>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Controles -->
-                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselFotos"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                  <button class="btn btn-primary btn-sm fw-bold shadow-sm px-3 rounded-pill" data-bs-toggle="modal"
+                    data-bs-target="#modalVentas" :disabled="!botones?.informacion_venta">
+                    <i class="bi bi-cash-coin me-1"></i> Info
                   </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#carouselFotos"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                  </button>
-                </div>
-
-                <!-- Mensaje cuando NO hay fotos -->
-                <div v-else class="text-center d-flex align-items-center justify-content-center" style="height: 345px;">
-                  Sin Fotos
                 </div>
               </div>
 
-              <!-- ==================== SECCIÓN DE DOCUMENTOS ==================== -->
-              <div class="tab-pane fade" id="documentos" role="tabpanel" aria-labelledby="documentos-tab">
-                <div class="list-group" style="overflow-y: auto; max-height: 400px;">
-
-                  <div v-for="(documento, index) in propiedad?.documentacion" :key="'doc-' + index"
-                    class="list-group-item d-flex flex-column h-100 atcl_card_body_panel_fotos_documentos_videos">
-
-                    <div class="flex-grow-1" style="overflow: hidden;">
-                      <embed :src="'http://10.10.10.191' + documento.url" type="application/pdf" class="w-100"
-                        height="300px">
-                    </div>
-
-                    <div class="p-2 bg-white" v-if="documento.notes">
-                      <input type="text" class="form-control" :value="documento.notes" disabled>
-                    </div>
+              <!-- Tarjeta Alquiler -->
+              <div class="col-md-6">
+                <div
+                  class="d-flex justify-content-between align-items-center p-3 rounded-3 border border-success border-opacity-25 bg-success bg-opacity-10 shadow-sm h-100 transition-hover">
+                  <div>
+                    <span class="d-block fw-bold text-success mb-1"
+                      style="font-size: 0.7rem; letter-spacing: 0.5px;">CÓDIGO ALQUILER</span>
+                    <span class="fs-5 fw-bolder text-dark" style="letter-spacing: 1px;">{{ propiedad?.cod_alquiler ||
+                      'S/C' }}</span>
                   </div>
-
-
-                  <div v-if="!propiedad?.documentacion || propiedad?.documentacion.length === 0"
-                    class="text-center  d-flex align-items-center justify-content-center" style="height: 345px;">
-                    Sin documentos
-                  </div>
-
-                </div>
-              </div>
-
-              <!-- ==================== SECCIÓN DE VIDEOS ==================== -->
-              <div class="tab-pane fade" id="videos" role="tabpanel" aria-labelledby="videos-tab">
-                <div class="list-group" style="overflow-y: auto; max-height: 400px;">
-
-                  <div v-for="(video, index) in propiedad?.video" :key="'video-' + index"
-                    class="list-group-item d-flex flex-column h-100 atcl_card_body_panel_fotos_documentos_videos">
-
-                    <div class="flex-grow-1" style="overflow: hidden;">
-                      <video controls class="w-100" height="300px">
-                        <source :src="'http://10.10.10.191' + video.url" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                      </video>
-                    </div>
-
-                    <div class="p-2 bg-white" v-if="video.notes">
-                      <input type="text" class="form-control" :value="video.notes" disabled>
-                    </div>
-                  </div>
-
-                  <div v-if="!propiedad?.video || propiedad?.video.length === 0"
-                    class="text-center  d-flex align-items-center justify-content-center" style="height: 345px;">
-                    Sin Videos
-                  </div>
+                  <button class="btn btn-success btn-sm fw-bold shadow-sm px-3 rounded-pill text-white"
+                    data-bs-toggle="modal" data-bs-target="#modalAlquiler" :disabled="!botones?.informacion_alquiler">
+                    <i class="bi bi-house-door me-1"></i> Info
+                  </button>
                 </div>
               </div>
 
             </div>
+
+          </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- COLUMNA DERECHA: MULTIMEDIA (Se adapta a h-100) -->
+        <!-- ========================================== -->
+        <div class="col-lg-5 h-100 d-flex flex-column ps-lg-3 mt-3 mt-lg-0 pb-3">
+
+          <!-- 4. CARD QUE SE ESTIRA HASTA ABAJO -->
+          <div class="card shadow-sm border-0 flex-grow-1 d-flex flex-column overflow-hidden">
+
+            <div class="card-header bg-white border-bottom p-0 flex-shrink-0">
+              <ul class="nav nav-tabs card-header-tabs m-0 compact-label" id="mediaTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active fw-bold px-3 py-2" id="fotos-tab" data-bs-toggle="tab" href="#fotos"
+                    role="tab">📷 Fotos</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link fw-bold px-3 py-2" id="documentos-tab" data-bs-toggle="tab" href="#documentos"
+                    role="tab">📄 Docs</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link fw-bold px-3 py-2" id="videos-tab" data-bs-toggle="tab" href="#videos"
+                    role="tab">🎥 Videos</a>
+                </li>
+              </ul>
+            </div>
+
+          <div class="card-body bg-light p-2 d-flex flex-column overflow-hidden">
+  
+  <!-- 1. El contenedor padre (tab-content) ahora es relative -->
+  <div class="tab-content flex-grow-1 position-relative" id="mediaTabContent">
+
+    <!-- ===================================== -->
+    <!-- TABS DE FOTOS (Hijo Absoluto 100%) -->
+    <!-- ===================================== -->
+    <div class="tab-pane fade show active position-absolute top-0 start-0 w-100 h-100" id="fotos" role="tabpanel">
+      <div v-if="propiedad?.fotos?.length" id="carouselFotos" class="carousel slide h-100 w-100" data-bs-ride="carousel">
+
+        <div class="carousel-inner h-100 w-100 rounded shadow-sm bg-dark">
+          <!-- 2. Forzamos h-100 w-100 en el item -->
+          <div v-for="(foto, index) in propiedad.fotos" :key="index" class="carousel-item h-100 w-100" :class="{ 'active': index === 0 }">
+            
+            <!-- 3. La imagen toma el 100% del contenedor y recorta el excedente -->
+            <img :src="'http://10.10.10.191' + foto.url" class="d-block w-100 h-100" style="object-fit: cover; cursor: pointer;" @click="openModal(index)" />
+
+            <div class="position-absolute bottom-0 w-100 bg-white bg-opacity-75 p-1 border-top" v-if="foto.notes">
+              <input type="text" class="form-control compact-input text-dark border-0 bg-transparent fw-bold" :value="foto.notes" readonly>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselFotos" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon bg-dark rounded-circle p-1" style="width: 1.5rem; height: 1.5rem;"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselFotos" data-bs-slide="next">
+          <span class="carousel-control-next-icon bg-dark rounded-circle p-1" style="width: 1.5rem; height: 1.5rem;"></span>
+        </button>
+
+      </div>
+      
+      <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
+        <i class="bi bi-camera-fill fs-3 me-2"></i> Sin Fotos
+      </div>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- TABS DE DOCUMENTOS (Hijo Absoluto 100%) -->
+    <!-- ===================================== -->
+    <div class="tab-pane fade position-absolute top-0 start-0 w-100 h-100 d-flex flex-column" id="documentos" role="tabpanel">
+      <div v-if="propiedad?.documentacion?.length" class="list-group flex-grow-1 overflow-auto custom-scrollbar pe-1">
+        <div v-for="(documento, index) in propiedad.documentacion" :key="index" class="list-group-item p-0 mb-2 border-0 shadow-sm rounded">
+          <embed :src="'http://10.10.10.191' + documento.url" type="application/pdf" class="w-100 rounded-top" height="300px">
+          <div class="p-1 bg-white rounded-bottom" v-if="documento.notes">
+            <input type="text" class="form-control compact-input text-muted border-0" :value="documento.notes" readonly>
           </div>
         </div>
       </div>
+      <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
+        <i class="bi bi-file-earmark-x-fill fs-3 me-2"></i> Sin Documentos
+      </div>
+    </div>
 
+    <!-- ===================================== -->
+    <!-- TABS DE VIDEOS (Hijo Absoluto 100%) -->
+    <!-- ===================================== -->
+    <div class="tab-pane fade position-absolute top-0 start-0 w-100 h-100 d-flex flex-column" id="videos" role="tabpanel">
+      <div v-if="propiedad?.video?.length" class="list-group flex-grow-1 overflow-auto custom-scrollbar pe-1">
+        <div v-for="(video, index) in propiedad.video" :key="index" class="list-group-item p-0 mb-2 border-0 shadow-sm rounded">
+          <video controls class="w-100 rounded-top bg-dark">
+            <source :src="'http://10.10.10.191' + video.url" type="video/mp4">
+          </video>
+          <div class="p-1 bg-white rounded-bottom" v-if="video.notes">
+            <input type="text" class="form-control compact-input text-muted border-0" :value="video.notes" readonly>
+          </div>
+        </div>
+      </div>
+      <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
+        <i class="bi bi-camera-video-off-fill fs-3 me-2"></i> Sin Videos
+      </div>
+    </div>
+
+  </div>
+</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- MODALES EXISTENTES -->
   <ModalPropiedadComodidades :propiedad="propiedad" />
   <ModalPropiedadDescripcion :propiedad="propiedad" :show="showDescripcionModal" @close="cerrarDescripcionModal" />
   <ModalImpuestoPropiedad :propiedad="propiedad" :show="showImpuestoModal" @close="cerrarImpuestoModal" />
   <ModalPropiedadVenta :propiedad="propiedad" />
   <ModalPropiedadAlquiler :propiedad="propiedad" />
   <ModalCondicionAlquiler :propiedad="propiedad" />
-  <ModalPropiedadPropietario :propiedad="propiedad" :mostrar-buscador="false" :ocultar-botones="true" />
+  <ModalPropiedadPropietario :propiedad="propiedad" :mostrar-buscador="false" :ocultar-botones="true"
+    :show="showModalPropietarios" @close="showModalPropietarios = false" />
   <ModalImagenesPropiedad :propiedad="propiedad" :fotos="propiedad?.fotos" :index="modalIndex" :show="showModal"
     @close="showModal = false" />
 </template>
+
 <script>
 import NavComponent from '../../components/NavComponent.vue'
-import { muestraPropiedad } from '../../Services/api/Atcl/AtclApi'
+import { muestraPropiedad, descargarFotos } from '../../Services/api/Atcl/AtclApi'
+
 import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalPropiedadComodidades.vue'
 import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
 import ModalImpuestoPropiedad from '../../components/Atcl/Propiedad/ModalImpuestoPropiedad.vue'
@@ -301,11 +307,7 @@ import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadV
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
-/* import { Popover } from 'bootstrap' */
-import { descargarFotos } from '../../Services/api/Atcl/AtclApi'
 import ModalImagenesPropiedad from '../../components/Atcl/Propiedad/ModalImagenesPropiedad.vue'
-
-
 
 export default {
   components: {
@@ -321,6 +323,7 @@ export default {
   },
   data() {
     return {
+      showModalPropietarios: false,
       propiedad: null,
       loading: true,
       error: null,
@@ -333,24 +336,14 @@ export default {
     }
   },
   computed: {
-    llaveDisplay() {
-      return this.propiedad?.llave
-    },
-    cartelDisplay() {
-      return this.propiedad?.cartel || 'NO'
-    },
-    comentarioLlave() {
-      return this.propiedad?.comentario_llave || 'Sin comentario'
-    },
-    comentarioCartel() {
-      return this.propiedad?.comentario_cartel || 'Sin comentario'
-    }
+    llaveDisplay() { return this.propiedad?.llave },
+    cartelDisplay() { return this.propiedad?.cartel || 'NO' },
+    comentarioLlave() { return this.propiedad?.comentario_llave || 'Sin comentario' },
+    comentarioCartel() { return this.propiedad?.comentario_cartel || 'Sin comentario' }
   },
   async mounted() {
     await this.mostrarPropiedad()
-    this.$nextTick(() => {
-      this.initPopovers()
-    })
+    this.$nextTick(() => { this.initPopovers() })
   },
   beforeUnmount() {
     this.destroyPopovers()
@@ -359,91 +352,106 @@ export default {
     initPopovers() {
       const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
       this.popovers = popoverTriggerList.map((popoverTriggerEl) => {
-        return new window.bootstrap.Popover(popoverTriggerEl, {
-          trigger: 'focus',
-          container: 'body'
-        })
+        return new window.bootstrap.Popover(popoverTriggerEl, { trigger: 'focus', container: 'body' })
       })
     },
     destroyPopovers() {
       if (Array.isArray(this.popovers)) {
-        this.popovers.forEach((popover) => {
-          if (popover && typeof popover.dispose === 'function') {
-            popover.dispose()
-          }
-        })
+        this.popovers.forEach((p) => { if (p && typeof p.dispose === 'function') p.dispose() })
         this.popovers = []
       }
     },
-    abrirDescripcionModal() {
-      this.showDescripcionModal = true
-    },
+    abrirDescripcionModal() { this.showDescripcionModal = true },
+    cerrarDescripcionModal() { this.showDescripcionModal = false },
+    abrirImpuestoModal() { this.showImpuestoModal = true },
+    cerrarImpuestoModal() { this.showImpuestoModal = false },
 
-    cerrarDescripcionModal() {
-      this.showDescripcionModal = false
-    },
-    abrirImpuestoModal() {
-      this.showImpuestoModal = true
-    },
-    cerrarImpuestoModal() {
-      this.showImpuestoModal = false
-    },
     async mostrarPropiedad() {
       try {
-        // Obtiene el ID de la URL (ej: /propiedad-detalle/825)
         const id = this.$route.params.id
-        //console.log('ID de la propiedad:', id)
-
-
-        // Llama a la API pasando el ID como parámetro
         const response = await muestraPropiedad({ id: id })
         this.propiedad = response.data.data
-        //console.log('Propiedad encontrada:', this.propiedad)
         this.botones = response.data.botones
-        //console.log('console de propiedad', this.botones)
-        //console.log('esto me devuelve response', response)
       } catch (error) {
-        console.error('Error cargando propiedad:', error)
-        this.error = 'No se pudo cargar la propiedad'
+        console.error(error)
+        this.error = 'Error'
       } finally {
         this.loading = false
       }
     },
+
     modificarDatosPropiedad() {
-      // Redirigir a la página de edición con el ID de la propiedad
       const id = this.$route.params.id
       this.$router.push(`/propiedad-update/${id}`)
     },
-    openModal(index) {
-      this.modalIndex = index
-      this.showModal = true
-    },
+
     async descargarFotos() {
       const id = this.$route.params.id
-
       try {
         const response = await descargarFotos(id)
-
         const blob = new Blob([response.data], { type: 'application/zip' })
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement('a')
         link.href = url
-
-        // Construir el nombre desde los datos que ya tenés en el componente
-        const fileName = `${this.propiedad.calle.name}-${this.propiedad.numero_calle}.zip`
-
-        link.download = fileName
+        link.download = `${this.propiedad.calle.name}-${this.propiedad.numero_calle}.zip`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
         window.URL.revokeObjectURL(url)
-
-        this.showSuccess('Descarga iniciada')
       } catch (error) {
-        this.handleApiError(error)
+        console.error(error)
       }
     }
-  },
-
+  }
 }
 </script>
+
+<style scoped>
+/* ESTILOS DE DENSIDAD DE PANTALLA Y SCROLLS */
+
+input[readonly] {
+  pointer-events: none;
+}
+
+/* Micro-tipografía y márgenes para los labels */
+.compact-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+  letter-spacing: 0.2px;
+}
+
+/* Reducimos el alto, el padding y la fuente de los inputs */
+.compact-input {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  min-height: 28px;
+  height: 28px;
+}
+
+/* Reducimos el alto y padding de los botones */
+.compact-btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  min-height: 28px;
+}
+
+/* ESTILIZACIÓN DEL SCROLLBAR (Para que no quede tosco en Windows) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+</style>

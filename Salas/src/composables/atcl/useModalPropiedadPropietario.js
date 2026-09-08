@@ -8,7 +8,10 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
   const personaSeleccionada = ref(null)
   const propietarios = ref([])
   const personaParaVer = ref(null)
-  const mostrarModalVer = ref(false)
+  
+  const mostrarModalVer = ref(false) 
+  const modalCargaAbierto = ref(false) 
+  
   const propietarioEnEdicion = ref(null)
   const { showError } = useToast()
 
@@ -21,7 +24,8 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
         propietarios.value = newVal.propietarios.map((p) => ({
           persona: p,
           baja: p.pivot ? p.pivot.baja === 'si' : false,
-          observaciones: p.pivot ? p.pivot.observaciones : ''
+          // CORRECCIÓN 1: Leemos observaciones_baja
+          observaciones_baja: p.pivot ? p.pivot.observaciones_baja : '' 
         }))
       }
     }
@@ -39,20 +43,12 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
 
   const emitirPropietarios = () => emit('propietarios-cambiados', getPropietariosList())
 
-  const switchModals = () => {
-    const modalPadre = window.bootstrap.Modal.getInstance(document.getElementById('modalPropietarios'))
-    if (modalPadre) modalPadre.hide()
-    setTimeout(() => {
-      const modalHijo = new window.bootstrap.Modal(document.getElementById('modalCargaPersona'))
-      modalHijo.show()
-    }, 400)
-  }
-
   const abrirModalCargaPersona = () => {
     personaParaVer.value = null
-    mostrarModalVer.value = false
+    mostrarModalVer.value = false 
     modalCargaPersonaRef.value?.resetForm()
-    switchModals()
+    
+    modalCargaAbierto.value = true 
   }
 
   const buscar = () => {
@@ -94,14 +90,14 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     const lista = getPropietariosList()
     const existe = lista.some((p) => p.id === personaSeleccionada.value.id)
     if (existe) {
-      //alert('Ya est� asignado')
       showError('Este propietario ya se encuentra asignado')
       return
     }
 
     lista.push({
       ...personaSeleccionada.value,
-      pivot: { observaciones: '', baja: 'no' }
+      // CORRECCIÓN 2: Creamos el pivot con observaciones_baja
+      pivot: { observaciones_baja: '', baja: 'no' } 
     })
 
     emitirPropietarios()
@@ -110,7 +106,8 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
 
   const aseguranPivot = (persona) => {
     if (!persona.pivot) {
-      persona.pivot = { baja: 'no', observaciones: '' }
+      // CORRECCIÓN 3: Protegemos el pivot con observaciones_baja
+      persona.pivot = { baja: 'no', observaciones_baja: '' } 
     }
   }
 
@@ -123,42 +120,46 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
   const verPropietario = async (persona) => {
     if (!props.propiedad?.id) {
       personaParaVer.value = persona
-      mostrarModalVer.value = true
-      switchModals()
+      mostrarModalVer.value = true 
+      modalCargaAbierto.value = true 
       return
     }
 
     try {
       const response = await muestraPropiedad({ id: props.propiedad.id })
-      const personaActualizada = response.data.propietarios.find((p) => p.id === persona.id)
+      const listaPropsFetch = response.data?.data?.propietarios || response.data?.propietarios || []
+      const personaActualizada = listaPropsFetch.find((p) => p.id === persona.id)
+      
       personaParaVer.value = personaActualizada || persona
     } catch (error) {
       console.error('Error al obtener datos actualizados:', error)
       personaParaVer.value = persona
     } finally {
-      mostrarModalVer.value = true
-      switchModals()
+      mostrarModalVer.value = true 
+      modalCargaAbierto.value = true 
     }
   }
 
   const editarPropietario = async (persona) => {
     if (!props.propiedad?.id) {
       personaParaVer.value = { ...persona }
-      mostrarModalVer.value = false
-      switchModals()
+      mostrarModalVer.value = false 
+      modalCargaAbierto.value = true 
       return
     }
 
     try {
       const response = await muestraPropiedad({ id: props.propiedad.id })
-      const personaActualizada = response.data.propietarios.find((p) => p.id === persona.id)
+      const listaPropsFetch = response.data?.data?.propietarios || response.data?.propietarios || []
+      const personaActualizada = listaPropsFetch.find((p) => p.id === persona.id)
+      
       personaParaVer.value = personaActualizada ? { ...personaActualizada } : { ...persona }
     } catch (error) {
       console.error('Error al obtener datos actualizados:', error)
       personaParaVer.value = { ...persona }
     } finally {
-      mostrarModalVer.value = false
-      switchModals()
+      mostrarModalVer.value = false 
+      modalCargaAbierto.value = true 
     }
   }
 
@@ -185,8 +186,8 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     propietarios,
     personaParaVer,
     mostrarModalVer,
+    modalCargaAbierto, 
     propietarioEnEdicion,
-    switchModals,
     abrirModalCargaPersona,
     buscar,
     seleccionarPersona,
