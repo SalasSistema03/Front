@@ -147,8 +147,8 @@
               data-bs-target="#modalDescripcion">
               <i class="bi bi-card-text"></i> Descripción
             </button>
-            <button type="button" class="btn btn-primary btn-sm flex-grow-1 shadow-sm" data-bs-toggle="modal"
-              data-bs-target="#modalPropietarios">
+            <button type="button" class="btn btn-primary btn-sm flex-grow-1 shadow-sm"
+              @click="mostrarModalPropietarios = true">
               <i class="bi bi-person-badge"></i> Propietario
             </button>
           </div>
@@ -213,9 +213,14 @@
               <!-- CARRUSEL IMÁGENES -->
               <div v-if="activeTab === 'images' && images.length">
                 <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
-                  <div class="carousel-inner rounded">
+                  <div class="carousel-inner rounded" :key="images.length">
                     <div v-for="(img, index) in images" :key="index" class="carousel-item"
                       :class="{ active: index === 0 }">
+                      <!-- BOTÓN DE ELIMINAR (Flotante arriba a la derecha) -->
+                      <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 shadow z-3"
+                        @click.prevent="eliminarArchivo('images', index)" title="Quitar imagen">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
                       <!-- Reducimos la altura a 220px -->
                       <img :src="img.url" class="d-block w-100 shadow-sm" style="height: 220px; object-fit: cover;" />
                       <input class="form-control form-control-sm mt-2 shadow-sm" placeholder="Comentario..."
@@ -238,9 +243,14 @@
               <!-- CARRUSEL VIDEOS -->
               <div v-if="activeTab === 'videos' && videos.length">
                 <div id="carouselVideos" class="carousel slide" data-bs-ride="carousel">
-                  <div class="carousel-inner rounded">
+                  <div class="carousel-inner rounded" :key="videos.length">
                     <div v-for="(vid, index) in videos" :key="index" class="carousel-item"
                       :class="{ active: index === 0 }">
+                      <!-- BOTÓN DE ELIMINAR -->
+                      <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 shadow z-3"
+                        @click.prevent="eliminarArchivo('videos', index)" title="Quitar video">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
                       <video controls class="d-block w-100 shadow-sm" style="height: 220px; object-fit: cover;">
                         <source :src="vid.url" />
                       </video>
@@ -264,9 +274,14 @@
               <!-- CARRUSEL PDF -->
               <div v-if="activeTab === 'pdfs' && pdfs.length">
                 <div id="carouselPDF" class="carousel slide" data-bs-ride="carousel">
-                  <div class="carousel-inner rounded">
+                  <div class="carousel-inner rounded" :key="pdfs.length">
                     <div v-for="(pdf, index) in pdfs" :key="index" class="carousel-item"
                       :class="{ active: index === 0 }">
+                      <!-- BOTÓN DE ELIMINAR -->
+                      <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 shadow z-3"
+                        @click.prevent="eliminarArchivo('pdfs', index)" title="Quitar PDF">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
                       <iframe :src="pdf.url" class="w-100 shadow-sm" style="height: 220px;"></iframe>
                       <input class="form-control form-control-sm mt-2 shadow-sm" placeholder="Comentario..."
                         v-model="pdf.comment" />
@@ -301,7 +316,8 @@
         @update:alquiler="formData.alquiler = $event"></ModalPropiedadAlquiler>
       <ModalCondicionAlquiler @update:condicion_alquiler="formData.condicion_alquiler = $event">
       </ModalCondicionAlquiler>
-      <ModalPropiedadPropietario @propietarios-cambiados="handlePropietariosUpdate" :mostrar-buscador="true">
+      <ModalPropiedadPropietario :show="mostrarModalPropietarios" @close="mostrarModalPropietarios = false"
+        @propietarios-cambiados="handlePropietariosUpdate" :mostrar-buscador="true">
       </ModalPropiedadPropietario>
     </form>
   </div>
@@ -472,6 +488,7 @@ export default {
   },
   data() {
     return {
+      mostrarModalPropietarios: false,
       isLoadingData: true,
       mostrarModalDuplicados: false,
       duplicados: {
@@ -545,6 +562,25 @@ export default {
     }
   },
   methods: {
+    eliminarArchivo(tipo, index) {
+      // 1. Eliminamos el archivo del arreglo correspondiente (images, videos o pdfs)
+      this[tipo].splice(index, 1);
+
+      // 2. Si vaciamos por completo esta pestaña, saltamos a otra que aún tenga archivos
+      if (this[tipo].length === 0) {
+        if (this.images.length > 0) {
+          this.activeTab = 'images';
+        } else if (this.videos.length > 0) {
+          this.activeTab = 'videos';
+        } else if (this.pdfs.length > 0) {
+          this.activeTab = 'pdfs';
+        } else {
+          // 3. Si ya no queda ningún archivo de ningún tipo, limpiamos el input original
+          this.$refs.fileInput.value = '';
+        }
+      }
+    },
+
     handlePropietariosUpdate(propietarios) {
       this.formData.propietario = propietarios
     },
@@ -607,7 +643,7 @@ export default {
     // 1. EL INTERCEPTOR: Verifica si abre el mapa o si roba las coordenadas
     // 1. EL INTERCEPTOR: Verifica si abre el mapa o si roba las coordenadas
     async handleSubmit() {
-      // Validaciones obligatorias mínimas (quitamos el aviso estricto de Altura)
+      // Validaciones obligatorias mínimas
       if (
         !this.calleId ||
         !this.formData.inmueble_id ||
@@ -621,21 +657,23 @@ export default {
       this.isSubmitting = true;
 
       try {
-        // Solo intentamos robar coordenadas a la BD si el usuario ingresó una altura exacta
-        if (this.formData.altura) {
+        // NUEVA LÓGICA: 
+        // Solo intentamos robar coordenadas a la BD si hay altura Y NO ES una propiedad "cercana" (similar_match).
+        if (this.formData.altura && this.duplicados.status !== 'similar_match') {
           const payload = { calle_id: this.calleId, numero_calle: this.formData.altura };
           const response = await verificarCoordenadasService(payload); 
 
           if (response.data && response.data.coordenadas) {
-            // ¡Ya existía! Nos robamos las coordenadas y guardamos directo
+            // ¡Ya existía en esta misma puerta! Nos robamos las coordenadas y guardamos directo
             this.formData.latitud = response.data.coordenadas.lat;
             this.formData.longitud = response.data.coordenadas.lng;
             this.ejecutarGuardadoReal();
-            return; // Cortamos la ejecución aquí
+            return; // Cortamos la ejecución aquí, no se abre el mapa
           }
         }
         
-        // Si NO hay altura, o la BD no tenía las coordenadas exactas guardadas, abrimos el mapa
+        // Si la propiedad ES cercana (similar_match), si NO hay altura, 
+        // o si la BD no tenía coordenadas registradas, abrimos el mapa:
         this.isSubmitting = false;
         this.abrirModalMapa();
         
@@ -661,7 +699,7 @@ export default {
           formDataToSend.append('longitud', this.formData.longitud);
         }
 
-        
+
 
         // Agregar campos del formulario
         Object.keys(this.formData).forEach(key => {
