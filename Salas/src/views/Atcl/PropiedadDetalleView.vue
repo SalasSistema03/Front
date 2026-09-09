@@ -201,28 +201,27 @@
               </ul>
             </div>
 
-          <div class="card-body bg-light p-2 d-flex flex-column overflow-hidden">
-  
-  <!-- 1. El contenedor padre (tab-content) ahora es relative -->
-  <div class="tab-content flex-grow-1 position-relative" id="mediaTabContent">
+            <div class="card-body bg-light p-2 d-flex flex-column overflow-hidden">
+  <div class="tab-content flex-grow-1 overflow-hidden" id="mediaTabContent">
 
     <!-- ===================================== -->
-    <!-- TABS DE FOTOS (Hijo Absoluto 100%) -->
+    <!-- TABS DE FOTOS -->
     <!-- ===================================== -->
-    <div class="tab-pane fade show active position-absolute top-0 start-0 w-100 h-100" id="fotos" role="tabpanel">
+    <div class="tab-pane fade show active" id="fotos" role="tabpanel">
       <div v-if="propiedad?.fotos?.length" id="carouselFotos" class="carousel slide h-100 w-100" data-bs-ride="carousel">
-
         <div class="carousel-inner h-100 w-100 rounded shadow-sm bg-dark">
-          <!-- 2. Forzamos h-100 w-100 en el item -->
+          
           <div v-for="(foto, index) in propiedad.fotos" :key="index" class="carousel-item h-100 w-100" :class="{ 'active': index === 0 }">
-            
-            <!-- 3. La imagen toma el 100% del contenedor y recorta el excedente -->
-            <img :src="'http://10.10.10.191' + foto.url" class="d-block w-100 h-100" style="object-fit: cover; cursor: pointer;" @click="openModal(index)" />
-
-            <div class="position-absolute bottom-0 w-100 bg-white bg-opacity-75 p-1 border-top" v-if="foto.notes">
-              <input type="text" class="form-control compact-input text-dark border-0 bg-transparent fw-bold" :value="foto.notes" readonly>
+            <div class="d-flex flex-column h-100 w-100">
+              <div class="flex-grow-1 position-relative overflow-hidden" style="cursor: pointer;" @click="openModal(index)">
+                <img :src="'http://10.10.10.191' + foto.url" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;" />
+              </div>
+              <div class="p-2 bg-white flex-shrink-0 border-top z-3">
+                <input type="text" class="form-control compact-input bg-light text-muted" :value="foto.notes ? foto.notes : 'Sin comentarios en esta foto'" readonly disabled>
+              </div>
             </div>
           </div>
+
         </div>
 
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselFotos" data-bs-slide="prev">
@@ -231,7 +230,6 @@
         <button class="carousel-control-next" type="button" data-bs-target="#carouselFotos" data-bs-slide="next">
           <span class="carousel-control-next-icon bg-dark rounded-circle p-1" style="width: 1.5rem; height: 1.5rem;"></span>
         </button>
-
       </div>
       
       <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
@@ -240,28 +238,30 @@
     </div>
 
     <!-- ===================================== -->
-    <!-- TABS DE DOCUMENTOS (Hijo Absoluto 100%) -->
+    <!-- TABS DE DOCUMENTOS -->
     <!-- ===================================== -->
-    <div class="tab-pane fade position-absolute top-0 start-0 w-100 h-100 d-flex flex-column" id="documentos" role="tabpanel">
-      <div v-if="propiedad?.documentacion?.length" class="list-group flex-grow-1 overflow-auto custom-scrollbar pe-1">
-        <div v-for="(documento, index) in propiedad.documentacion" :key="index" class="list-group-item p-0 mb-2 border-0 shadow-sm rounded">
+    <div class="tab-pane fade" id="documentos" role="tabpanel">
+      <!-- Aquí está la magia: w-100, h-100 y overflow-auto para el scroll -->
+      <div v-if="propiedad?.documentacion?.length" class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2">
+        <div v-for="(documento, index) in propiedad.documentacion" :key="index" class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0">
           <embed :src="'http://10.10.10.191' + documento.url" type="application/pdf" class="w-100 rounded-top" height="300px">
           <div class="p-1 bg-white rounded-bottom" v-if="documento.notes">
             <input type="text" class="form-control compact-input text-muted border-0" :value="documento.notes" readonly>
           </div>
         </div>
       </div>
+      
       <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
         <i class="bi bi-file-earmark-x-fill fs-3 me-2"></i> Sin Documentos
       </div>
     </div>
 
     <!-- ===================================== -->
-    <!-- TABS DE VIDEOS (Hijo Absoluto 100%) -->
+    <!-- TABS DE VIDEOS -->
     <!-- ===================================== -->
-    <div class="tab-pane fade position-absolute top-0 start-0 w-100 h-100 d-flex flex-column" id="videos" role="tabpanel">
-      <div v-if="propiedad?.video?.length" class="list-group flex-grow-1 overflow-auto custom-scrollbar pe-1">
-        <div v-for="(video, index) in propiedad.video" :key="index" class="list-group-item p-0 mb-2 border-0 shadow-sm rounded">
+    <div class="tab-pane fade" id="videos" role="tabpanel">
+      <div v-if="propiedad?.video?.length" class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2">
+        <div v-for="(video, index) in propiedad.video" :key="index" class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0">
           <video controls class="w-100 rounded-top bg-dark">
             <source :src="'http://10.10.10.191' + video.url" type="video/mp4">
           </video>
@@ -270,6 +270,7 @@
           </div>
         </div>
       </div>
+      
       <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
         <i class="bi bi-camera-video-off-fill fs-3 me-2"></i> Sin Videos
       </div>
@@ -366,6 +367,12 @@ export default {
     abrirImpuestoModal() { this.showImpuestoModal = true },
     cerrarImpuestoModal() { this.showImpuestoModal = false },
 
+    // AÑADE ESTA FUNCIÓN AQUÍ:
+    openModal(index) {
+      this.modalIndex = index;
+      this.showModal = true;
+    },
+
     async mostrarPropiedad() {
       try {
         const id = this.$route.params.id
@@ -453,5 +460,20 @@ input[readonly] {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* FORZAR FLEXBOX EN LOS TABS DE BOOTSTRAP */
+#mediaTabContent {
+  display: flex;
+  flex-direction: column;
+}
+#mediaTabContent > .tab-pane {
+  display: none !important; /* Oculta totalmente las inactivas */
+  height: 100%;
+}
+#mediaTabContent > .tab-pane.active {
+  display: flex !important; /* Expande la activa */
+  flex-direction: column;
+  flex-grow: 1;
 }
 </style>
