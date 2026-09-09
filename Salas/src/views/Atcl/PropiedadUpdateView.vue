@@ -228,6 +228,13 @@
           <div id="mapa-edicion" style="height: 350px; width: 100%;"></div>
         </div>
         <div class="modal-footer bg-light py-1">
+          <!-- BOTÓN DE GOOGLE MAPS DINÁMICO -->
+          <div>
+            <a v-if="enlaceGoogleMaps" :href="enlaceGoogleMaps" target="_blank" class="btn btn-sm btn-outline-primary fw-bold shadow-sm">
+              <i class="bi bi-google"></i> Ver Dir. en Google
+            </a>
+          </div>
+          
           <button type="button" class="btn btn-sm btn-secondary fw-bold" @click="cerrarModalMapa">Cancelar</button>
           <button type="button" class="btn btn-sm btn-success fw-bold px-3" @click="guardarNuevasCoordenadas"
             :disabled="guardandoMapa">
@@ -555,14 +562,10 @@
   <ModalCondicionAlquiler :propiedad-update="propiedad_update" @update:condicion_alquiler="actualizarCondicion">
   </ModalCondicionAlquiler>
 
-<ModalPropiedadPropietario 
-  :propiedad="propiedad_update" 
-  :mostrar-buscador="true"
-  :mostrar-quitar="true"
-  :show="showModalPropietarios"
-  @propietarios-cambiados="handlePropietariosCambiados" 
-  @close="showModalPropietarios = false">
-</ModalPropiedadPropietario>
+  <ModalPropiedadPropietario :propiedad="propiedad_update" :mostrar-buscador="true" :mostrar-quitar="true"
+    :show="showModalPropietarios" @propietarios-cambiados="handlePropietariosCambiados"
+    @close="showModalPropietarios = false">
+  </ModalPropiedadPropietario>
 
 </template>
 
@@ -593,6 +596,17 @@ import { canSubmitPropertyUpdate } from '../../utils/propertyUpdateGuard'
 import { useLocalidades } from '../../composables/atcl/useLocalidades'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+
+import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import iconShadow from 'leaflet/dist/images/marker-shadow.png'
+
+const DefaultIcon = L.icon({
+  iconUrl: iconUrl,
+  shadowUrl: iconShadow,
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34]
+})
+L.Marker.prototype.options.icon = DefaultIcon
 
 export default {
   name: 'PropiedadUpdateView',
@@ -648,6 +662,21 @@ export default {
     }
   },
   computed: {
+    // 🟢 NUEVA FUNCIÓN: Genera el link de Google Maps en tiempo real
+    enlaceGoogleMaps() {
+      // Si no hay calle ni altura, no armamos el link
+      if (!this.calleSeleccionada || !this.numero_calle) return '';
+      
+      // Rescatamos los nombres usando los IDs seleccionados en los combos
+      const nombreProvincia = this.provincias.find(p => p.id == this.id_provincia)?.name || '';
+      const nombreLocalidad = this.localidades.find(l => l.id == this.id_localidad)?.name || '';
+      
+      // Armamos la dirección de búsqueda
+      const query = `${this.calleSeleccionada} ${this.numero_calle}, ${nombreLocalidad}, ${nombreProvincia}, Argentina`;
+      
+      // Retornamos la URL oficial de búsqueda de Google Maps
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    },
     canSubmitPropertyUpdate() {
       return canSubmitPropertyUpdate({ loading: this.loading, submitting: this.submitting, loadFailed: this.loadFailed, property: this.propiedad_update })
     },
@@ -663,6 +692,27 @@ export default {
     }
   },
   methods: {
+    actualizarComodidades(comodidades) {
+      if (!this.propiedad_update) { this.propiedad_update = {} }
+      this.propiedad_update.comodidades = comodidades
+    },
+    actualizarDescripcion(descripcion) {
+      if (!this.propiedad_update) { this.propiedad_update = {} }
+      this.propiedad_update.descripcion = descripcion
+    },
+    actualizarVenta(venta) {
+      if (!this.propiedad_update) { this.propiedad_update = {} }
+      this.propiedad_update.venta = venta
+    },
+    actualizarAlquiler(alquiler) {
+      if (!this.propiedad_update) { this.propiedad_update = {} }
+      this.propiedad_update.alquiler = alquiler
+    },
+    actualizarCondicion(condicion) {
+      if (!this.propiedad_update) { this.propiedad_update = {} }
+      this.propiedad_update.condicion = condicion
+    },
+    
     // 1. MÉTODO PARA ESCUCHAR AL MODAL DE PROPIETARIOS
     handlePropietariosCambiados(propietariosActuales) {
       // Reiniciamos los arrays
@@ -689,7 +739,7 @@ export default {
           // ES UN PROPIETARIO EXISTENTE (Verificar si fue modificado)
           const obsActual = actual.pivot?.observaciones_baja || actual.pivot?.observaciones || ''
           const obsOriginal = original.pivot?.observaciones_baja || original.pivot?.observaciones || ''
-          
+
           const bajaActual = actual.pivot?.baja || 'no'
           const bajaOriginal = original.pivot?.baja || 'no'
 
@@ -697,14 +747,14 @@ export default {
           if (obsActual !== obsOriginal || bajaActual !== bajaOriginal) {
             this.propietariosModificados.push({
               id: actual.id,
-              observaciones_baja: obsActual, 
+              observaciones_baja: obsActual,
               baja: bajaActual
             })
           }
         }
       })
     },
-// 1. Formatear fecha para mostrar
+    // 1. Formatear fecha para mostrar
     formatDate(dateString) {
       if (!dateString) return ''
       const date = new Date(dateString)
@@ -764,31 +814,155 @@ export default {
       return { valido: true }
     },
 
-    // TODAS TUS FUNCIONES DE FOTOS/DOCUMENTOS/VIDEOS/PROPIETARIOS SE MANTIENEN IGUALES
-    agregarFotosPendientes(event) { /* ... */ },
+    // ==========================================
+    // MULTIMEDIA: FOTOS
+    // ==========================================
+    agregarFotosPendientes(event) {
+      const archivos = Array.from(event.target.files)
+      archivos.forEach(file => {
+        this.fotosPendientes.push({
+          file: file,
+          preview: URL.createObjectURL(file),
+          comentario: '',
+          orden: null,
+          archivado: 0 // Corrección agregada aquí
+        })
+      })
+      event.target.value = '' // Limpiar input
+    },
+    quitarFotoPendiente(index) {
+      URL.revokeObjectURL(this.fotosPendientes[index].preview) // liberar memoria
+      this.fotosPendientes.splice(index, 1)
+    },
+    eliminarFotoExistente(fotoId) {
+      if (!confirm('¿Eliminar esta foto?')) return
+      this.propiedad_update.fotos = this.propiedad_update.fotos.filter(f => f.id !== fotoId)
+      this.fotosEliminadas.push(fotoId)
+    },
+
+    // ==========================================
+    // MULTIMEDIA: DOCUMENTOS
+    // ==========================================
+    agregarDocumentosPendientes(event) {
+      const archivos = Array.from(event.target.files)
+      archivos.forEach(file => {
+        const esPdf = file.type === 'application/pdf'
+        this.documentosPendientes.push({
+          file,
+          preview: URL.createObjectURL(file),
+          esPdf,
+          nombre: file.name,
+          comentario: ''
+        })
+      })
+      event.target.value = ''
+    },
+    quitarDocumentoPendiente(index) {
+      URL.revokeObjectURL(this.documentosPendientes[index].preview)
+      this.documentosPendientes.splice(index, 1)
+    },
+    eliminarDocumentoExistente(docId) {
+      if (!confirm('¿Eliminar este documento?')) return
+      this.propiedad_update.documentacion = this.propiedad_update.documentacion.filter(d => d.id !== docId)
+      this.documentosEliminados.push(docId)
+    },
+
+    // ==========================================
+    // MULTIMEDIA: VIDEOS
+    // ==========================================
+    agregarVideosPendientes(event) {
+      const archivos = Array.from(event.target.files)
+      archivos.forEach(file => {
+        this.videosPendientes.push({
+          file,
+          preview: URL.createObjectURL(file),
+          comentario: '',
+          orden: null
+        })
+      })
+      event.target.value = ''
+    },
+    quitarVideoPendiente(index) {
+      URL.revokeObjectURL(this.videosPendientes[index].preview)
+      this.videosPendientes.splice(index, 1)
+    },
+    eliminarVideoExistente(videoId) {
+      if (!confirm('¿Eliminar este video?')) return
+      this.propiedad_update.video = this.propiedad_update.video.filter(v => v.id !== videoId)
+      this.videosEliminados.push(videoId)
+    },
     // (Omito acá por brevedad, dejá tus métodos exactos como los pasaste)
 
     // LÓGICA DEL MAPA
-    abrirModalMapa() {
+async abrirModalMapa() {
       this.mostrarModalMapa = true;
-      let lat = this.propiedad_update?.latitud || -31.637321;
-      let lng = this.propiedad_update?.longitud || -60.694612;
+      
+      // 1. Coordenadas por defecto (Centro de Santa Fe)
+      let lat = -31.637321;
+      let lng = -60.694612;
+
+      // 2. Si la base de datos ya tiene las coordenadas exactas, priorizamos esas
+      if (this.propiedad_update?.latitud && this.propiedad_update?.longitud) {
+        lat = this.propiedad_update.latitud;
+        lng = this.propiedad_update.longitud;
+      } 
+      // 3. Si NO hay coordenadas, pero el usuario ya cargó la calle y altura, buscamos la dirección
+      else if (this.calleSeleccionada && this.numero_calle) {
+        try {
+          // Rescatamos el nombre en texto de la provincia y localidad usando los IDs seleccionados
+          const nombreProvincia = this.provincias.find(p => p.id == this.id_provincia)?.name || '';
+          const nombreLocalidad = this.localidades.find(l => l.id == this.id_localidad)?.name || '';
+          
+          // Armamos el string de búsqueda (Ej: "San Martin 2500, Santa Fe, Santa Fe, Argentina")
+          const query = `${this.calleSeleccionada} ${this.numero_calle}, ${nombreLocalidad}, ${nombreProvincia}, Argentina`;
+          
+          // Consultamos a la API de Nominatim
+          const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          
+          // Si encuentra resultados, tomamos la lat y lng del primer resultado
+          if (data && data.length > 0) {
+            lat = parseFloat(data[0].lat);
+            lng = parseFloat(data[0].lon);
+          }
+        } catch (error) {
+          console.error("Error buscando la dirección en el mapa:", error);
+          // Si falla la conexión o no encuentra la calle, simplemente caerá en el default de Santa Fe
+        }
+      }
+
       this.nuevasCoordenadas.lat = lat;
       this.nuevasCoordenadas.lng = lng;
 
+      // 4. Renderizamos el mapa de Leaflet
       this.$nextTick(() => {
         if (this.mapaInstancia) {
           this.mapaInstancia.remove();
           this.mapaInstancia = null;
         }
+        
         this.mapaInstancia = L.map('mapa-edicion').setView([lat, lng], 16);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.mapaInstancia);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(this.mapaInstancia);
+
         this.marcadorInstancia = L.marker([lat, lng], { draggable: true }).addTo(this.mapaInstancia);
+        
+        const popupHTML = `
+          <div style="min-width: 150px; text-align: center;">
+            <h6 class="fw-bold mb-1 text-danger"><i class="bi bi-geo-alt"></i> Ubicación Estimada</h6>
+            <p class="small text-muted mb-0">Arrastrá este pin para corregir la posición exacta.</p>
+          </div>
+        `;
+        this.marcadorInstancia.bindPopup(popupHTML).openPopup();
+
         this.marcadorInstancia.on('dragend', (event) => {
           const posicion = event.target.getLatLng();
           this.nuevasCoordenadas.lat = posicion.lat;
           this.nuevasCoordenadas.lng = posicion.lng;
         });
+
         setTimeout(() => {
           if (this.mapaInstancia) {
             this.mapaInstancia.invalidateSize();
@@ -809,7 +983,7 @@ export default {
       this.showSuccess('Coordenadas listas para ser guardadas.');
     },
 
-  // 2. MÉTODO PARA CARGAR LOS DATOS (COMPLETO)
+    // 2. MÉTODO PARA CARGAR LOS DATOS (COMPLETO)
     async mostrarPropiedad() {
       this.loadFailed = false
       try {
@@ -869,6 +1043,16 @@ export default {
 
     // 3. MÉTODO PARA ENVIAR LOS DATOS (COMPLETO)
     async actualizarPropiedad() {
+      const id_usuario = await getUser(localStorage.getItem('token'))
+      const formData = new FormData()
+
+      // 🟢 LÍNEA CLAVE: Engañamos al backend para que acepte archivos en un update
+      formData.append('_method', 'PUT')
+
+      // DATOS PRINCIPALES
+      formData.append('id', this.$route.params.id)
+      formData.append('calle_id', this.calleId ?? '')
+      formData.append('numero_calle', this.numero_calle ?? '')
       if (!this.canSubmitPropertyUpdate) {
         this.showWarning('Esperá a que termine de cargarse la propiedad antes de guardar.')
         return
@@ -897,7 +1081,7 @@ export default {
         formData.append('id_zona', this.id_zona ?? '')
         formData.append('id_provincia', this.id_provincia ?? '')
         formData.append('id_localidad', this.id_localidad ?? '')
-        
+
         if (this.propiedad_update?.latitud) formData.append('latitud', this.propiedad_update.latitud)
         if (this.propiedad_update?.longitud) formData.append('longitud', this.propiedad_update.longitud)
 
@@ -998,7 +1182,7 @@ export default {
 
         // PETICIÓN AL BACKEND
         const response = await actualizaPropiedad(formData)
-        
+
         if (response.data.success) {
           this.showSuccess('Propiedad actualizada correctamente')
           this.$router.push(`/propiedad-detalle/${this.$route.params.id}`)
@@ -1009,6 +1193,10 @@ export default {
         this.submitting = false
       }
     }
+
+
+    
+
   },
   async mounted() {
     // 1. Nos aseguramos de que el spinner esté activo
@@ -1083,5 +1271,14 @@ export default {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* ESTILOS DEL POPUP DEL MAPA (Tomados de PropiedadBusquedaMap) */
+:deep(.leaflet-popup-content-wrapper) {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+:deep(.leaflet-popup-content) {
+  margin: 15px;
 }
 </style>

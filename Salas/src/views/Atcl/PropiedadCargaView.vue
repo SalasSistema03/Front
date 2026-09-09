@@ -605,42 +605,40 @@ export default {
     },
 
     // 1. EL INTERCEPTOR: Verifica si abre el mapa o si roba las coordenadas
+    // 1. EL INTERCEPTOR: Verifica si abre el mapa o si roba las coordenadas
     async handleSubmit() {
-      // --- MINI VALIDACIONES OBLIGATORIAS ---
+      // Validaciones obligatorias mínimas (quitamos el aviso estricto de Altura)
       if (
         !this.calleId ||
-        !this.formData.altura ||
         !this.formData.inmueble_id ||
         !this.formData.provincia_id ||
         !this.formData.localidad_id
       ) {
-        this.showWarning('Faltan datos obligatorios: Provincia, Localidad, Calle, Altura e Inmueble deben estar completos.');
-        return; // Detenemos la ejecución aquí mismo, no hacemos nada más.
+        this.showWarning('Faltan datos obligatorios: Provincia, Localidad, Calle e Inmueble deben estar completos.');
+        return; 
       }
 
       this.isSubmitting = true;
 
-      // Si falta la calle o la altura, que intente guardar igual para que salten las validaciones de Laravel
-      if (!this.calleId || !this.formData.altura) {
-        this.ejecutarGuardadoReal();
-        return;
-      }
-
       try {
-        // Le preguntamos al backend si esta dirección ya tiene coordenadas
-        const payload = { calle_id: this.calleId, numero_calle: this.formData.altura };
-        const response = await verificarCoordenadasService(payload); // Asegurate de importar este servicio
+        // Solo intentamos robar coordenadas a la BD si el usuario ingresó una altura exacta
+        if (this.formData.altura) {
+          const payload = { calle_id: this.calleId, numero_calle: this.formData.altura };
+          const response = await verificarCoordenadasService(payload); 
 
-        if (response.data && response.data.coordenadas) {
-          // ¡Ya existía! Nos robamos las coordenadas y guardamos directo
-          this.formData.latitud = response.data.coordenadas.lat;
-          this.formData.longitud = response.data.coordenadas.lng;
-          this.ejecutarGuardadoReal();
-        } else {
-          // Es una dirección nueva. Abrimos el mapa.
-          this.isSubmitting = false;
-          this.abrirModalMapa();
+          if (response.data && response.data.coordenadas) {
+            // ¡Ya existía! Nos robamos las coordenadas y guardamos directo
+            this.formData.latitud = response.data.coordenadas.lat;
+            this.formData.longitud = response.data.coordenadas.lng;
+            this.ejecutarGuardadoReal();
+            return; // Cortamos la ejecución aquí
+          }
         }
+        
+        // Si NO hay altura, o la BD no tenía las coordenadas exactas guardadas, abrimos el mapa
+        this.isSubmitting = false;
+        this.abrirModalMapa();
+        
       } catch (error) {
         console.error("Error verificando coordenadas", error);
         // Si falla la red al verificar, intenta guardar igual sin coordenadas
