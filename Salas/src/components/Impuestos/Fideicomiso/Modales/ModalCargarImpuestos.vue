@@ -22,6 +22,7 @@
                             <option value="seguro">Seguro</option>
                             <option value="limpieza">Limpieza</option>
                             <option value="ascensor">Ascensor</option>
+                             <option value="internet">Internet</option>
                             <option value="honorario">Honorarios</option>
                         </select>
                     </div>

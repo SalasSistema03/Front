@@ -49,7 +49,7 @@ const props = defineProps({
 const emit = defineEmits(['cerrarModalModificar', 'registroActualizado']);
 
 const loading = ref(false);
-const conceptos = ['tgi', 'agua', 'api', 'luz', 'seguro', 'limpieza', 'ascensor', 'honorario'];
+const conceptos = ['tgi', 'agua', 'api', 'luz', 'seguro', 'limpieza', 'ascensor', 'internet', 'honorario'];
 
 // Clonamos los datos que vienen por prop para no mutar la tabla original hasta que se guarde en DB
 const form = reactive({});
