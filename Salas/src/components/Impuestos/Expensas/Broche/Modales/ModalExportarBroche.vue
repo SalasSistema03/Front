@@ -45,7 +45,9 @@ import { descargarPdfBrocheService } from '@/Services/api/Impuestos/expensasApi.
 
 const props = defineProps({
   show: { type: Boolean, required: true },
-  empresas: { type: Array, required: true }
+  empresas: { type: Array, required: true },
+  mes: { type: [Number, String], default: '' },
+  anio: { type: [Number, String], default: '' }
 });
 
 const emit = defineEmits(['close']);
@@ -59,9 +61,13 @@ const form = ref({
 
 onMounted(() => {
   const fecha = new Date();
-  form.value.mes = fecha.getMonth() + 1;
-  form.value.anio = fecha.getFullYear();
+  form.value.mes = props.mes || (fecha.getMonth() + 1);
+  form.value.anio = props.anio || fecha.getFullYear();
 });
+
+const cerrarModal = () => {
+  emit('close');
+};
 
 const generarDocumento = async () => {
   if (!form.value.mes || !form.value.anio) {
