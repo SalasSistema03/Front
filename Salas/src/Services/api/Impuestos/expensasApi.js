@@ -20,7 +20,7 @@ export const filtroUnidadesCompletoService = (params) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    params: params 
+    params: params
   })
 }
 
@@ -113,7 +113,7 @@ export const buscarBrochesService = (filtros) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/expensas/broche-buscar`, {
     headers: { Authorization: `Bearer ${token}` },
-    params: filtros 
+    params: filtros
   })
 }
 
@@ -156,5 +156,12 @@ export const cargaMasivaImpuestosService = (data) => {
   const token = localStorage.getItem('token')
   return axios.post(`${API_URL}/v1/fideicomiso/carga-masiva`, data, {
     headers: { Authorization: `Bearer ${token}` }
+  })
+}
+
+export const getBancosService = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/expensas/bancos`, {
+    headers: { Authorization: `Bearer ${token}` },
   })
 }

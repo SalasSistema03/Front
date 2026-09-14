@@ -269,6 +269,8 @@ const confirmarGuardado = async () => {
     }))
   };
 
+  console.log(payload);
+
   guardando.value = true;
   try {
     const response = await completarCargaUnidadesService(payload);
