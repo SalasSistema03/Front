@@ -31,6 +31,7 @@
                             <th>Seguro</th>
                             <th>Limpieza</th>
                             <th>Ascensor</th>
+                            <th>Internet</th>
                             <th>Honorarios</th>
                             <th>Total</th>
                             <th>Acciones</th>
@@ -46,6 +47,7 @@
                             <td>$ {{ item.seguro }}</td>
                             <td>$ {{ item.limpieza }}</td>
                             <td>$ {{ item.ascensor }}</td>
+                            <td>$ {{ item.internet }}</td>
                             <td>$ {{ item.honorario }}</td>
                             <td class="fw-bold text-dark">$ {{ calcularTotalFila(item) }}</td>
                             <td>
@@ -58,8 +60,12 @@
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button type="button" class="btn btn-sm btn-primary shadow-sm"
-                                        @click="generarComprobante(item)" title="Generar PDF">
-                                        <i class="bi bi-file-earmark-pdf"></i>
+                                        :disabled="generandoPdf === item.id" @click="generarComprobante(item)"
+                                        title="Generar PDF">
+                                        <span v-if="generandoPdf === item.id" class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span>
+
+                                        <i v-else class="bi bi-file-earmark-pdf"></i>
                                     </button>
                                     <button type="button" class="btn btn-sm shadow-sm"
                                         :class="item.pagado === 'S' ? 'btn-success' : 'btn-outline-success'"
@@ -126,6 +132,7 @@ const pdfData = ref({});
 const pdfRef = ref(null);
 const mostrarModalModificar = ref(false);
 const registroAEditar = ref(null);
+const generandoPdf = ref(null);
 
 // Función para abrir el modal
 const abrirModalModificar = (item) => {
@@ -162,29 +169,43 @@ onMounted(() => {
 });
 
 const generarComprobante = async (registro) => {
-    // 1. Armamos el objeto de datos
+    generandoPdf.value = registro.id;
+
     const payload = {
         unidad: props.datosUnidad,
         registro: registro
     };
 
-    console.log('ModalEstadoImpuestos - generando PDF con:', JSON.parse(JSON.stringify(payload)));
+    console.log(
+        'ModalEstadoImpuestos - generando PDF con:',
+        JSON.parse(JSON.stringify(payload))
+    );
 
-    // 2. Hacemos la llamada directa a la API (Eliminamos toda la lógica del nextTick y del componente hijo)
     try {
         const resp = await GenerarPdfComprobantesService(payload);
-        
-        // Armamos el PDF y lo abrimos en una nueva pestaña
-        const blob = new Blob([resp.data], { type: 'application/pdf' });
+
+        const blob = new Blob([resp.data], {
+            type: 'application/pdf'
+        });
+
         const url = window.URL.createObjectURL(blob);
+
         window.open(url, '_blank', 'noopener,noreferrer');
-        
-        // Limpiamos la URL después de un minuto
-        setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
-        
+
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+        }, 60_000);
+
     } catch (err) {
         console.error('Error generando PDF desde el padre:', err);
-        // Opcional: Acá podés meter un alertas.error('Error al generar el PDF')
+
+        alertas.error(
+            err.response?.data?.message ||
+            'Hubo un error al generar el PDF.'
+        );
+
+    } finally {
+        generandoPdf.value = null;
     }
 };
 

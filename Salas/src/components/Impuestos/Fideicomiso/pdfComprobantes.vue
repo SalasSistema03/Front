@@ -15,7 +15,6 @@ const props = defineProps({
 })
 
 const generarPdf = async (payload = null) => {
-  console.log('pdfComprobantes.generarPdf invoked (before request). payload:', payload ? JSON.parse(JSON.stringify(payload)) : JSON.parse(JSON.stringify(props.formData)));
   try {
     const dataToSend = payload ?? props.formData;
     console.log('pdfComprobantes - calling GenerarPdfComprobantesService with', JSON.parse(JSON.stringify(dataToSend)));
