@@ -134,7 +134,7 @@
         :empresas="listaEmpresas" @close="mostrarModalCarga = false" @recargar="obtenerBroches" />
 
     <ModalExportarBroche v-if="mostrarModalExportar" :show="mostrarModalExportar" :empresas="listaEmpresas"
-        @close="mostrarModalExportar = false" />
+        :mes="filtros.mes" :anio="filtros.anio" @close="mostrarModalExportar = false" />
 
     <ModalEditarBroche v-if="mostrarModalEditar" :show="mostrarModalEditar" :broche="brocheSeleccionado"
         @close="mostrarModalEditar = false" @recargar="obtenerBroches" />
