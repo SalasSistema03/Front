@@ -44,7 +44,7 @@
                   <br>Cargando consorcios...
                 </td>
               </tr>
-              
+
               <tr v-else-if="edificios.length === 0">
                 <td colspan="4" class="text-center py-4 text-muted">No se encontraron consorcios.</td>
               </tr>
@@ -65,24 +65,17 @@
       </div>
     </div>
 
-    </div>
+  </div>
 
-    <ModalConsorcio 
-  v-if="mostrarModal" 
-  :show="mostrarModal"
-  :modoEdicion="esEdicion"
-  :consorcio="consorcioSeleccionado"
-  :listaCalles="calles"
-  :listaAdministradores="administradores"
-  @close="mostrarModal = false"
-  @recargar="obtenerConsorcios"
-/>
+  <ModalConsorcio v-if="mostrarModal" :show="mostrarModal" :modoEdicion="esEdicion" :consorcio="consorcioSeleccionado"
+    :listaCalles="calles" :listaAdministradores="administradores" :listaBancos="bancos" @close="mostrarModal = false"
+    @recargar="obtenerConsorcios" />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { alertas } from '@/utils/alertas'; // Ajustá la ruta
-import { getEdificiosService } from '@/Services/api/Impuestos/expensasApi.js';
+import { getEdificiosService, getBancosService } from '@/Services/api/Impuestos/expensasApi.js';
 import ModalConsorcio from '@/components/Impuestos/Expensas/Consorcios/Modales/ModalConsorcio.vue';
 
 // --- ESTADOS ---
@@ -99,6 +92,7 @@ const administradores = ref([]);
 // Objeto para pasar al modal cuando editamos
 const consorcioSeleccionado = ref(null);
 
+const bancos = ref([]);
 // --- MÉTODOS ---
 
 // 1. Obtener la lista y catálogos
@@ -106,7 +100,7 @@ const obtenerConsorcios = async () => {
   cargando.value = true;
   try {
     const response = await getEdificiosService({ search: search.value });
-    
+
     // Asignamos las 3 colecciones que nos devuelve el backend
     const data = response.data.data;
     edificios.value = data.edificios;
@@ -131,13 +125,21 @@ const abrirModalNuevo = () => {
 const abrirModalEditar = (edificio) => {
   esEdicion.value = true;
   // Hacemos una copia superficial para no editar directamente la tabla hasta guardar
-  consorcioSeleccionado.value = { ...edificio }; 
+  consorcioSeleccionado.value = { ...edificio };
   mostrarModal.value = true;
 };
+
+// 4 Obtener Bancos
+const obtenerBancos = async () => {
+  const response = await getBancosService()
+  bancos.value = response.data.data
+  //console.log(bancos.value)
+}
 
 // --- CICLO DE VIDA ---
 onMounted(() => {
   obtenerConsorcios();
+  obtenerBancos();
 });
 </script>
 
