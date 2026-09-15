@@ -127,7 +127,7 @@
           </div>
         </div>
 
-        <div class="table-responsive" style="min-height: 350px;">
+        <div class="table-responsive" style="min-height: 350px; overflow-y: auto">
 
           <table class="table table-hover align-middle mb-0 proceso_reserva_table">
 
@@ -284,8 +284,9 @@
   <ModalContrato :show="showModalContrato" :contrato="contratoSeleccionado" :estados="estadoContrato"
     @close="cerrarModalContrato" @guardar="guardarModalContrato" />
 
-  <ModalObservacionesContrato :show="showModalObservacionesContrato" :contrato="contratoSeleccionado"
-    :estados="estadoContrato" @close="cerrarModalObservacionesContrato" @guardar="guardarObservacionesContrato" />
+  <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
+    @close="showModalObservacion = false" />
+
 </template>
 
 <script setup>
@@ -293,7 +294,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import NavComponent from '@/components/NavComponent.vue'
 import ModalContrato from '@/components/Contrato/Contrato Nuevo/ModalContrato.vue'
-import ModalObservacionesContrato from '@/components/Contrato/Contrato Nuevo/ModalObservacionesContrato.vue'
+import ModalObservacionAlquiler from '@/components/Atcl/Alquiler/ModalObservacionAlquiler.vue'
 import { getEstadosContrato, getHistorialContrato, ActualizarEstadoContrato } from '@/Services/api/Contrato/Contrato'
 import { asesoresAlquiler } from '@/Services/api/Atcl/Alquiler/Alquiler'
 import { useToast } from '@/composables/useToast'
@@ -310,11 +311,12 @@ const asesores = ref([])
 const filtroEstado = ref('')
 const filtroAsesor = ref('')
 const folio = ref('')
+const contratoSeleccionado = ref(null)
 //const inventario = ref('')
 const { showError, showSuccess } = useToast()
 const showModalContrato = ref(false)
-const showModalObservacionesContrato = ref(false)
-const contratoSeleccionado = ref(null)
+const showModalObservacion = ref(false)
+const observacionActual = ref(null)
 const getForm = () => ({
   mes: mes.value,
   anio: anio.value,
@@ -322,6 +324,7 @@ const getForm = () => ({
   filtroAsesor: filtroAsesor.value,
   folio: folio.value,
 })
+const sector = ref('contrato')
 
 //Obtenemos los 3 ultimos años
 const obtenerAñoMenos3 = () => {
@@ -380,18 +383,13 @@ const abrirModalContrato = (item) => {
 }
 
 const abrirModalObservacionesContrato = (item) => {
-  console.log('Contrato seleccionado para observaciones:', item)
-  contratoSeleccionado.value = item
-  showModalObservacionesContrato.value = true
+  //console.log('Contrato seleccionado para observaciones:', item)
+  observacionActual.value = item.id
+  showModalObservacion.value = true
 }
 
 const cerrarModalContrato = () => {
   showModalContrato.value = false
-  contratoSeleccionado.value = null
-}
-
-const cerrarModalObservacionesContrato = () => {
-  showModalObservacionesContrato.value = false
   contratoSeleccionado.value = null
 }
 
@@ -412,18 +410,18 @@ const obtenerClaseEstado = (estado) => {
   return 'bg-secondary text-white'
 }
 
-const guardarObservacionesContrato = async (formData) => {
+/* const guardarObservacionesContrato = async (formData) => {
   try {
     await ActualizarEstadoContrato(formData)
     showSuccess('Observaciones guardadas correctamente')
-    showModalObservacionesContrato.value = false
+    showModalObservacion.value = false
     listado(getForm())
   }
   catch (error) {
     console.log(error)
     showError('Error al guardar las observaciones')
   }
-}
+} */
 
 const guardarModalContrato = async (formData) => {
   try {

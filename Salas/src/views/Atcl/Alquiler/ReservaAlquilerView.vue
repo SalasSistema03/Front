@@ -397,6 +397,7 @@ const mesesContrato = ref(null)
 
 const abrirModalObservacion = (item) => {
   observacionActual.value = item.proceso_propiedad.id
+  console.log(observacionActual.value)
   showModalObservacion.value = true
 }
 

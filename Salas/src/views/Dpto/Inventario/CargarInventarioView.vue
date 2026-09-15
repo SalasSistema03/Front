@@ -201,8 +201,10 @@
   </div>
   <ModalInventario v-if="showModalInventario" :show="showModalInventario" :inventario="inventarioSeleccionado"
     @close="cerrarModalInventario" @guardar="guardarModalInventario" />
-  <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones"
-    :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" />
+  <!-- <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones"
+    :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" /> -->
+  <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
+    @close="showModalObservacion = false" />
 </template>
 <script setup>
 import NavComponent from '../../../components/NavComponent.vue'
@@ -214,8 +216,9 @@ import {
   getUsuariosDpto,
 } from '@/Services/api/Dpto/Inventario'
 import { ref, onMounted, watch, computed } from 'vue'
+import ModalObservacionAlquiler from '@/components/Atcl/Alquiler/ModalObservacionAlquiler.vue'
 import ModalInventario from '@/components/Dpto/Inventario/ModalInventario.vue'
-import ModalObservacionesInventario from '@/components/Dpto/Inventario/ModalObservacionesInventario.vue'
+/* import ModalObservacionesInventario from '@/components/Dpto/Inventario/ModalObservacionesInventario.vue' */
 import { useDateFormatter } from '@/composables/useDateFormatter'
 import { useToast } from '@/composables/useToast'
 const { mes, anio, obtenerAñoMenos3 } = useFiltroMesAnio()
@@ -224,7 +227,7 @@ const historial = ref([])
 const { formatDate } = useDateFormatter()
 const inventarioSeleccionado = ref(null)
 const showModalInventario = ref(false)
-const showModalObservaciones = ref(false)
+const showModalObservacion = ref(false)
 const { showError, showSuccess } = useToast()
 const filtroEstado = ref('')
 const estadoDpto = ref([])
@@ -234,7 +237,8 @@ const folio = ref('')
 const totalInventarios = ref(0)
 const inventariosRealizados = ref(0)
 const inventariosRestantes = ref(0)
-
+const sector = ref('inventario')
+const observacionActual = ref(null)
 
 const inventariosPorAsesor = computed(() => {
   const conteo = {}
@@ -302,14 +306,15 @@ const cerrarModalInventario = () => {
 }
 
 const abrirModalObservacionesContrato = (item) => {
-  console.log(item)
-  inventarioSeleccionado.value = item
-  showModalObservaciones.value = true
+  //console.log(item)
+  observacionActual.value = item.id
+  /* inventarioSeleccionado.value = item */
+  showModalObservacion.value = true
 }
 
-const cerrarModalObservaciones = () => {
-  showModalObservaciones.value = false
-}
+/* const cerrarModalObservaciones = () => {
+  showModalObservacion.value = false
+} */
 
 const guardarModalInventario = async (formData) => {
   //console.log('aca llega la informacion', formData)
