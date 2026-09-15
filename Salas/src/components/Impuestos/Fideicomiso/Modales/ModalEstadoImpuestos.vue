@@ -169,17 +169,26 @@ onMounted(() => {
 });
 
 const generarComprobante = async (registro) => {
+    // 1. Preguntamos al usuario
+    const res = await alertas.preguntarTipoPdf(
+        'Tipo de Comprobante',
+        '¿Desea generar el comprobante detallado con todos los conceptos o solo con el total?'
+    );
+
+    // Si hace click en Cancelar o cierra el cartel, no generamos nada
+    if (res.isDismissed) return;
+
+    // true si presionó 'Detallado', false si presionó 'Simple (Solo Total)'
+    const esDetallado = res.isConfirmed;
+
     generandoPdf.value = registro.id;
 
+    // 2. Enviamos el flag 'detallado' al backend
     const payload = {
         unidad: props.datosUnidad,
-        registro: registro
+        registro: registro,
+        detallado: esDetallado
     };
-
-    console.log(
-        'ModalEstadoImpuestos - generando PDF con:',
-        JSON.parse(JSON.stringify(payload))
-    );
 
     try {
         const resp = await GenerarPdfComprobantesService(payload);
@@ -189,7 +198,6 @@ const generarComprobante = async (registro) => {
         });
 
         const url = window.URL.createObjectURL(blob);
-
         window.open(url, '_blank', 'noopener,noreferrer');
 
         setTimeout(() => {
@@ -198,12 +206,9 @@ const generarComprobante = async (registro) => {
 
     } catch (err) {
         console.error('Error generando PDF desde el padre:', err);
-
         alertas.error(
-            err.response?.data?.message ||
-            'Hubo un error al generar el PDF.'
+            err.response?.data?.message || 'Hubo un error al generar el PDF.'
         );
-
     } finally {
         generandoPdf.value = null;
     }
@@ -254,4 +259,7 @@ const calcularTotalFila = (item) => {
     // Retornamos el total formateado con 2 decimales (opcional, podés sacar el toFixed si no usás centavos)
     return total.toFixed(2);
 };
+
+
+
 </script>

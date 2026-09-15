@@ -45,5 +45,25 @@ export const alertas = {
             cancelButtonText: 'Cancelar',
             reverseButtons: true 
         });
+    },
+
+    // NUEVO MÉTODO PARA ESTE CASO (Permite elegir entre dos variantes o cancelar)
+    async preguntarTipoPdf(title = '¿Cómo desea generar el comprobante?', text = 'Seleccione el formato del PDF') {
+        return Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonColor: '#0055b9',
+            denyButtonColor: '#6c757d',
+            cancelButtonColor: '#ff0000',
+            confirmButtonText: 'Detallado',
+            denyButtonText: 'Simple (Solo Total)',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
     }
+
+    
 };
