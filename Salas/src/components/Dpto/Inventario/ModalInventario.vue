@@ -13,7 +13,7 @@
 
       <div class="row">
 
-        <div class="col-md-4 form-group form-control-sm">
+        <div class="col-md-3 form-group form-control-sm">
           <label>Verficiado Por</label>
           <select class="form-select" v-model="form.verificado_por">
             <option value="">Seleccionar</option>
@@ -23,12 +23,7 @@
           </select>
         </div>
 
-        <div class="col-md-4 form-group form-control-sm">
-          <label>Fecha Inventario</label>
-          <input type="date" class="form-control" v-model="form.fecha_inventario">
-        </div>
-
-        <div class="col-md-4 form-group form-control-sm">
+        <div class="col-md-5 form-group form-control-sm">
           <label>Estado</label>
           <select class="form-select" v-model="form.estado_id">
             <option value="">Seleccionar</option>
@@ -37,11 +32,19 @@
             </option>
           </select>
         </div>
-        <div class="col-md form-group form-control-sm">
-          <label>Observaciones</label>
-          <textarea class="form-control" v-model="form.observaciones"></textarea>
+        <div v-if="estados.find(e => e.id == form.estado_id)?.estado === 'TERMINADO'"
+          class="col-md-4 form-group form-control-sm">
+          <label>Fecha Inventario</label>
+          <input type="date" class="form-control" v-model="form.fecha_inventario">
         </div>
 
+
+
+
+      </div>
+      <div class="col-md form-group form-control-sm">
+        <label>Observaciones</label>
+        <textarea class="form-control" v-model="form.observaciones"></textarea>
       </div>
     </template>
 
@@ -60,6 +63,7 @@
 import { defineProps, defineEmits, ref, onMounted, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { getUsuariosDpto, getEstadoDpto } from '@/Services/api/Dpto/Inventario'
+import { getUser } from '@/Services/api/Usuario/userApi'
 
 
 
@@ -109,8 +113,9 @@ watch(() => props.inventario, (newVal) => {
 }, { immediate: true })
 
 
-const cargarUsuarios = async () => {
+/* const cargarUsuarios = async () => {
   try {
+
     const res = await getUsuariosDpto()
     const data = res.data.resultado || res.data || []
 
@@ -122,7 +127,39 @@ const cargarUsuarios = async () => {
   } catch (error) {
     console.error('Error cargando usuarios:', error)
   }
+} */
+
+
+const cargarUsuarios = async () => {
+  try {
+    // Obtener usuario actualmente logueado
+    const resUser = await getUser()
+    const usuarioActual = resUser.data
+
+    // Obtener todos los usuarios del departamento
+    const res = await getUsuariosDpto()
+    const data = res.data.resultado || res.data || []
+
+    // Cargar todos los usuarios
+    usuarios.value = data.map((u) => ({
+      ...u,
+      value: u.id_usuario ?? u.id ?? u.usuario_id ?? u.usuario?.id ?? '',
+      username:
+        u.usuario?.username ??
+        u.username ??
+        u.usuario_username ??
+        'Sin usuario'
+    }))
+
+    // Seleccionar automáticamente al usuario actual
+    form.value.verificado_por = usuarioActual.id
+
+  } catch (error) {
+    console.error('Error cargando usuarios:', error)
+  }
 }
+
+
 
 const cargarEstados = async () => {
   try {
