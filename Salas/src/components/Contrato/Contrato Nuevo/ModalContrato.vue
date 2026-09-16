@@ -142,7 +142,8 @@
                 Gasto Administrativo
               </label>
 
-              <input type="number" v-model="form.gastos_administrativos" class="form-control form-control-sm" />
+              <input type="number" v-model="form.gastos_administrativos" class="form-control form-control-sm"
+                :disabled="tieneGastoAdministrativo" />
 
             </div>
 
@@ -153,7 +154,8 @@
                 Entregada a
               </label>
 
-              <select v-model="form.tirilla_entregada_a" class="form-select form-select-sm">
+              <select v-model="form.tirilla_entregada_a" class="form-select form-select-sm"
+                :disabled="tieneGastoAdministrativo">
                 <option value="">Seleccionar</option>
 
                 <option v-for="usuario in usuarioTirilla" :key="getUsuarioOptionValue(usuario)"
@@ -171,7 +173,8 @@
                 Fecha entrega
               </label>
 
-              <input type="date" v-model="form.fecha_tirilla_entregada" class="form-control form-control-sm" />
+              <input type="date" v-model="form.fecha_tirilla_entregada" class="form-control form-control-sm"
+                :disabled="tieneGastoAdministrativo" />
 
             </div>
 
@@ -182,7 +185,8 @@
                 Controlada por
               </label>
 
-              <select v-model="form.tirilla_controlada_por" class="form-select form-select-sm">
+              <select v-model="form.tirilla_controlada_por" class="form-select form-select-sm"
+                :disabled="tieneGastoAdministrativo">
                 <option value="">Seleccionar</option>
 
                 <option v-for="usuario in usuarioControlaTirilla" :key="getUsuarioOptionValue(usuario)"
@@ -201,86 +205,21 @@
                 Fecha controlada
               </label>
 
-              <input type="date" v-model="form.fecha_tirilla_controlada" class="form-control form-control-sm" />
+              <input type="date" v-model="form.fecha_tirilla_controlada" class="form-control form-control-sm"
+                :disabled="tieneGastoAdministrativo" />
 
             </div>
 
-          </div>
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- 3. CIERRE DEL CONTRATO -->
-        <!-- ================================================= -->
-
-        <div class="contrato-seccion">
-
-          <div class="contrato-seccion-header">
-            <i class="bi bi-calendar-check"></i>
-            <span>CIERRE DEL CONTRATO</span>
-          </div>
-
-          <div class="row g-3">
-
-            <div class="col-md-2 form-group">
+            <!-- Monto Contrato -->
+             <div class="col-md-2 form-group">
 
               <label class="form-label">
-                Fecha Contrato
+                Monto Contrato
               </label>
 
-              <input type="date" v-model="form.fecha_contrato" class="form-control form-control-sm" />
-
-            </div>
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Fecha Autorización
-              </label>
-
-              <input type="date" v-model="form.fecha_autorizacion" class="form-control form-control-sm" />
-
-            </div>
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Entrega de Llaves
-              </label>
-
-              <input type="date" v-model="form.fecha_finalizacion_firma_cobro" class="form-control form-control-sm" />
-
-            </div>
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Cant. Meses
-              </label>
-
-              <input type="number" v-model="form.cant_meses" class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1" />
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- 4. DOCUMENTACIÓN Y DATOS -->
-        <!-- ================================================= -->
-
-        <div class="contrato-seccion">
-
-          <div class="contrato-seccion-header">
-            <i class="bi bi-folder2-open"></i>
-            <span>DOCUMENTACIÓN Y DATOS</span>
-          </div>
-
-          <div class="row g-3">
+              <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm"
+                :disabled="form.monto_contrato == 1" />
+                </div>
 
             <!-- Monto -->
             <div class="col-md-2 form-group">
@@ -365,6 +304,85 @@
 
             </div>
 
+          </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- 3. CIERRE DEL CONTRATO -->
+        <!-- ================================================= -->
+
+        <div class="contrato-seccion">
+
+          <div class="contrato-seccion-header">
+            <i class="bi bi-calendar-check"></i>
+            <span>CIERRE DEL CONTRATO</span>
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-md-2 form-group">
+
+              <label class="form-label">
+                Fecha Contrato
+              </label>
+
+              <input type="date" v-model="form.fecha_contrato" class="form-control form-control-sm" />
+
+            </div>
+
+            <div class="col-md-2 form-group">
+
+              <label class="form-label">
+                Fecha Autorización
+              </label>
+
+              <input type="date" v-model="form.fecha_autorizacion" class="form-control form-control-sm" />
+
+            </div>
+
+            <div class="col-md-2 form-group">
+
+              <label class="form-label">
+                Entrega de Llaves
+              </label>
+
+              <input type="date" v-model="form.fecha_finalizacion_firma_cobro" class="form-control form-control-sm" />
+
+            </div>
+
+            <div class="col-md-2 form-group">
+
+              <label class="form-label">
+                Cant. Meses
+              </label>
+
+              <input type="number" v-model="form.cant_meses" class="form-control form-control-sm"
+                :disabled="form.bloqueado == 1" />
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- 4. DOCUMENTACIÓN Y DATOS -->
+        <!-- ================================================= -->
+
+        <div class="contrato-seccion">
+
+          <div class="contrato-seccion-header">
+            <i class="bi bi-folder2-open"></i>
+            <span>DOCUMENTACIÓN Y DATOS</span>
+          </div>
+
+          <div class="row g-3">
+
+            
+
             <!-- Monto alquiler -->
             <div class="col-md-2 form-group">
 
@@ -425,7 +443,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits, onMounted } from 'vue'
+import { ref, watch, defineProps, defineEmits, onMounted, computed } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { verificarPermisoUsuario } from '@/Services/api/Contrato/Contrato'
 import { useDateFormatter } from '@/composables/useDateFormatter'
@@ -477,6 +495,7 @@ const getFormFromContrato = (contrato) => {
   let inquilino_propietario = contrato?.registro_sellado?.inq_prop
   let fecha_inventario = contrato?.historial_estado_dpto?.fecha_inventario
 
+  //console.log(hc)
   //console.log(contrato)
   const bloqueado = contrato?.registro_sellado?.mostrar
   //console.log(bloqueado)
@@ -485,6 +504,7 @@ const getFormFromContrato = (contrato) => {
 
   if (hc) {
     return {
+
       id_estado: hc.id_estado || '',
       fecha_inventario: normalizarFecha(fecha_inventario) ?? '',
       fecha_comercial_presenta_carpeta: normalizarFecha(hc.fecha_comercial_presenta_carpeta),
@@ -509,6 +529,7 @@ const getFormFromContrato = (contrato) => {
       tipo_contrato: tipo_contrato || '',
       inquilino_propietario: inquilino_propietario || '',
       bloqueado: bloqueado,
+
     }
   }
   return {
@@ -531,6 +552,11 @@ const getFormFromContrato = (contrato) => {
 }
 
 const form = ref(getFormFromContrato(props.contrato))
+
+const tieneGastoAdministrativo = computed(() => {
+  const valorInicial = props.contrato?.historial_estado_contrato?.gastos_administrativos
+  return valorInicial !== null && valorInicial !== undefined && valorInicial !== ''
+})
 
 watch(() => props.contrato, (newContrato) => {
   form.value = getFormFromContrato(newContrato)
