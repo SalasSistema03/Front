@@ -12,7 +12,7 @@
             <div class="row">
               <div class="col-md-3 form-group">
                 <label>Mes</label>
-                <select v-model="mes" class="form-control">
+                <select v-model="mes" class="form-control form-control-sm">
                   <option value="">Todos</option>
                   <option :value="1">Enero</option>
                   <option :value="2">Febrero</option>
@@ -31,14 +31,14 @@
 
               <div class="col-md-2 form-group">
                 <label>Año</label>
-                <select v-model="anio" class="form-control">
+                <select v-model="anio" class="form-control form-control-sm">
                   <option v-for="año in obtenerAñoMenos3()" :key="año" :value="año">{{ año }}</option>
                 </select>
               </div>
 
               <div class="col-md-3 form-group">
                 <label for="">Estado</label>
-                <select v-model="filtroEstado" class="form-control">
+                <select v-model="filtroEstado" class="form-control form-control-sm">
                   <option value="">Todos</option>
                   <option v-for="estado in estadoDpto" :key="estado.id" :value="estado.id">
                     {{ estado.estado }}
@@ -48,7 +48,7 @@
 
               <div class="col-md-2 form-group">
                 <label for="">Usuario</label>
-                <select v-model="filtroAsesor" class="form-control">
+                <select v-model="filtroAsesor" class="form-control form-control-sm">
                   <option value="">Todos</option>
                   <option v-for="asesor in usuariosDpto" :key="asesor.id" :value="asesor.id">
                     {{ asesor.username }}
@@ -58,7 +58,7 @@
 
               <div class="col-md-2 form-group">
                 <label for="">Folio</label>
-                <input type="text" placeholder="Buscar" v-model="folio" class="form-control" />
+                <input type="text" placeholder="Buscar" v-model="folio" class="form-control form-control-sm" />
               </div>
             </div>
           </div>
@@ -200,7 +200,7 @@
 
   </div>
   <ModalInventario v-if="showModalInventario" :show="showModalInventario" :inventario="inventarioSeleccionado"
-    @close="cerrarModalInventario" @guardar="guardarModalInventario" />
+    @close="cerrarModalInventario" @guardar="guardarModalInventario" :tienePermisoCarga="tienePermisoCarga" />
   <!-- <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones"
     :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" /> -->
   <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
@@ -218,11 +218,12 @@ import {
 import { ref, onMounted, watch, computed } from 'vue'
 import ModalObservacionAlquiler from '@/components/Atcl/Alquiler/ModalObservacionAlquiler.vue'
 import ModalInventario from '@/components/Dpto/Inventario/ModalInventario.vue'
+import { verificarPermiso } from '@/Services/api/Atcl/AtclApi'
 /* import ModalObservacionesInventario from '@/components/Dpto/Inventario/ModalObservacionesInventario.vue' */
 import { useDateFormatter } from '@/composables/useDateFormatter'
 import { useToast } from '@/composables/useToast'
 const { mes, anio, obtenerAñoMenos3 } = useFiltroMesAnio()
-
+const resPermiso = ref(false)
 const historial = ref([])
 const { formatDate } = useDateFormatter()
 const inventarioSeleccionado = ref(null)
@@ -239,6 +240,7 @@ const inventariosRealizados = ref(0)
 const inventariosRestantes = ref(0)
 const sector = ref('inventario')
 const observacionActual = ref(null)
+const tienePermisoCarga = ref(false)
 
 const inventariosPorAsesor = computed(() => {
   const conteo = {}
@@ -366,10 +368,13 @@ const formatearFechaHora = (fecha) => {
 
   return `${dia}/${mes}/${anio} ${horaParte.substring(0, 5)}`
 }
-onMounted(() => {
+onMounted(async () => {
   traerEstadoDpto()
   traerAsesoresDpto()
   buscar()
+  resPermiso.value = await verificarPermiso('GuardarInventario')
+  tienePermisoCarga.value = resPermiso.value?.data ?? false
+  console.log('resPermiso.value', tienePermisoCarga.value)
 })
 
 watch([mes, anio, folio, filtroAsesor, filtroEstado], () => {

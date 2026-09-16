@@ -377,7 +377,7 @@ const listado = async (form) => {
 }
 
 const abrirModalContrato = (item) => {
-  //console.log('Contrato seleccionado:', item)
+  console.log('Contrato seleccionado:', item)
   contratoSeleccionado.value = item
   showModalContrato.value = true
 }
