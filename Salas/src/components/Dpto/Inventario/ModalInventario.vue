@@ -52,7 +52,7 @@
       <button type="button" class="btn btn-secondary btn-sm" @click="$emit('close')">
         Cancelar
       </button>
-      <button type="button" class="btn btn-primary btn-sm" @click="guardarCambios">
+      <button type="button" class="btn btn-primary btn-sm" @click="guardarCambios" :disabled="!tienePermisoCarga">
         Guardar Cambios
       </button>
     </template>
@@ -75,6 +75,10 @@ const props = defineProps({
   inventario: {
     type: Object,
     default: () => ({})
+  },
+  tienePermisoCarga: {
+    type: Boolean,
+    default: false
   }
 })
 
