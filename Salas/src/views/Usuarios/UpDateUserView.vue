@@ -28,13 +28,25 @@
               <h6 class="fw-bold">Información Personal</h6>
               <div class="col-md-6">
                 <label for="">Usuario</label>
-                <select class="form-control" @change="handleNombreUsuarioChange($event.target.value)"
-                  :disabled="loading">
-                  <option value="">Seleccione</option>
-                  <option v-for="nombre in nombresDeUsuarios" :key="nombre.id" :value="nombre.id">
-                    {{ nombre.username }}({{ nombre.name }})
-                  </option>
-                </select>
+                <div class="d-flex gap-2">
+                  <!-- Agregamos v-model="selectedUserId" -->
+                  <select class="form-control" v-model="selectedUserId" @change="handleNombreUsuarioChange($event.target.value)"
+                    :disabled="loading">
+                    <option value="">Seleccione</option>
+                    <option v-for="nombre in nombresDeUsuarios" :key="nombre.id" :value="nombre.id">
+                      {{ nombre.username }} ({{ nombre.name }})
+                    </option>
+                  </select>
+                  
+                  <!-- NUEVO BOTÓN DE EXPORTACIÓN PDF -->
+                  <button type="button" class="btn btn-outline-danger d-flex align-items-center gap-1"
+                    :disabled="!selectedUserId || generandoPdf" @click="exportarPermisos"
+                    title="Exportar permisos a PDF">
+                    <span v-if="generandoPdf" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <i v-else class="bi bi-file-earmark-pdf-fill"></i>
+                    PDF
+                  </button>
+                </div>
               </div>
               <div class="col-md-6">
                 <label for="">Fecha de Nacimiento</label>
@@ -46,7 +58,26 @@
               </div>
               <div class="col-md-6">
                 <label for="">Contraseña</label>
-                <input type="input" class="form-control" v-model="datosUsuario.contraseña" :disabled="loading" />
+                <div class="input-group">
+                  <!-- Cambiamos dinámicamente el type entre 'password' y 'text' -->
+                  <input 
+                    :type="mostrarContrasena ? 'text' : 'password'" 
+                    class="form-control" 
+                    v-model="datosUsuario.contraseña" 
+                    :disabled="loading" 
+                  />
+                  <!-- Botón para alternar la visibilidad -->
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button" 
+                    @click="mostrarContrasena = !mostrarContrasena"
+                    :disabled="loading"
+                    title="Mostrar/Ocultar contraseña"
+                  >
+                    <!-- Cambiamos el ícono dependiendo del estado -->
+                    <i class="bi" :class="mostrarContrasena ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="col-md-6 row px-3">
@@ -171,8 +202,12 @@
 
 
 <script setup>
+import { ref } from 'vue' // <-- Asegúrate de importar ref
 import NavComponent from '../../components/NavComponent.vue'
 import { useUsuarioUpdate } from '@/composables/usuario/useUsuarioUpdate'
+// Importa tu servicio y alertas (ajusta la ruta según la ubicación real de tu archivo)
+import { DescargarPdfPermisosService } from '@/Services/api/Usuario/userApi.js'
+import { alertas } from '@/utils/alertas.js'
 
 const {
   menuActivo,
@@ -191,4 +226,39 @@ const {
   checkBotonSelected,
   agruparVistasPorSeccion
 } = useUsuarioUpdate()
+
+// --- NUEVA LÓGICA PARA EL PDF ---
+
+// Variable vinculada al select para saber qué usuario está elegido
+const selectedUserId = ref('')
+// Variable para mostrar el spinner en el botón rojo mientras se descarga el PDF
+const generandoPdf = ref(false)
+
+// NUEVA VARIABLE: Controla la visibilidad de la contraseña
+const mostrarContrasena = ref(false)
+
+const exportarPermisos = async () => {
+  // Doble validación de seguridad
+  if (!selectedUserId.value) return;
+
+  generandoPdf.value = true;
+  try {
+    const response = await DescargarPdfPermisosService(selectedUserId.value);
+
+    // Convertimos la respuesta a Blob y abrimos en nueva pestaña
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    // Limpiamos la URL después de un minuto
+    setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+
+  } catch (error) {
+    console.error("Error al generar PDF de permisos:", error);
+    alertas.error('Error', 'No se pudo generar el reporte de permisos para este usuario.');
+  } finally {
+    generandoPdf.value = false;
+  }
+}
 </script>

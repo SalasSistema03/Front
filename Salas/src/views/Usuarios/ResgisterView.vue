@@ -37,8 +37,22 @@
                 <input type="text" class="form-control" v-model="form.username" placeholder="Usuario" />
               </div>
               <div class="col-md-6 pt-3">
-
-                <input type="password" class="form-control" v-model="form.password" placeholder="Contraseña" />
+                <div class="input-group">
+                  <input 
+                    :type="mostrarContrasena ? 'text' : 'password'" 
+                    class="form-control" 
+                    v-model="form.password" 
+                    placeholder="Contraseña" 
+                  />
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button" 
+                    @click="mostrarContrasena = !mostrarContrasena"
+                    title="Mostrar/Ocultar contraseña"
+                  >
+                    <i class="bi" :class="mostrarContrasena ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="col-md-6 row px-3">
@@ -149,6 +163,8 @@ const activeTab = ref('tab1')
 
 // Función para agrupar vistas por sección
 
+// NUEVA VARIABLE: Controla la visibilidad de la contraseña
+const mostrarContrasena = ref(false)
 
 const {
   menuActivo,
