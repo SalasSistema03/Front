@@ -53,3 +53,16 @@ export const updateUser = (user, userId) => {
   })
 }
 
+
+// Reemplaza tu función DescargarPdfPermisosService por esta:
+export const DescargarPdfPermisosService = (usuario_id) => {
+  const token = localStorage.getItem('token');
+  
+  // Igual que en ClienteApi.js, apuntamos a /v1/usuarios/...
+  return axios.get(`${API_URL}/v1/usuarios/${usuario_id}/permisos/pdf`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob' // Mantenemos el blob para descargar el archivo
+  });
+}
