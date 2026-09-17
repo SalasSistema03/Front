@@ -1,13 +1,11 @@
 <template>
   <BaseModal :show="show" size="lg" @close="emit('close')">
-
     <!-- ===================================================== -->
     <!-- HEADER -->
     <!-- ===================================================== -->
 
     <template #title>
       <div class="d-flex align-items-center gap-2">
-
         <i class="bi bi-file-earmark-text text-primary"></i>
 
         <div>
@@ -20,48 +18,36 @@
             {{ contrato?.propiedad?.calle?.name }}
             {{ contrato?.propiedad?.numero_calle }}
 
-            <span v-if="contrato?.propiedad?.piso">
-              · Piso {{ contrato.propiedad.piso }}
-            </span>
+            <span v-if="contrato?.propiedad?.piso"> · Piso {{ contrato.propiedad.piso }} </span>
 
             <span v-if="contrato?.propiedad?.departamento">
               · Dpto {{ contrato.propiedad.departamento }}
             </span>
           </div>
         </div>
-
       </div>
     </template>
-
 
     <!-- ===================================================== -->
     <!-- BODY -->
     <!-- ===================================================== -->
 
     <template #body>
-
       <form class="contrato-form contrato-form-scroll px-2">
-
-
         <!-- ================================================= -->
         <!-- 1. ESTADO Y PROCESO -->
         <!-- ================================================= -->
 
         <div class="contrato-seccion">
-
           <div class="contrato-seccion-header">
             <i class="bi bi-diagram-3"></i>
             <span>ESTADO Y PROCESO</span>
           </div>
 
           <div class="row g-3">
-
             <!-- Estado -->
             <div class="col-md-3 form-group">
-
-              <label class="form-label">
-                Estado de Contrato
-              </label>
+              <label class="form-label"> Estado de Contrato </label>
 
               <select v-model="form.id_estado" class="form-select form-select-sm">
                 <option value="">Seleccionar Estado</option>
@@ -70,363 +56,247 @@
                   {{ estado.estado }}
                 </option>
               </select>
-
             </div>
 
             <!-- Inventario -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Inventario </label>
 
-              <label class="form-label">
-                Inventario
-              </label>
-
-              <input type="date" v-model="form.fecha_inventario" class="form-control form-control-sm" disabled />
-
+              <input
+                type="date"
+                v-model="form.fecha_inventario"
+                class="form-control form-control-sm"
+                disabled
+              />
             </div>
 
             <!-- Carpeta -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Carpeta Presentada</label>
 
-              <label class="form-label">
-                Carpeta
-              </label>
-
-              <input type="date" v-model="form.fecha_comercial_presenta_carpeta" class="form-control form-control-sm" />
-
+              <input
+                type="date"
+                v-model="form.fecha_comercial_presenta_carpeta"
+                class="form-control form-control-sm"
+              />
             </div>
 
             <!-- Preaprobado -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Preaprobado </label>
 
-              <label class="form-label">
-                Preaprobado
-              </label>
-
-              <input type="date" v-model="form.fecha_preaprobada" class="form-control form-control-sm" />
-
+              <input
+                type="date"
+                v-model="form.fecha_preaprobada"
+                class="form-control form-control-sm"
+              />
             </div>
 
             <!-- Reserva -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Reserva </label>
 
-              <label class="form-label">
-                Reserva
-              </label>
-
-              <input type="date" v-model="form.fecha_reserva" class="form-control form-control-sm" disabled />
-
+              <input
+                type="date"
+                v-model="form.fecha_reserva"
+                class="form-control form-control-sm"
+                disabled
+              />
             </div>
 
+            <div class="col-md-2 form-group">
+              <label class="form-label"> Fecha Contrato </label>
+
+              <input
+                type="date"
+                v-model="form.fecha_contrato"
+                class="form-control form-control-sm"
+              />
+            </div>
+
+            <div class="col-md-2 form-group">
+              <label class="form-label"> Fecha Autorización </label>
+
+              <input
+                type="date"
+                v-model="form.fecha_autorizacion"
+                class="form-control form-control-sm"
+              />
+            </div>
+
+            <div class="col-md-2 form-group">
+              <label class="form-label"> Entrega de Llaves </label>
+
+              <input
+                type="date"
+                v-model="form.fecha_finalizacion_firma_cobro"
+                class="form-control form-control-sm"
+              />
+            </div>
+
+            <div class="col-md-2 form-group">
+              <label class="form-label"> Cant. Meses </label>
+
+              <input
+                type="number"
+                v-model="form.cant_meses"
+                class="form-control form-control-sm"
+                :disabled="form.bloqueado == 1"
+              />
+            </div>
           </div>
-
         </div>
-
 
         <!-- ================================================= -->
         <!-- 2. TIRILLA -->
         <!-- ================================================= -->
 
         <div class="contrato-seccion">
-
           <div class="contrato-seccion-header">
             <i class="bi bi-receipt"></i>
             <span>TIRILLA</span>
           </div>
 
           <div class="row g-3">
-
             <!-- Gastos -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Gasto Administrativo </label>
 
-              <label class="form-label">
-                Gasto Administrativo
-              </label>
-
-              <input type="number" v-model="form.gastos_administrativos" class="form-control form-control-sm"
-                :disabled="tieneGastoAdministrativo" />
-
+              <input
+                type="number"
+                v-model="form.gastos_administrativos"
+                class="form-control form-control-sm"
+              />
             </div>
 
-            <!-- Entregada a -->
             <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Entregada a
-              </label>
-
-              <select v-model="form.tirilla_entregada_a" class="form-select form-select-sm"
-                :disabled="tieneGastoAdministrativo">
-                <option value="">Seleccionar</option>
-
-                <option v-for="usuario in usuarioTirilla" :key="getUsuarioOptionValue(usuario)"
-                  :value="getUsuarioOptionValue(usuario)">
-                  {{ getUsuarioLabel(usuario) }}
-                </option>
-              </select>
+              <label class="form-label"> Cuotas</label>
+              <input
+                type="number"
+                v-model="form.cuotas"
+                class="form-control form-control-sm"/>
 
             </div>
-
-            <!-- Fecha entrega -->
+            <!-- Monto alquiler -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Monto Alquiler </label>
 
-              <label class="form-label">
-                Fecha entrega
-              </label>
-
-              <input type="date" v-model="form.fecha_tirilla_entregada" class="form-control form-control-sm"
-                :disabled="tieneGastoAdministrativo" />
-
+              <input
+                type="number"
+                v-model="form.precio_alquiler"
+                class="form-control form-control-sm"
+              />
             </div>
-
-            <!-- Controlada por -->
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Controlada por
-              </label>
-
-              <select v-model="form.tirilla_controlada_por" class="form-select form-select-sm"
-                :disabled="tieneGastoAdministrativo">
-                <option value="">Seleccionar</option>
-
-                <option v-for="usuario in usuarioControlaTirilla" :key="getUsuarioOptionValue(usuario)"
-                  :value="getUsuarioOptionValue(usuario)">
-                  {{ getUsuarioLabel(usuario) }}
-                </option>
-
-              </select>
-
-            </div>
-
-            <!-- Fecha controlada -->
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Fecha controlada
-              </label>
-
-              <input type="date" v-model="form.fecha_tirilla_controlada" class="form-control form-control-sm"
-                :disabled="tieneGastoAdministrativo" />
-
-            </div>
-
-            <!-- Monto Contrato -->
-             <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Monto Contrato
-              </label>
-
-              <input type="number" v-model="form.monto_contrato" class="form-control form-control-sm"
-                :disabled="form.monto_contrato == 1" />
-                </div>
-
             <!-- Monto -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Monto Documentación </label>
 
-              <label class="form-label">
-                Monto Documentación
-              </label>
-
-              <input type="number" v-model="form.monto" class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1" />
-
+              <input
+                type="number"
+                v-model="form.monto"
+                class="form-control form-control-sm"
+                disabled
+              />
             </div>
 
             <!-- Hojas -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Hojas </label>
 
-              <label class="form-label">
-                Hojas
-              </label>
-
-              <input type="number" v-model="form.chojas" class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1" />
-
+              <input
+                type="number"
+                v-model="form.chojas"
+                class="form-control form-control-sm"
+                disabled
+              />
             </div>
 
             <!-- Informe -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Informe </label>
 
-              <label class="form-label">
-                Informe
-              </label>
-
-              <select v-model="form.informe" class="form-select form-select-sm" :disabled="form.bloqueado == 1">
+              <select
+                v-model="form.informe"
+                class="form-select form-select-sm"
+                disabled
+              >
                 <option value="">Seleccionar</option>
                 <option value="SI">SI</option>
                 <option value="NO">NO</option>
               </select>
-
             </div>
 
             <!-- Cant Informe -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Cant. Inf. </label>
 
-              <label class="form-label">
-                Cant. Inf.
-              </label>
-
-              <input type="number" v-model="form.CantInforme" class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1" />
-
+              <input
+                type="number"
+                v-model="form.CantInforme"
+                class="form-control form-control-sm"
+               disabled
+              />
             </div>
 
             <!-- Contrato -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Tipo de Contrato </label>
 
-              <label class="form-label">
-                Tipo de Contrato
-              </label>
-
-              <select v-model="form.tipo_contrato" class="form-select form-select-sm" :disabled="form.bloqueado == 1">
+              <select
+                v-model="form.tipo_contrato"
+                class="form-select form-select-sm"
+                disabled
+              >
                 <option value="">Seleccionar</option>
                 <option value="Vivienda">Vivienda</option>
                 <option value="Comercio">Comercio</option>
                 <option value="Cochera">Cochera</option>
               </select>
-
             </div>
 
             <!-- Inq Prop -->
             <div class="col-md-2 form-group">
+              <label class="form-label"> Inquilino / Propietario </label>
 
-              <label class="form-label">
-                Inquilino / Propietario
-              </label>
-
-              <select v-model="form.inquilino_propietario" class="form-select form-select-sm"
-                :disabled="form.bloqueado == 1">
+              <select
+                v-model="form.inquilino_propietario"
+                class="form-select form-select-sm"
+                disabled
+              >
                 <option value="">Seleccionar</option>
                 <option value="NO">NO</option>
                 <option value="SI">SI</option>
               </select>
-
             </div>
-
           </div>
-
         </div>
 
-
-        <!-- ================================================= -->
-        <!-- 3. CIERRE DEL CONTRATO -->
-        <!-- ================================================= -->
-
         <div class="contrato-seccion">
-
-          <div class="contrato-seccion-header">
-            <i class="bi bi-calendar-check"></i>
-            <span>CIERRE DEL CONTRATO</span>
-          </div>
-
-          <div class="row g-3">
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Fecha Contrato
-              </label>
-
-              <input type="date" v-model="form.fecha_contrato" class="form-control form-control-sm" />
-
-            </div>
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Fecha Autorización
-              </label>
-
-              <input type="date" v-model="form.fecha_autorizacion" class="form-control form-control-sm" />
-
-            </div>
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Entrega de Llaves
-              </label>
-
-              <input type="date" v-model="form.fecha_finalizacion_firma_cobro" class="form-control form-control-sm" />
-
-            </div>
-
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Cant. Meses
-              </label>
-
-              <input type="number" v-model="form.cant_meses" class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1" />
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- 4. DOCUMENTACIÓN Y DATOS -->
-        <!-- ================================================= -->
-
-        <div class="contrato-seccion">
-
-          <div class="contrato-seccion-header">
-            <i class="bi bi-folder2-open"></i>
-            <span>DOCUMENTACIÓN Y DATOS</span>
-          </div>
-
-          <div class="row g-3">
-
-            
-
-            <!-- Monto alquiler -->
-            <div class="col-md-2 form-group">
-
-              <label class="form-label">
-                Monto Alquiler
-              </label>
-
-              <input type="number" v-model="form.precio_alquiler" class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1" />
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- 5. OBSERVACIONES -->
-        <!-- ================================================= -->
-
-        <div class="contrato-seccion">
-
           <div class="contrato-seccion-header">
             <i class="bi bi-chat-left-text"></i>
             <span>OBSERVACIONES</span>
           </div>
 
-          <textarea v-model="form.observaciones" class="form-control form-control-sm" rows="4"
-            placeholder="Ingrese observaciones..."></textarea>
-
+          <textarea
+            v-model="form.observaciones"
+            class="form-control form-control-sm"
+          
+            rows="4"
+            placeholder="Ingrese observaciones..."
+            :required="requiereObservacion"
+          ></textarea>
+          <!-- <div v-if="requiereObservacion && observacionInvalida" class="invalid-feedback">
+            La observación es obligatoria para el estado Reserva caída.
+          </div> -->
         </div>
-
       </form>
-
     </template>
-
 
     <!-- ===================================================== -->
     <!-- FOOTER -->
     <!-- ===================================================== -->
 
     <template #footer>
-
       <button type="button" class="btn btn-outline-secondary btn-sm" @click="emit('close')">
         <i class="bi bi-x-lg me-1"></i>
         Cancelar
@@ -436,28 +306,28 @@
         <i class="bi bi-check-lg me-1"></i>
         Guardar Cambios
       </button>
-
     </template>
-
   </BaseModal>
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits, onMounted, computed } from 'vue'
+import { computed, ref, watch, defineProps, defineEmits, onMounted } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { verificarPermisoUsuario } from '@/Services/api/Contrato/Contrato'
 import { useDateFormatter } from '@/composables/useDateFormatter'
 const props = defineProps({
   show: { type: Boolean, default: false },
   contrato: { type: Object, default: null },
-  estados: { type: Array, default: () => [] }
+  estados: { type: Array, default: () => [] },
 })
+import { useToast } from '@/composables/useToast'
+
+const { showSuccess, showError } = useToast()
 
 const emit = defineEmits(['close', 'guardar'])
 const usuarioTirilla = ref([])
 const usuarioControlaTirilla = ref([])
 const { formatDateForInput } = useDateFormatter()
-
 
 const normalizarFecha = (valor) => {
   if (!valor) return ''
@@ -472,13 +342,6 @@ const getUsuarioOptionValue = (usuario) => {
   return usuario
 }
 
-const getUsuarioLabel = (usuario) => {
-  if (!usuario) return ''
-  if (typeof usuario === 'object') {
-    return usuario.username ?? usuario.name ?? usuario.usuario?.username ?? ''
-  }
-  return usuario
-}
 
 const getFormFromContrato = (contrato) => {
   const hc = contrato?.historial_estado_contrato
@@ -495,7 +358,7 @@ const getFormFromContrato = (contrato) => {
   let inquilino_propietario = contrato?.registro_sellado?.inq_prop
   let fecha_inventario = contrato?.historial_estado_dpto?.fecha_inventario
 
-  //console.log(hc)
+  //console.log('aaaaa', contrato)
   //console.log(contrato)
   const bloqueado = contrato?.registro_sellado?.mostrar
   //console.log(bloqueado)
@@ -504,7 +367,6 @@ const getFormFromContrato = (contrato) => {
 
   if (hc) {
     return {
-
       id_estado: hc.id_estado || '',
       fecha_inventario: normalizarFecha(fecha_inventario) ?? '',
       fecha_comercial_presenta_carpeta: normalizarFecha(hc.fecha_comercial_presenta_carpeta),
@@ -529,7 +391,7 @@ const getFormFromContrato = (contrato) => {
       tipo_contrato: tipo_contrato || '',
       inquilino_propietario: inquilino_propietario || '',
       bloqueado: bloqueado,
-
+      cuotas: hc.cuotas_ga || '',
     }
   }
   return {
@@ -547,20 +409,38 @@ const getFormFromContrato = (contrato) => {
     fecha_autorizacion: '',
     fecha_finalizacion_firma_cobro: '',
     observaciones: '',
-    bloqueado: null
+    bloqueado: null,
   }
 }
 
 const form = ref(getFormFromContrato(props.contrato))
 
-const tieneGastoAdministrativo = computed(() => {
-  const valorInicial = props.contrato?.historial_estado_contrato?.gastos_administrativos
-  return valorInicial !== null && valorInicial !== undefined && valorInicial !== ''
+const normalizarTexto = (valor) =>
+  String(valor ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+
+const requiereObservacion = computed(() => {
+  const estadoSeleccionado = props.estados.find(
+    (estado) => String(estado.id) === String(form.value.id_estado),
+  )
+
+  return normalizarTexto(estadoSeleccionado?.estado) === 'reserva caida'
 })
 
-watch(() => props.contrato, (newContrato) => {
-  form.value = getFormFromContrato(newContrato)
-}, { immediate: true })
+const observacionInvalida = computed(
+  () => requiereObservacion.value && !String(form.value.observaciones ?? '').trim(),
+)
+
+watch(
+  () => props.contrato,
+  (newContrato) => {
+    form.value = getFormFromContrato(newContrato)
+  },
+  { immediate: true },
+)
 
 const formatearFolio = (folios) => {
   if (!folios || folios.length === 0) return '-'
@@ -579,13 +459,17 @@ const formatearFolio = (folios) => {
 }
 
 const guardarCambios = () => {
+  if (observacionInvalida.value) {
+    showError('Debe ingresar una observación para este estado.')
+    return
+  }
+
   emit('guardar', {
     id_proceso: props.contrato?.id,
     id_historial: props.contrato?.id_historial_estado_contrato,
-    ...form.value
+    ...form.value,
   })
 }
-
 
 const permisotirilla = async () => {
   const response = await verificarPermisoUsuario('controlTirilla')
@@ -598,8 +482,7 @@ const permisotirilla = async () => {
 
 onMounted(() => {
   permisotirilla()
-
-});
+})
 </script>
 
 <style>
@@ -623,7 +506,7 @@ onMounted(() => {
   color: var(--bs-primary);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .4px;
+  letter-spacing: 0.4px;
 
   border-bottom: 1px solid #dee2e6;
 

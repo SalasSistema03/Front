@@ -144,11 +144,11 @@
                 <th>Reserva</th>
                 <th>Gastos Adm.</th>
 
-                <th>Tirilla entregada</th>
-                <th>Fecha entrega</th>
-
-                <th>Tirilla controlada</th>
-                <th>Fecha controlada</th>
+               <!--  <th>Tirilla entregada</th> -->
+              <!--   <th>Fecha entrega</th>
+ -->
+            <!--     <th>Tirilla controlada</th>
+                <th>Fecha controlada</th> -->
 
                 <th>Contrato</th>
                 <th>Autorización</th>
@@ -186,7 +186,7 @@
 
                 <!-- Inventario -->
                 <td class="text-center fecha-contrato">
-                  {{ formatDate(item.historial_estado_contrato?.fecha_inventario) }}
+                  {{ formatDate(item.historial_estado_dpto.fecha_inventario) }}
                 </td>
 
                 <!-- Carpeta -->
@@ -210,28 +210,28 @@
                 </td>
 
                 <!-- Tirilla entregada por -->
-                <td>
+               <!--  <td>
                   <span class="text-nowrap">
                     {{ item.historial_estado_contrato?.tirilla_entregada_por?.username || '—' }}
                   </span>
-                </td>
+                </td> -->
 
                 <!-- Fecha entrega -->
-                <td class="text-center fecha-contrato">
+                <!-- <td class="text-center fecha-contrato">
                   {{ formatDate(item.historial_estado_contrato?.fecha_tirilla_entregada) }}
-                </td>
+                </td> -->
 
                 <!-- Tirilla controlada por -->
-                <td>
+                <!-- <td>
                   <span class="text-nowrap">
                     {{ item.historial_estado_contrato?.tirilla_controlada_por?.username || '—' }}
                   </span>
-                </td>
+                </td> -->
 
                 <!-- Fecha controlada -->
-                <td class="text-center fecha-contrato">
+               <!--  <td class="text-center fecha-contrato">
                   {{ formatDate(item.historial_estado_contrato?.fecha_tirilla_controlada) }}
-                </td>
+                </td> -->
 
                 <!-- Contrato -->
                 <td class="text-center fecha-contrato">

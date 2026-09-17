@@ -44,7 +44,12 @@
       </div>
       <div class="col-md form-group form-control-sm">
         <label>Observaciones</label>
-        <textarea class="form-control" v-model="form.observaciones"></textarea>
+        <textarea
+          v-model="form.observaciones"
+          class="form-control"
+          :required="requiereObservacion"
+        ></textarea>
+       
       </div>
     </template>
 
@@ -60,10 +65,11 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, onMounted, watch } from 'vue'
+import { computed, defineProps, defineEmits, ref, onMounted, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { getUsuariosDpto, getEstadoDpto } from '@/Services/api/Dpto/Inventario'
 import { getUser } from '@/Services/api/Usuario/userApi'
+import { useToast } from '@/composables/useToast'
 
 
 
@@ -81,7 +87,7 @@ const props = defineProps({
     default: false
   }
 })
-
+const { showSuccess, showError } = useToast()
 const emit = defineEmits(['close', 'guardar'])
 
 const usuarios = ref([])
@@ -94,6 +100,26 @@ const form = ref({
   estado_id: '',
   observaciones: '',
 })
+
+const normalizarEstado = (valor) =>
+  String(valor ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+
+const estadoCaido = computed(() => {
+  const estadoSeleccionado = estados.value.find(
+    (estado) => String(estado.id) === String(form.value.estado_id),
+  )
+
+  return normalizarEstado(estadoSeleccionado?.estado) === 'caido'
+})
+
+const requiereObservacion = computed(() => estadoCaido.value)
+const observacionInvalida = computed(
+  () => requiereObservacion.value && !String(form.value.observaciones ?? '').trim(),
+)
 
 watch(() => props.inventario, (newVal) => {
   if (newVal) {
@@ -168,6 +194,7 @@ const cargarUsuarios = async () => {
 const cargarEstados = async () => {
   try {
     const res = await getEstadoDpto()
+    
     estados.value = res.data.resultado || res.data || []
   } catch (error) {
     console.error('Error cargando estados:', error)
@@ -181,6 +208,11 @@ onMounted(() => {
 
 
 const guardarCambios = () => {
+  if (observacionInvalida.value) {
+    showError('Debe ingresar una observación para este estado.')
+    return
+  }
+
   emit('guardar', form.value)
 }
 </script>

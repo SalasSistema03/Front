@@ -22,8 +22,8 @@
                       </select>
                     </div>
 
-                    <input type="number" v-model="form.folio" @blur="buscarFolioPrecargado"
-                      @keyup.enter="buscarFolioPrecargado" class="form-control form-control-sm shadow-sm" required />
+                    <input type="number" v-model="form.folio"
+                      class="form-control form-control-sm shadow-sm" required />
 
                   </div>
 
@@ -225,7 +225,7 @@ import ModalDatosCalculos from './Modales/ModalDatosCalculos.vue';
 import ModalAcciones from './Modales/ModalAcciones.vue';
 //import { alertas } from '../../../utils/alertas.js'
 import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters.js'
-import { calcularSelladoService, guardarResultadoService, getRegistrosService, getSelladoPrecarcadoService } from '../../../Services/api/Contable/selladoApi.js'
+import { calcularSelladoService, guardarResultadoService, getRegistrosService } from '../../../Services/api/Contable/selladoApi.js'
 import { useToast } from '@/composables/useToast.js';
 
 const mostrarModal = ref(false);
@@ -261,37 +261,6 @@ const error = ref(null);
 
 /* const showModal = ref(false);
  */
-
-const buscarFolioPrecargado = async () => {
-  if (!form.value.folio) return;
-  try {
-    // console.log("Buscando folio:", form.value.folio);
-    const response = await getSelladoPrecarcadoService(form.value.folio, form.value.empresa);
-    const datos = response.data?.data || response.data;
-
-    if (datos) {
-      // Aquí mapeas los datos que te devuelva la API a tu formulario
-      if (datos.nombre) form.value.nombre = datos.nombre;
-      if (datos.cantidad_meses) form.value.cantidad_meses = datos.cantidad_meses;
-      if (datos.proceso_monto) form.value.monto_alquiler = datos.proceso_monto;
-      if (datos.monto_documento) form.value.monto_documento = datos.monto_documento;
-      if (datos.monto_contrato) form.value.monto_contrato = datos.monto_contrato;
-      if (datos.hojas) form.value.hojas = datos.hojas;
-      if (datos.informe) form.value.informe = datos.informe === 1 ? 'SI' : 'NO';
-      if (datos.cantidad_informes) form.value.cantidad_informes = datos.cantidad_informes;
-      if (datos.inq_prop) form.value.inq_prop = datos.inq_prop;
-      if (datos.tipo_contrato) form.value.tipo_contrato = datos.tipo_contrato;
-      if (datos.fecha_inicio) form.value.fecha_inicio = datos.fecha_inicio;
-
-      showSuccess('Datos del folio encontrados y precargados');
-    }
-  } catch (err) {
-    // Si no lo encuentra, lo ignoramos o mostramos un mensaje sutil
-    //console.log("No se encontraron datos precargados para este folio");
-    showError('No se encontraron datos precargados para este folio');
-  }
-
-};
 
 const handleSubmit = async () => {
   loading.value = true;
