@@ -10,7 +10,7 @@
                 <div class="text-muted">
                   <h6 class="text-primary">{{ props.impuesto.toUpperCase() }} - Administra L</h6>
                   <p class="fw-bold text-muted"
-                    v-if="props.impuesto === 'agua' || props.impuesto === 'tgi' || props.impuesto === 'api'">
+                    >
                     Monto Total: ${{ formatearMoneda(montoTotal?.total ?? montoTotal) }}
                   </p>
                 </div>
@@ -21,7 +21,7 @@
                 <div class="text-muted">
                   <h6 class="text-success">{{ props.impuesto.toUpperCase() }} - Salas</h6>
                   <p class="fw-bold text-muted"
-                    v-if="props.impuesto === 'agua' || props.impuesto === 'tgi' || props.impuesto === 'api'">
+                    >
                     Monto Total: ${{ formatearMoneda(montoTotalSalas) }}
                   </p>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="text-muted">
                   <h6 class="text-danger">{{ props.impuesto.toUpperCase() }} - Seguir Pagando</h6>
                   <p class="fw-bold text-muted"
-                    v-if="props.impuesto === 'agua' || props.impuesto === 'tgi' || props.impuesto === 'api'">
+                   >
                     Monto Total: ${{ formatearMoneda(seguir_pagando) }}
                   </p>
                 </div>
