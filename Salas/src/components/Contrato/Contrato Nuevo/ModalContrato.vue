@@ -105,17 +105,17 @@
             </div>
 
             <div class="col-md-2 form-group">
-              <label class="form-label"> Fecha Contrato </label>
+              <label class="form-label">Firma Contrato </label>
 
               <input
                 type="date"
-                v-model="form.fecha_contrato"
+                v-model="form.fecha_firma_contrato"
                 class="form-control form-control-sm"
               />
             </div>
 
             <div class="col-md-2 form-group">
-              <label class="form-label"> Fecha Autorización </label>
+              <label class="form-label"> Firma Autorización </label>
 
               <input
                 type="date"
@@ -131,17 +131,6 @@
                 type="date"
                 v-model="form.fecha_finalizacion_firma_cobro"
                 class="form-control form-control-sm"
-              />
-            </div>
-
-            <div class="col-md-2 form-group">
-              <label class="form-label"> Cant. Meses </label>
-
-              <input
-                type="number"
-                v-model="form.cant_meses"
-                class="form-control form-control-sm"
-                :disabled="form.bloqueado == 1"
               />
             </div>
           </div>
@@ -166,6 +155,7 @@
                 type="number"
                 v-model="form.gastos_administrativos"
                 class="form-control form-control-sm"
+                min="0"
               />
             </div>
 
@@ -174,8 +164,20 @@
               <input
                 type="number"
                 v-model="form.cuotas"
-                class="form-control form-control-sm"/>
+                class="form-control form-control-sm"
+                min="0"
+              />
+            </div>
+            <div class="col-md-2 form-group">
+              <label class="form-label"> Cant. Meses </label>
 
+              <input
+                type="number"
+                v-model="form.cant_meses"
+                class="form-control form-control-sm"
+                min="0"
+                
+              />
             </div>
             <!-- Monto alquiler -->
             <div class="col-md-2 form-group">
@@ -185,6 +187,7 @@
                 type="number"
                 v-model="form.precio_alquiler"
                 class="form-control form-control-sm"
+                min="0"
               />
             </div>
             <!-- Monto -->
@@ -195,7 +198,8 @@
                 type="number"
                 v-model="form.monto"
                 class="form-control form-control-sm"
-                disabled
+                min="0"
+                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
 
@@ -207,7 +211,8 @@
                 type="number"
                 v-model="form.chojas"
                 class="form-control form-control-sm"
-                disabled
+                min="0"
+                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
 
@@ -215,11 +220,7 @@
             <div class="col-md-2 form-group">
               <label class="form-label"> Informe </label>
 
-              <select
-                v-model="form.informe"
-                class="form-select form-select-sm"
-                disabled
-              >
+              <select v-model="form.informe" class="form-select form-select-sm" :disabled="String(form.bloqueado) === '1'">
                 <option value="">Seleccionar</option>
                 <option value="SI">SI</option>
                 <option value="NO">NO</option>
@@ -234,7 +235,8 @@
                 type="number"
                 v-model="form.CantInforme"
                 class="form-control form-control-sm"
-               disabled
+                min="0"
+                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
 
@@ -242,11 +244,7 @@
             <div class="col-md-2 form-group">
               <label class="form-label"> Tipo de Contrato </label>
 
-              <select
-                v-model="form.tipo_contrato"
-                class="form-select form-select-sm"
-                disabled
-              >
+              <select v-model="form.tipo_contrato" class="form-select form-select-sm" :disabled="String(form.bloqueado) === '1'">
                 <option value="">Seleccionar</option>
                 <option value="Vivienda">Vivienda</option>
                 <option value="Comercio">Comercio</option>
@@ -258,15 +256,22 @@
             <div class="col-md-2 form-group">
               <label class="form-label"> Inquilino / Propietario </label>
 
-              <select
-                v-model="form.inquilino_propietario"
-                class="form-select form-select-sm"
-                disabled
-              >
+              <select v-model="form.inquilino_propietario" class="form-select form-select-sm" :disabled="String(form.bloqueado) === '1'">
                 <option value="">Seleccionar</option>
                 <option value="NO">NO</option>
                 <option value="SI">SI</option>
               </select>
+            </div>
+
+            <!-- Inicio Contrato -->
+            <div class="col-md-2 form-group">
+              <label class="form-label"> Inicio Contrato </label>
+              <input
+                type="date"
+                v-model="form.fecha_inicio_contrato"
+                class="form-control form-control-sm"
+                :disabled="String(form.bloqueado) === '1'"
+              />
             </div>
           </div>
         </div>
@@ -280,7 +285,6 @@
           <textarea
             v-model="form.observaciones"
             class="form-control form-control-sm"
-          
             rows="4"
             placeholder="Ingrese observaciones..."
             :required="requiereObservacion"
@@ -322,7 +326,7 @@ const props = defineProps({
 })
 import { useToast } from '@/composables/useToast'
 
-const { showSuccess, showError } = useToast()
+const { showError } = useToast()
 
 const emit = defineEmits(['close', 'guardar'])
 const usuarioTirilla = ref([])
@@ -334,15 +338,14 @@ const normalizarFecha = (valor) => {
   return formatDateForInput(valor) || ''
 }
 
-const getUsuarioOptionValue = (usuario) => {
+/* const getUsuarioOptionValue = (usuario) => {
   if (!usuario) return ''
   if (typeof usuario === 'object') {
     return usuario.usuario_id ?? usuario.id ?? usuario.usuario?.id ?? ''
   }
   return usuario
 }
-
-
+ */
 const getFormFromContrato = (contrato) => {
   const hc = contrato?.historial_estado_contrato
   const meses = contrato?.meses_contrato
@@ -373,12 +376,9 @@ const getFormFromContrato = (contrato) => {
       fecha_preaprobada: normalizarFecha(hc.fecha_preaprobada),
       fecha_reserva: normalizarFecha(hc?.fecha_reserva ?? contrato?.fecha_reserva),
       gastos_administrativos: hc.gastos_administrativos || '',
-      tirilla_entregada_a: getUsuarioOptionValue(hc.tirilla_entregada_a),
-      fecha_tirilla_entregada: normalizarFecha(hc.fecha_tirilla_entregada),
-      tirilla_controlada_por: getUsuarioOptionValue(hc.tirilla_controlada_por),
-      fecha_tirilla_controlada: normalizarFecha(hc.fecha_tirilla_controlada),
-      fecha_contrato: normalizarFecha(hc.fecha_contrato),
+      fecha_firma_contrato: normalizarFecha(hc.fecha_firma_contrato),
       fecha_autorizacion: normalizarFecha(hc.fecha_autorizacion),
+      fecha_inicio_contrato: normalizarFecha(contrato.registro_sellado?.fecha_inicio),
       fecha_finalizacion_firma_cobro: normalizarFecha(hc.fecha_finalizacion_firma_cobro),
       cant_meses: meses || '',
       precio_alquiler: precio_alquiler || '',
@@ -401,12 +401,9 @@ const getFormFromContrato = (contrato) => {
     fecha_preaprobada: '',
     fecha_reserva: '',
     gastos_administrativos: '',
-    tirilla_entregada_a: '',
-    fecha_tirilla_entregada: '',
-    tirilla_controlada_por: '',
-    fecha_tirilla_controlada: '',
-    fecha_contrato: '',
+    fecha_firma_contrato: '',
     fecha_autorizacion: '',
+    fecha_inicio_contrato: '',
     fecha_finalizacion_firma_cobro: '',
     observaciones: '',
     bloqueado: null,
