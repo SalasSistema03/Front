@@ -22,7 +22,7 @@
           </label>
 
           <input type="number" class="form-control form-control-sm" v-model="numero_cliente_buscado"
-            :disabled="desactivarNumeroCliente" @keyup.enter="buscar" />
+            :disabled="desactivarNumeroCliente" @keyup.enter="buscar" placeholder="Ingrese Nº Cliente" />
         </div>
 
         <!-- Folio -->
@@ -32,6 +32,7 @@
           </label>
 
           <input type="number" class="form-control form-control-sm" v-model="folio_buscado" :disabled="desactivarFolio"
+            placeholder="Ingrese Nº Folio Salas"
             @keyup.enter="buscar" />
         </div>
 
