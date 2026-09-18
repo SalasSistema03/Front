@@ -310,6 +310,10 @@ const filtrar = async () => {
     impuesto: props.impuesto,
     dia: dia.value || null,
   }
+  if(props.impuesto === 'gas' && (dia.value === null || mes.value === null || anio.value === null)) {
+    showError('Para el impuesto GAS, es obligatorio ingresar día, mes y año.')
+    return
+  }
 
   try {
     const response = await padronCarga(form)

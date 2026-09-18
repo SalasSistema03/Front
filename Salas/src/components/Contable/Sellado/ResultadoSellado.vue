@@ -90,13 +90,23 @@ const cargando = ref(false);
 
 // Creamos una referencia local para el gasto administrativo
 // Se inicializa con el valor que llega de props
-const gastoAdministrativoLocal = ref(props.datos?.data?.gasto_administrativo || 0);
+const gastoAdministrativoLocal = ref(props.datos?.data?.gasto_adm_calc2 || 0);
+
 
 // Sincronizar si los datos externos cambian (por ejemplo, al hacer un nuevo cálculo)
 watch(() => props.datos?.data?.gasto_administrativo, (nuevoValor) => {
   gastoAdministrativoLocal.value = nuevoValor;
 });
 
+/* watch(
+  () => props.datos,
+  (nuevosDatos) => {
+    console.log('Datos recibidos en ResultadoSellado:', nuevosDatos);
+    console.log('Contenido de props.datos.data:', nuevosDatos?.data);
+  },
+  { immediate: true, deep: true },
+);
+ */
 // Calculamos el IVA automáticamente basado en el gasto local
 const ivaGastoCalculado = computed(() => {
   const valor = parseFloat(gastoAdministrativoLocal.value) || 0;
