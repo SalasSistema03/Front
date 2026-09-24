@@ -756,8 +756,17 @@ if (props.sector === 'Alquiler') {
 }
 
 // Inicializar campos seleccionados
-// toma todas las keys y las deja tildadas por defecto
-//camposSeleccionados.value = informacionMostrar.value.map((campo) => campo.key)
+if (props.sector === 'Alquiler') {
+  camposSeleccionados.value = [
+    'cod_alquiler',
+    'direccion',
+    'p_d',
+    'estado',
+    'usuario',
+    'folio',
+    'propietario',
+  ]
+}
 
 //Variables para guardar los datos del formulario
 const formPropiedades = ref({
