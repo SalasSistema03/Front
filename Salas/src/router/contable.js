@@ -22,7 +22,16 @@ const routesContable = [
         name: 'buscaComprobante',
         component: () => import('../views/Contable/Comprobantes/BuscarComprobante.vue'), // Se importa solo cuando se necesita
         meta: { requiresAuth: true },
-    }
+    },
+    {
+        path: "/confirmarSellado",
+        name: 'confirmarSellado',
+        component : () => import('../views/Contable/ConfirmacionSelladoView.vue'),
+        meta:{ requiresAuth:true,
+            vistaId:67
+        }
+    }    
+    
 ]
 
 export default routesContable

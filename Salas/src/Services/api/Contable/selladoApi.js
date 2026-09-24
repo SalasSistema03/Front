@@ -105,3 +105,22 @@ export const getSelladoPrecarcadoService = (folio, empresa) => {
     }
   })
 }
+
+export const traerSelladoSinConfirmar = (params = {}) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/sellado/traerSinConfirmar`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: params
+  })
+}
+
+export const confirmarRegistroService = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/sellado/confirmar`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
