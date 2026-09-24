@@ -116,11 +116,11 @@ const ivaGastoCalculado = computed(() => {
 const guardarRegistro = async () => {
   cargando.value = true;
   // IMPORTANTE: Enviamos los valores actualizados al padre
-  if (!gastoAdministrativoLocal.value) {
+  /* if (!gastoAdministrativoLocal.value) {
     alertas.error('Por favor, ingresa un valor para el Gasto Administrativo.');
     cargando.value = false;
     return;
-  }
+  } */
   const datosFinales = {
     ...props.datos.data,
     gasto_administrativo: gastoAdministrativoLocal.value,

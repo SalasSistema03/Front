@@ -186,7 +186,7 @@
 
                 <!-- Inventario -->
                 <td class="text-center fecha-contrato">
-                  {{ formatDate(item.historial_estado_dpto.fecha_inventario) }}
+                  {{ formatDate(item.historial_estado_dpto?.fecha_inventario) }}
                 </td>
 
                 <!-- Carpeta -->
