@@ -9,7 +9,11 @@
           <label>Usuario</label>
           <input type="text" class="form-control" :value="username?.nombre" readonly />
         </div>
-        <div class="col-md-2">
+        <div v-if="props.sector?.nombre === 'Alquiler'" class="col-md-2">
+          <label>Fecha</label>
+          <input type="date" class="form-control" v-model="fechaLocal" />
+        </div>
+        <div class="col-md-2" v-else>
           <label>Fecha</label>
           <input type="date" class="form-control" v-model="fechaLocal" :readonly="nota || props.sector?.id !== 2" />
           <!--   <input type="text" value=props.sector> -->
@@ -20,22 +24,40 @@
           <input v-else type="time" class="form-control" v-model="horaInicio" :step="900" @blur="validarHoraInicio"
             :readonly="nota" />
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2" v-if="props.sector?.nombre === 'Alquiler'">
+          <label>Hora Fin</label>
+          <input type="time" class="form-control" v-model="horaFin" :step="900" @blur="validarHoraFin" />
+        </div>
+        <div class="col-md-2" v-else>
           <label>Hora Fin</label>
           <input type="time" class="form-control" v-model="horaFin" :step="900" @blur="validarHoraFin"
             :readonly="nota" />
         </div>
+        <div class="col-md-2" v-if="nota">
+          <label>Agendado Por</label>
+          <input type="text" class="form-control" v-model="agendadoPor" :readonly="nota" />
+        </div>
+
 
         <div class="row d-flex align-items-center justify-content-center">
-          <div class="col-md-3" v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
+          <!-- <div class="col-md-3"
+            v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
             <label>Nombre Cliente</label>
             <input type="text" class="form-control" v-model="nombreCliente" :readonly="nota"
               :disabled="props.sector?.nombre === 'Ventas'" />
+          </div> -->
+          <div class="col-md-3"
+            v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
+            <label>Nombre Cliente</label>
+
+            <input type="text" class="form-control" v-model="nombreCliente"
+              :readonly="props.sector?.nombre === 'Alquiler' && !nota" :disabled="props.sector?.nombre === 'Ventas'" />
           </div>
           <div class="col-md-2 position-relative"
             v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
             <label>Telefono</label>
             <input type="text" class="form-control" v-model="telefono"
+              @input="telefono = String(telefono).replace(/[^0-9]/g, '')"
               @focus="mostrandoResultadosClientes = resultadosClientes.length > 0" :readonly="nota" />
 
             <!-- Resultados predictivos de clientes -->
@@ -55,7 +77,8 @@
             v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas'">
             <label>Buscar propiedad</label>
             <input type="text" class="form-control" placeholder="Ingrese codigo o calle" v-model="busquedaPropiedad"
-              @focus="mostrandoResultados = resultadosPropiedades.length > 0" :readonly="nota" />
+              @focus="mostrandoResultados = resultadosPropiedades.length > 0"
+              :readonly="props.sector?.nombre === 'Ventas' || (props.sector?.nombre === 'Alquiler' && !nota)" />
 
             <!-- Resultados predictivos -->
             <div v-if="mostrandoResultados && resultadosPropiedades.length > 0"
@@ -93,7 +116,12 @@
           </div>
 
         </div>
-        <div class="col-12">
+        <div class="col-12" v-if="props.sector?.nombre === 'Alquiler' && nota">
+          <label>Descripcion</label>
+          <textarea name="descripcion" class="form-control" rows="2" placeholder="Escribe una nota..."
+            v-model="descripcion"></textarea>
+        </div>
+        <div class="col-12" v-else>
           <label>Descripcion</label>
           <textarea name="descripcion" class="form-control" rows="2" placeholder="Escribe una nota..."
             v-model="descripcion" :readonly="nota"></textarea>
@@ -155,7 +183,10 @@
     <template #footer>
       <!-- <button type="button" class="btn btn-secondary btn-sm" @click="emit('close')">Cerrar</button> -->
       <button v-if="!nota" type="button" class="btn btn-primary btn-sm" @click="guardar">Guardar</button>
+
       <button v-if="nota" type="button" class="btn btn-danger btn-sm" @click="abrirModalMotivoBorrar">Borrar</button>
+      <button v-if="nota && props.sector.nombre === 'Alquiler'" type="button" class="btn btn-primary btn-sm"
+        @click="modificar">Modificar</button>
     </template>
 
   </BaseModal>
@@ -169,7 +200,7 @@ import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import ModalMotivoBorrar from '@/components/Agenda/ModalMotivoBorrar.vue'
 import { buscarPropiedadPorCodigoCalle } from '@/Services/api/Agenda/AgendaApi'
-import { cargarNota } from '@/Services/api/Agenda/AgendaApi'
+import { cargarNota, modificarNota } from '@/Services/api/Agenda/AgendaApi'
 import { getClientesTelefono } from '@/Services/api/Agenda/AgendaApi'
 import { borrarNota } from '@/Services/api/Agenda/AgendaApi'
 import { useToast } from '@/composables/useToast'
@@ -187,6 +218,7 @@ const clienteSeleccionado = ref(null)
 const historialCliente = ref([])
 const showModalMotivoBorrar = ref(false)
 const { showSuccess, showError } = useToast()
+const agendadoPor = ref(null)
 // Fecha local editable para sector Ventas (id 2)
 
 const props = defineProps({
@@ -228,11 +260,14 @@ function normalizarHora(hora) {
 function textoPropiedadDesdeNota(nota) {
   if (!nota) return ''
 
+  console.log(nota)
+
   const codigo = nota.propiedad_cod_venta || nota.propiedad_cod_alquiler || ''
   const calle = nota.propiedad_calle || ''
   const numero = nota.propiedad_numero_calle ? String(nota.propiedad_numero_calle) : ''
   const estadoAlquiler = nota.propiedad_estado_alquiler || ''
   const estadoVenta = nota.propiedad_estado_venta || ''
+  agendadoPor.value = nota.creado_por || ''
 
   const calleCompleta = `${calle}${numero ? ` ${numero}` : ''}`.trim()
 
@@ -494,6 +529,35 @@ async function guardar() {
 
 }
 
+async function modificar() {
+  const datosCompletos = {
+    id: props.nota.id,
+    usuario: props.username.usuario_id || '',
+    fecha: props.sector?.id === 2 ? fechaLocal.value : props.fecha,
+    horaInicio: horaInicioEfectiva.value,
+    horaFin: horaFin.value,
+    descripcion: descripcion.value,
+    telefono: telefono.value,
+    propiedad: propiedadSeleccionada.value,
+    sector: props.sector?.id || '',
+    busquedaPropiedad: busquedaPropiedad.value,
+    criterioSeleccionado: props.criterioSeleccionado?.id_criterio_venta || '',
+    nombreCliente: nombreCliente.value
+  }
+
+  try {
+    // Llamar a la API para cargar la nota
+    await modificarNota(datosCompletos)
+    showSuccess('Nota modificada correctamente')
+    emit('nota-guardada')
+    emit('close')
+  } catch (error) {
+    //console.error('Error al guardar:', error.request)
+
+
+    showError(error.response.data.message)
+  }
+}
 // Función auxiliar para redondear al múltiplo de 15 más cercano
 function redondearA15Minutos(horaString) {
   let [h, m] = horaString.split(':').map(Number)
@@ -539,8 +603,8 @@ watch(horaInicioEfectiva, (nuevaHora) => {
   horaFin.value = calculada > HORA_MAX ? HORA_MAX : calculada
 }, { immediate: true })
 
-console.log('criterioSeleccionado:', props.criterioSeleccionado)
-console.log('nota:', props.nota)
+/* console.log('criterioSeleccionado:', props.criterioSeleccionado)
+console.log('nota:', props.nota) */
 watch(
   () => props.show,
   () => {

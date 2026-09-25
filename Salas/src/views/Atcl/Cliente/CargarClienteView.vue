@@ -236,7 +236,7 @@ export default {
   name: 'CargarClienteView',
   components: {
     NavComponent,
-    
+
     ModalBusquedaPropiedadVenta
   },
 
@@ -443,7 +443,7 @@ export default {
         const response = await getClientePorTelefono(telefono)
         //console.log('Response:', response)
         const cliente = response.data.cliente
-        //console.log('Cliente:', cliente)
+        console.log('Cliente:', cliente)
 
         this.nombre = cliente.nombre ?? ''
         this.id_asesor = cliente.asesor?.id_usuario ?? ''
@@ -578,9 +578,9 @@ export default {
         console.log('¿El usuario tiene permiso para seleccionar asesor erro?', false)
       }
     },
-    async cantidadCliente(){
+    async cantidadCliente() {
 
-      try{
+      try {
         const response = await getCantidadClientes()
         console.log('Cantidades por asesor:', response.data)
         const cantidades = response.data || []
@@ -594,7 +594,7 @@ export default {
 
           return resultado
         }, {})
-      }catch(error){
+      } catch (error) {
         console.log(error)
       }
     }
