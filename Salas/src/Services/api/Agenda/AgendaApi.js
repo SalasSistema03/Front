@@ -48,6 +48,14 @@ export const cargarNota = (datosCompletos) => {
     }
   })
 }
+export const modificarNota = (datosCompletos) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/modificar-nota`, datosCompletos, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
 
 export const borrarNota = (id, motivo) => {
   const token = localStorage.getItem('token')

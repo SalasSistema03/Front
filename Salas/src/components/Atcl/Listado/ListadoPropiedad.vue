@@ -186,53 +186,38 @@
               <div class="col-md-6 mt-2">
                 <label class="form-label">Información a mostrar</label>
                 <div class="dropdown w-100">
-                  <button
-                    class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    data-bs-auto-close="outside"
-                    aria-expanded="false"
-                    id="infoDropdownBtn"
-                  >
+                  <button class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
+                    type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+                    id="infoDropdownBtn">
                     <span>
                       Mostrando <strong>{{ camposSeleccionados.length }}</strong> de
                       <strong>{{ informacionMostrar.length }}</strong> campos
                     </span>
-                    <span class="badge bg-primary rounded-pill ms-2" v-if="camposSeleccionados.length < informacionMostrar.length">
+                    <span class="badge bg-primary rounded-pill ms-2"
+                      v-if="camposSeleccionados.length < informacionMostrar.length">
                       {{ informacionMostrar.length - camposSeleccionados.length }} ocultos
                     </span>
                   </button>
                   <div class="dropdown-menu p-3 w-100" style="max-height: 300px; overflow: auto; min-width: 300px">
                     <!-- Filtro de búsqueda -->
                     <div class="mb-2">
-                      <input
-                        type="text"
-                        class="form-control form-control-sm"
-                        placeholder="Filtrar campos..."
-                        v-model="filtroCampos"
-                      />
+                      <input type="text" class="form-control form-control-sm" placeholder="Filtrar campos..."
+                        v-model="filtroCampos" />
                     </div>
                     <!-- Botones de selección masiva -->
                     <div class="d-flex gap-2 mb-2">
-                      <button class="btn btn-sm btn-outline-primary w-50" @click="seleccionarTodos">Seleccionar todo</button>
-                      <button class="btn btn-sm btn-outline-secondary w-50" @click="deseleccionarTodos">Deseleccionar todo</button>
+                      <button class="btn btn-sm btn-outline-primary w-50" @click="seleccionarTodos">Seleccionar
+                        todo</button>
+                      <button class="btn btn-sm btn-outline-secondary w-50" @click="deseleccionarTodos">Deseleccionar
+                        todo</button>
                     </div>
                     <hr />
                     <!-- Lista de checkboxes -->
                     <div class="row" id="infoList">
-                      <div
-                        v-for="campo in camposFiltrados"
-                        :key="campo.key"
-                        class="col-md-6 mb-2"
-                      >
+                      <div v-for="campo in camposFiltrados" :key="campo.key" class="col-md-6 mb-2">
                         <div class="form-check">
-                          <input
-                            class="form-check-input campo-checkbox"
-                            type="checkbox"
-                            :value="campo.key"
-                            v-model="camposSeleccionados"
-                            :id="`campo-${campo.key}`"
-                          />
+                          <input class="form-check-input campo-checkbox" type="checkbox" :value="campo.key"
+                            v-model="camposSeleccionados" :id="`campo-${campo.key}`" />
                           <label class="form-check-label" :for="`campo-${campo.key}`">
                             {{ campo.label }}
                           </label>
@@ -491,12 +476,12 @@
           </div>
           <div class="card-body text-primary form-group">
             <div class="row">
-              <div class="col-md-4 p-1">
+              <div class="col-md-3 p-1">
                 <label class="form-label">Desde</label>
                 <input type="date" class="form-control form-control-sm" :max="formConsultasIngresadas.hasta"
                   v-model="formConsultasIngresadas.desde" />
               </div>
-              <div class="col-md-4 p-1">
+              <div class="col-md-3 p-1">
                 <label class="form-label">Hasta</label>
                 <input type="date" class="form-control form-control-sm" :min="formConsultasIngresadas.desde"
                   v-model="formConsultasIngresadas.hasta" />
@@ -511,6 +496,16 @@
                   <option value="Generales">Generales</option>
 
                 </select>
+              </div>
+              <div class="col-md-3 p-1">
+                <label class="form-label">Asesores</label>
+                <select class="form-select form-select-sm" v-model="formConsultasIngresadas.asesor">
+                  <option value="">Seleccione un Asesor</option>
+                  <option v-for="asesor in asesores" :key="asesor.id_usuario" :value="asesor.id_usuario">
+                    {{ asesor.username }}
+                  </option>
+                </select>
+
               </div>
 
               <div class="col-md-12 mt-2">
@@ -828,6 +823,8 @@ const formCriterios = ref({
 const formConsultasIngresadas = ref({
   desde: '',
   hasta: '',
+  consulta: '',
+  asesor: '',
   sector: props.sector,
   pertenece: 'consultasIngresadas',
 })
