@@ -27,8 +27,7 @@ const routesContable = [
         path: "/confirmarSellado",
         name: 'confirmarSellado',
         component : () => import('../views/Contable/ConfirmacionSelladoView.vue'),
-        meta:{ requiresAuth:true,
-            vistaId:67
+        meta:{ requiresAuth:true
         }
     }    
     
