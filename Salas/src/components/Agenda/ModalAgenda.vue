@@ -51,8 +51,9 @@
             <label>Nombre Cliente</label>
 
             <input type="text" class="form-control" v-model="nombreCliente"
-              :readonly="props.sector?.nombre === 'Alquiler' && !nota" :disabled="props.sector?.nombre === 'Ventas'" />
+               :disabled="props.sector?.nombre === 'Ventas'" />
           </div>
+          
           <div class="col-md-2 position-relative"
             v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
             <label>Telefono</label>
@@ -78,7 +79,7 @@
             <label>Buscar propiedad</label>
             <input type="text" class="form-control" placeholder="Ingrese codigo o calle" v-model="busquedaPropiedad"
               @focus="mostrandoResultados = resultadosPropiedades.length > 0"
-              :readonly="props.sector?.nombre === 'Ventas' || (props.sector?.nombre === 'Alquiler' && !nota)" />
+              :readonly="props.sector?.nombre === 'Ventas' && nota " />
 
             <!-- Resultados predictivos -->
             <div v-if="mostrandoResultados && resultadosPropiedades.length > 0"
