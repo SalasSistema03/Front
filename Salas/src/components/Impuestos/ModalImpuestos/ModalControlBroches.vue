@@ -6,7 +6,7 @@
       <div class="modal-control-impuesto">
         <div v-for="(item, index) in listaBroches" :key="index" class="input-group mb-3 form-group form-control">
           <input type="text" class="form-control"
-            :value="'Nº Broche: ' + item.nombre + ' Cantidad de Broches (' + item.cantidad + ')'" readonly />
+            :value="'Nº Broche: ' + item.nombre  /* + ' Cantidad de Broches (' + item.cantidad + ')' */ " readonly />
 
           <div class="input-group-append px-2">
             <button class="btn btn-sm btn-primary mx-1" @click="onBajado(item)">Bajado</button>
