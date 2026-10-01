@@ -1,6 +1,7 @@
 <template>
   <NavComponentSin />
-  <div class="px-3">
+  <div class="px-5">
+    
     <div class="row d-flex justify-content-center text-center">
       <div class="col-md-8 px-1 d-flex justify-content-center">
         <table class="table table-striped table-hover ">

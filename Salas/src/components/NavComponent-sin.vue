@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg sticky-top mb-3 px-3">
+  <nav class="navbar navbar-expand-lg sticky-top px-5 pt-3">
     <router-link class="navbar-brand" id="navbar_contenedor_logo" :to="{ name: 'home' }">
       <img :src="logo" alt="Logo" class="img-fluid" />
     </router-link>
