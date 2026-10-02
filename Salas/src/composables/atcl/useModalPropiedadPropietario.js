@@ -7,6 +7,7 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
   const sugerencias = ref([])
   const personaSeleccionada = ref(null)
   const propietarios = ref([])
+  const propietariosEditados = ref([])
   const personaParaVer = ref(null)
   
   const mostrarModalVer = ref(false) 
@@ -21,6 +22,10 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     () => props.propiedad,
     (newVal) => {
       if (newVal && Array.isArray(newVal.propietarios)) {
+        propietariosEditados.value = newVal.propietarios.map(persona => ({
+          ...persona,
+          pivot: { ...(persona.pivot || {}) }
+        }))
         propietarios.value = newVal.propietarios.map((p) => ({
           persona: p,
           baja: p.pivot ? p.pivot.baja === 'si' : false,
@@ -28,15 +33,13 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
           observaciones_baja: p.pivot ? p.pivot.observaciones_baja : '' 
         }))
       }
-    }
+    },
+    { immediate: true }
   )
 
   const getPropietariosList = () => {
     if (props.propiedad) {
-      if (!Array.isArray(props.propiedad.propietarios)) {
-        props.propiedad.propietarios = []
-      }
-      return props.propiedad.propietarios
+      return propietariosEditados.value
     }
     return propietarios.value
   }
@@ -184,6 +187,7 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     sugerencias,
     personaSeleccionada,
     propietarios,
+    propietariosEditados,
     personaParaVer,
     mostrarModalVer,
     modalCargaAbierto, 

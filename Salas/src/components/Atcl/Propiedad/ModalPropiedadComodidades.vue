@@ -147,6 +147,8 @@
 </template>
 
 <script setup>
+import { reactive, watch } from 'vue'
+import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 
 // Recibir las props del componente padre
 const props = defineProps({
@@ -164,45 +166,17 @@ const props = defineProps({
   }
 
 })
-// Este se ejecuta cuando cambia el valor
-/* watch(() => props.propiedadUpdate, (newValue) => {
-    console.log('propiedadUpdate cambió:', newValue)
-}, { immediate: true })
- */
-import { reactive, watch, defineEmits } from 'vue'
 
 // Definir los emits
 const emit = defineEmits(['update:comodidades'])
 
 // Datos reactivos del modal
-const comodidades = reactive({
-  estado_general: '',
-  dormitorios: '',
-  banios: '',
-  lotes: '',
-  lote_cubierto: '',
-  cochera: '',
-  numero_cochera: '',
-  asfalto: '',
-  gas: '',
-  cloaca: '',
-  agua: ''
-})
+const comodidades = reactive(propertyUpdateFormState(null).comodidades)
+
 // Observar cuando llegue propiedadUpdate y cargar los valores
 watch(() => props.propiedadUpdate, (newValue) => {
   if (newValue) {
-    //console.log('Cargando datos:', newValue)
-    comodidades.estado_general = newValue.id_estado_general || ''
-    comodidades.dormitorios = newValue.cantidad_dormitorios ?? ''
-    comodidades.banios = newValue.banios || ''
-    comodidades.lotes = newValue.mLote || ''
-    comodidades.lote_cubierto = newValue.mCubiertos || ''
-    comodidades.cochera = newValue.cochera || ''
-    comodidades.numero_cochera = newValue.numero_cochera || ''
-    comodidades.asfalto = newValue.asfalto || ''
-    comodidades.gas = newValue.gas || ''
-    comodidades.cloaca = newValue.cloaca || ''
-    comodidades.agua = newValue.agua || ''
+    Object.assign(comodidades, propertyUpdateFormState(newValue).comodidades)
   }
 }, { immediate: true })
 // Observar cambios y emitir automáticamente

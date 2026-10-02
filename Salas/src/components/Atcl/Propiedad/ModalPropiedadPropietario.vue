@@ -65,7 +65,7 @@
 
           <!-- CUERPO PARA "UPDATE" (Con propiedad) -->
           <tbody v-if="propiedad">
-            <tr v-for="(item, index) in propiedad.propietarios" :key="index">
+            <tr v-for="(item, index) in propietariosEditados" :key="index">
               <td class="ps-3 fw-semibold text-dark">{{ item.apellido }}, {{ item.nombre }}</td>
               <td>
                 <textarea class="form-control form-control-sm text-muted bg-light compact-textarea"
@@ -101,7 +101,7 @@
                 </div>
               </td>
             </tr>
-            <tr v-if="propiedad.propietarios.length === 0">
+            <tr v-if="propietariosEditados.length === 0">
               <td colspan="5" class="text-center text-muted py-4">No hay propietarios asignados.</td>
             </tr>
           </tbody>
@@ -176,9 +176,9 @@ const {
   busqueda,
   sugerencias,
   propietarios,
+  propietariosEditados,
   personaParaVer,
   mostrarModalVer,
-  propietarioEnEdicion,
   modalCargaAbierto,
   abrirModalCargaPersona,
   buscar,

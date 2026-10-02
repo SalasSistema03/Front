@@ -591,6 +591,11 @@ import { useAsesores } from '../../composables/atcl/useAsesores'
 import { useToast } from '../../composables/useToast'
 import { getUser } from '../../Services/api/Usuario/userApi'
 import { canSubmitPropertyUpdate } from '../../utils/propertyUpdateGuard'
+import {
+  changedPropertyUpdateFields,
+  propertyUpdateFormState,
+  propertyUpdateValuesEqual
+} from '../../utils/propertyUpdateChanges.js'
 
 // IMPORTAMOS LOCALIDADES Y LEAFLET
 import { useLocalidades } from '../../composables/atcl/useLocalidades'
@@ -643,6 +648,8 @@ export default {
       showModalPropietarios: false,
       propiedad_update: null,
       loading: true, loadFailed: false, submitting: false,
+      originalForm: null,
+      modalDraft: {},
       numero_calle: '', piso: '', departamento: '', llave: '', comentario_llave: '', comentario_cartel: '',
       ph: '', tipo_inmueble: '', id_zona: '', id_provincia: '',
       id_localidad: '', // NUEVO CAMPO LOCALIDAD
@@ -665,7 +672,7 @@ export default {
     // 🟢 NUEVA FUNCIÓN: Genera el link de Google Maps en tiempo real
     enlaceGoogleMaps() {
       // Si no hay calle ni altura, no armamos el link
-      if (!this.calleSeleccionada || !this.numero_calle) return '';
+      if (!this.calleSeleccionada || this.numero_calle === '' || this.numero_calle == null) return '';
       
       // Rescatamos los nombres usando los IDs seleccionados en los combos
       const nombreProvincia = this.provincias.find(p => p.id == this.id_provincia)?.name || '';
@@ -693,24 +700,19 @@ export default {
   },
   methods: {
     actualizarComodidades(comodidades) {
-      if (!this.propiedad_update) { this.propiedad_update = {} }
-      this.propiedad_update.comodidades = comodidades
+      this.modalDraft.comodidades = comodidades
     },
     actualizarDescripcion(descripcion) {
-      if (!this.propiedad_update) { this.propiedad_update = {} }
-      this.propiedad_update.descripcion = descripcion
+      this.modalDraft.descripcion = descripcion
     },
     actualizarVenta(venta) {
-      if (!this.propiedad_update) { this.propiedad_update = {} }
-      this.propiedad_update.venta = venta
+      this.modalDraft.venta = venta
     },
     actualizarAlquiler(alquiler) {
-      if (!this.propiedad_update) { this.propiedad_update = {} }
-      this.propiedad_update.alquiler = alquiler
+      this.modalDraft.alquiler = alquiler
     },
     actualizarCondicion(condicion) {
-      if (!this.propiedad_update) { this.propiedad_update = {} }
-      this.propiedad_update.condicion = condicion
+      this.modalDraft.condicion = condicion
     },
     
     // 1. MÉTODO PARA ESCUCHAR AL MODAL DE PROPIETARIOS
@@ -737,19 +739,21 @@ export default {
           this.propietariosNuevos.push(actual)
         } else {
           // ES UN PROPIETARIO EXISTENTE (Verificar si fue modificado)
-          const obsActual = actual.pivot?.observaciones_baja || actual.pivot?.observaciones || ''
-          const obsOriginal = original.pivot?.observaciones_baja || original.pivot?.observaciones || ''
+          const pivotActual = actual.pivot || {}
+          const pivotOriginal = original.pivot || {}
+          const cambios = changedPropertyUpdateFields(
+            {
+              observaciones_baja: pivotOriginal.observaciones_baja ?? pivotOriginal.observaciones ?? '',
+              baja: pivotOriginal.baja ?? 'no'
+            },
+            {
+              observaciones_baja: pivotActual.observaciones_baja ?? pivotActual.observaciones ?? '',
+              baja: pivotActual.baja ?? 'no'
+            }
+          )
 
-          const bajaActual = actual.pivot?.baja || 'no'
-          const bajaOriginal = original.pivot?.baja || 'no'
-
-          // Si cambió el comentario o el estado de baja...
-          if (obsActual !== obsOriginal || bajaActual !== bajaOriginal) {
-            this.propietariosModificados.push({
-              id: actual.id,
-              observaciones_baja: obsActual,
-              baja: bajaActual
-            })
+          if (Object.keys(cambios).length > 0) {
+            this.propietariosModificados.push({ id: actual.id, ...cambios })
           }
         }
       })
@@ -782,7 +786,7 @@ export default {
         this.showError(`El número de orden ${fotoActual.orden} ya está siendo usado por otra foto`)
         this.$nextTick(() => {
           const original = this.fotosOriginales?.find(f => f.id === fotoActual.id)
-          fotoActual.orden = original?.orden || null
+          fotoActual.orden = original?.orden ?? null
         })
       }
     },
@@ -902,7 +906,7 @@ async abrirModalMapa() {
       let lng = -60.694612;
 
       // 2. Si la base de datos ya tiene las coordenadas exactas, priorizamos esas
-      if (this.propiedad_update?.latitud && this.propiedad_update?.longitud) {
+      if (this.propiedad_update?.latitud != null && this.propiedad_update?.longitud != null) {
         lat = this.propiedad_update.latitud;
         lng = this.propiedad_update.longitud;
       } 
@@ -996,44 +1000,57 @@ async abrirModalMapa() {
         }
 
         this.propiedad_update = response.data.data
-        this.numero_calle = this.propiedad_update.numero_calle
-        this.piso = this.propiedad_update.piso
-        this.departamento = this.propiedad_update.departamento
-        this.llave = this.propiedad_update.llave
-        this.comentario_llave = this.propiedad_update.comentario_llave
-        this.comentario_cartel = this.propiedad_update.comentario_cartel
-        this.ph = this.propiedad_update.ph
-        this.tipo_inmueble = this.propiedad_update.id_inmueble
-        this.id_zona = this.propiedad_update.id_zona
-        this.id_provincia = this.propiedad_update.id_provincia
-        this.id_localidad = this.propiedad_update.id_localidad || ''
-        this.cartel = this.propiedad_update.cartel
-        this.calleSeleccionada = this.propiedad_update.calle?.name || ''
-        this.calleId = this.propiedad_update.calle?.id || ''
+        this.originalForm = propertyUpdateFormState(this.propiedad_update)
+        this.numero_calle = this.originalForm.main.numero_calle
+        this.piso = this.originalForm.main.piso
+        this.departamento = this.originalForm.main.departamento
+        this.llave = this.originalForm.main.llave
+        this.comentario_llave = this.originalForm.main.comentario_llave
+        this.comentario_cartel = this.originalForm.main.comentario_cartel
+        this.ph = this.originalForm.main.ph
+        this.tipo_inmueble = this.originalForm.main.id_inmueble
+        this.id_zona = this.originalForm.main.id_zona
+        this.id_provincia = this.originalForm.main.id_provincia
+        this.id_localidad = this.originalForm.main.id_localidad
+        this.cartel = this.originalForm.main.cartel
+        this.calleSeleccionada = this.propiedad_update.calle?.name ?? ''
+        this.calleId = this.originalForm.main.calle_id
 
         // GUARDAMOS LOS ORIGINALES PARA COMPARAR DESPUÉS
         if (response.data.data.fotos && Array.isArray(response.data.data.fotos)) {
-          this.fotosOriginales = response.data.data.fotos.map(f => ({ id: f.id, orden: f.orden, notes: f.notes, updated_at: f.updated_at, archivado: f.archivado }))
+          this.fotosOriginales = response.data.data.fotos.map(f => ({
+            id: f.id,
+            orden: f.orden ?? '',
+            notes: f.notes ?? '',
+            archivado: f.archivado
+          }))
         } else { this.fotosOriginales = [] }
 
         if (response.data.data.documentacion && Array.isArray(response.data.data.documentacion)) {
-          this.documentosOriginales = response.data.data.documentacion.map(d => ({ id: d.id, notes: d.notes }))
+          this.documentosOriginales = response.data.data.documentacion.map(d => ({
+            id: d.id,
+            notes: d.notes ?? ''
+          }))
         } else { this.documentosOriginales = [] }
 
         if (response.data.data.video && Array.isArray(response.data.data.video)) {
-          this.videosOriginales = response.data.data.video.map(v => ({ id: v.id, notes: v.notes }))
+          this.videosOriginales = response.data.data.video.map(v => ({
+            id: v.id,
+            notes: v.notes ?? '',
+            archivado: v.archivado
+          }))
         } else { this.videosOriginales = [] }
 
         // PROPIETARIOS ORIGINALES SEGUROS
         this.propietariosOriginales = (response.data.data.propietarios || []).map(p => ({
           id: p.id,
           pivot: {
-            observaciones_baja: p.pivot?.observaciones_baja || p.pivot?.observaciones || '',
-            baja: p.pivot?.baja || 'no'
+            observaciones_baja: p.pivot?.observaciones_baja ?? p.pivot?.observaciones ?? '',
+            baja: p.pivot?.baja ?? 'no'
           }
         }))
 
-      } catch (error) {
+      } catch {
         this.loadFailed = true
         this.error = 'No se pudo cargar la propiedad'
       } finally {
@@ -1043,16 +1060,6 @@ async abrirModalMapa() {
 
     // 3. MÉTODO PARA ENVIAR LOS DATOS (COMPLETO)
     async actualizarPropiedad() {
-      const id_usuario = await getUser(localStorage.getItem('token'))
-      const formData = new FormData()
-
-      // 🟢 LÍNEA CLAVE: Engañamos al backend para que acepte archivos en un update
-      formData.append('_method', 'PUT')
-
-      // DATOS PRINCIPALES
-      formData.append('id', this.$route.params.id)
-      formData.append('calle_id', this.calleId ?? '')
-      formData.append('numero_calle', this.numero_calle ?? '')
       if (!this.canSubmitPropertyUpdate) {
         this.showWarning('Esperá a que termine de cargarse la propiedad antes de guardar.')
         return
@@ -1067,38 +1074,44 @@ async abrirModalMapa() {
           return
         }
 
-        const id_usuario = await getUser(localStorage.getItem('token'))
+        const usuario = await getUser(localStorage.getItem('token'))
         const formData = new FormData()
 
-        // DATOS PRINCIPALES
         formData.append('id', this.$route.params.id)
-        formData.append('calle_id', this.calleId ?? '')
-        formData.append('numero_calle', this.numero_calle ?? '')
-        formData.append('piso', this.piso ?? '')
-        formData.append('departamento', this.departamento ?? '')
-        formData.append('ph', this.ph ?? '')
-        formData.append('id_inmueble', this.tipo_inmueble ?? '')
-        formData.append('id_zona', this.id_zona ?? '')
-        formData.append('id_provincia', this.id_provincia ?? '')
-        formData.append('id_localidad', this.id_localidad ?? '')
+        formData.append('id_usuario', usuario.data.id)
 
-        if (this.propiedad_update?.latitud) formData.append('latitud', this.propiedad_update.latitud)
-        if (this.propiedad_update?.longitud) formData.append('longitud', this.propiedad_update.longitud)
+        const original = this.originalForm
+        const mainChanges = changedPropertyUpdateFields(original.main, {
+          calle_id: this.calleId,
+          numero_calle: this.numero_calle,
+          piso: this.piso,
+          departamento: this.departamento,
+          ph: this.ph,
+          id_inmueble: this.tipo_inmueble,
+          id_zona: this.id_zona,
+          id_provincia: this.id_provincia,
+          id_localidad: this.id_localidad,
+          latitud: this.propiedad_update.latitud ?? null,
+          longitud: this.propiedad_update.longitud ?? null,
+          llave: this.llave,
+          comentario_llave: this.comentario_llave,
+          cartel: this.cartel,
+          comentario_cartel: this.comentario_cartel
+        })
+        Object.entries(mainChanges).forEach(([key, value]) => {
+          formData.append(key, value === null ? '' : value)
+        })
 
-        formData.append('llave', this.llave ?? '')
-        formData.append('comentario_llave', this.comentario_llave ?? '')
-        formData.append('cartel', this.cartel ?? '')
-        formData.append('comentario_cartel', this.comentario_cartel ?? '')
-        formData.append('id_usuario', id_usuario.data.id)
-
-        // DATOS DE LOS MODALES
-        if (this.propiedad_update) {
-          if (this.propiedad_update.comodidades) formData.append('comodidades', JSON.stringify(this.propiedad_update.comodidades))
-          if (this.propiedad_update.descripcion) formData.append('descripcion', JSON.stringify(this.propiedad_update.descripcion))
-          if (this.propiedad_update.venta) formData.append('venta', JSON.stringify(this.propiedad_update.venta))
-          if (this.propiedad_update.alquiler) formData.append('alquiler', JSON.stringify(this.propiedad_update.alquiler))
-          if (this.propiedad_update.condicion) formData.append('condicion_alquiler', JSON.stringify(this.propiedad_update.condicion))
+        const modalChanges = {
+          comodidades: changedPropertyUpdateFields(original.comodidades, this.modalDraft.comodidades || original.comodidades),
+          descripcion: changedPropertyUpdateFields(original.descripcion, this.modalDraft.descripcion || original.descripcion),
+          venta: changedPropertyUpdateFields(original.venta, this.modalDraft.venta || original.venta),
+          alquiler: changedPropertyUpdateFields(original.alquiler, this.modalDraft.alquiler || original.alquiler),
+          condicion_alquiler: changedPropertyUpdateFields(original.condicion, this.modalDraft.condicion || original.condicion)
         }
+        Object.entries(modalChanges).forEach(([key, changes]) => {
+          if (Object.keys(changes).length > 0) formData.append(key, JSON.stringify(changes))
+        })
 
         // ENVIAR PROPIETARIOS A LARAVEL
         if (this.propietariosNuevos && this.propietariosNuevos.length > 0) {
@@ -1116,10 +1129,20 @@ async abrirModalMapa() {
           const fotasModificadas = this.propiedad_update.fotos.filter(foto => {
             const original = this.fotosOriginales.find(o => o.id === foto.id)
             if (!original) return false
-            return foto.orden != original.orden || foto.notes != original.notes || foto.archivado != original.archivado
+            return Object.keys(changedPropertyUpdateFields(original, {
+              orden: foto.orden,
+              notes: foto.notes,
+              archivado: foto.archivado
+            })).length > 0
           })
           if (fotasModificadas.length > 0) {
-            const datos = fotasModificadas.map(f => ({ id: f.id, orden: f.orden ?? '', notes: f.notes ?? '', archivado: f.archivado ?? '' }))
+            const datos = fotasModificadas.map(f => ({
+              id: f.id,
+              ...changedPropertyUpdateFields(
+                this.fotosOriginales.find(o => o.id === f.id),
+                { orden: f.orden, notes: f.notes, archivado: f.archivado }
+              )
+            }))
             formData.append('fotos_modificadas', JSON.stringify(datos))
           }
         }
@@ -1151,10 +1174,13 @@ async abrirModalMapa() {
           const docsModificados = this.propiedad_update.documentacion.filter(doc => {
             const original = this.documentosOriginales.find(o => o.id === doc.id)
             if (!original) return false
-            return doc.notes != original.notes
+            return !propertyUpdateValuesEqual(original.notes, doc.notes)
           })
           if (docsModificados.length > 0) {
-            const datos = docsModificados.map(d => ({ id: d.id, notes: d.notes ?? '' }))
+            const datos = docsModificados.map(d => ({
+              id: d.id,
+              ...changedPropertyUpdateFields(this.documentosOriginales.find(o => o.id === d.id), { notes: d.notes })
+            }))
             formData.append('documentos_modificados', JSON.stringify(datos))
           }
         }
@@ -1172,10 +1198,19 @@ async abrirModalMapa() {
           const videosModificados = this.propiedad_update.video.filter(video => {
             const original = this.videosOriginales.find(o => o.id === video.id)
             if (!original) return false
-            return video.notes != original.notes || video.archivado != original.archivado
+            return Object.keys(changedPropertyUpdateFields(original, {
+              notes: video.notes,
+              archivado: video.archivado
+            })).length > 0
           })
           if (videosModificados.length > 0) {
-            const datos = videosModificados.map(v => ({ id: v.id, notes: v.notes ?? '', archivado: v.archivado }))
+            const datos = videosModificados.map(v => ({
+              id: v.id,
+              ...changedPropertyUpdateFields(
+                this.videosOriginales.find(o => o.id === v.id),
+                { notes: v.notes, archivado: v.archivado }
+              )
+            }))
             formData.append('videos_modificados', JSON.stringify(datos))
           }
         }

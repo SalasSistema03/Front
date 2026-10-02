@@ -258,8 +258,9 @@
 <script setup>
 // Recibir las props del componente padre
 import ModalNovedades from './ModalNovedades.vue'
-import { reactive, watch, defineEmits, computed, ref } from 'vue'
+import { reactive, watch, defineEmits, computed, ref, nextTick } from 'vue'
 import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
+import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 
 
 
@@ -283,8 +284,7 @@ const props = defineProps({
 })
 const fichaPdfRef = ref(null)
 const fichaReservaPdfRef = ref(null)
-const fechaOfrecimientoTouched = ref(false)
-const initialFechaOfrecimiento = ref('')
+const hidratando = ref(false)
 
 
 // Definir los emits
@@ -293,40 +293,11 @@ const emit = defineEmits(['update:alquiler', 'update:novedadAlquiler', 'update:o
 // Watch para precargar datos cuando llega propiedadUpdate (como en venta)
 watch(() => props.propiedadUpdate, (newValue) => {
   if (newValue) {
-    //console.log('Cargando datos de alquiler:', newValue)
-    // Precargar los datos en el formulario
-    alquiler.cod_alquiler = newValue.cod_alquiler || ''
-    alquiler.estado_alquiler = newValue.id_estado_alquiler || ''
-    alquiler.moneda_alquiler = newValue.precio_actual?.moneda_alquiler_pesos ? '1' : '2'
-    alquiler.monto_alquiler = newValue.precio_actual?.moneda_alquiler_pesos || newValue.precio_actual?.moneda_alquiler_dolar || ''
-    alquiler.autorizacion_alquiler = newValue.autorizacion_alquiler || ''
-    alquiler.fecha_autorizacion_alquiler = newValue.fecha_autorizacion_alquiler || ''
-    alquiler.exclusividad_alquiler = newValue.exclusividad_alquiler || ''
-    alquiler.clausula_de_venta = newValue.clausula_de_venta || ''
-    alquiler.tiempo_clausula = newValue.tiempo_clausula || ''
-    alquiler.alquiler_fecha_alta = newValue.alquiler_fecha_alta || ''
-    alquiler.mascota = newValue.mascota || ''
-    alquiler.descripcion_estado_alquiler = newValue.historial_estados_alquiler?.comentario_alquiler || ''
-    alquiler.fecha_baja_temporal_alquiler = newValue.historial_estados_alquiler?.reactiva_fecha_alquiler?.split(' ')[0] || ''
-    alquiler.flyer_a = newValue.flyer_a || ''
-    alquiler.reel_a = newValue.reel_a || ''
-    alquiler.web_a = newValue.web_a || ''
-    alquiler.captador_interno_a = newValue.captador_int_a || ''
-    alquiler.fecha_ofrecimiento = newValue.fecha_ofrecimiento || ''
-    //initialFechaOfrecimiento.value = alquiler.fecha_ofrecimiento
-    //fechaOfrecimientoTouched.value = false
-
-
-    // Precargar folios si existen
-    if (newValue.folios && newValue.folios.length > 0) {
-      const folioCentral = newValue.folios.find(f => f.empresa_id === 1)
-      const folioCandioti = newValue.folios.find(f => f.empresa_id === 2)
-      const folioTribunales = newValue.folios.find(f => f.empresa_id === 3)
-
-      alquiler.FCentral = folioCentral?.folio || ''
-      alquiler.FCandioti = folioCandioti?.folio || ''
-      alquiler.FTribunales = folioTribunales?.folio || ''
-    }
+    hidratando.value = true
+    Object.assign(alquiler, propertyUpdateFormState(newValue).alquiler)
+    nextTick(() => {
+      hidratando.value = false
+    })
   }
 }, { immediate: true })
 
@@ -467,33 +438,22 @@ const mostrarFechaOfrecimiento = computed(() => {
 
 // Limpiar `fecha_ofrecimiento` al ocultarse (comportamiento consistente con otros campos)
 watch(mostrarFechaOfrecimiento, (val) => {
-  if (!val) alquiler.fecha_ofrecimiento = ''
-})
-
-// Detectar cambios reales en el valor de fecha_ofrecimiento (aunque @change falle)
-watch(() => alquiler.fecha_ofrecimiento, (newVal, oldVal) => {
-  if (newVal === undefined) return
-  if (newVal !== initialFechaOfrecimiento.value) {
-    fechaOfrecimientoTouched.value = true
-  }
+  if (!val && !hidratando.value) alquiler.fecha_ofrecimiento = ''
 })
 
 // Limpiar campos al ocultarse (igual que el JS original)
 watch(mostrarDescripcion, (val) => {
-  if (!val) alquiler.descripcion_estado_alquiler = ''
+  if (!val && !hidratando.value) alquiler.descripcion_estado_alquiler = ''
 })
 
 
 watch(mostrarBajaTemporal, (val) => {
-  if (!val) alquiler.fecha_baja_temporal_alquiler = ''
+  if (!val && !hidratando.value) alquiler.fecha_baja_temporal_alquiler = ''
 })
 
 // Observar cambios y emitir automáticamente
 watch(alquiler, (newValue) => {
-  const payload = { ...newValue }
-  // Si el usuario no tocó fecha_ofrecimiento, enviarla vacía para mantener comportamiento consistente
-  if (!fechaOfrecimientoTouched.value) payload.fecha_ofrecimiento = ''
-  emit('update:alquiler', payload)
+  emit('update:alquiler', { ...newValue })
 }, { deep: true })
 
 </script>
