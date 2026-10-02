@@ -1,28 +1,35 @@
 <template>
   <!-- 1. CONTENEDOR PADRE AL 100% DE ALTO (vh-100) Y SIN SCROLL GLOBAL (overflow-hidden) -->
   <div class="d-flex flex-column vh-100 overflow-hidden bg-white">
-
     <NavComponent titulo="Detalle de Propiedad"></NavComponent>
 
     <!-- 2. CONTENEDOR PRINCIPAL QUE ABSORBE EL ESPACIO RESTANTE (flex-grow-1) -->
     <div class="container-fluid px-3 py-2 d-flex flex-column flex-grow-1 overflow-hidden">
-
       <!-- SPINNER DE CARGA -->
-      <div v-if="loading" class="d-flex flex-column justify-content-center align-items-center flex-grow-1">
-        <div class="spinner-border text-primary mb-2" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
+      <div
+        v-if="loading"
+        class="d-flex flex-column justify-content-center align-items-center flex-grow-1"
+      >
+        <div
+          class="spinner-border text-primary mb-2"
+          style="width: 2.5rem; height: 2.5rem"
+          role="status"
+        ></div>
         <h6 class="text-muted fw-bold">Cargando datos...</h6>
       </div>
 
       <!-- 3. FILA QUE SE EXPANDE (flex-grow-1) -->
       <div v-else class="row flex-grow-1 overflow-hidden m-0">
-
         <!-- ========================================== -->
         <!-- COLUMNA IZQUIERDA: DETALLES (h-100 con scroll interno) -->
         <!-- ========================================== -->
-        <div class="col-lg-7 h-100 overflow-auto pe-lg-3 pb-3 custom-scrollbar border-end form-group">
-
+        <div
+          class="col-lg-7 h-100 overflow-auto pe-lg-3 pb-3 custom-scrollbar border-end form-group"
+        >
           <!-- ENCABEZADO ÚNICO COMPACTO -->
-          <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-2 mt-1">
+          <div
+            class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-2 mt-1"
+          >
             <h6 class="fw-bold text-primary mb-0 small text-uppercase">
               <i class="bi bi-info-square-fill"></i> Ficha de la Propiedad
             </h6>
@@ -32,22 +39,39 @@
           <div class="row g-1 mb-1">
             <div class="col-md-3">
               <label class="form-label compact-label text-muted">Provincia</label>
-              <input type="text" class="form-control compact-input bg-light" readonly
-                :value="propiedad?.provincia?.name">
+              <input
+                type="text"
+                class="form-control compact-input bg-light"
+                readonly
+                :value="propiedad?.provincia?.name"
+              />
             </div>
             <div class="col-md-3">
               <label class="form-label compact-label text-muted">Localidad</label>
-              <input type="text" class="form-control compact-input bg-light" readonly
-                :value="propiedad?.localidad?.name || '- - -'">
+              <input
+                type="text"
+                class="form-control compact-input bg-light"
+                readonly
+                :value="propiedad?.localidad?.name || '- - -'"
+              />
             </div>
             <div class="col-md-3">
               <label class="form-label compact-label text-muted">Zona</label>
-              <input type="text" class="form-control compact-input bg-light" readonly :value="propiedad?.zona?.name">
+              <input
+                type="text"
+                class="form-control compact-input bg-light"
+                readonly
+                :value="propiedad?.zona?.name"
+              />
             </div>
             <div class="col-md-3">
               <label class="form-label compact-label text-muted">Inmueble</label>
-              <input type="text" class="form-control compact-input bg-light" readonly
-                :value="propiedad?.tipo_inmueble?.inmueble">
+              <input
+                type="text"
+                class="form-control compact-input bg-light"
+                readonly
+                :value="propiedad?.tipo_inmueble?.inmueble"
+              />
             </div>
           </div>
 
@@ -55,30 +79,50 @@
           <div class="row g-1 mb-1">
             <div class="col-md-5">
               <label class="form-label compact-label text-muted">Calle</label>
-              <input type="text" class="form-control compact-input bg-light" readonly :value="propiedad?.calle?.name">
+              <input
+                type="text"
+                class="form-control compact-input bg-light"
+                readonly
+                :value="propiedad?.calle?.name"
+              />
             </div>
             <div class="col-md-2">
               <label class="form-label compact-label text-muted">N°</label>
-              <input type="text" class="form-control compact-input bg-light text-center" readonly
-                :value="propiedad?.numero_calle">
+              <input
+                type="text"
+                class="form-control compact-input bg-light text-center"
+                readonly
+                :value="propiedad?.numero_calle"
+              />
             </div>
             <div class="col-md-2">
               <label class="form-label compact-label text-muted">Piso</label>
-              <input type="text" class="form-control compact-input bg-light text-center" readonly
-                :value="propiedad?.piso">
+              <input
+                type="text"
+                class="form-control compact-input bg-light text-center"
+                readonly
+                :value="propiedad?.piso"
+              />
             </div>
             <div class="col-md-1">
               <label class="form-label compact-label text-muted">Dto</label>
-              <input type="text" class="form-control compact-input bg-light text-center" readonly
-                :value="propiedad?.departamento">
+              <input
+                type="text"
+                class="form-control compact-input bg-light text-center"
+                readonly
+                :value="propiedad?.departamento"
+              />
             </div>
             <div class="col-md-2">
               <label class="form-label compact-label text-muted">PH</label>
-              <input type="text" class="form-control compact-input bg-light text-center" readonly
-                :value="propiedad?.ph">
+              <input
+                type="text"
+                class="form-control compact-input bg-light text-center"
+                readonly
+                :value="propiedad?.ph"
+              />
             </div>
           </div>
-
 
           <!-- PANEL DE CONTROL (MODALES) -->
           <h6 class="fw-bold text-primary border-bottom pb-1 mb-2 mt-3 small text-uppercase">
@@ -87,16 +131,30 @@
 
           <div class="row g-1 mb-2">
             <div class="col-3">
-              <button class="btn btn-primary w-100 compact-btn shadow-sm" data-bs-toggle="modal"
-                data-bs-target="#modalComodidades">Comodidades</button>
+              <button
+                class="btn btn-primary w-100 compact-btn shadow-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#modalComodidades"
+              >
+                Comodidades
+              </button>
             </div>
             <div class="col-3">
-              <button class="btn btn-primary w-100 compact-btn shadow-sm"
-                @click="abrirDescripcionModal">Descripción</button>
+              <button
+                class="btn btn-primary w-100 compact-btn shadow-sm"
+                @click="abrirDescripcionModal"
+              >
+                Descripción
+              </button>
             </div>
             <div class="col-3">
-              <button class="btn btn-primary w-100 compact-btn shadow-sm" @click="showModalPropietarios = true"
-                :disabled="!botones?.propietario">Propietarios</button>
+              <button
+                class="btn btn-primary w-100 compact-btn shadow-sm"
+                @click="showModalPropietarios = true"
+                :disabled="!botones?.propietario"
+              >
+                Propietarios
+              </button>
             </div>
             <div class="col-3">
               <button class="btn btn-primary w-100 compact-btn shadow-sm" @click="descargarFotos">
@@ -107,26 +165,51 @@
 
           <div class="row g-1 mb-3">
             <div class="col-3">
-              <button type="button" class="btn w-100 compact-btn shadow-sm"
-                :class="propiedad?.comentario_llave ? 'btn-danger text-white' : 'btn-outline-secondary bg-white'"
-                data-bs-toggle="popover" data-bs-placement="top" :data-bs-content="comentarioLlave">
+              <button
+                type="button"
+                class="btn w-100 compact-btn shadow-sm"
+                :class="
+                  propiedad?.comentario_llave
+                    ? 'btn-danger text-white'
+                    : 'btn-outline-secondary bg-white'
+                "
+                data-bs-toggle="popover"
+                data-bs-placement="top"
+                :data-bs-content="comentarioLlave"
+              >
                 <i class="bi bi-key"></i> Llave: <strong>{{ llaveDisplay }}</strong>
               </button>
             </div>
             <div class="col-3">
-              <button type="button" class="btn w-100 compact-btn shadow-sm"
-                :class="propiedad?.comentario_cartel ? 'btn-danger text-white' : 'btn-outline-secondary bg-white'"
-                data-bs-toggle="popover" data-bs-placement="top" :data-bs-content="comentarioCartel">
+              <button
+                type="button"
+                class="btn w-100 compact-btn shadow-sm"
+                :class="
+                  propiedad?.comentario_cartel
+                    ? 'btn-danger text-white'
+                    : 'btn-outline-secondary bg-white'
+                "
+                data-bs-toggle="popover"
+                data-bs-placement="top"
+                :data-bs-content="comentarioCartel"
+              >
                 <i class="bi bi-signpost-2"></i> Cartel: <strong>{{ cartelDisplay }}</strong>
               </button>
             </div>
             <div class="col-3">
-              <button class="btn btn-secondary w-100 compact-btn shadow-sm"
-                @click="abrirImpuestoModal">Impuestos</button>
+              <button
+                class="btn btn-secondary w-100 compact-btn shadow-sm"
+                @click="abrirImpuestoModal"
+              >
+                Impuestos
+              </button>
             </div>
             <div class="col-3">
-              <button class="btn btn-secondary w-100 compact-btn shadow-sm" @click="modificarDatosPropiedad"
-                :disabled="!botones?.modificar">
+              <button
+                class="btn btn-secondary w-100 compact-btn shadow-sm"
+                @click="modificarDatosPropiedad"
+                :disabled="!botones?.modificar"
+              >
                 <i class="bi bi-pencil-square"></i> Modificar Ficha
               </button>
             </div>
@@ -137,19 +220,27 @@
             <!-- BOTONES DE VENTA Y ALQUILER -->
 
             <div class="row g-3 mb-4">
-
               <!-- Tarjeta Venta -->
               <div class="col-md-6">
                 <div
-                  class="d-flex justify-content-between align-items-center p-3 rounded-3 border border-primary border-opacity-25 bg-primary bg-opacity-10 shadow-sm h-100 transition-hover">
+                  class="d-flex justify-content-between align-items-center p-3 rounded-3 border border-primary border-opacity-25 bg-primary bg-opacity-10 shadow-sm h-100 transition-hover"
+                >
                   <div>
-                    <span class="d-block fw-bold text-primary mb-1"
-                      style="font-size: 0.7rem; letter-spacing: 0.5px;">CÓDIGO VENTA</span>
-                    <span class="fs-5 fw-bolder text-dark" style="letter-spacing: 1px;">{{ propiedad?.cod_venta || 'S/C'
+                    <span
+                      class="d-block fw-bold text-primary mb-1"
+                      style="font-size: 0.7rem; letter-spacing: 0.5px"
+                      >CÓDIGO VENTA</span
+                    >
+                    <span class="fs-5 fw-bolder text-dark" style="letter-spacing: 1px">{{
+                      propiedad?.cod_venta || 'S/C'
                     }}</span>
                   </div>
-                  <button class="btn btn-primary btn-sm fw-bold shadow-sm px-3 rounded-pill" data-bs-toggle="modal"
-                    data-bs-target="#modalVentas" :disabled="!botones?.informacion_venta">
+                  <button
+                    class="btn btn-primary btn-sm fw-bold shadow-sm px-3 rounded-pill"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalVentas"
+                    :disabled="!botones?.informacion_venta"
+                  >
                     <i class="bi bi-cash-coin me-1"></i> Info
                   </button>
                 </div>
@@ -158,97 +249,171 @@
               <!-- Tarjeta Alquiler -->
               <div class="col-md-6">
                 <div
-                  class="d-flex justify-content-between align-items-center p-3 rounded-3 border border-success border-opacity-25 bg-success bg-opacity-10 shadow-sm h-100 transition-hover">
+                  class="d-flex justify-content-between align-items-center p-3 rounded-3 border border-success border-opacity-25 bg-success bg-opacity-10 shadow-sm h-100 transition-hover"
+                >
                   <div>
-                    <span class="d-block fw-bold text-success mb-1"
-                      style="font-size: 0.7rem; letter-spacing: 0.5px;">CÓDIGO ALQUILER</span>
-                    <span class="fs-5 fw-bolder text-dark" style="letter-spacing: 1px;">{{ propiedad?.cod_alquiler ||
-                      'S/C' }}</span>
+                    <span
+                      class="d-block fw-bold text-success mb-1"
+                      style="font-size: 0.7rem; letter-spacing: 0.5px"
+                      >CÓDIGO ALQUILER</span
+                    >
+                    <span class="fs-5 fw-bolder text-dark" style="letter-spacing: 1px">{{
+                      propiedad?.cod_alquiler || 'S/C'
+                    }}</span>
                   </div>
-                  <button class="btn btn-success btn-sm fw-bold shadow-sm px-3 rounded-pill text-white"
-                    data-bs-toggle="modal" data-bs-target="#modalAlquiler" :disabled="!botones?.informacion_alquiler">
+                  <button
+                    class="btn btn-success btn-sm fw-bold shadow-sm px-3 rounded-pill text-white"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalAlquiler"
+                    :disabled="!botones?.informacion_alquiler"
+                  >
                     <i class="bi bi-house-door me-1"></i> Info
                   </button>
                 </div>
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <!-- ========================================== -->
         <!-- COLUMNA DERECHA: MULTIMEDIA (Se adapta a h-100) -->
         <!-- ========================================== -->
         <div class="col-lg-5 h-100 d-flex flex-column ps-lg-3 mt-3 mt-lg-0 pb-3">
-
           <!-- 4. CARD QUE SE ESTIRA HASTA ABAJO -->
           <div class="card shadow-sm border-0 flex-grow-1 d-flex flex-column overflow-hidden">
-
             <div class="card-header bg-white border-bottom p-0 flex-shrink-0">
-              <ul class="nav nav-tabs card-header-tabs m-0 compact-label" id="mediaTabs" role="tablist">
+              <ul
+                class="nav nav-tabs card-header-tabs m-0 compact-label"
+                id="mediaTabs"
+                role="tablist"
+              >
                 <li class="nav-item" role="presentation">
-                  <a class="nav-link active fw-bold px-3 py-2" id="fotos-tab" data-bs-toggle="tab" href="#fotos"
-                    role="tab">📷 Fotos</a>
+                  <a
+                    class="nav-link active fw-bold px-3 py-2"
+                    id="fotos-tab"
+                    data-bs-toggle="tab"
+                    href="#fotos"
+                    role="tab"
+                    >📷 Fotos</a
+                  >
                 </li>
                 <li class="nav-item" role="presentation">
-                  <a class="nav-link fw-bold px-3 py-2" id="documentos-tab" data-bs-toggle="tab" href="#documentos"
-                    role="tab">📄 Docs</a>
+                  <a
+                    class="nav-link fw-bold px-3 py-2"
+                    id="documentos-tab"
+                    data-bs-toggle="tab"
+                    href="#documentos"
+                    role="tab"
+                    >📄 Docs</a
+                  >
                 </li>
                 <li class="nav-item" role="presentation">
-                  <a class="nav-link fw-bold px-3 py-2" id="videos-tab" data-bs-toggle="tab" href="#videos"
-                    role="tab">🎥 Videos</a>
+                  <a
+                    class="nav-link fw-bold px-3 py-2"
+                    id="videos-tab"
+                    data-bs-toggle="tab"
+                    href="#videos"
+                    role="tab"
+                    >🎥 Videos</a
+                  >
                 </li>
                 <!-- NUEVA PESTAÑA MAPA -->
                 <li class="nav-item" role="presentation">
-                  <a class="nav-link fw-bold px-3 py-2" id="mapa-tab" data-bs-toggle="tab" href="#tab-mapa" role="tab"
-                    @click="activarMapa">🗺️ Mapa</a>
+                  <a
+                    class="nav-link fw-bold px-3 py-2"
+                    id="mapa-tab"
+                    data-bs-toggle="tab"
+                    href="#tab-mapa"
+                    role="tab"
+                    @click="activarMapa"
+                    >🗺️ Mapa</a
+                  >
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a
+                    class="nav-link fw-bold px-3 py-2"
+                    id="muestras-tab"
+                    data-bs-toggle="tab"
+                    href="#tab-muestras"
+                    role="tab"
+                    >🗓️ Muestras</a
+                  >
                 </li>
               </ul>
             </div>
 
             <div class="card-body bg-light p-2 d-flex flex-column overflow-hidden">
               <div class="tab-content flex-grow-1 overflow-hidden" id="mediaTabContent">
-
                 <!-- ===================================== -->
                 <!-- TABS DE FOTOS -->
                 <!-- ===================================== -->
                 <div class="tab-pane fade show active" id="fotos" role="tabpanel">
-                  <div v-if="propiedad?.fotos?.length" id="carouselFotos" class="carousel slide h-100 w-100"
-                    data-bs-ride="carousel">
+                  <div
+                    v-if="propiedad?.fotos?.length"
+                    id="carouselFotos"
+                    class="carousel slide h-100 w-100"
+                    data-bs-ride="carousel"
+                  >
                     <div class="carousel-inner h-100 w-100 rounded shadow-sm bg-dark">
-
-                      <div v-for="(foto, index) in propiedad.fotos" :key="index" class="carousel-item h-100 w-100"
-                        :class="{ 'active': index === 0 }">
+                      <div
+                        v-for="(foto, index) in propiedad.fotos"
+                        :key="index"
+                        class="carousel-item h-100 w-100"
+                        :class="{ active: index === 0 }"
+                      >
                         <div class="d-flex flex-column h-100 w-100">
-                          <div class="flex-grow-1 position-relative overflow-hidden" style="cursor: pointer;"
-                            @click="openModal(index)">
-                            <img :src="'http://10.10.10.191' + foto.url"
-                              class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;" />
+                          <div
+                            class="flex-grow-1 position-relative overflow-hidden"
+                            style="cursor: pointer"
+                            @click="openModal(index)"
+                          >
+                            <img
+                              :src="'http://10.10.10.191' + foto.url"
+                              class="position-absolute top-0 start-0 w-100 h-100"
+                              style="object-fit: cover"
+                            />
                           </div>
                           <div class="p-2 bg-white flex-shrink-0 border-top z-3">
-                            <input type="text" class="form-control compact-input bg-light text-muted"
-                              :value="foto.notes ? foto.notes : 'Sin comentarios en esta foto'" readonly disabled>
+                            <input
+                              type="text"
+                              class="form-control compact-input bg-light text-muted"
+                              :value="foto.notes ? foto.notes : 'Sin comentarios en esta foto'"
+                              readonly
+                              disabled
+                            />
                           </div>
                         </div>
                       </div>
-
                     </div>
 
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselFotos"
-                      data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon bg-dark rounded-circle p-1"
-                        style="width: 1.5rem; height: 1.5rem;"></span>
+                    <button
+                      class="carousel-control-prev"
+                      type="button"
+                      data-bs-target="#carouselFotos"
+                      data-bs-slide="prev"
+                    >
+                      <span
+                        class="carousel-control-prev-icon bg-dark rounded-circle p-1"
+                        style="width: 1.5rem; height: 1.5rem"
+                      ></span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselFotos"
-                      data-bs-slide="next">
-                      <span class="carousel-control-next-icon bg-dark rounded-circle p-1"
-                        style="width: 1.5rem; height: 1.5rem;"></span>
+                    <button
+                      class="carousel-control-next"
+                      type="button"
+                      data-bs-target="#carouselFotos"
+                      data-bs-slide="next"
+                    >
+                      <span
+                        class="carousel-control-next-icon bg-dark rounded-circle p-1"
+                        style="width: 1.5rem; height: 1.5rem"
+                      ></span>
                     </button>
                   </div>
 
-                  <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
+                  <div
+                    v-else
+                    class="h-100 d-flex align-items-center justify-content-center text-muted"
+                  >
                     <i class="bi bi-camera-fill fs-3 me-2"></i> Sin Fotos
                   </div>
                 </div>
@@ -258,20 +423,36 @@
                 <!-- ===================================== -->
                 <div class="tab-pane fade" id="documentos" role="tabpanel">
                   <!-- Aquí está la magia: w-100, h-100 y overflow-auto para el scroll -->
-                  <div v-if="propiedad?.documentacion?.length"
-                    class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2">
-                    <div v-for="(documento, index) in propiedad.documentacion" :key="index"
-                      class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0">
-                      <embed :src="'http://10.10.10.191' + documento.url" type="application/pdf"
-                        class="w-100 rounded-top" height="300px">
+                  <div
+                    v-if="propiedad?.documentacion?.length"
+                    class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2"
+                  >
+                    <div
+                      v-for="(documento, index) in propiedad.documentacion"
+                      :key="index"
+                      class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0"
+                    >
+                      <embed
+                        :src="'http://10.10.10.191' + documento.url"
+                        type="application/pdf"
+                        class="w-100 rounded-top"
+                        height="300px"
+                      />
                       <div class="p-1 bg-white rounded-bottom" v-if="documento.notes">
-                        <input type="text" class="form-control compact-input text-muted border-0"
-                          :value="documento.notes" readonly>
+                        <input
+                          type="text"
+                          class="form-control compact-input text-muted border-0"
+                          :value="documento.notes"
+                          readonly
+                        />
                       </div>
                     </div>
                   </div>
 
-                  <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
+                  <div
+                    v-else
+                    class="h-100 d-flex align-items-center justify-content-center text-muted"
+                  >
                     <i class="bi bi-file-earmark-x-fill fs-3 me-2"></i> Sin Documentos
                   </div>
                 </div>
@@ -280,21 +461,33 @@
                 <!-- TABS DE VIDEOS -->
                 <!-- ===================================== -->
                 <div class="tab-pane fade" id="videos" role="tabpanel">
-                  <div v-if="propiedad?.video?.length"
-                    class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2">
-                    <div v-for="(video, index) in propiedad.video" :key="index"
-                      class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0">
+                  <div
+                    v-if="propiedad?.video?.length"
+                    class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2"
+                  >
+                    <div
+                      v-for="(video, index) in propiedad.video"
+                      :key="index"
+                      class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0"
+                    >
                       <video controls class="w-100 rounded-top bg-dark">
-                        <source :src="'http://10.10.10.191' + video.url" type="video/mp4">
+                        <source :src="'http://10.10.10.191' + video.url" type="video/mp4" />
                       </video>
                       <div class="p-1 bg-white rounded-bottom" v-if="video.notes">
-                        <input type="text" class="form-control compact-input text-muted border-0" :value="video.notes"
-                          readonly>
+                        <input
+                          type="text"
+                          class="form-control compact-input text-muted border-0"
+                          :value="video.notes"
+                          readonly
+                        />
                       </div>
                     </div>
                   </div>
 
-                  <div v-else class="h-100 d-flex align-items-center justify-content-center text-muted">
+                  <div
+                    v-else
+                    class="h-100 d-flex align-items-center justify-content-center text-muted"
+                  >
                     <i class="bi bi-camera-video-off-fill fs-3 me-2"></i> Sin Videos
                   </div>
                 </div>
@@ -303,15 +496,62 @@
                 <!-- TABS DE MAPA (SOLO LECTURA)           -->
                 <!-- ===================================== -->
                 <div class="tab-pane fade" id="tab-mapa" role="tabpanel">
-                  <div v-if="tieneCoordenadas" class="w-100 h-100 position-relative rounded overflow-hidden shadow-sm">
+                  <div
+                    v-if="tieneCoordenadas"
+                    class="w-100 h-100 position-relative rounded overflow-hidden shadow-sm"
+                  >
                     <div id="mapa-detalle-propiedad" class="w-100 h-100"></div>
                   </div>
-                  <div v-else class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
+                  <div
+                    v-else
+                    class="h-100 d-flex flex-column align-items-center justify-content-center text-muted"
+                  >
                     <i class="bi bi-geo-alt-fill fs-2 text-secondary mb-2"></i>
                     <span>Esta propiedad no posee coordenadas registradas</span>
                   </div>
                 </div>
 
+                <!-- ===================================== -->
+                <!-- TABS DE MUESTRAS (SOLO LECTURA)           -->
+                <!-- ===================================== -->
+                <div class="tab-pane fade" id="tab-muestras" role="tabpanel">
+                  <div
+                    v-if="propiedad?.notas.length"
+                    class="list-group h-100 w-100 overflow-auto custom-scrollbar pe-2 pb-2"
+                  >
+                    <div
+                      v-for="(nota, index) in propiedad.notas"
+                      :key="index"
+                      class="list-group-item p-0 mb-3 border-0 shadow-sm rounded flex-shrink-0 px-2"
+                    >
+                      <div class="row pt-2">
+                        <div class="col-md-2" style="border-right: 1px solid; font-size:0.7rem; text-align:center;">
+                          <div class="pt-4">{{ formatearFechaMuestra(nota.fecha) }}</div>
+                          <div>{{ formatearHoraMuestra(nota.hora_inicio) }} Hs</div>
+                        </div>
+                        <div class="col-md-9">
+                          <div style="font-size: 0.7rem;">{{ nota.descripcion }}</div>
+                          <hr class="mb-2 mt-1" />
+                          <div  style="color: gray;font-size: 0.7rem;">{{ nota.agenda.sector.nombre }}</div>
+                        </div>
+                      </div>
+                      <!-- <div class="p-2 bg-white rounded-top">
+                        <span class="fw-bold text-primary">Nota {{ index + 1 }}</span>
+                      </div>
+                      <div class="p-2 bg-light rounded-bottom">
+                        <p class="mb-1"><strong>Fecha:</strong> {{ nota.fecha }}</p>
+                        <p class="mb-1"><strong>Usuario:</strong> {{ nota.usuario }}</p>
+                        <p class="mb-0"><strong>Comentario:</strong> {{ nota.comentario }}</p>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div
+                    v-else
+                    class="h-100 d-flex align-items-center justify-content-center text-muted"
+                  >
+                    <i class="bi bi-file-earmark-x-fill fs-3 me-2"></i> Sin Muestras
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -322,15 +562,33 @@
 
   <!-- MODALES EXISTENTES -->
   <ModalPropiedadComodidades :propiedad="propiedad" />
-  <ModalPropiedadDescripcion :propiedad="propiedad" :show="showDescripcionModal" @close="cerrarDescripcionModal" />
-  <ModalImpuestoPropiedad :propiedad="propiedad" :show="showImpuestoModal" @close="cerrarImpuestoModal" />
+  <ModalPropiedadDescripcion
+    :propiedad="propiedad"
+    :show="showDescripcionModal"
+    @close="cerrarDescripcionModal"
+  />
+  <ModalImpuestoPropiedad
+    :propiedad="propiedad"
+    :show="showImpuestoModal"
+    @close="cerrarImpuestoModal"
+  />
   <ModalPropiedadVenta :propiedad="propiedad" />
   <ModalPropiedadAlquiler :propiedad="propiedad" />
   <ModalCondicionAlquiler :propiedad="propiedad" />
-  <ModalPropiedadPropietario :propiedad="propiedad" :mostrar-buscador="false" :ocultar-botones="true"
-    :show="showModalPropietarios" @close="showModalPropietarios = false" />
-  <ModalImagenesPropiedad :propiedad="propiedad" :fotos="propiedad?.fotos" :index="modalIndex" :show="showModal"
-    @close="showModal = false" />
+  <ModalPropiedadPropietario
+    :propiedad="propiedad"
+    :mostrar-buscador="false"
+    :ocultar-botones="true"
+    :show="showModalPropietarios"
+    @close="showModalPropietarios = false"
+  />
+  <ModalImagenesPropiedad
+    :propiedad="propiedad"
+    :fotos="propiedad?.fotos"
+    :index="modalIndex"
+    :show="showModal"
+    @close="showModal = false"
+  />
 </template>
 
 <script>
@@ -347,9 +605,9 @@ const DefaultIcon = L.icon({
   iconUrl: iconUrl,
   shadowUrl: iconShadow,
   iconAnchor: [12, 41],
-  popupAnchor: [1, -34]
-});
-L.Marker.prototype.options.icon = DefaultIcon;
+  popupAnchor: [1, -34],
+})
+L.Marker.prototype.options.icon = DefaultIcon
 
 import ModalPropiedadComodidades from '../../components/Atcl/Propiedad/ModalPropiedadComodidades.vue'
 import ModalPropiedadDescripcion from '../../components/Atcl/Propiedad/ModalPropiedadDescripcion.vue'
@@ -359,7 +617,6 @@ import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropied
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
 import ModalImagenesPropiedad from '../../components/Atcl/Propiedad/ModalImagenesPropiedad.vue'
-
 export default {
   components: {
     NavComponent,
@@ -370,7 +627,7 @@ export default {
     ModalCondicionAlquiler,
     ModalPropiedadPropietario,
     ModalImagenesPropiedad,
-    ModalImpuestoPropiedad
+    ModalImpuestoPropiedad,
   },
   data() {
     return {
@@ -386,21 +643,34 @@ export default {
       popovers: [],
       // Instancia del mapa de Leaflet
       mapaDetalle: null,
-      marcadorDetalle: null
+      marcadorDetalle: null,
     }
   },
   computed: {
-    llaveDisplay() { return this.propiedad?.llave },
-    cartelDisplay() { return this.propiedad?.cartel || 'NO' },
-    comentarioLlave() { return this.propiedad?.comentario_llave || 'Sin comentario' },
-    comentarioCartel() { return this.propiedad?.comentario_cartel || 'Sin comentario' },
+    llaveDisplay() {
+      return this.propiedad?.llave
+    },
+    cartelDisplay() {
+      return this.propiedad?.cartel || 'NO'
+    },
+    comentarioLlave() {
+      return this.propiedad?.comentario_llave || 'Sin comentario'
+    },
+    comentarioCartel() {
+      return this.propiedad?.comentario_cartel || 'Sin comentario'
+    },
     tieneCoordenadas() {
       return !!(this.propiedad?.latitud && this.propiedad?.longitud)
-    }
+    },
+    tieneNotas() {
+      return Array.isArray(this.propiedad?.notas) && this.propiedad.notas.length > 0
+    },
   },
   async mounted() {
     await this.mostrarPropiedad()
-    this.$nextTick(() => { this.initPopovers() })
+    this.$nextTick(() => {
+      this.initPopovers()
+    })
   },
   beforeUnmount() {
     this.destroyPopovers()
@@ -410,68 +680,106 @@ export default {
     }
   },
   methods: {
+    formatearFechaMuestra(fecha) {
+      if (!fecha) return ''
+
+      const fechaSolo = String(fecha).trim().split(/[T\s]/, 1)[0]
+      const coincidencia = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(fechaSolo)
+      if (!coincidencia) return ''
+
+      const [, anio, mes, dia] = coincidencia
+      return `${dia.padStart(2, '0')}-${mes.padStart(2, '0')}-${anio}`
+    },
+    formatearHoraMuestra(hora) {
+      if (!hora) return ''
+
+      const coincidencia = /^(\d{1,2}):(\d{2})(?::\d{2}(?:\.\d+)?)?$/.exec(String(hora).trim())
+      if (!coincidencia) return String(hora)
+
+      const [, horas, minutos] = coincidencia
+      return `${horas.padStart(2, '0')}:${minutos}`
+    },
     initPopovers() {
-      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+      const popoverTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="popover"]'),
+      )
       this.popovers = popoverTriggerList.map((popoverTriggerEl) => {
-        return new window.bootstrap.Popover(popoverTriggerEl, { trigger: 'focus', container: 'body' })
+        return new window.bootstrap.Popover(popoverTriggerEl, {
+          trigger: 'focus',
+          container: 'body',
+        })
       })
     },
     destroyPopovers() {
       if (Array.isArray(this.popovers)) {
-        this.popovers.forEach((p) => { if (p && typeof p.dispose === 'function') p.dispose() })
+        this.popovers.forEach((p) => {
+          if (p && typeof p.dispose === 'function') p.dispose()
+        })
         this.popovers = []
       }
     },
-    abrirDescripcionModal() { this.showDescripcionModal = true },
-    cerrarDescripcionModal() { this.showDescripcionModal = false },
-    abrirImpuestoModal() { this.showImpuestoModal = true },
-    cerrarImpuestoModal() { this.showImpuestoModal = false },
+    abrirDescripcionModal() {
+      this.showDescripcionModal = true
+    },
+    cerrarDescripcionModal() {
+      this.showDescripcionModal = false
+    },
+    abrirImpuestoModal() {
+      this.showImpuestoModal = true
+    },
+    cerrarImpuestoModal() {
+      this.showImpuestoModal = false
+    },
     openModal(index) {
-      this.modalIndex = index;
-      this.showModal = true;
+      this.modalIndex = index
+      this.showModal = true
     },
 
     // INICIALIZACIÓN / RENDERIZADO DEL MAPA
     activarMapa() {
-      if (!this.tieneCoordenadas) return;
+      if (!this.tieneCoordenadas) return
 
       this.$nextTick(() => {
-        const lat = parseFloat(this.propiedad.latitud);
-        const lng = parseFloat(this.propiedad.longitud);
+        const lat = parseFloat(this.propiedad.latitud)
+        const lng = parseFloat(this.propiedad.longitud)
 
         if (!this.mapaDetalle) {
-          const contenedor = document.getElementById('mapa-detalle-propiedad');
-          if (!contenedor) return;
+          const contenedor = document.getElementById('mapa-detalle-propiedad')
+          if (!contenedor) return
 
           // Mapa centrado en la propiedad
-          this.mapaDetalle = L.map('mapa-detalle-propiedad').setView([lat, lng], 16);
+          this.mapaDetalle = L.map('mapa-detalle-propiedad').setView([lat, lng], 16)
 
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(this.mapaDetalle);
+            attribution: '&copy; OpenStreetMap contributors',
+          }).addTo(this.mapaDetalle)
 
           // Marcador fijo (no draggable)
-          const calle = this.propiedad.calle?.name || '';
-          const nro = this.propiedad.numero_calle || '';
-          const tipo = this.propiedad.tipo_inmueble?.inmueble || 'Propiedad';
+          const calle = this.propiedad.calle?.name || ''
+          const nro = this.propiedad.numero_calle || ''
+          const tipo = this.propiedad.tipo_inmueble?.inmueble || 'Propiedad'
 
-          this.marcadorDetalle = L.marker([lat, lng], { draggable: false }).addTo(this.mapaDetalle);
-          this.marcadorDetalle.bindPopup(`
+          this.marcadorDetalle = L.marker([lat, lng], { draggable: false }).addTo(this.mapaDetalle)
+          this.marcadorDetalle
+            .bindPopup(
+              `
             <div style="font-size: 0.85rem;">
               <strong>${tipo}</strong><br>
               ${calle} ${nro}
             </div>
-          `).openPopup();
+          `,
+            )
+            .openPopup()
         }
 
         // Recalcular tamaño de canvas al abrir la pestaña para evitar pantalla gris
         setTimeout(() => {
           if (this.mapaDetalle) {
-            this.mapaDetalle.invalidateSize();
-            this.mapaDetalle.setView([lat, lng], 16);
+            this.mapaDetalle.invalidateSize()
+            this.mapaDetalle.setView([lat, lng], 16)
           }
-        }, 200);
-      });
+        }, 200)
+      })
     },
 
     async mostrarPropiedad() {
@@ -509,8 +817,8 @@ export default {
       } catch (error) {
         console.error(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -569,13 +877,13 @@ input[readonly] {
   flex-direction: column;
 }
 
-#mediaTabContent>.tab-pane {
+#mediaTabContent > .tab-pane {
   display: none !important;
   /* Oculta totalmente las inactivas */
   height: 100%;
 }
 
-#mediaTabContent>.tab-pane.active {
+#mediaTabContent > .tab-pane.active {
   display: flex !important;
   /* Expande la activa */
   flex-direction: column;
