@@ -33,6 +33,7 @@
 
 <script setup>
 import { reactive, watch, defineEmits } from 'vue'
+import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 
 // Definir los emits
 const emit = defineEmits(['update:condicion_alquiler'])
@@ -56,8 +57,7 @@ const props = defineProps({
 // Watch para precargar datos cuando llega propiedadUpdate (como en venta)
 watch(() => props.propiedadUpdate, (newValue) => {
   if (newValue) {
-    //console.log('Cargando datos de condición de alquiler:', newValue)
-    condicionData.condicion = newValue.condicion || ''
+    Object.assign(condicionData, propertyUpdateFormState(newValue).condicion)
   }
 }, { immediate: true })
 

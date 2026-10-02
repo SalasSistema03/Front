@@ -41,6 +41,7 @@
 <script setup>
 import { reactive, watch, defineEmits, defineProps, computed } from 'vue'
 import BaseModal from '../../base/BaseModal.vue'
+import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 
 // Definir props para recibir la propiedad (opcional)
 const props = defineProps({
@@ -69,9 +70,7 @@ const descripcion = reactive({
 
 watch(() => props.propiedadUpdate, (newValue) => {
   if (newValue) {
-    //console.log('Cargando datos:', newValue)
-    descripcion.texto = newValue.descipcion_propiedad || ''
-
+    Object.assign(descripcion, propertyUpdateFormState(newValue).descripcion)
   }
 }, { immediate: true })
 

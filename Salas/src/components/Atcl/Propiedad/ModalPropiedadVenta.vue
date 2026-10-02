@@ -317,7 +317,8 @@
 <script setup>
 import ModalNovedades from './ModalNovedades.vue'
 import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
-import { ref } from 'vue'
+import { reactive, watch, defineEmits, computed, ref, nextTick } from 'vue'
+import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 
 // Recibir las props del componente padre
 const props = defineProps({
@@ -344,56 +345,19 @@ const props = defineProps({
 
 })
 
-//console.log('props', props.captadoresInternos)
-
-import { reactive, watch, defineEmits, computed } from 'vue'
-
-
-
-
 // Definir los emits
 const emit = defineEmits(['update:venta', 'update:novedadVenta', 'update:observacionesModificadasVenta'])
 const fichaPdfRef = ref(null)
+const hidratando = ref(false)
 
 // Watch para precargar datos cuando llega propiedadUpdate (como en comodidades)
 watch(() => props.propiedadUpdate, (newValue) => {
   if (newValue) {
-    /*  console.log('Cargando datos de venta:', newValue) */
-    // Precargar los datos en el formulario
-    venta.cod_venta = newValue.cod_venta || ''
-    venta.estado_venta = newValue.id_estado_venta || ''
-    venta.moneda_venta = newValue.precio_actual?.moneda_venta_dolar ? '2' : '1'
-    venta.monto_venta = newValue.precio_actual?.moneda_venta_dolar || newValue.precio_actual?.moneda_venta_pesos || ''
-
-    // Precargar fecha y monto de tasación más reciente
-    if (newValue.tasaciones && newValue.tasaciones.length > 0) {
-      const tasacionMasReciente = newValue.tasaciones.reduce((max, tasacion) => {
-        return tasacion.id > max.id ? tasacion : max
-      }, newValue.tasaciones[0])
-
-      venta.fecha_tasacion_venta = tasacionMasReciente.fecha_tasacion || ''
-      venta.tasacion_venta = tasacionMasReciente.tasacion_dolar_venta || tasacionMasReciente.tasacion_pesos_venta || ''
-    } else {
-      venta.fecha_tasacion_venta = ''
-      venta.tasacion_venta = ''
-    }
-
-    venta.exclusividad_venta = newValue.exclusividad_venta || ''
-    venta.comparte_venta = newValue.comparte_venta || ''
-    venta.condicionado_venta = newValue.condicionado_venta || ''
-    venta.autorizacion_venta = newValue.autorizacion_venta || ''
-    venta.venta_fecha_alta = newValue.venta_fecha_alta || ''
-    venta.fecha_autorizacion_venta = newValue.fecha_autorizacion_venta || ''
-    venta.comentario_autorizacion = newValue.comentario_autorizacion || ''
-    venta.zona_prop = newValue.zona_prop || ''
-    venta.flyer_v = newValue.flyer_v || ''
-    venta.reel_v = newValue.reel_v || ''
-    venta.web_v = newValue.web_v || ''
-    venta.captador_interno_v = newValue.usuario_captador_int_v?.id || ''
-    venta.asesor_resultado = newValue.usuario_asesor?.id || ''
-    venta.descripcion_estado_venta = newValue.historial_estados_venta?.comentario || ''
-    venta.fecha_baja_temporal_venta = newValue.historial_estados_venta?.reactiva_fecha || ''
-
+    hidratando.value = true
+    Object.assign(venta, propertyUpdateFormState(newValue).venta)
+    nextTick(() => {
+      hidratando.value = false
+    })
   }
 }, { immediate: true })
 
@@ -533,11 +497,11 @@ const mostrarBajaTemporal = computed(() =>
 )
 
 watch(mostrarDescripcion, (val) => {
-  if (!val) venta.descripcion_estado_venta = ''
+  if (!val && !hidratando.value) venta.descripcion_estado_venta = ''
 })
 
 watch(mostrarBajaTemporal, (val) => {
-  if (!val) venta.fecha_baja_temporal_venta = ''
+  if (!val && !hidratando.value) venta.fecha_baja_temporal_venta = ''
 })
 
 watch(venta, (newValue) => {

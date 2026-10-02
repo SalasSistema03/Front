@@ -9,8 +9,7 @@
               <div class="border rounded p-1 bg-light h-100">
                 <div class="text-muted">
                   <h6 class="text-primary">{{ props.impuesto.toUpperCase() }} - Administra L</h6>
-                  <p class="fw-bold text-muted"
-                    >
+                  <p class="fw-bold text-muted">
                     Monto Total: ${{ formatearMoneda(montoTotal?.total ?? montoTotal) }}
                   </p>
                 </div>
@@ -20,8 +19,7 @@
               <div class="border rounded p-1 bg-light h-100">
                 <div class="text-muted">
                   <h6 class="text-success">{{ props.impuesto.toUpperCase() }} - Salas</h6>
-                  <p class="fw-bold text-muted"
-                    >
+                  <p class="fw-bold text-muted">
                     Monto Total: ${{ formatearMoneda(montoTotalSalas) }}
                   </p>
                 </div>
@@ -31,41 +29,51 @@
               <div class="border rounded p-1 bg-light h-100">
                 <div class="text-muted">
                   <h6 class="text-danger">{{ props.impuesto.toUpperCase() }} - Seguir Pagando</h6>
-                  <p class="fw-bold text-muted"
-                   >
+                  <p class="fw-bold text-muted">
                     Monto Total: ${{ formatearMoneda(seguir_pagando) }}
                   </p>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
       <div class="card mt-2">
         <div class="card-header">
-          <p class="text-start">
-            Calcular Broche
-          </p>
+          <p class="text-start">Calcular Broche</p>
         </div>
         <div class="card-body">
-          <div class="row ">
+          <div class="row">
             <div class="col-md-4 form-group border rounded bg-light h-100">
               <label for="cant_broches" class="form-label">Cantidad de broches</label>
               <div class="input-group mb-2">
-                <input type="number" class="form-control form-control-sm" placeholder="Ej: 3" v-model="cant_broches" />
-                <button type="button" class="btn btn-outline-primary btn-sm" @click="calcularBroches">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  placeholder="Ej: 3"
+                  v-model="cant_broches"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  @click="calcularBroches"
+                >
                   <i class="bi bi-calculator"></i> Calcular
                 </button>
               </div>
               <div v-if="resultado_broche" class="tabla_armar_broche">
-                <div class="w-100 titulo-resultados d-flex align-items-center justify-content-center">
+                <div
+                  class="w-100 titulo-resultados d-flex align-items-center justify-content-center"
+                >
                   <label class="form-label">Resultado</label>
                 </div>
-                <ul class="list-group" style="max-height: 120px; overflow-y: auto;">
-                  <li class="list-group-item fw-bold text-muted" v-for="(broche, index) in resultado_broche"
-                    :key="index">
+                <ul class="list-group" style="max-height: 120px; overflow-y: auto">
+                  <li
+                    class="list-group-item fw-bold text-muted"
+                    v-for="(broche, index) in resultado_broche"
+                    :key="index"
+                  >
                     Broche {{ index + 1 }}: ${{ formatearMoneda(broche.importe) }}
                   </li>
                 </ul>
@@ -74,85 +82,45 @@
           </div>
         </div>
       </div>
-      <!--  <div class="row g-4">
-        <div class="col-md-4 form-group"> -->
-      <!-- <h6 class="text-primary">{{ props.impuesto.toUpperCase() }} - Administra L</h6> -->
-      <!-- <p class="fw-bold text-muted"
-            v-if="props.impuesto === 'agua' || props.impuesto === 'tgi' || props.impuesto === 'api'">
-            Monto Total: {{ montoTotal.total }}
-          </p> -->
-      <!--
-          <label for="cant_broches" class="form-label">Cantidad de broches</label>
-          <div class="input-group mb-2">
-            <input type="number" class="form-control form-control-sm" placeholder="Ej: 3" v-model="cant_broches" />
-            <button type="button" class="btn btn-outline-primary btn-sm" @click="calcularBroches">
-              <i class="bi bi-calculator"></i> Calcular
-            </button>
-          </div>
-
-          <div v-if="resultado_broche" class="tabla_armar_broche">
-            <div class="w-100 titulo-resultados d-flex align-items-center justify-content-center">
-              <label class="form-label">Resultado</label>
-            </div>
-            <ul class="list-group">
-              <li class="list-group-item" v-for="(broche, index) in resultado_broche" :key="index">
-                Broche {{ index + 1 }}: ${{ parseFloat(broche.importe).toFixed(2) }}
-              </li>
-            </ul>
-          </div> -->
-      <!--  </div> -->
-
-      <!-- Columna Salas -->
-
-      <!-- <div class="col-md-4 form-group" v-if="props.impuesto !== 'gas'"> -->
-      <!-- <h6 class="text-success">{{ props.impuesto.toUpperCase() }} - Salas</h6>
-          <p class="fw-bold text-muted" id="monto_total_salas">
-            Monto Total Salas: {{ montoTotalSalas }}
-          </p> -->
-
-      <!-- <div class="form-group">
-            <label for="cant_broches_salas" class="form-label" v-if="props.impuesto !== 'api'">Cantidad de
-              broches</label>
-            <input type="text" id="cant_broches_salas" class="form-control form-control-sm mb-3" value="1" readonly
-              v-if="props.impuesto !== 'api'" />
-          </div> -->
-
-      <!--  </div> -->
-
-      <!-- Columna Seguir Pagando -->
-      <!-- <div class="col-md-4 form-group">
-          <h6 class="text-danger">{{ props.impuesto.toUpperCase() }} - Seguir Pagando</h6>
-          <p class="fw-bold text-muted">
-            Monto Total: {{ seguir_pagando }}
-          </p>
-
-          <label for="cant_broches" class="form-label">Cantidad de broches</label>
-          <div class="input-group mb-2">
-            <input type="text" class="form-control form-control-sm mb-3" value="1" readonly />
-          </div>
-
-
-        </div> -->
-
-      <!-- </div> -->
     </template>
-
     <template #footer>
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary btn-sm" id="btn_guardar_broches_tgi" @click="guardarNumeroBroches">
-          <i class="bi bi-save"></i> Guardar Broches {{ props.impuesto.toUpperCase() }}
-        </button>
-      </div>
-      <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
-        <button type="submit" class="btn btn-success btn-sm" id="btn_guardar_broches_salas"
-          @click="guardarNumeroBrochesSalas">
-          <i class="bi bi-save"></i> Guardar Broche {{ props.impuesto.toUpperCase() }} - SALAS
-        </button>
-      </div>
-      <div class="d-flex gap-2" v-if="props.impuesto !== 'gas'">
-        <button type="submit" class="btn btn-danger btn-sm" @click="guardarSeguirPagando">
-          <i class="bi bi-save"></i> Guardar Broche {{ props.impuesto.toUpperCase() }} - SP
-        </button>
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div style="padding-left: 100px;">
+          <button
+            type="submit"
+            class="btn btn-primary btn-sm"
+            id="btn_guardar_broches_tgi"
+            @click="guardarNumeroBroches"
+          >
+            <i class="bi bi-save"></i>
+            Guardar Broches {{ props.impuesto.toUpperCase() }}
+          </button>
+        </div>
+        
+        <div>
+          <button
+            v-if="props.impuesto !== 'gas'"
+            type="submit"
+            class="btn btn-success btn-sm"
+            id="btn_guardar_broches_salas"
+            @click="guardarNumeroBrochesSalas"
+          >
+            <i class="bi bi-save"></i>
+            Guardar Broche {{ props.impuesto.toUpperCase() }} - SALAS
+          </button>
+        </div>
+
+        <div style="padding-right: 100px;">
+          <button
+            v-if="props.impuesto !== 'gas'"
+            type="submit"
+            class="btn btn-danger btn-sm"
+            @click="guardarSeguirPagando"
+          >
+            <i class="bi bi-save"></i>
+            Guardar Broche {{ props.impuesto.toUpperCase() }} - SP
+          </button>
+        </div>
       </div>
     </template>
   </baseModal>
@@ -210,7 +178,6 @@ const totalMontoCargado = async () => {
     montoTotal.value = response.data.total
     montoTotalSalas.value = response.data.totalSalas
     seguir_pagando.value = response.data.totalSeguirPagando
-
   } catch (error) {
     console.log(error)
     showError('Error al traer los montos')
@@ -268,8 +235,6 @@ const guardarSeguirPagando = async () => {
     showError('Error al guardar los broches')
     console.log(error)
   }
-
-
 }
 
 const calcularBroches = async () => {
