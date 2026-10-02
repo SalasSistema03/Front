@@ -1323,6 +1323,116 @@
   height: 82vh !important;
 }
 
+.icono-transparente,
+.icono-operacion {
+  background: transparent;
+  border: none;
+}
+
+.icono-operacion svg {
+  width: 32px;
+  height: 42px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.45));
+}
+
+.pin-forma {
+  stroke: white;
+  stroke-width: 1.5px;
+}
+
+.pin-numero {
+  color: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  border: 3px solid white;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pin-grupo:hover .pin-numero {
+  transform: scale(1.15);
+}
+
+.pin-venta .pin-forma {
+  fill: rgb(0, 85, 185);
+}
+.pin-venta .pin-numero {
+  background-color: rgb(0, 85, 185);
+}
+
+.leyenda-pin.pin-venta {
+  background-color: rgb(0, 85, 185);
+}
+
+.pin-alquiler .pin-forma {
+  fill: rgba(0, 175, 154, 0.96);
+}
+.pin-alquiler .pin-numero {
+  background-color: rgba(0, 175, 154, 0.96);
+}
+
+.leyenda-pin.pin-alquiler {
+  background-color: rgba(0, 175, 154, 0.96);
+}
+
+.pin-ambas .pin-forma {
+  fill: rgb(102.5, 102.5, 102.5);
+}
+.pin-ambas .pin-numero {
+  background-color: rgb(102.5, 102.5, 102.5);
+}
+
+.leyenda-pin.pin-ambas {
+  background-color: rgb(102.5, 102.5, 102.5);
+}
+
+.pin-venta-alquilada .pin-forma {
+  fill: lightgrey;
+}
+.pin-venta-alquilada .pin-numero {
+  background-color: lightgrey;
+}
+
+.leyenda-pin.pin-venta-alquilada {
+  background-color: lightgrey;
+}
+
+.leyenda-operaciones {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px 11px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  font-size: 0.78rem;
+}
+.leyenda-operaciones span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.leyenda-pin {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+}
+
 .btn-primary {
   background-color: rgb(0, 85, 185) !important;
   border-color: rgb(0, 85, 185) !important;

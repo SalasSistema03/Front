@@ -115,8 +115,14 @@
       </div>
 
       <!-- DERECHA: MAPA -->
-      <div class="col-10 cuadromapabusquedamap p-0 m-0">
+      <div class="col-10 cuadromapabusquedamap p-0 m-0 position-relative">
          <div id="mapa-inmuebles" class="w-100 h-100"></div>
+         <div class="leyenda-operaciones" aria-label="Referencias de operaciones">
+           <span><i class="leyenda-pin pin-venta"></i> Venta</span>
+           <span><i class="leyenda-pin pin-alquiler"></i> Alquiler</span>
+           <span><i class="leyenda-pin pin-ambas"></i> Venta y alquiler</span>
+           <span><i class="leyenda-pin pin-venta-alquilada"></i>Venta y Alquilada</span>
+         </div>
       </div>
 
     </div>
@@ -129,16 +135,6 @@ import { getPropiedadesMapaService, getCatalogosMapaService } from '../../../Ser
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-const DefaultIcon = L.icon({
-  iconUrl: iconUrl,
-  shadowUrl: iconShadow,
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34]
-});
-L.Marker.prototype.options.icon = DefaultIcon;
 
 const cargando = ref(false);
 const propiedades = ref([]);
@@ -185,6 +181,47 @@ const inicializarMapa = () => {
   }).addTo(map);
   marcadoresLayer = L.layerGroup().addTo(map);
 };
+
+const tieneCodigo = codigo => codigo !== null && codigo !== undefined && codigo !== '';
+
+const esVentaActiva = propiedad =>
+  tieneCodigo(propiedad.cod_venta) && [1, 2].includes(Number(propiedad.id_estado_venta));
+
+const esAlquilada = propiedad => Number(propiedad.id_estado_alquiler) === 3;
+
+const estaAlquiladaYEnVenta = propiedad =>
+  esAlquilada(propiedad) && esVentaActiva(propiedad);
+
+const tipoOperacion = propiedad => {
+  const tieneVenta = tieneCodigo(propiedad.cod_venta);
+  const tieneAlquiler = tieneCodigo(propiedad.cod_alquiler);
+
+  if (estaAlquiladaYEnVenta(propiedad)) return 'venta-alquilada';
+  if (tieneVenta && tieneAlquiler) return 'ambas';
+  return tieneAlquiler ? 'alquiler' : 'venta';
+};
+
+const tipoOperacionGrupo = propiedadesGrupo => {
+  if (propiedadesGrupo.some(estaAlquiladaYEnVenta)) return 'venta-alquilada';
+
+  const tieneVenta = propiedadesGrupo.some(prop =>
+    tieneCodigo(prop.cod_venta)
+  );
+  const tieneAlquiler = propiedadesGrupo.some(prop =>
+    tieneCodigo(prop.cod_alquiler)
+  );
+
+  if (tieneVenta && tieneAlquiler) return 'ambas';
+  return tieneAlquiler ? 'alquiler' : 'venta';
+};
+
+const crearIconoOperacion = tipo => L.divIcon({
+  className: `icono-operacion pin-${tipo}`,
+  html: '<svg viewBox="0 0 32 42" aria-hidden="true"><path class="pin-forma" d="M16 0C7.16 0 0 7.16 0 16c0 11.5 16 26 16 26s16-14.5 16-26C32 7.16 24.84 0 16 0zm0 22a6 6 0 1 1 0-12 6 6 0 0 1 0 12z"/></svg>',
+  iconSize: [32, 42],
+  iconAnchor: [16, 42],
+  popupAnchor: [0, -38]
+});
 
 // Se ejecuta al cambiar la operación (Venta o Alquiler)
 const onOperacionChange = () => {
@@ -249,8 +286,9 @@ const dibujarPines = () => {
     let popupHTML = '';
 
     if (listaProps.length > 1) {
+      const tipo = tipoOperacionGrupo(listaProps);
       const iconoAgrupado = L.divIcon({
-        className: 'icono-transparente',
+        className: `icono-transparente pin-grupo pin-${tipo}`,
         html: `<div class="pin-numero">${listaProps.length}</div>`,
         iconSize: [36, 36],
         iconAnchor: [18, 18],
@@ -272,31 +310,42 @@ const dibujarPines = () => {
       listaProps.forEach(prop => {
         const tipo = prop.tipo_inmueble ? prop.tipo_inmueble.inmueble : 'Propiedad';
         const dorms = prop.cantidad_dormitorios ? `${prop.cantidad_dormitorios} dorm.` : 'Monoambiente';
-        let badge = prop.cod_alquiler ? `<span class="badge bg-success">Alq</span>` : `<span class="badge bg-primary">Vta</span>`;
+        const codigos = [];
+        if (tieneCodigo(prop.cod_venta)) codigos.push(`Venta: ${prop.cod_venta}`);
+        if (tieneCodigo(prop.cod_alquiler)) codigos.push(`Alq: ${prop.cod_alquiler}`);
+        const badges = codigos.map(codigo => {
+          const esAlquiler = codigo.startsWith('Alq:');
+          return `<span class="badge ${esAlquiler ? 'bg-success' : 'bg-primary'}">${codigo}</span>`;
+        }).join(' ');
+        const codigosTexto = codigos.map(codigo => codigo.replace(/^(Venta|Alq): /, '')).join(' / ');
+        const estadoAlquilerHtml = esAlquilada(prop)
+          ? '<span class="badge bg-warning text-dark">Alquilada</span>'
+          : '';
         
         popupHTML += `
           <li class="list-group-item px-1 py-1 d-flex justify-content-between align-items-center">
             <div>
               <strong>${tipo}</strong> (${dorms})<br>
-              <a href="/propiedad-detalle/${prop.id}" target="_blank" class="text-decoration-none">Ver código ${prop.cod_alquiler || prop.cod_venta}</a>
+              <a href="/propiedad-detalle/${prop.id}" target="_blank" class="text-decoration-none">Ver código ${codigosTexto}</a>
             </div>
-            ${badge}
+            <div class="d-flex flex-column gap-1">${badges}${estadoAlquilerHtml}</div>
           </li>
         `;
       });
       popupHTML += `</ul></div>`;
     } 
     else {
-      marcador = L.marker([lat, lng]);
-      
       const prop = listaProps[0];
+      marcador = L.marker([lat, lng], { icon: crearIconoOperacion(tipoOperacion(prop)) });
       const tipo = prop.tipo_inmueble ? prop.tipo_inmueble.inmueble : 'Propiedad';
       const calle = prop.calle ? prop.calle.name : '';
       const numero = prop.numero_calle || '';
       
       let codigoHtml = '';
-      if (prop.cod_alquiler) codigoHtml += `<span class="badge bg-success mb-1">Alq: ${prop.cod_alquiler}</span><br>`;
-      if (prop.cod_venta) codigoHtml += `<span class="badge bg-primary">Venta: ${prop.cod_venta}</span>`;
+      if (tieneCodigo(prop.cod_alquiler)) codigoHtml += `<span class="badge bg-success mb-1">Alq: ${prop.cod_alquiler}</span><br>`;
+      if (esAlquilada(prop)) codigoHtml += '<span class="badge bg-warninga text-dark">Alquilada</span>';
+      if (tieneCodigo(prop.cod_venta)) codigoHtml += `<br><span class="badge bg-primary">Venta: ${prop.cod_venta}</span>`;
+      
 
       popupHTML = `
         <div style="min-width: 180px;">
@@ -332,7 +381,7 @@ const limpiarFiltros = () => {
 const agruparPorCoordenadas = (propiedadesArray) => {
   const agrupadas = {};
   propiedadesArray.forEach(prop => {
-    if (prop.latitud && prop.longitud) {
+    if (prop.latitud != null && prop.longitud != null) {
       const key = `${prop.latitud},${prop.longitud}`;
       if (!agrupadas[key]) agrupadas[key] = [];
       agrupadas[key].push(prop);
@@ -349,29 +398,5 @@ const agruparPorCoordenadas = (propiedadesArray) => {
 }
 :deep(.leaflet-popup-content) {
   margin: 15px;
-}
-:deep(.icono-transparente) {
-  background: transparent;
-  border: none;
-}
-:deep(.pin-numero) {
-  background-color: #007bff; 
-  color: white;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 16px;
-  border: 3px solid white; 
-  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-:deep(.pin-numero:hover) {
-  transform: scale(1.15);
-  background-color: #0056b3;
 }
 </style>
