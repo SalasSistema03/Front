@@ -1330,9 +1330,13 @@
 }
 
 .icono-operacion svg {
-  width: 32px;
+  width: 22px;
   height: 42px;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.45));
+}
+.icono-operacion:hover svg {
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.75));
+  transform: scale(1.15);
 }
 
 .pin-forma {
@@ -1343,21 +1347,85 @@
 .pin-numero {
   color: white;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
   font-size: 16px;
   border: 3px solid white;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 6px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: transform 0.2s;
 }
 
 .pin-grupo:hover .pin-numero {
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.75));
   transform: scale(1.15);
+}
+
+.pin-grupo-resumen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.pin-grupo .pin-numero {
+  border: 2px solid #495057;
+  background-color: white;
+  color: #212529;
+}
+
+.pin-estados {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.pin-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 25px;
+  height: 16px;
+  padding: 0 3px;
+  border: 1px solid white;
+  border-radius: 9px;
+  background: white;
+  color: #212529;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.55);
+}
+
+.pin-estado-color {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+}
+
+.pin-estado.pin-venta .pin-estado-color {
+  background-color: rgb(0, 85, 185);
+}
+
+.pin-estado.pin-alquiler .pin-estado-color {
+  background-color: rgba(0, 175, 154, 0.96);
+}
+
+.pin-estado.pin-ambas .pin-estado-color {
+  background-color: rgb(102.5, 102.5, 102.5);
+}
+
+.pin-estado.pin-venta-alquilada .pin-estado-color {
+  background-color: lightgrey;
 }
 
 .pin-venta .pin-forma {
@@ -1426,8 +1494,8 @@
 
 .leyenda-pin {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border: 1px solid white;
   border-radius: 50%;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);

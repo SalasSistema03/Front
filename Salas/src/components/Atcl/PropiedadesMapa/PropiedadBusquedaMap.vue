@@ -192,6 +192,15 @@ const esAlquilada = propiedad => Number(propiedad.id_estado_alquiler) === 3;
 const estaAlquiladaYEnVenta = propiedad =>
   esAlquilada(propiedad) && esVentaActiva(propiedad);
 
+const etiquetasOperacion = {
+  venta: 'En venta',
+  alquiler: 'En alquiler',
+  ambas: 'En venta y alquiler',
+  'venta-alquilada': 'Alquilada y en venta'
+};
+
+const tiposOperacion = Object.keys(etiquetasOperacion);
+
 const tipoOperacion = propiedad => {
   const tieneVenta = tieneCodigo(propiedad.cod_venta);
   const tieneAlquiler = tieneCodigo(propiedad.cod_alquiler);
@@ -201,18 +210,15 @@ const tipoOperacion = propiedad => {
   return tieneAlquiler ? 'alquiler' : 'venta';
 };
 
-const tipoOperacionGrupo = propiedadesGrupo => {
-  if (propiedadesGrupo.some(estaAlquiladaYEnVenta)) return 'venta-alquilada';
+const resumirOperaciones = propiedadesGrupo => {
+  const conteos = Object.fromEntries(tiposOperacion.map(tipo => [tipo, 0]));
+  propiedadesGrupo.forEach(propiedad => {
+    conteos[tipoOperacion(propiedad)] += 1;
+  });
 
-  const tieneVenta = propiedadesGrupo.some(prop =>
-    tieneCodigo(prop.cod_venta)
-  );
-  const tieneAlquiler = propiedadesGrupo.some(prop =>
-    tieneCodigo(prop.cod_alquiler)
-  );
-
-  if (tieneVenta && tieneAlquiler) return 'ambas';
-  return tieneAlquiler ? 'alquiler' : 'venta';
+  return tiposOperacion
+    .filter(tipo => conteos[tipo] > 0)
+    .map(tipo => ({ tipo, cantidad: conteos[tipo] }));
 };
 
 const crearIconoOperacion = tipo => L.divIcon({
@@ -286,12 +292,16 @@ const dibujarPines = () => {
     let popupHTML = '';
 
     if (listaProps.length > 1) {
-      const tipo = tipoOperacionGrupo(listaProps);
+      const resumen = resumirOperaciones(listaProps);
+      const anchoIcono = Math.max(40, resumen.length * 25 + (resumen.length - 1) * 3);
+      const indicadores = resumen.map(({ tipo, cantidad }) =>
+        `<span class="pin-estado pin-${tipo}" aria-label="${etiquetasOperacion[tipo]}: ${cantidad}" title="${etiquetasOperacion[tipo]}: ${cantidad}"><span class="pin-estado-color" aria-hidden="true"></span><span>${cantidad}</span></span>`
+      ).join('');
       const iconoAgrupado = L.divIcon({
-        className: `icono-transparente pin-grupo pin-${tipo}`,
-        html: `<div class="pin-numero">${listaProps.length}</div>`,
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
+        className: 'icono-transparente pin-grupo',
+        html: `<div class="pin-grupo-resumen"><div class="pin-numero">${listaProps.length}</div><div class="pin-estados">${indicadores}</div></div>`,
+        iconSize: [anchoIcono, 58],
+        iconAnchor: [Math.round(anchoIcono / 2), 18],
         popupAnchor: [0, -18]
       });
 
@@ -342,9 +352,10 @@ const dibujarPines = () => {
       const numero = prop.numero_calle || '';
       
       let codigoHtml = '';
-      if (tieneCodigo(prop.cod_alquiler)) codigoHtml += `<span class="badge bg-success mb-1">Alq: ${prop.cod_alquiler}</span><br>`;
-      if (esAlquilada(prop)) codigoHtml += '<span class="badge bg-warninga text-dark">Alquilada</span>';
-      if (tieneCodigo(prop.cod_venta)) codigoHtml += `<br><span class="badge bg-primary">Venta: ${prop.cod_venta}</span>`;
+      if (tieneCodigo(prop.cod_venta)) codigoHtml += `<span class="badge bg-primary mb-1">Venta: ${prop.cod_venta}</span>`;
+      if (tieneCodigo(prop.cod_alquiler)) codigoHtml += `<br><span class="badge bg-success ">Alq: ${prop.cod_alquiler}</span><br>`;
+      if (esAlquilada(prop)) codigoHtml += '<span class="badge bg-warning text-dark mb-1"> - Alquilada - </span>';
+      
       
 
       popupHTML = `
