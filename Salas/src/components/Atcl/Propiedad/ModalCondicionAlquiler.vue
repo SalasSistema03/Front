@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits } from 'vue'
+import { reactive, watch } from 'vue'
 import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 
 // Definir los emits

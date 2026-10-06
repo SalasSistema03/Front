@@ -4,7 +4,6 @@
 
 <script setup>
 import { GenerarPdfListadoPropiedad } from '@/Services/api/Atcl/AtclApi'
-import { defineProps } from 'vue'
 
 const props = defineProps({
   formData: {

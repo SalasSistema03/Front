@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { ModificarEstado } from '@/Services/api/Impuestos/tgiApi'
 

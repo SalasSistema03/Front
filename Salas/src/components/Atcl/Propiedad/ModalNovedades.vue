@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { guardarNovedad as guardarNovedadApi } from '../../../Services/api/Atcl/AtclApi'
 import { useToast } from '../../../composables/useToast' // ajustá el path
 import { getUser } from '../../../Services/api/Usuario/userApi'

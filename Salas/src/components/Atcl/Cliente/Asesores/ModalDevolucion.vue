@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 
 const props = defineProps({

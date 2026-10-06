@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { getUsuariosDpto, getEstadoDpto } from '@/Services/api/Dpto/Inventario'
 import { getUser } from '@/Services/api/Usuario/userApi'

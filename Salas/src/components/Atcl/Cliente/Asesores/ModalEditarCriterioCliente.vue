@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted, reactive, watch } from 'vue'
+import { onMounted, reactive, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useInmuebles } from '@/composables/atcl/useInmuebles'
 import { useZona } from '@/composables/atcl/useZona'

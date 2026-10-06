@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits, defineProps, computed } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import BaseModal from '../../base/BaseModal.vue'
 import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 

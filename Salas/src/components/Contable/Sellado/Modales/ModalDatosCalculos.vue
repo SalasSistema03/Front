@@ -141,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import BaseModal from '../../../base/BaseModal.vue';
 import { getDatosCalculosService, guardarValoresRegistrales, guardarValoresSellado, guardarValoresAdministrativo, guardarValoresHoja } from '../../../../Services/api/Contable/selladoApi.js'
 import { useToast } from '@/composables/useToast'

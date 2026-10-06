@@ -4,7 +4,7 @@
 
 <script setup>
 import { GenerarPdfComprobantesService } from '@/Services/api/Impuestos/FideicomisoApi'
-import { defineProps, watch } from 'vue'
+import { watch } from 'vue'
 import { onMounted } from 'vue'
 
 const props = defineProps({

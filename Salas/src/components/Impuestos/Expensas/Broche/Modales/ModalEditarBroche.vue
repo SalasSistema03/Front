@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import BaseModal from '@/components/base/BaseModal.vue';
 import { alertas } from '@/utils/alertas';
 import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters';

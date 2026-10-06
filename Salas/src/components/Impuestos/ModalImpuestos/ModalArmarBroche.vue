@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useToast } from '@/composables/useToast'
 import { formatearMoneda } from '@/utils/formatters'

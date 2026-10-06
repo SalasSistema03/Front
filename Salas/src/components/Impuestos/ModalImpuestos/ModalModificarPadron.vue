@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { actualizarRegistro } from '@/Services/api/Impuestos/tgiApi'
 import { useToast } from '@/composables/useToast'

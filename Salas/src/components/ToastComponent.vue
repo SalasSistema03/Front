@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, h } from 'vue'
+import { h } from 'vue'
 
 const props = defineProps({
   toasts: {

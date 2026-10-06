@@ -1,3 +1,4 @@
+@use "sass:color"
 @use 'colorSalas'
 $azulSalas: colorSalas.$azulSalas
 $verdeSalas: colorSalas.$verdeSalas
@@ -71,7 +72,7 @@ $verdeSalas: colorSalas.$verdeSalas
       text-align: center
       border-radius: 5px !important
       box-shadow: 0 0 0px $azulSalas !important
-      background-color: lighten($azulSalas, 50%) !important
+      background-color: color.adjust($azulSalas, $lightness: 50%) !important
       color: black
 
   .titulo-columna-asesores
@@ -136,7 +137,7 @@ $verdeSalas: colorSalas.$verdeSalas
       background-color: white !important
       color: $verdeSalas !important
   .mensaje-resaltado
-    box-shadow: 0px -5px 9px lighten($azulSalas, 57%) inset !important
+    box-shadow: 0px -5px 9px color.adjust($azulSalas, $lightness: 57%) inset !important
 
 .btn-adds-conversacion-asesores
   font-size: 0.8rem !important
@@ -146,8 +147,8 @@ $verdeSalas: colorSalas.$verdeSalas
   border-radius: 25px !important
   cursor: pointer !important
   &:hover
-    border-color: darken($azulSalas, 25%) !important
-    background-color: darken($azulSalas, 10%) !important
+    border-color: color.adjust($azulSalas, $lightness: -25%) !important
+    background-color: color.adjust($azulSalas, $lightness: -10%) !important
     color: white !important
 .lista-codigos-asesores
   height: 27rem
@@ -200,7 +201,7 @@ $verdeSalas: colorSalas.$verdeSalas
 .seleccionAsesores
   /* background-color: lighten($azulSalas, 60%) !important */
   //quiero la sombra para arriba y para adentro
-  box-shadow: 0px -10px 9px lighten($azulSalas, 57%) inset !important
+  box-shadow: 0px -10px 9px color.adjust($azulSalas, $lightness: 57%) inset !important
   color: white !important
   border-radius: 10px !important
   border: 0px solid !important
@@ -276,7 +277,7 @@ $verdeSalas: colorSalas.$verdeSalas
       text-align: center
       border-radius: 5px !important
       box-shadow: 0 0 0px $azulSalas !important
-      background-color: lighten($azulSalas, 50%) !important
+      background-color: color.adjust($azulSalas, $lightness: 50%) !important
       color: black
 
   .titulo-columna-asesores
