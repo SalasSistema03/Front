@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { getPropiedadesVenta } from '@/Services/api/Atcl/Cliente/ClienteApi'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useToast } from '@/composables/useToast'

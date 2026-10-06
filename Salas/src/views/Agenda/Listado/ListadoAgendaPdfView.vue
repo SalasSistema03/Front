@@ -4,7 +4,6 @@
 
 <script setup>
 //import { GenerarPdfListadoPropiedad } from '@/Services/api/Atcl/AtclApi'
-import { defineProps } from 'vue'
 import { listarAgenda } from '../../../Services/api/Agenda/AgendaApi'
 
 const props = defineProps({

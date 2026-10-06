@@ -315,7 +315,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, defineProps, defineEmits, onMounted } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { verificarPermisoUsuario } from '@/Services/api/Contrato/Contrato'
 import { useDateFormatter } from '@/composables/useDateFormatter'

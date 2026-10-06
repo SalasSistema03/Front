@@ -591,7 +591,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, defineProps, computed } from 'vue'
+import { ref, nextTick, onMounted, computed } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'

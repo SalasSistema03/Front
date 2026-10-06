@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted, reactive, watch, computed } from 'vue'
+import { onMounted, reactive, watch, computed } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { modificarCliente } from '@/Services/api/Atcl/Cliente/ClienteApi'
 import { useToast } from '@/composables/useToast'

@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseModal from '../../base/BaseModal.vue'
 import { useDateFormatter } from '@/composables/useDateFormatter'
 

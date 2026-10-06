@@ -200,7 +200,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue'
+import { ref, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useToast } from '@/composables/useToast'
 import { getHistorialReservaAlquiler } from '@/Services/api/Atcl/Alquiler/Alquiler'

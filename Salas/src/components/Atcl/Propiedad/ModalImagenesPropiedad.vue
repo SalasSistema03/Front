@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 
 const emit = defineEmits(['close'])

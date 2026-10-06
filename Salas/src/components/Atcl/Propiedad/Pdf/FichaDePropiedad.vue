@@ -185,7 +185,6 @@
 
 <script setup>
 import { GenerarPdfFichaPropiedad } from '@/Services/api/Atcl/AtclApi'
-import { defineProps } from 'vue'
 const props = defineProps({
   propiedad: {
     type: Object,

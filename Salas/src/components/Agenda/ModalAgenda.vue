@@ -197,7 +197,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import ModalMotivoBorrar from '@/components/Agenda/ModalMotivoBorrar.vue'
 import { buscarPropiedadPorCodigoCalle } from '@/Services/api/Agenda/AgendaApi'

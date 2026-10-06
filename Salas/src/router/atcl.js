@@ -66,6 +66,15 @@ const routesAtcl = [
             vistaId: 64,
         },
     },
+    {
+        path: '/carga-de-tasacion',
+        alias: '/carga_tasacion',
+        name: 'carga_tasacion',
+        component:() => import('../views/Atcl/Tasaciones/TasacionesView.vue'),
+        meta: {
+            requiresAuth: true,
+        }
+    }
 ]
 
 export default routesAtcl

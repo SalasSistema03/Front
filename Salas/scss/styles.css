@@ -335,8 +335,7 @@
 
 .mostrarTurnosPublicidad {
   height: 83vh;
-}
-.mostrarTurnosPublicidad {
+  width: auto;
   border-radius: 15px;
 }
 .mostrarTurnosPublicidad video {
@@ -1499,6 +1498,37 @@
   border: 1px solid white;
   border-radius: 50%;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+}
+
+.tasaciones-body-scroll {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.contrato-seccion {
+  margin-bottom: 18px;
+}
+
+.contrato-seccion:last-child {
+  margin-bottom: 0;
+}
+
+.contrato-seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--bs-primary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 5px;
+  margin-bottom: 12px;
+}
+
+.contrato-seccion-header i {
+  font-size: 13px;
 }
 
 .btn-primary {

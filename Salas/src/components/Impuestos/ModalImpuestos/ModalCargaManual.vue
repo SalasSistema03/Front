@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useToast } from '@/composables/useToast'
 import { cargaManual, cargaNuevoManual } from '@/Services/api/Impuestos/tgiApi'

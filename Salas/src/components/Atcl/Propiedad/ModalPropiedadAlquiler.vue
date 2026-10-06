@@ -258,7 +258,7 @@
 <script setup>
 // Recibir las props del componente padre
 import ModalNovedades from './ModalNovedades.vue'
-import { reactive, watch, defineEmits, computed, ref, nextTick } from 'vue'
+import { reactive, watch, computed, ref, nextTick } from 'vue'
 import FichaPropiedad from './Pdf/FichaDePropiedad.vue'
 import { propertyUpdateFormState } from '../../../utils/propertyUpdateChanges.js'
 

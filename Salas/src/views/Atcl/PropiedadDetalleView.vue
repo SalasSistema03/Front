@@ -170,7 +170,7 @@
                 class="btn w-100 compact-btn shadow-sm"
                 :class="
                   propiedad?.comentario_llave
-                    ? 'btn-danger text-white'
+                    ? 'btn-success text-white'
                     : 'btn-outline-secondary bg-white'
                 "
                 data-bs-toggle="popover"
@@ -526,11 +526,16 @@
                     >
                       <div class="row pt-2">
                         <div class="col-md-2" style="border-right: 1px solid; font-size:0.7rem; text-align:center;">
-                          <div class="pt-4">{{ formatearFechaMuestra(nota.fecha) }}</div>
+                          <div class="pt-2">{{ formatearFechaMuestra(nota.fecha) }}</div>
                           <div>{{ formatearHoraMuestra(nota.hora_inicio) }} Hs</div>
                         </div>
                         <div class="col-md-9">
-                          <div style="font-size: 0.7rem;">{{ nota.descripcion }}</div>
+                          <div style="font-size: 0.7rem;" v-if="nota?.descripcion != null">
+                            {{ nota.descripcion }}
+                          </div>
+                          <div style="font-size: 0.7rem;" v-else>
+                            Sin Comentario Agendado
+                          </div>
                           <hr class="mb-2 mt-1" />
                           <div  style="color: gray;font-size: 0.7rem;">{{ nota.agenda.sector.nombre }}</div>
                         </div>

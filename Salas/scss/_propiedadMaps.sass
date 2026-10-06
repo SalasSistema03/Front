@@ -1,4 +1,5 @@
-@import _colorSalas
+@use 'colorSalas' as *
+@use "sass:color"
 .cuadromapabusquedamap
     height: 82vh !important
 
@@ -92,7 +93,7 @@
     background-color: $verdeSalas
 
 .pin-estado.pin-ambas .pin-estado-color
-    background-color: darken(grey, 10%)
+    background-color: color.adjust(grey, $lightness: -10%)
 
 .pin-estado.pin-venta-alquilada .pin-estado-color
     background-color: lightgrey
@@ -117,12 +118,12 @@
 
 .pin-ambas
     .pin-forma
-        fill: darken(grey, 10%)
+        fill: color.adjust(grey, $lightness: -10%)
     .pin-numero
-        background-color: darken(grey, 10%)
+        background-color: color.adjust(grey, $lightness: -10%)
 
 .leyenda-pin.pin-ambas
-    background-color: darken(grey, 10%)
+    background-color: color.adjust(grey, $lightness: -10%)
 
 .pin-venta-alquilada
     .pin-forma
