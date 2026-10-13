@@ -96,6 +96,36 @@ export const guardarPropiedad = (id, data) => {
   })
 }
 
+export const guardarNuevaTasacion = (data) =>{
+   const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/propiedad/tasacion`, data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data' // Para enviar archivos
+    },
+  })
+}
+
+export const actualizarTasacion = (id, data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/propiedad/tasacion/${id}`, data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data'
+    },
+  })
+}
+
+export const eliminarTasacion = (id) => {
+  const token = localStorage.getItem('token')
+  return axios.delete(`${API_URL}/v1/propiedad/tasacion/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+
 export const buscaPersona = (params) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/padron/buscar`, {
