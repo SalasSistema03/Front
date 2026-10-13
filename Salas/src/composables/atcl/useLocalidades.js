@@ -14,7 +14,7 @@ export function useLocalidades() {
     try {
       const response = await getLocalidades()
       localidades.value = response.data.data
-      console.log('Localidades:', response.data.data)
+      //console.log('Localidades:', response.data.data)
     } catch (err) {
       error.value = err
       console.error('Error cargando localidades:', err)

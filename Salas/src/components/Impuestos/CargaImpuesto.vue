@@ -273,7 +273,7 @@ const props = defineProps({
   },
 })
 
-const { showError, showSuccess } = useToast()
+const { handleApiError, showError, showSuccess } = useToast()
 const { formatDate } = useDateFormatter()
 const dia = ref(null)
 const mes = ref(null)
@@ -355,7 +355,7 @@ const cargarCodigoBarra = async () => {
   } catch (error) {
     console.error(error)
     codigo_barras.value = ''
-    showError('Error al cargar el código de barras')
+    handleApiError(error)
   }
 }
 

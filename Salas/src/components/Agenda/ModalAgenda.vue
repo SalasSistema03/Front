@@ -51,9 +51,9 @@
             <label>Nombre Cliente</label>
 
             <input type="text" class="form-control" v-model="nombreCliente"
-               :disabled="props.sector?.nombre === 'Ventas'" />
+              :disabled="props.sector?.nombre === 'Ventas'" />
           </div>
-          
+
           <div class="col-md-2 position-relative"
             v-if="(props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas') && !criterioSeleccionado">
             <label>Telefono</label>
@@ -75,23 +75,36 @@
 
 
           <div class="col-md-7 position-relative"
-            v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas'">
+            v-if="props.sector?.nombre === 'Alquiler' || props.sector?.nombre === 'Ventas' || props.sector?.nombre === 'Depto.Tecnico'">
             <label>Buscar propiedad</label>
             <input type="text" class="form-control" placeholder="Ingrese codigo o calle" v-model="busquedaPropiedad"
               @focus="mostrandoResultados = resultadosPropiedades.length > 0"
-              :readonly="props.sector?.nombre === 'Ventas' && nota " />
+              :readonly="props.sector?.nombre === 'Ventas' && nota" />
 
             <!-- Resultados predictivos -->
             <div v-if="mostrandoResultados && resultadosPropiedades.length > 0"
               class="position-absolute w-100 bg-white border border-top-0 rounded-bottom shadow-sm m-0 px-1 agenda_desplegable_busqueda">
               <div v-for="propiedad in resultadosPropiedades" :key="propiedad.id" class="px-2 py-1 hover:bg-light cursor-pointer row m-0 agenda_desplegable_busqueda_propiedad d-flex
               align-items-center justify-content-between" @click="seleccionarPropiedad(propiedad)">
+
                 <div class="small col-1" v-if="props.sector?.nombre === 'Ventas'">
                   {{ propiedad.cod_venta }}
                 </div>
+
                 <div v-if="props.sector?.nombre === 'Alquiler'" class="small col-1">
                   {{ propiedad.cod_alquiler }}
                 </div>
+
+                <div class="small col-2" v-if="props.sector?.nombre === 'Depto.Tecnico'">
+                  <span v-if="propiedad.cod_alquiler != null">
+                    Cod Alq {{ propiedad.cod_alquiler }}
+                  </span>
+
+                  <span v-if="propiedad.cod_venta != null">
+                    Cod Venta {{ propiedad.cod_venta }}
+                  </span>
+                </div>
+
                 <div class="small col-5">
                   {{ propiedad.calle }} {{ propiedad.numero_calle }}
                 </div>
@@ -111,6 +124,22 @@
                   <div class="col-6">
                     {{ propiedad.estado_venta }}
                   </div>
+                </div>
+                <div v-if="props.sector?.nombre === 'Depto.Tecnico'" class="small col-5 row">
+                  <div v-if="propiedad.estado_alquiler != null" class="col-6 text-start">
+                    Estado Alquiler
+                    <div v-if="propiedad.estado_alquiler != null" class="col-6">
+                      {{ propiedad.estado_alquiler }}
+                    </div>
+                  </div>
+
+                  <div v-if="propiedad.estado_venta != null" class="col-6 text-start">
+                    Estado Venta
+                    <div v-if="propiedad.estado_venta != null" class="col-6">
+                      {{ propiedad.estado_venta }}
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>

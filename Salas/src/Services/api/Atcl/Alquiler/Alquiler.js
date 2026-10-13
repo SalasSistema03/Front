@@ -20,6 +20,14 @@ export const asesoresAlquiler = () => {
   })
 }
 
+export const asesoresTasacion = () =>{
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/asesoresTasacion`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
 
 export const buscarPropiedadPorCodigoAlquiler = (cod_alquiler) => {
   const token = localStorage.getItem('token')

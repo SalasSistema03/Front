@@ -230,11 +230,12 @@
         <div class="modal-footer bg-light py-1">
           <!-- BOTÓN DE GOOGLE MAPS DINÁMICO -->
           <div>
-            <a v-if="enlaceGoogleMaps" :href="enlaceGoogleMaps" target="_blank" class="btn btn-sm btn-outline-primary fw-bold shadow-sm">
+            <a v-if="enlaceGoogleMaps" :href="enlaceGoogleMaps" target="_blank"
+              class="btn btn-sm btn-outline-primary fw-bold shadow-sm">
               <i class="bi bi-google"></i> Ver Dir. en Google
             </a>
           </div>
-          
+
           <button type="button" class="btn btn-sm btn-secondary fw-bold" @click="cerrarModalMapa">Cancelar</button>
           <button type="button" class="btn btn-sm btn-success fw-bold px-3" @click="guardarNuevasCoordenadas"
             :disabled="guardandoMapa">
@@ -673,14 +674,14 @@ export default {
     enlaceGoogleMaps() {
       // Si no hay calle ni altura, no armamos el link
       if (!this.calleSeleccionada || this.numero_calle === '' || this.numero_calle == null) return '';
-      
+
       // Rescatamos los nombres usando los IDs seleccionados en los combos
       const nombreProvincia = this.provincias.find(p => p.id == this.id_provincia)?.name || '';
       const nombreLocalidad = this.localidades.find(l => l.id == this.id_localidad)?.name || '';
-      
+
       // Armamos la dirección de búsqueda
       const query = `${this.calleSeleccionada} ${this.numero_calle}, ${nombreLocalidad}, ${nombreProvincia}, Argentina`;
-      
+
       // Retornamos la URL oficial de búsqueda de Google Maps
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     },
@@ -714,7 +715,7 @@ export default {
     actualizarCondicion(condicion) {
       this.modalDraft.condicion = condicion
     },
-    
+
     // 1. MÉTODO PARA ESCUCHAR AL MODAL DE PROPIETARIOS
     handlePropietariosCambiados(propietariosActuales) {
       // Reiniciamos los arrays
@@ -898,9 +899,9 @@ export default {
     // (Omito acá por brevedad, dejá tus métodos exactos como los pasaste)
 
     // LÓGICA DEL MAPA
-async abrirModalMapa() {
+    async abrirModalMapa() {
       this.mostrarModalMapa = true;
-      
+
       // 1. Coordenadas por defecto (Centro de Santa Fe)
       let lat = -31.637321;
       let lng = -60.694612;
@@ -909,22 +910,22 @@ async abrirModalMapa() {
       if (this.propiedad_update?.latitud != null && this.propiedad_update?.longitud != null) {
         lat = this.propiedad_update.latitud;
         lng = this.propiedad_update.longitud;
-      } 
+      }
       // 3. Si NO hay coordenadas, pero el usuario ya cargó la calle y altura, buscamos la dirección
       else if (this.calleSeleccionada && this.numero_calle) {
         try {
           // Rescatamos el nombre en texto de la provincia y localidad usando los IDs seleccionados
           const nombreProvincia = this.provincias.find(p => p.id == this.id_provincia)?.name || '';
           const nombreLocalidad = this.localidades.find(l => l.id == this.id_localidad)?.name || '';
-          
+
           // Armamos el string de búsqueda (Ej: "San Martin 2500, Santa Fe, Santa Fe, Argentina")
           const query = `${this.calleSeleccionada} ${this.numero_calle}, ${nombreLocalidad}, ${nombreProvincia}, Argentina`;
-          
+
           // Consultamos a la API de Nominatim
           const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
           const response = await fetch(url);
           const data = await response.json();
-          
+
           // Si encuentra resultados, tomamos la lat y lng del primer resultado
           if (data && data.length > 0) {
             lat = parseFloat(data[0].lat);
@@ -945,14 +946,14 @@ async abrirModalMapa() {
           this.mapaInstancia.remove();
           this.mapaInstancia = null;
         }
-        
+
         this.mapaInstancia = L.map('mapa-edicion').setView([lat, lng], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; OpenStreetMap contributors'
         }).addTo(this.mapaInstancia);
 
         this.marcadorInstancia = L.marker([lat, lng], { draggable: true }).addTo(this.mapaInstancia);
-        
+
         const popupHTML = `
           <div style="min-width: 150px; text-align: center;">
             <h6 class="fw-bold mb-1 text-danger"><i class="bi bi-geo-alt"></i> Ubicación Estimada</h6>
@@ -979,7 +980,7 @@ async abrirModalMapa() {
       this.mostrarModalMapa = false;
     },
     guardarNuevasCoordenadas() {
-      // Como esto es un form de update, lo ideal es guardarlo temporalmente y que se envíe 
+      // Como esto es un form de update, lo ideal es guardarlo temporalmente y que se envíe
       // al backend recién cuando el usuario toca "Editar Propiedad", o bien mandarlo por api directo.
       this.propiedad_update.latitud = this.nuevasCoordenadas.lat;
       this.propiedad_update.longitud = this.nuevasCoordenadas.lng;
@@ -1230,7 +1231,7 @@ async abrirModalMapa() {
     }
 
 
-    
+
 
   },
   async mounted() {
@@ -1311,8 +1312,9 @@ async abrirModalMapa() {
 /* ESTILOS DEL POPUP DEL MAPA (Tomados de PropiedadBusquedaMap) */
 :deep(.leaflet-popup-content-wrapper) {
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 :deep(.leaflet-popup-content) {
   margin: 15px;
 }

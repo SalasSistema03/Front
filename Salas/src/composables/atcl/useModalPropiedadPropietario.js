@@ -37,6 +37,19 @@ export function useModalPropiedadPropietario(props, emit, modalCargaPersonaRef) 
     { immediate: true }
   )
 
+  watch(
+    () => props.propietariosIniciales,
+    (nuevosPropietarios) => {
+      if (!props.propiedad && Array.isArray(nuevosPropietarios)) {
+        propietarios.value = nuevosPropietarios.map((persona) => ({
+          ...persona,
+          pivot: { ...(persona.pivot || {}) }
+        }))
+      }
+    },
+    { deep: true }
+  )
+
   const getPropietariosList = () => {
     if (props.propiedad) {
       return propietariosEditados.value
