@@ -20,7 +20,7 @@
             </div>
 
             <div v-else class="table-responsive border rounded">
-                <table class="table table-sm table-striped table-hover mb-0 text-center" style="font-size: 0.8rem;">
+                <table class="table table-sm table-hover mb-0 text-center" style="font-size: 0.8rem;">
                     <thead class="table-light">
                         <tr>
                             <th>Período</th>
@@ -33,60 +33,82 @@
                             <th>Ascensor</th>
                             <th>Internet</th>
                             <th>Honorarios</th>
+                            <th>Extraordinaria</th>
+                            <th>Fondo Reserva</th>
+                            <th>Otro</th>
                             <th>Total</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in registros" :key="item.id">
+                        <tr v-for="item in registros" :key="item.id" :class="{ 'table-success': item.pagado === 'S' }">
                             <td class="fw-bold">{{ formatPeriodo(item.periodo) }}</td>
-                            <td>$ {{ item.tgi }}</td>
-                            <td>$ {{ item.agua }}</td>
-                            <td>$ {{ item.api }}</td>
-                            <td>$ {{ item.luz }}</td>
-                            <td>$ {{ item.seguro }}</td>
-                            <td>$ {{ item.limpieza }}</td>
-                            <td>$ {{ item.ascensor }}</td>
-                            <td>$ {{ item.internet }}</td>
-                            <td>$ {{ item.honorario }}</td>
-                            <td class="fw-bold text-dark">$ {{ calcularTotalFila(item) }}</td>
+                            <td>{{ formatearMoneda(item.tgi) }}</td>
+                            <td>{{ formatearMoneda(item.agua) }}</td>
+                            <td>{{ formatearMoneda(item.api) }}</td>
+                            <td>{{ formatearMoneda(item.luz) }}</td>
+                            <td>{{ formatearMoneda(item.seguro) }}</td>
+                            <td>{{ formatearMoneda(item.limpieza) }}</td>
+                            <td>{{ formatearMoneda(item.ascensor) }}</td>
+                            <td>{{ formatearMoneda(item.internet) }}</td>
+                            <td>{{ formatearMoneda(item.honorario) }}</td>
+                            <td>{{ formatearMoneda(item.extraordinaria) }}</td>
+                            <td>{{ formatearMoneda(item.fondo_reserva) }}</td>
+                            <td>{{ formatearMoneda(item.otro) }}</td>
+                            <td class="fw-bold text-dark">{{ formatearMoneda(calcularTotalFila(item)) }}</td>
                             <td>
-                                <div class="d-flex justify-content-center align-items-center gap-1">
-                                    <!-- 1. Botón Editar (Lápiz) -->
-                                    <button type="button" class="btn btn-sm shadow-sm"
-                                        :class="item.pagado === 'S' ? 'btn-light text-muted' : 'btn-light text-primary'"
-                                        :disabled="item.pagado === 'S'" @click="abrirModalModificar(item)"
-                                        title="Modificar">
-                                        <i class="bi bi-pencil"></i>
+                                <div class="dropdown position-static">
+                                    <button type="button" class="btn btn-sm btn-light border-0 shadow-none"
+                                        data-bs-toggle="dropdown" data-bs-boundary="window" aria-expanded="false"
+                                        title="Opciones">
+                                        <i class="bi bi-three-dots-vertical"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary shadow-sm"
-                                        :disabled="generandoPdf === item.id" @click="generarComprobante(item)"
-                                        title="Generar PDF">
-                                        <span v-if="generandoPdf === item.id" class="spinner-border spinner-border-sm"
-                                            role="status" aria-hidden="true"></span>
 
-                                        <i v-else class="bi bi-file-earmark-pdf"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm shadow-sm"
-                                        :class="item.pagado === 'S' ? 'btn-success' : 'btn-outline-success'"
-                                        :disabled="item.pagado === 'S'" @click="marcarComoPagado(item)">
-                                        <i class="bi"
-                                            :class="item.pagado === 'S' ? 'bi-check2-all' : 'bi-currency-dollar'"></i>
-                                        {{ item.pagado === 'S' ? 'Pagado' : 'Pagar' }}
-                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                        <!-- 1. Modificar (Deshabilitado si ya está pagado) -->
+                                        <li>
+                                            <button type="button" class="dropdown-item d-flex align-items-center gap-2"
+                                                :class="{ 'disabled text-muted': item.pagado === 'S' }"
+                                                :disabled="item.pagado === 'S'" @click="abrirModalModificar(item)">
+                                                <i class="bi bi-pencil text-primary"></i> Modificar
+                                            </button>
+                                        </li>
+
+                                        <!-- 2. Generar PDF -->
+                                        <li>
+                                            <button type="button" class="dropdown-item d-flex align-items-center gap-2"
+                                                :disabled="generandoPdf === item.id" @click="generarComprobante(item)">
+                                                <span v-if="generandoPdf === item.id"
+                                                    class="spinner-border spinner-border-sm text-primary"
+                                                    role="status"></span>
+                                                <i v-else class="bi bi-file-earmark-pdf text-danger"></i>
+                                                Generar PDF
+                                            </button>
+                                        </li>
+
+                                        <!-- 3. Pagar (Solo visible si no está pagado) -->
+                                        <li v-if="item.pagado !== 'S'">
+                                            <hr class="dropdown-divider my-1">
+                                            <button type="button"
+                                                class="dropdown-item d-flex align-items-center gap-2 text-success"
+                                                @click="marcarComoPagado(item)">
+                                                <i class="bi bi-currency-dollar"></i> Pagar
+                                            </button>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
 
                         <tr v-if="registros.length === 0">
-                            <!-- Corregido el colspan a 11 -->
-                            <td colspan="11" class="text-muted py-3">
+                            <td colspan="15" class="text-muted py-3">
                                 No hay registros mensuales para esta unidad.
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
         </template>
 
         <template #footer>
@@ -113,7 +135,9 @@ import { alertas } from '@/utils/alertas.js';
 import { getRegistrosPorUnidadService, modificarRegistroMensualService, GenerarPdfComprobantesService } from '@/Services/api/Impuestos/FideicomisoApi.js';
 import PdfComprobantes from '../pdfComprobantes.vue';
 import ModalModificarRegistro from './ModalModificarRegistro.vue';
+import { formatearMoneda as formatearMonedaHelper } from '@/utils/formatters.js'
 
+const formatearMoneda = (valor) => formatearMonedaHelper(valor, true);
 
 const props = defineProps({
     modalEstado: Boolean,
@@ -246,7 +270,7 @@ const marcarComoPagado = async (item) => {
 
 // Función para sumar todos los importes de una fila
 const calcularTotalFila = (item) => {
-    const conceptos = ['tgi', 'agua', 'api', 'luz', 'seguro', 'limpieza', 'ascensor', 'honorario'];
+    const conceptos = ['tgi', 'agua', 'api', 'luz', 'seguro', 'limpieza', 'ascensor', 'honorario', 'extraordinaria', 'fondo_reserva', 'otro'];
     let total = 0;
 
     conceptos.forEach(concepto => {
