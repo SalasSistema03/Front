@@ -148,6 +148,10 @@
               <i class="bi bi-card-text"></i> Descripción
             </button>
             <button type="button" class="btn btn-primary btn-sm flex-grow-1 shadow-sm"
+              @click="mostrarModalTasaciones = true">
+              <i class="bi bi-clipboard-data"></i> Tasaciones
+            </button>
+            <button type="button" class="btn btn-primary btn-sm flex-grow-1 shadow-sm"
               @click="mostrarModalPropietarios = true">
               <i class="bi bi-person-badge"></i> Propietario
             </button>
@@ -162,7 +166,6 @@
               <i class="bi bi-house-add"></i> Datos Alquiler
             </button>
           </div>
-
           <!-- BOTÓN FINAL -->
           <div class="mt-2 pt-2 border-top">
             <button type="submit" class="btn btn-primary w-100 fw-bold shadow" :disabled="isSubmitting">
@@ -311,13 +314,17 @@
         @update:comodidades="formData.comodidades = $event"></ModalPropiedadComodidades>
       <ModalPropiedadDescripcion @update:descripcion="formData.descripcion = $event"></ModalPropiedadDescripcion>
       <ModalPropiedadVenta :estados-venta="estadosVenta" :captadores-internos="captadoresInternos" :asesores="asesores"
-        @update:venta="formData.venta = $event"></ModalPropiedadVenta>
+        :tasacion-seleccionada="tasacionSeleccionada" @update:venta="formData.venta = $event"></ModalPropiedadVenta>
       <ModalPropiedadAlquiler :estados-alquiler="estadosAlquiler" :captadores-internos="captadoresInternos"
-        @update:alquiler="formData.alquiler = $event"></ModalPropiedadAlquiler>
+        :tasacion-seleccionada="tasacionSeleccionada" @update:alquiler="formData.alquiler = $event">
+      </ModalPropiedadAlquiler>
       <ModalCondicionAlquiler @update:condicion_alquiler="formData.condicion_alquiler = $event">
       </ModalCondicionAlquiler>
+      <ModalSeleccionarTasacion :show="mostrarModalTasaciones" @close="mostrarModalTasaciones = false"
+        @tasacion-seleccionada="seleccionarTasacion"></ModalSeleccionarTasacion>
       <ModalPropiedadPropietario :show="mostrarModalPropietarios" @close="mostrarModalPropietarios = false"
-        @propietarios-cambiados="handlePropietariosUpdate" :mostrar-buscador="true">
+        @propietarios-cambiados="handlePropietariosUpdate" :mostrar-buscador="true"
+        :propietarios-iniciales="formData.propietario">
       </ModalPropiedadPropietario>
     </form>
   </div>
@@ -420,7 +427,12 @@ import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadV
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
-import { guardarPropiedad, validarUbicacionDuplicada, verificarCoordenadasService, getLocalidades } from '../../Services/api/Atcl/AtclApi'
+import ModalSeleccionarTasacion from '../../components/Atcl/Propiedad/ModalSeleccionarTasacion.vue'
+import {
+  guardarPropiedad,
+  validarUbicacionDuplicada,
+  verificarCoordenadasService,
+} from '../../Services/api/Atcl/AtclApi'
 import { useToast } from '../../composables/useToast'
 import { useCalleAutocomplete } from '../../composables/atcl/useCalleAutocomplete'
 import { useInmuebles } from '../../composables/atcl/useInmuebles'
@@ -457,7 +469,8 @@ export default {
     ModalPropiedadVenta,
     ModalPropiedadAlquiler,
     ModalCondicionAlquiler,
-    ModalPropiedadPropietario
+    ModalPropiedadPropietario,
+    ModalSeleccionarTasacion
   },
   setup() {
     const { showWarning, showError, showSuccess } = useToast()
@@ -489,6 +502,8 @@ export default {
   data() {
     return {
       mostrarModalPropietarios: false,
+      mostrarModalTasaciones: false,
+      tasacionSeleccionada: null,
       isLoadingData: true,
       mostrarModalDuplicados: false,
       duplicados: {
@@ -562,6 +577,22 @@ export default {
     }
   },
   methods: {
+    propietariosPorTasacion(tasacion) {
+      const persona = tasacion?.propietario_relacion
+      if (!persona) return []
+
+      return [{
+        ...persona,
+        pivot: { ...(persona.pivot || {}), baja: 'no', observaciones_baja: '' }
+      }]
+    },
+
+    seleccionarTasacion(tasacion) {
+      this.tasacionSeleccionada = tasacion
+      const propietario = this.propietariosPorTasacion(tasacion)
+      if (propietario.length) this.formData.propietario = propietario
+    },
+
     eliminarArchivo(tipo, index) {
       // 1. Eliminamos el archivo del arreglo correspondiente (images, videos o pdfs)
       this[tipo].splice(index, 1);
@@ -651,17 +682,17 @@ export default {
         !this.formData.localidad_id
       ) {
         this.showWarning('Faltan datos obligatorios: Provincia, Localidad, Calle e Inmueble deben estar completos.');
-        return; 
+        return;
       }
 
       this.isSubmitting = true;
 
       try {
-        // NUEVA LÓGICA: 
+        // NUEVA LÓGICA:
         // Solo intentamos robar coordenadas a la BD si hay altura Y NO ES una propiedad "cercana" (similar_match).
         if (this.formData.altura && this.duplicados.status !== 'similar_match') {
           const payload = { calle_id: this.calleId, numero_calle: this.formData.altura };
-          const response = await verificarCoordenadasService(payload); 
+          const response = await verificarCoordenadasService(payload);
 
           if (response.data && response.data.coordenadas) {
             // ¡Ya existía en esta misma puerta! Nos robamos las coordenadas y guardamos directo
@@ -671,12 +702,12 @@ export default {
             return; // Cortamos la ejecución aquí, no se abre el mapa
           }
         }
-        
-        // Si la propiedad ES cercana (similar_match), si NO hay altura, 
+
+        // Si la propiedad ES cercana (similar_match), si NO hay altura,
         // o si la BD no tenía coordenadas registradas, abrimos el mapa:
         this.isSubmitting = false;
         this.abrirModalMapa();
-        
+
       } catch (error) {
         console.error("Error verificando coordenadas", error);
         // Si falla la red al verificar, intenta guardar igual sin coordenadas
@@ -692,6 +723,7 @@ export default {
         // Crear FormData para enviar archivos
         const formDataToSend = new FormData();
         formDataToSend.append('calle_id', this.calleId || '');
+        formDataToSend.append('tasacion_id', this.tasacionSeleccionada?.id || '');
 
         // NUEVO: Agregamos latitud y longitud si están disponibles
         if (this.formData.latitud && this.formData.longitud) {

@@ -341,6 +341,10 @@ const props = defineProps({
   propiedadUpdate: {
     type: Object,
     default: null
+  },
+  tasacionSeleccionada: {
+    type: Object,
+    default: null
   }
 
 })
@@ -479,6 +483,12 @@ const venta = reactive(
     autorizacion_venta: '',
   }
 )
+
+watch(() => props.tasacionSeleccionada, (tasacion) => {
+  venta.tasacion_venta = tasacion?.tasacion_venta ?? ''
+  venta.fecha_tasacion_venta = tasacion?.fecha ? String(tasacion.fecha).slice(0, 10) : ''
+})
+
 // Lógica toggleDescripcion para venta
 const ESTADOS_CON_DESCRIPCION_VENTA = ['BAJA', 'RESET', 'BAJA TEMPORAL']
 

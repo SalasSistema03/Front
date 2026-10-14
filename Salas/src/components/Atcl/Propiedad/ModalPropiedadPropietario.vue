@@ -165,7 +165,8 @@ const props = defineProps({
   mostrarBuscador: { type: Boolean, default: false },
   ocultarBotones: { type: Boolean, default: false },
   mostrarQuitar: { type: Boolean, default: false },
-  show: { type: Boolean, default: false } // NUEVA PROP: Controla la apertura del modal base
+  show: { type: Boolean, default: false }, // NUEVA PROP: Controla la apertura del modal base
+  propietariosIniciales: { type: Array, default: null }
 })
 
 const emit = defineEmits(['propietarios-cambiados', 'close']) // NUEVO EMIT: Avisa al padre que cierre
