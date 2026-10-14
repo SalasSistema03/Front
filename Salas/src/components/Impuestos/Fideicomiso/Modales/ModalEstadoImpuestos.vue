@@ -13,12 +13,14 @@
                 <span class="badge bg-secondary">Porcentual: {{ datosUnidad?.porcentual }}%</span>
             </div>
 
+            <!-- SPINNER DE CARGA -->
             <div v-if="loading" class="d-flex justify-content-center py-4">
                 <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Cargando...</span>
                 </div>
             </div>
 
+            <!-- TABLA DE REGISTROS -->
             <div v-else class="table-responsive border rounded">
                 <table class="table table-sm table-hover mb-0 text-center" style="font-size: 0.8rem;">
                     <thead class="table-light">
@@ -41,7 +43,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in registros" :key="item.id" :class="{ 'table-success': item.pagado === 'S' }">
+                        <tr v-for="item in registros" :key="item.id"
+                            :class="{ 'table-success': item.pagado === 'S' }">
                             <td class="fw-bold">{{ formatPeriodo(item.periodo) }}</td>
                             <td>{{ formatearMoneda(item.tgi) }}</td>
                             <td>{{ formatearMoneda(item.agua) }}</td>
@@ -59,25 +62,29 @@
                             <td>
                                 <div class="dropdown position-static">
                                     <button type="button" class="btn btn-sm btn-light border-0 shadow-none"
-                                        data-bs-toggle="dropdown" data-bs-boundary="window" aria-expanded="false"
-                                        title="Opciones">
+                                        data-bs-toggle="dropdown" data-bs-boundary="window"
+                                        aria-expanded="false" title="Opciones">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
 
                                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                                        <!-- 1. Modificar (Deshabilitado si ya está pagado) -->
+                                        <!-- Modificar -->
                                         <li>
-                                            <button type="button" class="dropdown-item d-flex align-items-center gap-2"
+                                            <button type="button"
+                                                class="dropdown-item d-flex align-items-center gap-2"
                                                 :class="{ 'disabled text-muted': item.pagado === 'S' }"
-                                                :disabled="item.pagado === 'S'" @click="abrirModalModificar(item)">
+                                                :disabled="item.pagado === 'S'"
+                                                @click="abrirModalModificar(item)">
                                                 <i class="bi bi-pencil text-primary"></i> Modificar
                                             </button>
                                         </li>
 
-                                        <!-- 2. Generar PDF -->
+                                        <!-- Generar PDF -->
                                         <li>
-                                            <button type="button" class="dropdown-item d-flex align-items-center gap-2"
-                                                :disabled="generandoPdf === item.id" @click="generarComprobante(item)">
+                                            <button type="button"
+                                                class="dropdown-item d-flex align-items-center gap-2"
+                                                :disabled="generandoPdf === item.id"
+                                                @click="generarComprobante(item)">
                                                 <span v-if="generandoPdf === item.id"
                                                     class="spinner-border spinner-border-sm text-primary"
                                                     role="status"></span>
@@ -86,7 +93,7 @@
                                             </button>
                                         </li>
 
-                                        <!-- 3. Pagar (Solo visible si no está pagado) -->
+                                        <!-- Pagar -->
                                         <li v-if="item.pagado !== 'S'">
                                             <hr class="dropdown-divider my-1">
                                             <button type="button"
@@ -100,6 +107,7 @@
                             </td>
                         </tr>
 
+                        <!-- Sin registros -->
                         <tr v-if="registros.length === 0">
                             <td colspan="15" class="text-muted py-3">
                                 No hay registros mensuales para esta unidad.
@@ -108,27 +116,20 @@
                     </tbody>
                 </table>
             </div>
-
-        </template>
-
-        <template #footer>
-            <button type="button" class="btn btn-secondary btn-sm" @click="$emit('cerrarModalEstado')">
-                Cerrar
-            </button>
         </template>
     </BaseModal>
-    <!-- FIN MODAL PRINCIPAL -->
 
-    <!-- 2. COMPONENTES AUXILIARES (POR FUERA DEL BASEMODAL) -->
-    <PdfComprobantes ref="pdfRef" :formData="pdfData" style="display:none" />
-
-    <ModalModificarRegistro v-if="mostrarModalModificar" :modalModificar="mostrarModalModificar"
-        :registro="registroAEditar" @cerrarModalModificar="mostrarModalModificar = false"
-        @registroActualizado="obtenerRegistrosDeUnidad" />
-
+    <!-- Modal Secundario para modificar -->
+    <ModalModificarRegistro 
+        v-if="mostrarModalModificar" 
+        :modalModificar="mostrarModalModificar"
+        :registro="registroAEditar" 
+        @cerrarModalModificar="mostrarModalModificar = false"
+        @registroActualizado="obtenerRegistrosDeUnidad" 
+    />
 </template>
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted } from 'vue';
 import BaseModal from '@/components/base/BaseModal.vue';
 import { alertas } from '@/utils/alertas.js';
 // Importamos el servicio que armamos en el archivo anterior

@@ -104,6 +104,13 @@
               <input v-else type="number" class="form-control text-center " id="" name="monto_alquiler" min="0"
                 placeholder="Ej: 4000" v-model="alquiler.monto_alquiler">
             </div>
+            <div class="form-group px-1 col-md-2">
+              <label class="text-center form-label">Valor Tasación</label>
+              <input v-if="propiedad" type="number" class="form-control text-center"
+                :value="propiedad.tasaciones?.[0]?.tasacion_pesos_alquiler || ''" readonly>
+              <input v-else type="number" min="0" class="form-control text-center"
+                v-model="alquiler.tasacion_alquiler">
+            </div>
 
 
             <div class="form-group  px-1 col-md-2 ">
@@ -277,6 +284,10 @@ const props = defineProps({
     type: Object,
     default: null
   },
+  tasacionSeleccionada: {
+    type: Object,
+    default: null
+  },
   captadoresInternos: {
     type: Object,
     default: null
@@ -391,6 +402,7 @@ const alquiler = reactive({
   estado_alquiler: '',
   moneda_alquiler: '1',
   monto_alquiler: '',
+  tasacion_alquiler: '',
   autorizacion_alquiler: '',
   fecha_autorizacion_alquiler: '',
   exclusividad_alquiler: '',
@@ -405,6 +417,10 @@ const alquiler = reactive({
   web_a: '',
   captador_interno_a: '',
   fecha_ofrecimiento: ''
+})
+
+watch(() => props.tasacionSeleccionada, (tasacion) => {
+  alquiler.tasacion_alquiler = tasacion?.tasacion_alquiler ?? ''
 })
 
 // Lógica equivalente al toggleDescripcion del blade
