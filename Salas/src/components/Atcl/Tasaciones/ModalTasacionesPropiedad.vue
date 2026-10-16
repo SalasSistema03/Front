@@ -158,6 +158,12 @@
             </option>
           </select>
         </div>
+        <div class="col-md-2 form-group">
+          <label for="fecha-tasacion">Fecha Tasacion</label>
+          <input id="fecha-tasacion" type="date" class="form-control form-control-sm" v-model="form.fecha"
+            :disabled="soloLectura" />
+          
+        </div>
         <div class="contrato-seccion-header pt-3">
           <i class="bi bi-diagram-3"></i>
           <span>OBSERVACIONES</span>
@@ -273,6 +279,7 @@ const form = reactive({
   tasadorId: '',
   tasacionInformada: '',
   observaciones: '',
+  fecha:null
 })
 const TipoTasacion = ref(['Alquiler', 'Venta', 'Alquiler y Venta'])
 const bloquearTasacionVenta = ref(false)
@@ -387,6 +394,7 @@ const resetForm = () => {
   form.tasadorId = ''
   form.tasacionInformada = ''
   form.observaciones = ''
+  form.fecha = null
   calleSeleccionada.value = ''
   calleId.value = null
   sugerenciasPropietario.value = []
@@ -403,6 +411,7 @@ const cargarDatosEdicion = (datos) => {
   form.departamento = datos.departamento || ''
   form.localidadId = datos.id_localidad || datos.localidad?.id || ''
   form.folio = datos.folio || null
+  form.fecha = datos.fecha ? String(datos.fecha).slice(0, 10) : null
 
   const propRel = datos.propietario_relacion
   if (propRel) {
@@ -438,7 +447,7 @@ watch(
 )
 
 const guardarTasacion = async () => {
-  const datosTasacion = { ...form, id_calle: calleId.value }
+  const datosTasacion = { ...form, fecha: form.fecha || null, id_calle: calleId.value }
   guardando.value = true
   try {
     if (props.tasacionData?.id) {
