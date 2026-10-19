@@ -1,3 +1,6 @@
+import { vi } from 'vitest'
+import { ref } from 'vue'
+
 export const mockInmuebles = [
   { id: 1, inmueble: 'Departamento' },
   { id: 2, inmueble: 'Casa' },
@@ -45,36 +48,63 @@ export const mockTasacionData = {
   tasador: 1,
   tasacion_informada_prop: 'Pasado, Ingreso',
   observaciones: 'Test observation',
+  fecha: '2024-03-15 10:30:00',
 }
 
-export const createMockAtclApi = () => ({
-  getInmueble: vi.fn().mockResolvedValue({ data: mockInmuebles }),
-  buscaPersona: vi.fn().mockResolvedValue({ data: mockPersonaSearchResults }),
-  guardarNuevaTasacion: vi.fn().mockResolvedValue({ data: { success: true } }),
-  actualizarTasacion: vi.fn().mockResolvedValue({ data: { success: true } }),
-  eliminarTasacion: vi.fn().mockResolvedValue({ data: { success: true } }),
-})
+/**
+ * Claves exactas que `guardarTasacion` (ModalTasacionesPropiedad.vue)
+ * envía al backend. Sirven como contrato front <-> back.
+ */
+export const TASACION_PAYLOAD_KEYS = [
+  'inmuebleId',
+  'calle',
+  'id_calle',
+  'numeroCalle',
+  'piso',
+  'departamento',
+  'localidadId',
+  'folio',
+  'propietarioId',
+  'propietario',
+  'ingreso',
+  'tipoTasacion',
+  'tasacionVenta',
+  'tasacionAlquiler',
+  'costoTasacion',
+  'tasadorId',
+  'tasacionInformada',
+  'observaciones',
+  'fecha',
+]
 
 export const createMockLocalidades = () => ({
-  localidades: mockLocalidades,
+  localidades: ref([...mockLocalidades]),
   cargarLocalidades: vi.fn().mockResolvedValue(undefined),
   error: null,
 })
 
-import { ref } from 'vue'
-export const createMockCalleAutocomplete = () => ({
-  callesFiltradas: ref([]),
-  mostrarSugerencias: ref(false),
-  calleSeleccionada: ref(''),
-  calleId: ref(null),
-  cargarCalles: vi.fn().mockResolvedValue(undefined),
-  filtrarCalles: vi.fn(),
-  seleccionarCalle: vi.fn(),
-  ocultarSugerencias: vi.fn(),
-  mostrarLista: vi.fn(),
-  limpiarSeleccion: vi.fn(),
-})
-
-export const createMockAlquilerApi = () => ({
-  asesoresTasacion: vi.fn().mockResolvedValue({ data: mockTasadores }),
-})
+export const createMockCalleAutocomplete = () => {
+  const api = {
+    callesFiltradas: ref([...mockCalles]),
+    mostrarSugerencias: ref(false),
+    calleSeleccionada: ref(''),
+    calleId: ref(null),
+    cargarCalles: vi.fn().mockResolvedValue(undefined),
+    filtrarCalles: vi.fn(),
+    seleccionarCalle: vi.fn((calle) => {
+      api.calleSeleccionada.value = calle?.name ?? ''
+      api.calleId.value = calle?.id ?? null
+    }),
+    ocultarSugerencias: vi.fn(() => {
+      api.mostrarSugerencias.value = false
+    }),
+    mostrarLista: vi.fn(() => {
+      api.mostrarSugerencias.value = true
+    }),
+    limpiarSeleccion: vi.fn(() => {
+      api.calleSeleccionada.value = ''
+      api.calleId.value = null
+    }),
+  }
+  return api
+}

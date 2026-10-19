@@ -137,7 +137,7 @@ const confirmarSellado = async (id) => {
 }
 
 const mostrarSeleccionado = (item) => {
-  console.log(item);
+  //console.log(item);
   selladoSeleccionado.value = item
   modalAbierto.value = true
 }
