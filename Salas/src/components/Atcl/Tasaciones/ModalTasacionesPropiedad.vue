@@ -127,18 +127,21 @@
         </div>
         <div class="col-md-2 form-group">
           <label for="tasacion-venta">Tasacion Venta</label>
-          <input id="tasacion-venta" type="number" class="form-control form-control-sm" autocomplete="off"
-            placeholder="U$S 40.000" :disabled="soloLectura || bloquearTasacionVenta" v-model.number="form.tasacionVenta" />
+          <input id="tasacion-venta" type="text" inputmode="numeric" class="form-control form-control-sm"
+            autocomplete="off" placeholder="U$S 40.000" :disabled="soloLectura || bloquearTasacionVenta"
+            :value="formatearMonto(form.tasacionVenta)" @input="actualizarMonto($event, 'tasacionVenta')" />
         </div>
         <div class="col-md-2 form-group">
           <label for="tasacion-alquiler">Tasacion Alquiler</label>
-          <input id="tasacion-alquiler" type="number" class="form-control form-control-sm" autocomplete="off"
-            placeholder="$ 100.000" :disabled="soloLectura || bloquearTasacionAlquiler" v-model.number="form.tasacionAlquiler" />
+          <input id="tasacion-alquiler" type="text" inputmode="numeric" class="form-control form-control-sm"
+            autocomplete="off" placeholder="$ 100.000" :disabled="soloLectura || bloquearTasacionAlquiler"
+            :value="formatearMonto(form.tasacionAlquiler)" @input="actualizarMonto($event, 'tasacionAlquiler')" />
         </div>
         <div class="col-md-2 form-group">
           <label for="costo-tasacion">Costo Tasacion</label>
-          <input id="costo-tasacion" type="number" class="form-control form-control-sm" autocomplete="off"
-            placeholder="$ 15.000" v-model.number="form.costoTasacion" :disabled="soloLectura" />
+          <input id="costo-tasacion" type="text" inputmode="numeric" class="form-control form-control-sm"
+            autocomplete="off" placeholder="$ 15.00 " :value="formatearMonto(form.costoTasacion)"
+            @input="actualizarMonto($event, 'costoTasacion')" :disabled="soloLectura" />
         </div>
         <div class="col-md-2 form-group">
           <label for="tasador">Tasador</label>
@@ -281,6 +284,30 @@ const form = reactive({
   observaciones: '',
   fecha:null
 })
+const formatearMonto = (valor) => {
+  if (valor === null || valor === undefined || valor === '') return ''
+  const numero = Number(valor)
+  return Number.isFinite(numero)
+    ? new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(numero)
+    : ''
+}
+const actualizarMonto = (event, campo) => {
+  const input = event.target
+  const posicionCursor = input.selectionStart ?? input.value.length
+  const digitosAntesCursor = input.value.slice(0, posicionCursor).replace(/\D/g, '').length
+  const digitos = input.value.replace(/\D/g, '')
+  form[campo] = digitos ? Number(digitos) : null
+
+  const valorFormateado = formatearMonto(form[campo])
+  input.value = valorFormateado
+  let nuevaPosicionCursor = 0
+  let digitosContados = 0
+  while (nuevaPosicionCursor < valorFormateado.length && digitosContados < digitosAntesCursor) {
+    if (/\d/.test(valorFormateado[nuevaPosicionCursor])) digitosContados++
+    nuevaPosicionCursor++
+  }
+  input.setSelectionRange(nuevaPosicionCursor, nuevaPosicionCursor)
+}
 const TipoTasacion = ref(['Alquiler', 'Venta', 'Alquiler y Venta'])
 const bloquearTasacionVenta = ref(false)
 const bloquearTasacionAlquiler = ref(false)

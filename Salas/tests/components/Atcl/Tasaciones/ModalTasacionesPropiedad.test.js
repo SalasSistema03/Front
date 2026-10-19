@@ -1,86 +1,69 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import ModalTasacionesPropiedad from '@/components/Atcl/Tasaciones/ModalTasacionesPropiedad.vue'
-import * as AtclApiModule from '@/Services/api/Atcl/AtclApi.js'
-import * as AlquilerApiModule from '@/Services/api/Atcl/Alquiler/Alquiler.js'
-const mockAtclApi = AtclApiModule
-const mockAlquilerApi = AlquilerApiModule
+import * as AtclApi from '@/Services/api/Atcl/AtclApi.js'
+import * as AlquilerApi from '@/Services/api/Atcl/Alquiler/Alquiler.js'
 import {
   mockInmuebles,
   mockLocalidades,
-  mockCalles,
   mockTasadores,
   mockPersonaSearchResults,
   mockTasacionData,
-  createMockAtclApi,
+  TASACION_PAYLOAD_KEYS,
   createMockLocalidades,
   createMockCalleAutocomplete,
-  createMockAlquilerApi,
 } from '../../../mocks/modalTasaciones.js'
 
 vi.mock('@/components/base/BaseModal.vue', () => ({
   default: {
     name: 'BaseModal',
-    template: `
-      <div class="modal" v-if="show">
-        <div class="modal-header">
-          <slot name="title" />
-        </div>
-        <div class="modal-body">
-          <slot name="body" />
-        </div>
-        <div class="modal-footer">
-          <slot name="footer" />
-        </div>
-      </div>
-    `,
     props: ['show', 'size'],
     emits: ['close'],
+    template: `
+      <div class="modal" v-if="show">
+        <div class="modal-header"><slot name="title" /></div>
+        <div class="modal-body"><slot name="body" /></div>
+        <div class="modal-footer"><slot name="footer" /></div>
+      </div>
+    `,
   },
 }))
 
 vi.mock('@/components/Atcl/Propiedad/ModalCargaPersona.vue', () => ({
   default: {
     name: 'ModalCargaPersona',
-    template: '<div data-testid="modal-carga-persona" />',
     props: ['show', 'personaData'],
     emits: ['close'],
+    template: '<div data-testid="modal-carga-persona" />',
   },
 }))
 
 vi.mock('@/Services/api/Atcl/AtclApi.js', () => ({
-  buscaPersona: vi.fn().mockResolvedValue({ data: [{ id: 1, nombre: 'Juan', apellido: 'Perez', documento: '12345678' }] }),
-  getInmueble: vi.fn().mockResolvedValue({ data: [{ id: 1, inmueble: 'Departamento' }, { id: 2, inmueble: 'Casa' }, { id: 3, inmueble: 'PH' }, { id: 4, inmueble: 'Local' }] }),
-  guardarNuevaTasacion: vi.fn().mockResolvedValue({ data: { success: true } }),
-  actualizarTasacion: vi.fn().mockResolvedValue({ data: { success: true } }),
-  eliminarTasacion: vi.fn().mockResolvedValue({ data: { success: true } }),
+  getInmueble: vi.fn(),
+  buscaPersona: vi.fn(),
+  guardarNuevaTasacion: vi.fn(),
+  actualizarTasacion: vi.fn(),
+  eliminarTasacion: vi.fn(),
 }))
-vi.mock('@/Services/api/Atcl/Alquiler/Alquiler.js', () => ({
-  asesoresTasacion: vi.fn().mockResolvedValue({ data: [{ id_usuario: 1, id_usuario_sector: 1, usuario_username: 'Tasador 1' }] }),
-}))
-vi.mock('@/composables/atcl/useLocalidades.js', () => {
-  globalThis.__mockLocalidades = { localidades: [{ id: 1, name: 'Santa Fe' }, { id: 2, name: 'Rosario' }, { id: 3, name: 'Rafaela' }], cargarLocalidades: vi.fn().mockResolvedValue(undefined), error: null }
-  return { useLocalidades: () => globalThis.__mockLocalidades }
-})
-vi.mock('@/composables/atcl/useCalleAutocomplete.js', () => {
-  globalThis.__mockCalle = {
-    callesFiltradas: { value: [] },
-    mostrarSugerencias: { value: false },
-    calleSeleccionada: { value: '' },
-    calleId: { value: null },
-    cargarCalles: vi.fn().mockResolvedValue(undefined),
-    filtrarCalles: vi.fn(),
-    seleccionarCalle: vi.fn(),
-    ocultarSugerencias: vi.fn(),
-    mostrarLista: vi.fn(),
-    limpiarSeleccion: vi.fn(),
-  }
-  return { useCalleAutocomplete: () => globalThis.__mockCalle }
-})
 
-const mountModal = (props = {}) => {
-  return mount(ModalTasacionesPropiedad, {
+vi.mock('@/Services/api/Atcl/Alquiler/Alquiler.js', () => ({
+  asesoresTasacion: vi.fn(),
+}))
+
+vi.mock('@/composables/atcl/useLocalidades.js', () => ({
+  useLocalidades: () => globalThis.__mockLocalidades,
+}))
+
+vi.mock('@/composables/atcl/useCalleAutocomplete.js', () => ({
+  useCalleAutocomplete: () => globalThis.__mockCalle,
+}))
+
+const calle = () => globalThis.__mockCalle
+const localidadesMock = () => globalThis.__mockLocalidades
+
+const mountModal = (props = {}) =>
+  mount(ModalTasacionesPropiedad, {
     props: {
       show: true,
       tasacionData: null,
@@ -102,56 +85,72 @@ const mountModal = (props = {}) => {
           },
         }),
       ],
-      stubs: {
-        ModalCargaPersona: true,
-      },
     },
   })
-}
 
-const mockCalleAutocomplete = globalThis.__mockCalle
-const mockLocalidadesApi = globalThis.__mockLocalidades
+const findButton = (wrapper, text) =>
+  wrapper.findAll('button').find((b) => b.text().includes(text))
 
 describe('ModalTasacionesPropiedad', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    localStorage.setItem('token', 'mock-token')
+
+    AtclApi.getInmueble.mockResolvedValue({ data: mockInmuebles })
+    AtclApi.buscaPersona.mockResolvedValue({ data: mockPersonaSearchResults })
+    AtclApi.guardarNuevaTasacion.mockResolvedValue({ data: { success: true } })
+    AtclApi.actualizarTasacion.mockResolvedValue({ data: { success: true } })
+    AtclApi.eliminarTasacion.mockResolvedValue({ data: { success: true } })
+    AlquilerApi.asesoresTasacion.mockResolvedValue({ data: mockTasadores })
+
+    globalThis.__mockLocalidades = createMockLocalidades()
+    globalThis.__mockCalle = createMockCalleAutocomplete()
   })
 
   afterEach(() => {
-    vi.resetModules()
+    vi.useRealTimers()
   })
 
   describe('Renderizado por modo', () => {
     it('muestra título "Carga de Tasaciones" en modo creación', () => {
-      const wrapper = mountModal({ show: true, tasacionData: null, soloLectura: false })
+      const wrapper = mountModal({ tasacionData: null, soloLectura: false })
       expect(wrapper.text()).toContain('Carga de Tasaciones')
     })
 
     it('muestra título "Editar Tasación" en modo edición', () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: false })
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: false })
       expect(wrapper.text()).toContain('Editar Tasación')
     })
 
     it('muestra título "Ver Tasación" en modo solo lectura', () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: true })
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
       expect(wrapper.text()).toContain('Ver Tasación')
     })
 
     it('deshabilita todos los campos en modo solo lectura', () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: true })
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
 
       expect(wrapper.find('#inmueble').attributes('disabled')).toBeDefined()
       expect(wrapper.find('#input-calle').attributes('disabled')).toBeDefined()
       expect(wrapper.find('#numero-calle').attributes('disabled')).toBeDefined()
       expect(wrapper.find('#tipo-tasacion').attributes('disabled')).toBeDefined()
+      expect(wrapper.find('#observaciones').attributes('disabled')).toBeDefined()
     })
 
-    it('habilita campos en modo edición/creación', () => {
-      const wrapper = mountModal({ show: true, tasacionData: null, soloLectura: false })
+    it('habilita campos en modo creación', () => {
+      const wrapper = mountModal({ tasacionData: null, soloLectura: false })
 
       expect(wrapper.find('#inmueble').attributes('disabled')).toBeUndefined()
       expect(wrapper.find('#input-calle').attributes('disabled')).toBeUndefined()
+      expect(wrapper.find('#tipo-tasacion').attributes('disabled')).toBeUndefined()
+    })
+
+    it('en solo lectura sólo muestra el botón Cerrar', () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
+
+      expect(findButton(wrapper, 'Cerrar')).toBeTruthy()
+      expect(findButton(wrapper, 'Guardar')).toBeUndefined()
+      expect(findButton(wrapper, 'Actualizar')).toBeUndefined()
+      expect(findButton(wrapper, 'Eliminar')).toBeUndefined()
     })
   })
 
@@ -160,10 +159,10 @@ describe('ModalTasacionesPropiedad', () => {
       mountModal()
       await flushPromises()
 
-      expect(mockAtclApi.getInmueble).toHaveBeenCalled()
-      expect(mockLocalidadesApi.cargarLocalidades).toHaveBeenCalled()
-      expect(mockCalleAutocomplete.cargarCalles).toHaveBeenCalled()
-      expect(mockAlquilerApi.asesoresTasacion).toHaveBeenCalled()
+      expect(AtclApi.getInmueble).toHaveBeenCalledTimes(1)
+      expect(localidadesMock().cargarLocalidades).toHaveBeenCalledTimes(1)
+      expect(calle().cargarCalles).toHaveBeenCalledTimes(1)
+      expect(AlquilerApi.asesoresTasacion).toHaveBeenCalledTimes(1)
     })
 
     it('puebla inmuebles, localidades y tasadores con respuestas de API', async () => {
@@ -174,10 +173,22 @@ describe('ModalTasacionesPropiedad', () => {
       expect(wrapper.vm.localidades).toEqual(mockLocalidades)
       expect(wrapper.vm.tasadores).toEqual(mockTasadores)
     })
+
+    it('tolera el fallo de getInmueble sin romper el render', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      AtclApi.getInmueble.mockRejectedValue(new Error('boom'))
+
+      const wrapper = mountModal()
+      await flushPromises()
+
+      expect(consoleSpy).toHaveBeenCalled()
+      expect(wrapper.vm.inmuebles).toEqual([])
+      consoleSpy.mockRestore()
+    })
   })
 
   describe('Watch: props.show -> carga/resetea formulario', () => {
-    it('carga datos de edición cuando show=true y hay tasacionData', async () => {
+    it('carga datos de edición cuando show pasa a true', async () => {
       const wrapper = mountModal({ show: false, tasacionData: mockTasacionData })
       await flushPromises()
 
@@ -186,11 +197,12 @@ describe('ModalTasacionesPropiedad', () => {
 
       expect(wrapper.vm.form.inmuebleId).toBe(1)
       expect(wrapper.vm.form.calle).toBe('Av. Santa Fe')
+      expect(wrapper.vm.form.id_calle).toBe(1)
       expect(wrapper.vm.form.numeroCalle).toBe('1234')
       expect(wrapper.vm.form.piso).toBe('5')
       expect(wrapper.vm.form.departamento).toBe('A')
-      expect(wrapper.vm.form.localidadId).toBe('1')
-      expect(wrapper.vm.form.folio).toBe(12345)
+      expect(wrapper.vm.form.localidadId).toBe(1)
+      expect(wrapper.vm.form.folio).toBe('12345')
       expect(wrapper.vm.form.propietario).toBe('Perez, Juan')
       expect(wrapper.vm.form.propietarioId).toBe(1)
       expect(wrapper.vm.form.ingreso).toBe('Presencial')
@@ -198,9 +210,10 @@ describe('ModalTasacionesPropiedad', () => {
       expect(wrapper.vm.form.tasacionVenta).toBe(150000)
       expect(wrapper.vm.form.tasacionAlquiler).toBeNull()
       expect(wrapper.vm.form.costoTasacion).toBe(15000)
-      expect(wrapper.vm.form.tasadorId).toBe('1')
+      expect(wrapper.vm.form.tasadorId).toBe(1)
       expect(wrapper.vm.form.tasacionInformada).toBe('Pasado, Ingreso')
       expect(wrapper.vm.form.observaciones).toBe('Test observation')
+      expect(wrapper.vm.form.fecha).toBe('2024-03-15')
     })
 
     it('resetea formulario cuando show=true sin tasacionData', async () => {
@@ -209,12 +222,15 @@ describe('ModalTasacionesPropiedad', () => {
 
       wrapper.vm.form.inmuebleId = '1'
       wrapper.vm.form.calle = 'Test'
+      wrapper.vm.form.propietario = 'Alguien'
 
       await wrapper.setProps({ show: true, tasacionData: null })
       await flushPromises()
 
       expect(wrapper.vm.form.inmuebleId).toBe('')
       expect(wrapper.vm.form.calle).toBe('')
+      expect(wrapper.vm.form.propietario).toBe('')
+      expect(wrapper.vm.sugerenciasPropietario).toEqual([])
     })
 
     it('usa immediate: true para cargar al montar con show=true', async () => {
@@ -222,84 +238,169 @@ describe('ModalTasacionesPropiedad', () => {
       await flushPromises()
 
       expect(wrapper.vm.form.inmuebleId).toBe(1)
+      expect(wrapper.find('#fecha-tasacion').element.value).toBe('2024-03-15')
+    })
+
+    it('usa propietario "legacy" cuando no hay relación', async () => {
+      const legacy = {
+        ...mockTasacionData,
+        propietario_relacion: null,
+        propietario: 'Dueño Viejo',
+      }
+      const wrapper = mountModal({ tasacionData: legacy })
+      await flushPromises()
+
+      expect(wrapper.vm.form.propietario).toBe('Dueño Viejo')
+      expect(wrapper.vm.form.propietarioId).toBe('Dueño Viejo')
+    })
+  })
+
+  describe('Formato de montos', () => {
+    it('formatea la tasación de venta en edición', async () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
+      await flushPromises()
+
+      expect(wrapper.find('#tasacion-venta').element.value).toBe('150.000')
+    })
+
+    it('deja los montos vacíos en creación', async () => {
+      const wrapper = mountModal()
+      await flushPromises()
+
+      expect(wrapper.find('#tasacion-venta').element.value).toBe('')
+      expect(wrapper.find('#costo-tasacion').element.value).toBe('')
+    })
+
+    it('actualizarMonto guarda sólo los dígitos y reformatea', async () => {
+      const wrapper = mountModal()
+      await flushPromises()
+
+      const input = wrapper.find('#tasacion-venta')
+      await input.setValue('1.234.567')
+
+      expect(wrapper.vm.form.tasacionVenta).toBe(1234567)
+      expect(input.element.value).toBe('1.234.567')
+    })
+
+    it('actualizarMonto vacía el campo cuando no hay dígitos', async () => {
+      const wrapper = mountModal()
+      await flushPromises()
+
+      const input = wrapper.find('#costo-tasacion')
+      await input.setValue('abc')
+
+      expect(wrapper.vm.form.costoTasacion).toBeNull()
+      expect(input.element.value).toBe('')
     })
   })
 
   describe('Selectores predictivos: Calle', () => {
-    it('muestra sugerencias al escribir en input calle', async () => {
+    it('al escribir llama a filtrarCalles', async () => {
       const wrapper = mountModal()
       await flushPromises()
 
-      mockCalleAutocomplete.callesFiltradas = [{ id: 1, name: 'Av. Santa Fe' }]
-      mockCalleAutocomplete.mostrarSugerencias = true
+      await wrapper.find('#input-calle').setValue('Santa')
 
-      const input = wrapper.find('#input-calle')
-      await input.trigger('focus')
-      await input.setValue('Santa')
-
-      expect(mockCalleAutocomplete.mostrarLista).toHaveBeenCalled()
-      expect(mockCalleAutocomplete.filtrarCalles).toHaveBeenCalled()
+      expect(calle().filtrarCalles).toHaveBeenCalled()
     })
 
-    it('seleccionar calle actualiza form.calle y form.id_calle', async () => {
+    it('al enfocar muestra la lista de sugerencias', async () => {
       const wrapper = mountModal()
       await flushPromises()
 
-      mockCalleAutocomplete.calleSeleccionada = 'Av. Santa Fe'
-      mockCalleAutocomplete.calleId = 1
+      await wrapper.find('#input-calle').trigger('focus')
+
+      expect(calle().mostrarLista).toHaveBeenCalled()
+      expect(wrapper.findAll('.busqueda-select li').length).toBe(3)
+    })
+
+    it('seleccionar una calle actualiza form.calle y form.id_calle', async () => {
+      const wrapper = mountModal()
+      await flushPromises()
 
       await wrapper.find('#input-calle').trigger('focus')
       await wrapper.find('#input-calle').setValue('Santa')
-      mockCalleAutocomplete.seleccionarCalle({ id: 1, name: 'Av. Santa Fe' })
+
+      await wrapper.findAll('.busqueda-select li')[0].trigger('mousedown')
 
       expect(wrapper.vm.form.calle).toBe('Av. Santa Fe')
       expect(wrapper.vm.form.id_calle).toBe(1)
     })
+
+    it('no muestra sugerencias en solo lectura', async () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
+      await flushPromises()
+
+      expect(wrapper.find('.busqueda-select').exists()).toBe(false)
+    })
   })
 
   describe('Selectores predictivos: Propietario', () => {
-    it('busca propietario por apellido con debounce', async () => {
-      const wrapper = mountModal()
-      await flushPromises()
-
-      const input = wrapper.find('#propietario')
-      await input.setValue('Perez')
-      await flushPromises()
-
-      expect(mockAtclApi.buscaPersona).toHaveBeenCalledWith({ apellido: 'Perez' })
+    beforeEach(() => {
+      vi.useFakeTimers()
     })
 
-    it('busca propietario por DNI si es numérico', async () => {
+    it('busca por apellido con debounce', async () => {
       const wrapper = mountModal()
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
-      const input = wrapper.find('#propietario')
-      await input.setValue('12345678')
-      await flushPromises()
+      await wrapper.find('#propietario').setValue('Perez')
+      expect(AtclApi.buscaPersona).not.toHaveBeenCalled()
 
-      expect(mockAtclApi.buscaPersona).toHaveBeenCalledWith({ dni: '12345678' })
+      await vi.runAllTimersAsync()
+      expect(AtclApi.buscaPersona).toHaveBeenCalledWith({ apellido: 'Perez' })
     })
 
-    it('seleccionar propietario formatea "Apellido, Nombre"', async () => {
+    it('busca por DNI cuando el texto es numérico', async () => {
       const wrapper = mountModal()
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
-      wrapper.vm.seleccionarPropietario({ id: 1, nombre: 'Juan', apellido: 'Perez', documento: '12345678' })
+      await wrapper.find('#propietario').setValue('12345678')
+      await vi.runAllTimersAsync()
+
+      expect(AtclApi.buscaPersona).toHaveBeenCalledWith({ dni: '12345678' })
+    })
+
+    it('no busca si el input está vacío', async () => {
+      const wrapper = mountModal()
+      await vi.runAllTimersAsync()
+
+      await wrapper.find('#propietario').setValue('')
+      await vi.runAllTimersAsync()
+
+      expect(AtclApi.buscaPersona).not.toHaveBeenCalled()
+    })
+
+    it('lista las sugerencias y seleccionar propietario formatea "Apellido, Nombre"', async () => {
+      const wrapper = mountModal()
+      await vi.runAllTimersAsync()
+
+      await wrapper.find('#propietario').setValue('Perez')
+      await vi.runAllTimersAsync()
+
+      const items = wrapper.findAll('.sugerencias-propietario li')
+      expect(items.length).toBe(mockPersonaSearchResults.length)
+
+      await items[0].trigger('click')
 
       expect(wrapper.vm.form.propietario).toBe('Perez, Juan')
       expect(wrapper.vm.form.propietarioId).toBe(1)
       expect(wrapper.vm.sugerenciasPropietario).toEqual([])
     })
 
-    it('no busca si input está vacío', async () => {
+    it('limpia las sugerencias si la búsqueda falla', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      AtclApi.buscaPersona.mockRejectedValue(new Error('boom'))
+
       const wrapper = mountModal()
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
-      const input = wrapper.find('#propietario')
-      await input.setValue('')
-      await flushPromises()
+      await wrapper.find('#propietario').setValue('Perez')
+      await vi.runAllTimersAsync()
 
-      expect(mockAtclApi.buscaPersona).not.toHaveBeenCalled()
+      expect(consoleSpy).toHaveBeenCalled()
+      expect(wrapper.vm.sugerenciasPropietario).toEqual([])
+      consoleSpy.mockRestore()
     })
   })
 
@@ -309,9 +410,11 @@ describe('ModalTasacionesPropiedad', () => {
       await flushPromises()
 
       wrapper.vm.form.tipoTasacion = 'Venta'
+      await flushPromises()
 
       expect(wrapper.vm.bloquearTasacionAlquiler).toBe(true)
       expect(wrapper.vm.bloquearTasacionVenta).toBe(false)
+      expect(wrapper.find('#tasacion-alquiler').attributes('disabled')).toBeDefined()
     })
 
     it('bloquea venta cuando tipo es Alquiler', async () => {
@@ -319,16 +422,19 @@ describe('ModalTasacionesPropiedad', () => {
       await flushPromises()
 
       wrapper.vm.form.tipoTasacion = 'Alquiler'
+      await flushPromises()
 
       expect(wrapper.vm.bloquearTasacionVenta).toBe(true)
       expect(wrapper.vm.bloquearTasacionAlquiler).toBe(false)
+      expect(wrapper.find('#tasacion-venta').attributes('disabled')).toBeDefined()
     })
 
-    it('no bloquea ninguno cuando tipo es Alquiler y Venta', async () => {
+    it('no bloquea ninguno cuando tipo es "Alquiler y Venta"', async () => {
       const wrapper = mountModal()
       await flushPromises()
 
       wrapper.vm.form.tipoTasacion = 'Alquiler y Venta'
+      await flushPromises()
 
       expect(wrapper.vm.bloquearTasacionVenta).toBe(false)
       expect(wrapper.vm.bloquearTasacionAlquiler).toBe(false)
@@ -336,111 +442,125 @@ describe('ModalTasacionesPropiedad', () => {
   })
 
   describe('Botón Guardar', () => {
-    it('llama a guardarNuevaTasacion en modo creación', async () => {
-      const wrapper = mountModal({ show: true })
+    it('crea con el payload que espera el backend', async () => {
+      const wrapper = mountModal()
       await flushPromises()
 
       wrapper.vm.form.inmuebleId = '1'
+      calle().calleId.value = 3
+      calle().calleSeleccionada.value = 'Av. Corrientes'
       wrapper.vm.form.numeroCalle = '1234'
+      wrapper.vm.form.localidadId = '2'
       wrapper.vm.form.tipoTasacion = 'Venta'
       wrapper.vm.form.tasacionVenta = 100000
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Guardar")).trigger('click')
+      await findButton(wrapper, 'Guardar').trigger('click')
       await flushPromises()
 
-      expect(mockAtclApi.guardarNuevaTasacion).toHaveBeenCalled()
+      expect(AtclApi.guardarNuevaTasacion).toHaveBeenCalledTimes(1)
+      const payload = AtclApi.guardarNuevaTasacion.mock.calls[0][0]
+      expect(Object.keys(payload).sort()).toEqual([...TASACION_PAYLOAD_KEYS].sort())
+      expect(payload.inmuebleId).toBe('1')
+      expect(payload.id_calle).toBe(3)
+      expect(payload.localidadId).toBe('2')
+      expect(payload.tipoTasacion).toBe('Venta')
+      expect(payload.tasacionVenta).toBe(100000)
+
       expect(wrapper.emitted('tasacionCreada')).toBeTruthy()
       expect(wrapper.emitted('close')).toBeTruthy()
     })
 
-    it('llama a actualizarTasacion en modo edición', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData })
+    it('actualiza en modo edición pasando el id', async () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
       await flushPromises()
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Actualizar")).trigger('click')
+      await findButton(wrapper, 'Actualizar').trigger('click')
       await flushPromises()
 
-      expect(mockAtclApi.actualizarTasacion).toHaveBeenCalledWith(1, expect.any(Object))
+      expect(AtclApi.actualizarTasacion).toHaveBeenCalledWith(1, expect.any(Object))
+      expect(AtclApi.guardarNuevaTasacion).not.toHaveBeenCalled()
       expect(wrapper.emitted('tasacionCreada')).toBeTruthy()
       expect(wrapper.emitted('close')).toBeTruthy()
     })
 
-    it('muestra estado guardando y deshabilita botón', async () => {
-      const wrapper = mountModal({ show: true })
+    it('muestra estado guardando y deshabilita el botón', async () => {
+      const wrapper = mountModal()
       await flushPromises()
 
-      mockAtclApi.guardarNuevaTasacion.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
+      AtclApi.guardarNuevaTasacion.mockReturnValue(new Promise(() => {}))
 
-      const btn = wrapper.findAll("button").find(b=>b.text().includes("Guardar"))
+      const btn = findButton(wrapper, 'Guardar')
       await btn.trigger('click')
+      await flushPromises()
 
       expect(wrapper.vm.guardando).toBe(true)
-      expect(btn.attributes('disabled')).toBeDefined()
+      expect(findButton(wrapper, 'Guardando...').attributes('disabled')).toBeDefined()
     })
 
-    it('maneja error al guardar', async () => {
+    it('maneja el error al guardar sin emitir eventos', async () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      const wrapper = mountModal({ show: true })
+      const wrapper = mountModal()
       await flushPromises()
 
-      mockAtclApi.guardarNuevaTasacion.mockRejectedValue(new Error('API Error'))
+      AtclApi.guardarNuevaTasacion.mockRejectedValue(new Error('API Error'))
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Guardar")).trigger('click')
+      await findButton(wrapper, 'Guardar').trigger('click')
       await flushPromises()
 
       expect(consoleSpy).toHaveBeenCalledWith('Error al procesar tasación:', expect.any(Error))
       expect(wrapper.vm.guardando).toBe(false)
+      expect(wrapper.emitted('tasacionCreada')).toBeFalsy()
+      expect(wrapper.emitted('close')).toBeFalsy()
       consoleSpy.mockRestore()
     })
   })
 
   describe('Botón Eliminar', () => {
-    it('solo se muestra en modo edición (no creación, no solo lectura)', async () => {
-      const wrapperCreate = mountModal({ show: true, tasacionData: null })
-      const wrapperEdit = mountModal({ show: true, tasacionData: mockTasacionData })
-      const wrapperView = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: true })
-
+    it('sólo se muestra en modo edición', async () => {
+      const create = mountModal({ tasacionData: null })
+      const edit = mountModal({ tasacionData: mockTasacionData })
+      const view = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
       await flushPromises()
 
-expect(wrapperCreate.findAll('button').filter(b => b.text().includes('Eliminar')).length > 0).toBe(false)
-expect(wrapperEdit.findAll('button').filter(b => b.text().includes('Eliminar')).length > 0).toBe(true)
-expect(wrapperView.findAll('button').filter(b => b.text().includes('Eliminar')).length > 0).toBe(false)
+      expect(findButton(create, 'Eliminar')).toBeUndefined()
+      expect(findButton(edit, 'Eliminar')).toBeTruthy()
+      expect(findButton(view, 'Eliminar')).toBeUndefined()
     })
 
-    it('llama a eliminarTasacionApi y emite eventos', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData })
+    it('llama a la API de borrado con el id y emite eventos', async () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
       await flushPromises()
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Eliminar")).trigger('click')
+      await findButton(wrapper, 'Eliminar').trigger('click')
       await flushPromises()
 
-      expect(mockAtclApi.eliminarTasacion).toHaveBeenCalledWith(1)
+      expect(AtclApi.eliminarTasacion).toHaveBeenCalledWith(1)
       expect(wrapper.emitted('tasacionCreada')).toBeTruthy()
       expect(wrapper.emitted('close')).toBeTruthy()
     })
 
-    it('muestra estado eliminando y deshabilita botones', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData })
+    it('muestra estado eliminando', async () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
       await flushPromises()
 
-      mockAtclApi.eliminarTasacion.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
-
-      await wrapper.findAll("button").find(b=>b.text().includes("Eliminar")).trigger('click')
+      AtclApi.eliminarTasacion.mockReturnValue(new Promise(() => {}))
+      await findButton(wrapper, 'Eliminar').trigger('click')
+      await flushPromises()
 
       expect(wrapper.vm.eliminando).toBe(true)
-      expect(wrapper.findAll("button").find(b=>b.text().includes("Eliminando...")).exists()).toBe(true)
+      expect(findButton(wrapper, 'Eliminando...')).toBeTruthy()
     })
 
-    it('muestra alerta en caso de error', async () => {
+    it('muestra alerta con el mensaje de error del backend', async () => {
       const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData })
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
       await flushPromises()
 
-      mockAtclApi.eliminarTasacion.mockRejectedValue({
+      AtclApi.eliminarTasacion.mockRejectedValue({
         response: { data: { message: 'Error custom' } },
       })
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Eliminar")).trigger('click')
+      await findButton(wrapper, 'Eliminar').trigger('click')
       await flushPromises()
 
       expect(alertSpy).toHaveBeenCalledWith('Error custom')
@@ -448,54 +568,68 @@ expect(wrapperView.findAll('button').filter(b => b.text().includes('Eliminar')).
       alertSpy.mockRestore()
     })
 
+    it('usa un mensaje genérico si el backend no informa uno', async () => {
+      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
+      await flushPromises()
+
+      AtclApi.eliminarTasacion.mockRejectedValue(new Error('network'))
+
+      await findButton(wrapper, 'Eliminar').trigger('click')
+      await flushPromises()
+
+      expect(alertSpy).toHaveBeenCalledWith('No se pudo eliminar la tasación.')
+      alertSpy.mockRestore()
+    })
+
     it('no elimina si ya está guardando o eliminando', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData })
+      const wrapper = mountModal({ tasacionData: mockTasacionData })
       await flushPromises()
 
       wrapper.vm.guardando = true
-      await wrapper.findAll("button").find(b=>b.text().includes("Eliminar")).trigger('click')
-      expect(mockAtclApi.eliminarTasacion).not.toHaveBeenCalled()
+      findButton(wrapper, 'Eliminar').element.click()
+      expect(AtclApi.eliminarTasacion).not.toHaveBeenCalled()
 
       wrapper.vm.guardando = false
       wrapper.vm.eliminando = true
-      await wrapper.findAll("button").find(b=>b.text().includes("Eliminar")).trigger('click')
-      expect(mockAtclApi.eliminarTasacion).not.toHaveBeenCalled()
+      findButton(wrapper, 'Eliminar').element.click()
+      expect(AtclApi.eliminarTasacion).not.toHaveBeenCalled()
     })
   })
 
   describe('Botón Cerrar', () => {
     it('emite close en modo solo lectura', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: true })
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
       await flushPromises()
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Cerrar")).trigger('click')
+      await findButton(wrapper, 'Cerrar').trigger('click')
 
       expect(wrapper.emitted('close')).toBeTruthy()
     })
   })
 
   describe('Botón Crear Nueva Persona', () => {
-    it('abre ModalCargaPersona en modo edición/creación', async () => {
-      const wrapper = mountModal({ show: true })
+    it('abre ModalCargaPersona en modo creación', async () => {
+      const wrapper = mountModal({ tasacionData: null })
       await flushPromises()
 
-      await wrapper.findAll("button").find(b=>b.text().includes("Crear Nueva Persona")).trigger('click')
+      await findButton(wrapper, 'Crear Nueva Persona').trigger('click')
 
       expect(wrapper.vm.modalCargaAbierto).toBe(true)
       expect(wrapper.vm.personaParaVer).toBeNull()
     })
 
     it('no se muestra en modo solo lectura', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: true })
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
       await flushPromises()
 
-      expect(wrapper.findAll("button").find(b=>b.text().includes("Crear Nueva Persona")).exists()).toBe(false)
+      expect(findButton(wrapper, 'Crear Nueva Persona')).toBeUndefined()
     })
   })
 
-  describe('Select Ingreso', () => {
-    it('puebla opciones de ingreso', async () => {
-      const wrapper = mountModal({ show: true })
+  describe('Selects', () => {
+    it('puebla las opciones de ingreso', async () => {
+      const wrapper = mountModal()
       await flushPromises()
 
       const options = wrapper.find('#ingreso').findAll('option')
@@ -503,26 +637,37 @@ expect(wrapperView.findAll('button').filter(b => b.text().includes('Eliminar')).
       expect(options[1].text()).toBe('Correo')
     })
 
-    it('no se muestra en modo solo lectura', async () => {
-      const wrapper = mountModal({ show: true, tasacionData: mockTasacionData, soloLectura: true })
+    it('no muestra el select de ingreso en solo lectura', async () => {
+      const wrapper = mountModal({ tasacionData: mockTasacionData, soloLectura: true })
       await flushPromises()
 
       expect(wrapper.find('#ingreso').exists()).toBe(false)
     })
-  })
 
-  describe('Select Tasación Informada', () => {
-    it('puebla opciones correctas', async () => {
-      const wrapper = mountModal({ show: true })
+    it('puebla las opciones de tasación informada', async () => {
+      const wrapper = mountModal()
       await flushPromises()
 
-      const options = wrapper.find('#tasacion-informada').findAll('option')
-      const values = options.map(o => o.text())
-      expect(values).toContain('Cancelado')
-      expect(values).toContain('No Pasado')
-      expect(values).toContain('Pasado, Ingreso')
-      expect(values).toContain('Pasado, No Ingreso')
-      expect(values).toContain('Pendiente')
+      const values = wrapper.find('#tasacion-informada').findAll('option').map((o) => o.text())
+      expect(values).toEqual(
+        expect.arrayContaining([
+          'Cancelado',
+          'No Pasado',
+          'Pasado, Ingreso',
+          'Pasado, No Ingreso',
+          'Pendiente',
+        ]),
+      )
+    })
+
+    it('puebla los tipos de tasación', async () => {
+      const wrapper = mountModal()
+      await flushPromises()
+
+      const values = wrapper.find('#tipo-tasacion').findAll('option').map((o) => o.text())
+      expect(values).toEqual(
+        expect.arrayContaining(['Alquiler', 'Venta', 'Alquiler y Venta']),
+      )
     })
   })
 })

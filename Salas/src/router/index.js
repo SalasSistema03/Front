@@ -9,6 +9,7 @@ import Atcl from '../router/atcl'
 import Alquiler from '../router/alquiler'
 import Agenda from '../router/agenda'
 import Cliente from '../router/cliente'
+import Repactado from '../router/repactado'
 import Impuestos from '../router/impuestos'
 import Contratos from '../router/contrato'
 import { useAuthStore } from '@/stores/auth'
@@ -46,7 +47,8 @@ const router = createRouter({
     ...Cliente,
     ...Impuestos,
     ...Contratos,
-    ...dpto
+    ...dpto,
+    ...Repactado
   ],
 })
 
