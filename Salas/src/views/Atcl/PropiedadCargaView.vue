@@ -591,6 +591,7 @@ export default {
       this.tasacionSeleccionada = tasacion
       const propietario = this.propietariosPorTasacion(tasacion)
       if (propietario.length) this.formData.propietario = propietario
+      this.showSuccess('Tasación seleccionada correctamente.')
     },
 
     eliminarArchivo(tipo, index) {
