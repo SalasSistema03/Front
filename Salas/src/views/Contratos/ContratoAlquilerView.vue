@@ -133,28 +133,18 @@
 
             <thead>
               <tr class="text-center">
-
                 <th>Folio</th>
+                <th>Ubicacion</th>
                 <th>Comercial</th>
                 <th>Estado</th>
-
                 <th>Inventario</th>
                 <th>Carpeta</th>
                 <th>Preaprobado</th>
                 <th>Reserva</th>
                 <th>Gastos Adm.</th>
-
-               <!--  <th>Tirilla entregada</th> -->
-              <!--   <th>Fecha entrega</th>
- -->
-            <!--     <th>Tirilla controlada</th>
-                <th>Fecha controlada</th> -->
-
                 <th>Contrato</th>
                 <th>Autorización</th>
-
                 <th>Acciones</th>
-
               </tr>
             </thead>
 
@@ -165,6 +155,9 @@
                 <!-- Folio -->
                 <td class="text-center fw-semibold">
                   {{ formatearFolio(item.propiedad?.folios) }}
+                </td>
+                <td>
+                  {{ [item.propiedad?.calle?.name, item.propiedad?.numero_calle].filter(Boolean).join(" ") }}
                 </td>
 
                 <!-- Comercial -->
@@ -210,7 +203,7 @@
                 </td>
 
                 <!-- Tirilla entregada por -->
-               <!--  <td>
+                <!--  <td>
                   <span class="text-nowrap">
                     {{ item.historial_estado_contrato?.tirilla_entregada_por?.username || '—' }}
                   </span>
@@ -229,7 +222,7 @@
                 </td> -->
 
                 <!-- Fecha controlada -->
-               <!--  <td class="text-center fecha-contrato">
+                <!--  <td class="text-center fecha-contrato">
                   {{ formatDate(item.historial_estado_contrato?.fecha_tirilla_controlada) }}
                 </td> -->
 
@@ -410,18 +403,6 @@ const obtenerClaseEstado = (estado) => {
   return 'bg-secondary text-white'
 }
 
-/* const guardarObservacionesContrato = async (formData) => {
-  try {
-    await ActualizarEstadoContrato(formData)
-    showSuccess('Observaciones guardadas correctamente')
-    showModalObservacion.value = false
-    listado(getForm())
-  }
-  catch (error) {
-    console.log(error)
-    showError('Error al guardar las observaciones')
-  }
-} */
 
 const guardarModalContrato = async (formData) => {
   try {
