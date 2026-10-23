@@ -7,6 +7,10 @@
     </template>
 
     <template #body>
+      <div v-if="errorGuardado" class="alert alert-danger py-1 px-2 small mb-2" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>{{ errorGuardado }}
+      </div>
+
       <div class="row tasaciones-body-scroll">
         <div class="contrato-seccion-header">
           <i class="bi bi-diagram-3"></i>
@@ -14,22 +18,20 @@
         </div>
         <div class="col-md-2 form-group">
           <label for="rep-folio">Folio</label>
-          <input id="rep-folio" type="text" class="form-control form-control-sm" v-model="form.folio"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-folio" type="text" class="form-control form-control-sm" :value="form.folio" disabled />
         </div>
-
 
         <div class="col-md-2 form-group">
           <label for="rep-estado">Estado</label>
-          <select id="rep-estado" class="form-control form-control-sm" v-model="form.estado" :disabled="soloLectura">
+          <select id="rep-estado" class="form-control form-control-sm" v-model="form.estadoId"
+            :disabled="soloLectura">
             <option value="">Seleccione</option>
-            <option v-for="opc in opcionesEstado" :key="opc" :value="opc">{{ opc }}</option>
+            <option v-for="opc in estados" :key="opc.id" :value="opc.id">{{ opc.estado }}</option>
           </select>
         </div>
         <div class="col-md-2 form-group">
           <label for="rep-cierre">Cierre</label>
-          <input id="rep-cierre" type="date" class="form-control form-control-sm" v-model="form.cierre"
-            :disabled="soloLectura" />
+          <input id="rep-cierre" type="date" class="form-control form-control-sm" :value="form.cierre" disabled />
         </div>
         <div class="col-md-3 form-group">
           <label for="rep-plazo">Plazo y Actualización</label>
@@ -46,18 +48,21 @@
         </div>
         <div class="col-md-3 form-group">
           <label for="rep-inicio-contrato">Inicio Contrato</label>
-          <input id="rep-inicio-contrato" type="date" class="form-control form-control-sm" v-model="form.inicioContrato"
-            :disabled="soloLectura" />
+          <input id="rep-inicio-contrato" type="date" class="form-control form-control-sm"
+            :value="form.inicioContrato" disabled />
         </div>
         <div class="col-md-3 form-group">
           <label for="rep-vencimiento-contrato">Vencimiento Contrato</label>
           <input id="rep-vencimiento-contrato" type="date" class="form-control form-control-sm"
-            v-model="form.vencimientoContrato" :disabled="soloLectura" />
+            :value="form.vencimientoContrato" disabled />
         </div>
         <div class="col-md-3 form-group">
           <label for="rep-situacion">Situación</label>
-          <input id="rep-situacion" type="text" class="form-control form-control-sm" v-model="form.situacion"
-            :disabled="soloLectura" autocomplete="off" />
+          <select id="rep-situacion" class="form-control form-control-sm" v-model="form.situacion"
+            :disabled="soloLectura">
+            <option value="">Seleccione</option>
+            <option v-for="opc in opcionesSituacion" :key="opc" :value="opc">{{ opc }}</option>
+          </select>
         </div>
         <div class="col-md-12 form-group">
           <label for="rep-observaciones">Observaciones</label>
@@ -71,48 +76,57 @@
         </div>
         <div class="col-md-4 form-group">
           <label for="rep-inquilino">Apellido y Nombre</label>
-          <input id="rep-inquilino" type="text" class="form-control form-control-sm" v-model="form.apellidoNombre"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-inquilino" type="text" class="form-control form-control-sm" :value="form.apellidoNombre"
+            disabled />
         </div>
         <div class="col-md-3 form-group">
           <label for="rep-telefono">Teléfono</label>
-          <input id="rep-telefono" type="text" class="form-control form-control-sm" v-model="form.telefono"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-telefono" type="text" class="form-control form-control-sm" :value="form.telefono"
+            disabled />
         </div>
 
-        <div class="col-md-2 form-group">
+        <div class="col-md-3 form-group">
           <label for="rep-cuentaCorriente">Cuenta Corriente</label>
-          <input id="rep-cuentaCorriente" type="text" class="form-control form-control-sm"
-            v-model="form.cuentaCorriente" :disabled="soloLectura" autocomplete="off" />
+          <select id="rep-cuentaCorriente" class="form-control form-control-sm" v-model="form.cuentaCorriente"
+            :disabled="soloLectura">
+            <option value="">Seleccione</option>
+            <option v-for="opc in opcionesCuentaCorriente" :key="opc" :value="opc">{{ opc }}</option>
+          </select>
         </div>
 
-        <div class="contrato-seccion-header pt-3 d-flex align-items-center justify-content-between">
-          <div>
-            <i class="bi bi-diagram-3"></i>
-            <span>DATOS DE LA PROPIEDAD</span>
-          </div>
-          <button type="button" class="btn btn-outline-info btn-sm px-2 py-0 border-0 opacity-75"
-            title="Ver comodidades de la propiedad" @click="mostrarModalComodidades = true">
-            <i class="bi bi-house-gear me-1"></i>
-            <small>Comodidades</small>
-          </button>
+        <div class="contrato-seccion-header pt-3">
+          <i class="bi bi-diagram-3"></i>
+          <span>DATOS DE LA PROPIEDAD</span>
+        </div>
+        <div class="col-md-2 form-group">
+          <label for="rep-cod-alquiler">Cod. Alquiler</label>
+          <input id="rep-cod-alquiler" type="text" class="form-control form-control-sm"
+            :value="form.codAlquiler" disabled />
+        </div>
+        <div class="col-md-2 form-group">
+          <label for="rep-cod-venta">Cod. Venta</label>
+          <input id="rep-cod-venta" type="text" class="form-control form-control-sm" :value="form.codVenta"
+            disabled />
         </div>
         <div class="col-md-4 form-group">
           <label for="rep-direccion">Dirección</label>
-          <input id="rep-direccion" type="text" class="form-control form-control-sm" v-model="form.direccion"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-direccion" type="text" class="form-control form-control-sm" :value="form.direccion"
+            disabled />
         </div>
-        <div class="col-md-3 form-group">
+        <div class="col-md-2 form-group">
           <label for="rep-localidad">Localidad</label>
-          <input id="rep-localidad" type="text" class="form-control form-control-sm" v-model="form.localidad"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-localidad" type="text" class="form-control form-control-sm" :value="form.localidad"
+            disabled />
         </div>
         <div class="col-md-2 form-group">
           <label for="rep-tipo">Tipo</label>
-          <input id="rep-tipo" type="text" class="form-control form-control-sm" v-model="form.tipo"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-tipo" type="text" class="form-control form-control-sm" :value="form.tipo" disabled />
         </div>
-
+        <div class="col-md-4 form-group">
+          <label for="rep-comodidades">Comodidades</label>
+          <input id="rep-comodidades" type="text" class="form-control form-control-sm" :value="form.comodidades"
+            disabled />
+        </div>
 
         <div class="contrato-seccion-header pt-3">
           <i class="bi bi-diagram-3"></i>
@@ -120,13 +134,13 @@
         </div>
         <div class="col-md-4 form-group">
           <label for="rep-propietario">Propietario</label>
-          <input id="rep-propietario" type="text" class="form-control form-control-sm" v-model="form.propietario"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-propietario" type="text" class="form-control form-control-sm" :value="form.propietario"
+            disabled />
         </div>
         <div class="col-md-3 form-group">
           <label for="rep-telefono-prop">Teléfono Propietario</label>
           <input id="rep-telefono-prop" type="text" class="form-control form-control-sm"
-            v-model="form.telefonoPropietario" :disabled="soloLectura" autocomplete="off" />
+            :value="form.telefonoPropietario" disabled />
         </div>
 
         <div class="contrato-seccion-header pt-3">
@@ -135,19 +149,23 @@
         </div>
         <div class="col-md-2 form-group">
           <label for="rep-viejo">Viejo</label>
-          <input id="rep-viejo" type="text" class="form-control form-control-sm" v-model="form.viejo"
-            :disabled="soloLectura" autocomplete="off" />
+          <input id="rep-viejo" type="text" class="form-control form-control-sm"
+            :value="formatearMonto(form.viejo)" disabled />
         </div>
         <div class="col-md-2 form-group">
-          <label for="rep-c/doc"> C/ Doc</label>
-          <input id="rep-c/doc" type="text" class="form-control form-control-sm" v-model="form.cdoc"
-            :disabled="soloLectura" autocomplete="off" />
+          <label for="rep-cdoc">C/ Doc</label>
+          <input id="rep-cdoc" type="text" class="form-control form-control-sm"
+            :value="formatearMonto(form.cdoc)" disabled />
+        </div>
+        <div class="col-md-2 form-group">
+          <label for="rep-reconocimiento">Reconocimiento</label>
+          <input id="rep-reconocimiento" type="text" class="form-control form-control-sm"
+            :value="formatearMonto(form.reconocimiento)" disabled />
         </div>
         <div class="col-md-2 form-group">
           <label for="rep-total">Total</label>
-          <input id="rep-total" type="text" class="form-control form-control-sm" v-model="form.total"
-            :disabled="soloLectura" autocomplete="off" />
-
+          <input id="rep-total" type="text" class="form-control form-control-sm"
+            :value="formatearMonto(totalCalculado)" disabled />
         </div>
         <div class="col-md-2 form-group">
           <label for="rep-nuevo">Nuevo</label>
@@ -168,102 +186,12 @@
     </template>
   </BaseModal>
 
-  <!-- Modal anidado: Comodidades de la propiedad -->
-  <BaseModal :show="mostrarModalComodidades" size="lg" @close="mostrarModalComodidades = false">
-    <template #title>
-      <i class="bi bi-house-gear me-2"></i>Comodidades de la Propiedad
-    </template>
-    <template #body>
-      <div class="row g-3">
-        <div class="col-md-4 form-group">
-          <label for="com-estado-general">Estado General</label>
-          <select id="com-estado-general" class="form-control form-control-sm" v-model="comodidades.estadoGeneral"
-            :disabled="soloLectura">
-            <option value="">Seleccione</option>
-            <option v-for="opc in opcionesEstadoGeneral" :key="opc" :value="opc">{{ opc }}</option>
-          </select>
-        </div>
-        <div class="col-md-4 form-group">
-          <label for="com-dormitorios">Dormitorios</label>
-          <input id="com-dormitorios" type="number" min="0" class="form-control form-control-sm"
-            v-model.number="comodidades.dormitorios" :disabled="soloLectura" placeholder="Ej: 2" />
-        </div>
-        <div class="col-md-4 form-group">
-          <label for="com-banos">Baños</label>
-          <input id="com-banos" type="number" min="0" class="form-control form-control-sm"
-            v-model.number="comodidades.banos" :disabled="soloLectura" placeholder="Ej: 1" />
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-m2-lote">m² Lote</label>
-          <input id="com-m2-lote" type="number" min="0" class="form-control form-control-sm"
-            v-model.number="comodidades.m2Lote" :disabled="soloLectura" placeholder="Ej: 500" />
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-m2-cubiertos">m² Cubiertos</label>
-          <input id="com-m2-cubiertos" type="number" min="0" class="form-control form-control-sm"
-            v-model.number="comodidades.m2Cubiertos" :disabled="soloLectura" placeholder="Ej: 56" />
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-cochera">Cochera</label>
-          <select id="com-cochera" class="form-control form-control-sm" v-model="comodidades.cochera"
-            :disabled="soloLectura">
-            <option value="">Seleccione</option>
-            <option value="SI">SI</option>
-            <option value="NO">NO</option>
-          </select>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-nro-cochera">N° Cochera</label>
-          <input id="com-nro-cochera" type="text" class="form-control form-control-sm" v-model="comodidades.nroCochera"
-            :disabled="soloLectura || comodidades.cochera !== 'SI'" placeholder="Ej: 2" autocomplete="off" />
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-asfalto">Asfalto</label>
-          <select id="com-asfalto" class="form-control form-control-sm" v-model="comodidades.asfalto"
-            :disabled="soloLectura">
-            <option value="">Seleccione</option>
-            <option value="SI">SI</option>
-            <option value="NO">NO</option>
-          </select>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-gas">Gas</label>
-          <select id="com-gas" class="form-control form-control-sm" v-model="comodidades.gas" :disabled="soloLectura">
-            <option value="">Seleccione</option>
-            <option value="SI">SI</option>
-            <option value="NO">NO</option>
-          </select>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-cloaca">Cloaca</label>
-          <select id="com-cloaca" class="form-control form-control-sm" v-model="comodidades.cloaca"
-            :disabled="soloLectura">
-            <option value="">Seleccione</option>
-            <option value="SI">SI</option>
-            <option value="NO">NO</option>
-          </select>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="com-agua">Agua</label>
-          <select id="com-agua" class="form-control form-control-sm" v-model="comodidades.agua" :disabled="soloLectura">
-            <option value="">Seleccione</option>
-            <option value="SI">SI</option>
-            <option value="NO">NO</option>
-          </select>
-        </div>
-      </div>
-    </template>
-    <template #footer>
-      <button type="button" class="btn btn-secondary btn-sm" @click="mostrarModalComodidades = false">
-        Cerrar
-      </button>
-    </template>
-  </BaseModal>
 </template>
 
 <script setup>
 import BaseModal from '@/components/base/BaseModal.vue'
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
+import { getEstadosRepactado, updateRepactado } from '@/Services/api/Contrato/Repactado.js'
 
 const props = defineProps({
   show: {
@@ -282,100 +210,186 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'repactadoGuardado'])
 
-const opcionesEstado = ['Abierto', 'Cerrado', 'Pendiente']
-const opcionesCondicion = ['Renueva', 'No Renueva', 'Pendiente']
-const opcionesEstadoGeneral = ['EXCELENTE', 'MUY BUENO', 'BUENO', 'REGULAR', 'MALO']
+const opcionesCondicion = ['No Renueva', 'Renueva', 'Retiro']
+const opcionesSituacion = ['Nuevo', 'Prop Retira', 'Prorroga', 'Reingresa']
+const opcionesCuentaCorriente = ['Muy Buena', 'Buena', 'Mala', 'Deudor']
 
-const mostrarModalComodidades = ref(false)
+const estados = ref([])
+const guardando = ref(false)
+const errorGuardado = ref('')
 
-const form = reactive({
+const valoresIniciales = {
+  id: null,
   folio: '',
   cuentaCorriente: '',
-  estado: '',
+  estadoId: '',
   cierre: '',
   plazoActualizacion: '',
   condicion: '',
   inicioContrato: '',
   vencimientoContrato: '',
   situacion: '',
+  observaciones: '',
   apellidoNombre: '',
   telefono: '',
   direccion: '',
   localidad: '',
   tipo: '',
   comodidades: '',
+  codAlquiler: '',
+  codVenta: '',
   propietario: '',
   telefonoPropietario: '',
-  viejo: '',
+  viejo: null,
+  cdoc: null,
+  reconocimiento: null,
   nuevo: '',
-})
+}
 
-const comodidades = reactive({
-  estadoGeneral: '',
-  dormitorios: null,
-  banos: null,
-  m2Lote: null,
-  m2Cubiertos: null,
-  cochera: '',
-  nroCochera: '',
-  asfalto: '',
-  gas: '',
-  cloaca: '',
-  agua: '',
-})
+const form = reactive({ ...valoresIniciales })
 
-const guardando = ref(false)
+const parseNumero = (valor) => {
+  if (valor === null || valor === undefined || valor === '') return 0
+  if (typeof valor === 'number') return Number.isFinite(valor) ? valor : 0
 
-const resetForm = () => {
-  Object.keys(form).forEach((key) => {
-    form[key] = ''
+  let texto = String(valor).trim()
+
+  if (texto.includes(',') && texto.includes('.')) {
+    texto = texto.replace(/\./g, '').replace(',', '.')
+  } else if (texto.includes(',')) {
+    texto = texto.replace(',', '.')
+  } else if (/^\d{1,3}(\.\d{3})+$/.test(texto)) {
+    texto = texto.replace(/\./g, '')
+  }
+
+  const numero = Number(texto)
+  return Number.isFinite(numero) ? numero : 0
+}
+
+const formatearMonto = (valor) => {
+  if (valor === null || valor === undefined || valor === '') return ''
+
+  return parseNumero(valor).toLocaleString('es-AR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   })
 }
 
+const totalCalculado = computed(
+  () => parseNumero(form.viejo) + parseNumero(form.cdoc) - parseNumero(form.reconocimiento)
+)
+
+const fechaHoy = () => {
+  const hoy = new Date()
+  const local = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000)
+  return local.toISOString().slice(0, 10)
+}
+
+watch(
+  () => form.estadoId,
+  (estadoId) => {
+    if (estadoId && !form.cierre) {
+      form.cierre = fechaHoy()
+    }
+  }
+)
+
+const resetForm = () => {
+  Object.assign(form, valoresIniciales)
+  errorGuardado.value = ''
+}
+
+const cargarEstados = async () => {
+  try {
+    const { data } = await getEstadosRepactado()
+    estados.value = data.data || []
+  } catch (error) {
+    console.error('Error al cargar estados de repactado:', error)
+    estados.value = []
+  }
+}
+
 const cargarDatosEdicion = (datos) => {
-  form.folio = datos.folio || ''
-  form.cuentaCorriente = datos.cuentaCorriente || ''
-  form.estado = datos.estado || ''
-  form.cierre = datos.cierre || ''
-  form.plazoActualizacion = datos.plazoActualizacion || ''
-  form.condicion = datos.condicion || ''
-  form.inicioContrato = datos.inicioContrato || ''
-  form.vencimientoContrato = datos.vencimientoContrato || ''
-  form.situacion = datos.situacion || ''
-  form.apellidoNombre = datos.apellidoNombre || ''
-  form.telefono = datos.telefono || ''
-  form.direccion = datos.direccion || ''
-  form.localidad = datos.localidad || ''
-  form.tipo = datos.tipo || ''
-  form.comodidades = datos.comodidades || ''
-  form.propietario = datos.propietario || ''
-  form.telefonoPropietario = datos.telefonoPropietario || ''
-  form.viejo = datos.viejo || ''
-  form.nuevo = datos.nuevo || ''
+  const estado = estados.value.find((opc) => opc.estado === datos.estado)
+
+  form.id = datos.id ?? null
+  form.folio = datos.folio ?? ''
+  form.cuentaCorriente = datos.cuentaCorriente ?? ''
+  form.estadoId = datos.estadoId ?? estado?.id ?? ''
+  form.cierre = datos.cierre ?? ''
+  form.plazoActualizacion = datos.plazoActualizacion ?? ''
+  form.condicion = datos.condicion ?? ''
+  form.inicioContrato = datos.inicioContrato ?? ''
+  form.vencimientoContrato = datos.vencimientoContrato ?? ''
+  form.situacion = datos.situacion ?? ''
+  form.observaciones = datos.observaciones ?? ''
+  form.apellidoNombre = datos.apellidoNombre ?? ''
+  form.telefono = datos.telefono ?? ''
+  form.direccion = datos.direccion ?? ''
+  form.localidad = datos.localidad ?? ''
+  form.tipo = datos.tipo ?? ''
+  form.comodidades = datos.comodidades ?? ''
+  form.codAlquiler = datos.codAlquiler ?? ''
+  form.codVenta = datos.codVenta ?? ''
+  form.propietario = datos.propietario ?? ''
+  form.telefonoPropietario = datos.telefonoPropietario ?? ''
+  form.viejo = datos.viejo ?? null
+  form.cdoc = datos.montoDocumento ?? null
+  form.reconocimiento = datos.reconocimiento ?? null
+  form.nuevo = datos.nuevo ?? ''
 }
 
 watch(
   () => props.show,
-  (isShown) => {
-    if (isShown) {
-      if (props.repactadoData) {
-        cargarDatosEdicion(props.repactadoData)
-      } else {
-        resetForm()
-      }
+  async (isShown) => {
+    if (!isShown) return
+
+    errorGuardado.value = ''
+    await cargarEstados()
+
+    if (props.repactadoData) {
+      cargarDatosEdicion(props.repactadoData)
+    } else {
+      resetForm()
     }
   },
   { immediate: true }
 )
 
 const guardarRepactado = async () => {
+  if (!form.id) {
+    errorGuardado.value = 'No hay un repactado cargado para actualizar.'
+    return
+  }
+
+  if (!form.estadoId) {
+    errorGuardado.value = 'Seleccione un estado.'
+    return
+  }
+
   guardando.value = true
+  errorGuardado.value = ''
+
   try {
-    // TODO: conectar con API cuando esté disponible
-    console.log('Datos a guardar:', { ...form })
-    emit('repactadoGuardado')
+    const payload = {
+      id: form.id,
+      estado: form.estadoId,
+      cuenta_corriente: form.cuentaCorriente || null,
+      plazo_y_actualizacion_contrato: form.plazoActualizacion || null,
+      condicion: form.condicion || null,
+      situacion: form.situacion || null,
+      observaciones_estado: form.observaciones || null,
+      nuevo_valor_alquiler: form.nuevo === '' ? null : parseNumero(form.nuevo),
+      monto_documento: parseNumero(form.cdoc),
+      reconocimiento: parseNumero(form.reconocimiento),
+    }
+
+    const { data } = await updateRepactado(payload)
+    emit('repactadoGuardado', data.data)
     emit('close')
   } catch (error) {
+    errorGuardado.value =
+      error?.response?.data?.message || 'Ocurrió un error al guardar el repactado.'
     console.error('Error al guardar repactado:', error)
   } finally {
     guardando.value = false

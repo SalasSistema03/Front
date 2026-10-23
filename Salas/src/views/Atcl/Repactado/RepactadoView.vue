@@ -92,7 +92,7 @@
         <thead>
           <tr>
             <th>Folio</th>
-            <th>Cuenta Corriente</th>
+            <!-- <th>Cuenta Corriente</th> -->
             <!--  <th>Nombre</th> -->
             <th>Estado</th>
             <!-- <th>Observaciones</th> -->
@@ -103,7 +103,7 @@
             <th>Vencimiento Contrato</th> -->
             <th>Situacion</th>
             <th>Apellido y Nombre</th>
-            <th>Telefono</th>
+            <th>Telefono Inq</th>
             <th>Direccion</th>
             <!-- <th>Localidad</th> -->
             <th>Tipo</th>
@@ -126,7 +126,7 @@
         <tbody>
           <tr v-for="item in repactados" :key="item.id">
             <td>{{ item.folio || '-' }}</td>
-            <td>{{ item.cuentaCorriente || '-' }}</td>
+            <!-- <td>{{ item.cuentaCorriente || '-' }}</td> -->
             <td>{{ item.estado || '-' }}</td>
             <td>{{ item.cierre || '-' }}</td>
             <!-- <td>{{ item.plazoActualizacion || '-' }}</td> -->
@@ -149,10 +149,10 @@
                 title="Editar repactado" aria-label="Editar repactado" @click="editarRepactado(item)">
                 <i class="bi bi-pencil-square"></i>
               </button>
-              <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 shadow-sm" title="Ver repactado"
+              <!--  <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 shadow-sm" title="Ver repactado"
                 aria-label="Ver repactado" @click="verRepactado(item)">
                 <i class="bi bi-eye"></i>
-              </button>
+              </button> -->
             </td>
           </tr>
           <tr v-if="repactados.length === 0">
