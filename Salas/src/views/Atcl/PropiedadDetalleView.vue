@@ -333,7 +333,7 @@
                             Sin Comentario Agendado
                           </div>
                           <hr class="mb-2 mt-1" />
-                          <div style="color: gray;font-size: 0.7rem;">{{ nota.agenda.sector.nombre }}</div>
+                          <div style="color: gray;font-size: 0.7rem;">{{ nota?.agenda?.sector?.nombre }}</div>
                         </div>
                       </div>
                       <!-- <div class="p-2 bg-white rounded-top">
