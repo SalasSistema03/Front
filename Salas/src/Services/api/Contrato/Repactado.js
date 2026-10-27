@@ -23,3 +23,21 @@ export const getRepactadoFiltrado = (folio, mes, anio, empresa) => {
   })
 }
 
+export const getEstadosRepactado = () => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/getEstadosRepactado`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const updateRepactado = (payload) => {
+  const token = localStorage.getItem('token')
+  return axios.put(`${API_URL}/v1/updateRepactado`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
