@@ -34,6 +34,11 @@
           @click="currentForm = 'devoluciones'" v-if="sector === 'Venta'">
           Listar Devoluciones
         </div>
+
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'listado_tasaciones' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'listado_tasaciones'" v-if="sector === 'Venta'">
+          Listar Tasaciones
+        </div>
       </div>
       <h5 class="mb-4" v-if="sector === 'Venta'">Listados Asesores</h5>
       <div>
@@ -379,6 +384,109 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'listado_tasaciones'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Tasaciones</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+              <div class="col-md-4 p-1 position-relative">
+                <label class="form-label">Calle</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Buscar calle..."
+                  v-model="filtroCalleTasacion" @input="filtrarCallesTasacionFiltro"
+                  @focus="mostrarSugerenciasCalleTasacion = true" @blur="ocultarSugerenciasCalleTasacion"
+                  autocomplete="off" />
+                <ul v-if="mostrarSugerenciasCalleTasacion && sugerenciasCalleTasacion.length"
+                  class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
+                  style="z-index: 1000; max-height: 200px; overflow-y: auto">
+                  <li v-for="calle in sugerenciasCalleTasacion" :key="calle.id"
+                    class="list-group-item list-group-item-action cursor-pointer py-1 small"
+                    @mousedown="seleccionarCalleTasacionFiltro(calle)">
+                    {{ calle.name }}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-md-4 p-1 position-relative">
+                <label class="form-label">Propietario</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Buscar por apellido o DNI..."
+                  v-model="filtroPropietarioTasacion" @input="filtrarPropietariosTasacionesFiltro"
+                  @focus="mostrarSugerenciasPropietarioTasacion = true" @blur="ocultarSugerenciasPropietarioTasacion"
+                  autocomplete="off" />
+                <ul v-if="mostrarSugerenciasPropietarioTasacion && sugerenciasPropietarioTasacion.length"
+                  class="list-group position-absolute w-100 shadow-sm sugerencias-lista"
+                  style="z-index: 1000; max-height: 200px; overflow-y: auto">
+                  <li v-for="persona in sugerenciasPropietarioTasacion" :key="persona.id"
+                    class="list-group-item list-group-item-action cursor-pointer py-1 small"
+                    @mousedown="seleccionarPropietarioTasacionFiltro(persona)">
+                    {{ persona.apellido }}, {{ persona.nombre }}
+                    <span class="text-muted ms-1">({{ persona.documento || 'Sin DNI' }})</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-md-2 p-1">
+                <label class="form-label">Desde</label>
+                <input type="date" class="form-control form-control-sm" v-model="formListadoTasaciones.fecha_desde"
+                  :max="formListadoTasaciones.fecha_hasta" />
+              </div>
+              <div class="col-md-2 p-1">
+                <label class="form-label">Hasta</label>
+                <input type="date" class="form-control form-control-sm" v-model="formListadoTasaciones.fecha_hasta"
+                  :min="formListadoTasaciones.fecha_desde" />
+              </div>
+
+              <div class="col-md-3 p-1">
+                <label class="form-label">Tipo Inmueble</label>
+                <select class="form-control form-control-sm" v-model="formListadoTasaciones.tipo_inmueble">
+                  <option value="">Todos</option>
+                  <option v-for="tipo in tiposInmuebleTasaciones" :key="tipo.id" :value="tipo.id">
+                    {{ tipo.inmueble }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3 p-1">
+                <label class="form-label">Tipo Tasación</label>
+                <select class="form-control form-control-sm" v-model="formListadoTasaciones.tipo_tasacion">
+                  <option value="">Todos</option>
+                  <option v-for="tipo in tiposTasacion" :key="tipo" :value="tipo">
+                    {{ tipo }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3 p-1">
+                <label class="form-label">Tasador</label>
+                <select class="form-control form-control-sm" v-model="formListadoTasaciones.tasador">
+                  <option value="">Todos</option>
+                  <option v-for="tasador in tasadoresTasaciones" :key="tasador.id" :value="tasador.id">
+                    {{ tasador.nombre }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3 p-1">
+                <label class="form-label">Tasación Informada Prop</label>
+                <select class="form-control form-control-sm" v-model="formListadoTasaciones.tasacion_informada_prop">
+                  <option value="">Todas</option>
+                  <option v-for="opcion in opcionesTasacionInformada" :key="opcion" :value="opcion">
+                    {{ opcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitListadoTasaciones()">
+                  Listar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div v-if="currentForm === 'criterios_activos'" class="form-section">
         <div class="card border-primary mx-2">
           <div class="card-header bg-transparent border-primary">
@@ -597,6 +705,7 @@ import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropied
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
 import { getEstadoAlquiler, verificarPermiso, getEstadoVenta } from '@/Services/api/Atcl/AtclApi'
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
+import { TasacionesActivas } from '@/Services/api/Atcl/Tasaciones/TasacionesApi'
 import { useToast } from '@/composables/useToast'
 import { getAsesor } from '@/Services/api/Atcl/AtclApi'
 import { isAdmin } from '../../../Services/business/auth'
@@ -657,6 +766,19 @@ const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 const permisoTiempoOfrecimiento = ref(false)
 
+const tasaciones = ref([])
+const filtroCalleTasacion = ref('')
+const mostrarSugerenciasCalleTasacion = ref(false)
+const filtroPropietarioTasacion = ref('')
+const mostrarSugerenciasPropietarioTasacion = ref(false)
+const opcionesTasacionInformada = [
+  'Cancelado',
+  'No Pasado',
+  'Pasado, Ingreso',
+  'Pasado, No Ingreso',
+  'Pendiente',
+]
+
 // === NUEVAS VARIABLES PARA EL FILTRO Y SELECCIÓN ===
 const filtroCampos = ref('')
 
@@ -670,6 +792,135 @@ const camposFiltrados = computed(() => {
     campo.label.toLowerCase().includes(query)
   )
 })
+
+const callesTasaciones = computed(() => {
+  const mapa = new Map()
+  for (const tasacion of tasaciones.value) {
+    const calle = tasacion.calle_relacion
+    if (!calle?.name) continue
+    const id = calle.id ?? tasacion.calle
+    if (!mapa.has(id)) {
+      mapa.set(id, { id, name: calle.name })
+    }
+  }
+  return Array.from(mapa.values()).sort((a, b) => a.name.localeCompare(b.name))
+})
+
+const sugerenciasCalleTasacion = computed(() => {
+  const texto = filtroCalleTasacion.value.trim().toLowerCase()
+  if (!texto) return []
+  return callesTasaciones.value
+    .filter((calle) => calle.name.toLowerCase().includes(texto))
+    .slice(0, 10)
+})
+
+const propietariosTasaciones = computed(() => {
+  const mapa = new Map()
+  for (const tasacion of tasaciones.value) {
+    const propietario = tasacion.propietario_relacion
+    if (!propietario?.id) continue
+    if (!mapa.has(propietario.id)) {
+      mapa.set(propietario.id, {
+        id: propietario.id,
+        nombre: propietario.nombre || '',
+        apellido: propietario.apellido || '',
+        documento: propietario.documento || '',
+      })
+    }
+  }
+  return Array.from(mapa.values()).sort((a, b) =>
+    `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`)
+  )
+})
+
+const sugerenciasPropietarioTasacion = computed(() => {
+  const texto = filtroPropietarioTasacion.value.trim().toLowerCase()
+  if (!texto) return []
+  return propietariosTasaciones.value
+    .filter((propietario) => {
+      const completo = `${propietario.apellido} ${propietario.nombre}`.toLowerCase()
+      const invertido = `${propietario.nombre} ${propietario.apellido}`.toLowerCase()
+      return (
+        completo.includes(texto) ||
+        invertido.includes(texto) ||
+        (propietario.documento || '').includes(texto)
+      )
+    })
+    .slice(0, 10)
+})
+
+const tiposInmuebleTasaciones = computed(() => {
+  const mapa = new Map()
+  for (const tasacion of tasaciones.value) {
+    const tipo = tasacion.tipo_inmueble
+    if (!tipo?.id) continue
+    if (!mapa.has(tipo.id)) {
+      mapa.set(tipo.id, { id: tipo.id, inmueble: tipo.inmueble || '' })
+    }
+  }
+  return Array.from(mapa.values()).sort((a, b) => a.inmueble.localeCompare(b.inmueble))
+})
+
+const tiposTasacion = computed(() => {
+  const tipos = new Set(
+    tasaciones.value.map((tasacion) => tasacion.tipo_tasacion).filter(Boolean)
+  )
+  return Array.from(tipos).sort()
+})
+
+const tasadoresTasaciones = computed(() => {
+  const mapa = new Map()
+  for (const tasacion of tasaciones.value) {
+    const id = tasacion.tasador_sector?.id_usuario ?? tasacion.tasador
+    if (!id) continue
+    if (!mapa.has(id)) {
+      mapa.set(id, {
+        id,
+        nombre:
+          tasacion.tasador_sector?.usuario?.username ||
+          tasacion.tasador_sector?.usuario?.name ||
+          (typeof tasacion.tasador === 'string' ? tasacion.tasador : `Tasador ${id}`),
+      })
+    }
+  }
+  return Array.from(mapa.values()).sort((a, b) => a.nombre.localeCompare(b.nombre))
+})
+
+const filtrarCallesTasacionFiltro = () => {
+  formListadoTasaciones.value.calle = ''
+  formListadoTasaciones.value.calle_busqueda = filtroCalleTasacion.value.trim()
+}
+
+const seleccionarCalleTasacionFiltro = (calle) => {
+  formListadoTasaciones.value.calle = calle.id
+  formListadoTasaciones.value.calle_busqueda = ''
+  filtroCalleTasacion.value = calle.name
+  mostrarSugerenciasCalleTasacion.value = false
+}
+
+const ocultarSugerenciasCalleTasacion = () => {
+  setTimeout(() => {
+    mostrarSugerenciasCalleTasacion.value = false
+  }, 200)
+}
+
+const filtrarPropietariosTasacionesFiltro = () => {
+  formListadoTasaciones.value.propietario = ''
+  formListadoTasaciones.value.propietario_busqueda = filtroPropietarioTasacion.value.trim()
+}
+
+const seleccionarPropietarioTasacionFiltro = (propietario) => {
+  formListadoTasaciones.value.propietario = propietario.id
+  formListadoTasaciones.value.propietario_busqueda = ''
+  filtroPropietarioTasacion.value = `${propietario.apellido}, ${propietario.nombre}`
+  mostrarSugerenciasPropietarioTasacion.value = false
+}
+
+const ocultarSugerenciasPropietarioTasacion = () => {
+  setTimeout(() => {
+    mostrarSugerenciasPropietarioTasacion.value = false
+  }, 200)
+}
 
 // Funciones de selección masiva (operan sobre los campos filtrados)
 const seleccionarTodos = () => {
@@ -808,6 +1059,21 @@ const formDevoluciones = ref({
   pertenece: 'devoluciones',
 })
 
+const formListadoTasaciones = ref({
+  calle: '',
+  calle_busqueda: '',
+  propietario: '',
+  propietario_busqueda: '',
+  tipo_inmueble: '',
+  tipo_tasacion: '',
+  tasador: '',
+  tasacion_informada_prop: '',
+  fecha_desde: '',
+  fecha_hasta: '',
+  sector: props.sector,
+  pertenece: 'listadoTasaciones',
+})
+
 const formCriterios = ref({
   asesor_id: '',
   estado: '',
@@ -841,6 +1107,15 @@ const formInformeNovedades = ref({
   sector: props.sector,
   pertenece: 'informeNovedades',
 })
+
+const cargarTasaciones = async () => {
+  try {
+    const response = await TasacionesActivas()
+    tasaciones.value = response?.data?.data || []
+  } catch (error) {
+    console.error('Error al cargar tasaciones:', error)
+  }
+}
 
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
@@ -906,6 +1181,10 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error('Error al cargar datos principales:', error)
+  }
+
+  if (props.sector === 'Venta') {
+    await cargarTasaciones()
   }
 })
 
@@ -981,10 +1260,20 @@ const submitDevoluciones = async () => {
     formActual.value = formDevoluciones.value
     await nextTick()
     listadoPropiedadRef.value?.generarPdf()
-  } catch (e) {
+  } catch {
     showError('Error al generar PDF en servidor')
-    console.log
   }
+}
+
+const submitListadoTasaciones = async () => {
+  const { fecha_desde, fecha_hasta } = formListadoTasaciones.value
+  if (fecha_desde && fecha_hasta && fecha_desde > fecha_hasta) {
+    showError('El rango de fechas es inválido')
+    return
+  }
+  formActual.value = { ...formListadoTasaciones.value }
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
 }
 
 const submitCriteriosActivos = async () => {
