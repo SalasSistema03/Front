@@ -1,94 +1,100 @@
 <template>
   <BaseModal :show="show" size="xl" @close="emit('close')">
     <template #title>
-      <i :class="soloLectura ? 'bi bi-eye me-2' : tasacionData ? 'bi bi-pencil-square me-2' : 'bi bi-cloud-upload me-2'"></i>
+      <i
+        :class="soloLectura ? 'bi bi-eye me-2' : tasacionData ? 'bi bi-pencil-square me-2' : 'bi bi-cloud-upload me-2'"></i>
       {{ soloLectura ? 'Ver Tasación' : tasacionData ? 'Editar Tasación' : 'Carga de Tasaciones' }}
     </template>
 
     <template #body>
       <div class="row tasaciones-body-scroll">
-        <div class="contrato-seccion-header">
-          <i class="bi bi-diagram-3"></i>
-          <span>DATOS DE LA PROPIEDAD</span>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="inmueble">Inmueble</label>
-          <select id="inmueble" class="form-control form-control-sm" v-model="form.inmuebleId" :disabled="soloLectura">
-            <option value="">Seleccione un inmueble</option>
-            <option v-for="inmueble in inmuebles" :key="inmueble.id" :value="inmueble.id">
-              {{ inmueble.inmueble }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="input-calle" class="form-label">Calle</label>
-          <div class="position-relative">
-            <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
-              v-model="calleSeleccionada" @input="filtrarCallesTasacion" @focus="mostrarLista"
-              :disabled="soloLectura"
-              @blur="ocultarSugerencias" autocomplete="off" />
+        <div class="col-12 row">
+          <div class="contrato-seccion-header">
+            <i class="bi bi-diagram-3"></i>
+            <span>DATOS DE LA PROPIEDAD</span>
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="inmueble">Inmueble</label>
+            <select id="inmueble" class="form-control form-control-sm" v-model="form.inmuebleId"
+              :disabled="soloLectura">
+              <option value="">Seleccione un inmueble</option>
+              <option v-for="inmueble in inmuebles" :key="inmueble.id" :value="inmueble.id">
+                {{ inmueble.inmueble }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="input-calle">Calle</label>
+            <div class="position-relative">
+              <input type="text" class="form-control form-control-sm" id="input-calle" placeholder="Calle"
+                v-model="calleSeleccionada" @input="filtrarCallesTasacion" @focus="mostrarLista" :disabled="soloLectura"
+                @blur="ocultarSugerencias" autocomplete="off" />
 
-            <ul v-if="!soloLectura && mostrarSugerencias && callesFiltradas.length"
-              class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm busqueda-select"
-              style="z-index: 1060; max-height: 200px; overflow-y: auto; top: 100%; left: 0;">
-              <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalleTasacion(calle)"
-                class="px-3 py-2 cursor-pointer hover:bg-light">
-                {{ calle.name }}
+              <ul v-if="!soloLectura && mostrarSugerencias && callesFiltradas.length"
+                class="position-absolute w-100 list-unstyled bg-white border border-top-0 shadow-sm busqueda-select"
+                style="z-index: 1060; max-height: 200px; overflow-y: auto; top: 100%; left: 0;">
+                <li v-for="calle in callesFiltradas" :key="calle.id" @mousedown="seleccionarCalleTasacion(calle)"
+                  class="px-3 py-2 cursor-pointer hover:bg-light">
+                  {{ calle.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="numero-calle">Nº Calle</label>
+            <input type="text" id="numero-calle" class="form-control form-control-sm" autocomplete="off"
+              placeholder="9100" v-model="form.numeroCalle" :disabled="soloLectura" />
+          </div>
+          <div class="col-md-1 form-group">
+            <label for="piso">Piso</label>
+            <input type="text" id="piso" class="form-control form-control-sm" autocomplete="off" placeholder="1"
+              v-model="form.piso" :disabled="soloLectura" />
+          </div>
+          <div class="col-md-1 form-group">
+            <label for="departamento">Departamento</label>
+            <input type="text" id="departamento" class="form-control form-control-sm" autocomplete="off" placeholder="A"
+              v-model="form.departamento" :disabled="soloLectura" />
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="localidad">Localidad</label>
+            <select id="localidad" class="form-control form-control-sm" v-model="form.localidadId"
+              :disabled="soloLectura">
+              <option value="">Seleccione una localidad</option>
+              <option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">
+                {{ localidad.name }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-1 form-group">
+            <label for="folio">Folio</label>
+            <input id="folio" type="number" class="form-control form-control-sm" autocomplete="off" placeholder="1234"
+              v-model.number="form.folio" :disabled="soloLectura" />
+          </div>
+
+        </div>
+
+        <div class="col-12 row">
+          <div class="contrato-seccion-header pt-3">
+            <i class="bi bi-diagram-3"></i>
+            <span>DATOS DEL PROPIETARIO</span>
+          </div>
+          <div class="col-md-4 form-group position-relative">
+            <label for="propietario">Propietario</label>
+            <input id="propietario" type="text" class="form-control form-control-sm"
+              placeholder="Buscar por apellido o DNI..." v-model="form.propietario" @input="buscarPropietario"
+              :disabled="soloLectura" autocomplete="off" />
+            <ul v-if="!soloLectura && sugerenciasPropietario.length"
+              class="list-group position-absolute w-100 shadow sugerencias-propietario">
+              <li v-for="persona in sugerenciasPropietario" :key="persona.id"
+                class="list-group-item list-group-item-action cursor-pointer py-2 small fw-semibold"
+                @click="seleccionarPropietario(persona)">
+                <i class="bi bi-person-check text-primary me-2"></i>
+                {{ persona.apellido }}, {{ persona.nombre }}
+                <span class="text-muted fw-normal ms-1">({{ persona.documento || 'Sin DNI' }})</span>
               </li>
             </ul>
           </div>
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="numero-calle">Nº Calle</label>
-          <input type="text" id="numero-calle" class="form-control form-control-sm" autocomplete="off"
-            placeholder="9100" v-model="form.numeroCalle" :disabled="soloLectura" />
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="piso">Piso</label>
-          <input type="text" id="piso" class="form-control form-control-sm" autocomplete="off" placeholder="1"
-            v-model="form.piso" :disabled="soloLectura" />
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="departamento">Departamento</label>
-          <input type="text" id="departamento" class="form-control form-control-sm" autocomplete="off" placeholder="A"
-            v-model="form.departamento" :disabled="soloLectura" />
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="localidad">Localidad</label>
-          <select id="localidad" class="form-control form-control-sm" v-model="form.localidadId" :disabled="soloLectura">
-            <option value="">Seleccione una localidad</option>
-            <option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">
-              {{ localidad.name }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="folio">Folio</label>
-          <input id="folio" type="number" class="form-control form-control-sm" autocomplete="off" placeholder="1234"
-            v-model.number="form.folio" :disabled="soloLectura" />
-        </div>
-        <div class="contrato-seccion-header pt-3">
-          <i class="bi bi-diagram-3"></i>
-          <span>DATOS DEL PROPIETARIO</span>
-        </div>
-        <div class="col-md-3 form-group position-relative">
-          <label for="propietario">Propietario</label>
-          <input id="propietario" type="text" class="form-control form-control-sm"
-            placeholder="Buscar por apellido o DNI..." v-model="form.propietario" @input="buscarPropietario"
-            :disabled="soloLectura"
-            autocomplete="off" />
-          <ul v-if="!soloLectura && sugerenciasPropietario.length"
-            class="list-group position-absolute w-100 shadow sugerencias-propietario">
-            <li v-for="persona in sugerenciasPropietario" :key="persona.id"
-              class="list-group-item list-group-item-action cursor-pointer py-2 small fw-semibold"
-              @click="seleccionarPropietario(persona)">
-              <i class="bi bi-person-check text-primary me-2"></i>
-              {{ persona.apellido }}, {{ persona.nombre }}
-              <span class="text-muted fw-normal ms-1">({{ persona.documento || 'Sin DNI' }})</span>
-            </li>
-          </ul>
-        </div>
-        <!-- <div class="col-md-3 form-group">
+          <!-- <div class="col-md-3 form-group">
           <label for="telefono">Nº Telefono</label>
           <input
             id="telefono"
@@ -97,97 +103,103 @@
             autocomplete="off"
           />
         </div> -->
-        <div v-if="!soloLectura" class="col-md-3 form-group">
-          <label for="ingreso">Ingreso</label>
-          <select id="ingreso" class="form-control form-control-sm" v-model="form.ingreso" :disabled="soloLectura">
-            <option value="">Seleccione un ingreso</option>
-            <option v-for="item in ingreso" :key="item" :value="item">
-              {{ item }}
-            </option>
-          </select>
+          <div class="col-md-3 form-group">
+            <label for="ingreso">Ingreso</label>
+            <select id="ingreso" class="form-control form-control-sm" v-model="form.ingreso" :disabled="soloLectura">
+              <option value="">Seleccione un ingreso</option>
+              <option v-for="item in ingreso" :key="item" :value="item">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+          <div v-if="!soloLectura" class="col-md-3 mt-4">
+            <button type="button" class="btn btn-outline-dark btn-sm w-100 fw-bold shadow-sm"
+              @click="abrirModalCargaPersona">
+              <i class="bi bi-person-vcard"></i> Crear Nueva Persona
+            </button>
+          </div>
         </div>
-        <div v-if="!soloLectura" class="col-md-3 mt-4">
-          <button type="button" class="btn btn-outline-dark btn-sm w-100 fw-bold shadow-sm"
-            @click="abrirModalCargaPersona">
-            <i class="bi bi-person-vcard"></i> Crear Nueva Persona
-          </button>
+
+        <div class="col-12 row">
+          <div class="contrato-seccion-header pt-3">
+            <i class="bi bi-diagram-3"></i>
+            <span>DATOS DE LA TASACION</span>
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="tipo-tasacion">Tipo Tasacion</label>
+            <select id="tipo-tasacion" class="form-control form-control-sm" v-model="form.tipoTasacion"
+              :disabled="soloLectura">
+              <option value="">Seleccione un tipo de tasacion</option>
+              <option v-for="tipo in TipoTasacion" :key="tipo" :value="tipo">
+                {{ tipo }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="tasacion-venta">Venta</label>
+            <input id="tasacion-venta" type="text" inputmode="numeric" class="form-control form-control-sm"
+              autocomplete="off" placeholder="U$S 40.000" :disabled="soloLectura || bloquearTasacionVenta"
+              :value="formatearMonto(form.tasacionVenta)" @input="actualizarMonto($event, 'tasacionVenta')" />
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="tasacion-alquiler">Alquiler</label>
+            <input id="tasacion-alquiler" type="text" inputmode="numeric" class="form-control form-control-sm"
+              autocomplete="off" placeholder="$ 100.000" :disabled="soloLectura || bloquearTasacionAlquiler"
+              :value="formatearMonto(form.tasacionAlquiler)" @input="actualizarMonto($event, 'tasacionAlquiler')" />
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="costo-tasacion">Precio</label>
+            <input id="costo-tasacion" type="text" inputmode="numeric" class="form-control form-control-sm"
+              autocomplete="off" placeholder="$ 15.00 " :value="formatearMonto(form.costoTasacion)"
+              @input="actualizarMonto($event, 'costoTasacion')" :disabled="soloLectura" />
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="tasador">Tasador</label>
+            <select id="tasador" class="form-control form-control-sm" v-model="form.tasadorId" :disabled="soloLectura">
+              <option value="">Seleccione un tasador</option>
+              <option v-for="tasador in tasadores" :key="tasador.id_usuario_sector" :value="tasador.id_usuario">
+                {{ tasador.usuario_username }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="tasacion-informada">Informada Prop</label>
+            <select id="tasacion-informada" class="form-control form-control-sm" v-model="form.tasacionInformada"
+              :disabled="soloLectura">
+              <option value="">Seleccione una opción</option>
+              <option v-for="item in tasacionInformada" :key="item" :value="item">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-2 form-group">
+            <label for="fecha-tasacion">Fecha</label>
+            <input id="fecha-tasacion" type="date" class="form-control form-control-sm" v-model="form.fecha"
+              :disabled="soloLectura" />
+
+          </div>
+
         </div>
-        <div class="contrato-seccion-header pt-3">
-          <i class="bi bi-diagram-3"></i>
-          <span>DATOS DE LA TASACION</span>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="tipo-tasacion">Tipo Tasacion</label>
-          <select id="tipo-tasacion" class="form-control form-control-sm" v-model="form.tipoTasacion" :disabled="soloLectura">
-            <option value="">Seleccione un tipo de tasacion</option>
-            <option v-for="tipo in TipoTasacion" :key="tipo" :value="tipo">
-              {{ tipo }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="tasacion-venta">Tasacion Venta</label>
-          <input id="tasacion-venta" type="text" inputmode="numeric" class="form-control form-control-sm"
-            autocomplete="off" placeholder="U$S 40.000" :disabled="soloLectura || bloquearTasacionVenta"
-            :value="formatearMonto(form.tasacionVenta)" @input="actualizarMonto($event, 'tasacionVenta')" />
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="tasacion-alquiler">Tasacion Alquiler</label>
-          <input id="tasacion-alquiler" type="text" inputmode="numeric" class="form-control form-control-sm"
-            autocomplete="off" placeholder="$ 100.000" :disabled="soloLectura || bloquearTasacionAlquiler"
-            :value="formatearMonto(form.tasacionAlquiler)" @input="actualizarMonto($event, 'tasacionAlquiler')" />
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="costo-tasacion">Costo Tasacion</label>
-          <input id="costo-tasacion" type="text" inputmode="numeric" class="form-control form-control-sm"
-            autocomplete="off" placeholder="$ 15.00 " :value="formatearMonto(form.costoTasacion)"
-            @input="actualizarMonto($event, 'costoTasacion')" :disabled="soloLectura" />
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="tasador">Tasador</label>
-          <select id="tasador" class="form-control form-control-sm" v-model="form.tasadorId" :disabled="soloLectura">
-            <option value="">Seleccione un tasador</option>
-            <option v-for="tasador in tasadores" :key="tasador.id_usuario_sector" :value="tasador.id_usuario">
-              {{ tasador.usuario_username }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-3 form-group">
-          <label for="tasacion-informada">Tasacion Informada Prop</label>
-          <select id="tasacion-informada" class="form-control form-control-sm" v-model="form.tasacionInformada" :disabled="soloLectura">
-            <option value="">Seleccione una opción</option>
-            <option v-for="item in tasacionInformada" :key="item" :value="item">
-              {{ item }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-2 form-group">
-          <label for="fecha-tasacion">Fecha Tasacion</label>
-          <input id="fecha-tasacion" type="date" class="form-control form-control-sm" v-model="form.fecha"
-            :disabled="soloLectura" />
-          
-        </div>
+
+
         <div class="contrato-seccion-header pt-3">
           <i class="bi bi-diagram-3"></i>
           <span>OBSERVACIONES</span>
         </div>
         <div class="col-md-12 form-group">
           <label for="observaciones">Observaciones</label>
-          <textarea id="observaciones" class="form-control form-control-sm" rows="2"
-            v-model="form.observaciones" :disabled="soloLectura"></textarea>
+          <textarea id="observaciones" class="form-control form-control-sm" rows="2" v-model="form.observaciones"
+            :disabled="soloLectura"></textarea>
         </div>
       </div>
     </template>
     <template #footer>
-      <button
-        v-if="tasacionData?.id && !soloLectura"
-        class="btn btn-danger btn-sm"
-        @click="eliminarTasacion"
-        :disabled="eliminando || guardando"
-      >
+      <button v-if="tasacionData?.id && !soloLectura" class="btn btn-danger btn-sm" @click="eliminarTasacion"
+        :disabled="eliminando || guardando">
         {{ eliminando ? 'Eliminando...' : 'Eliminar' }}
       </button>
-      <button v-if="!soloLectura" class="btn btn-primary btn-sm" @click="guardarTasacion" :disabled="guardando || eliminando">
+      <button v-if="!soloLectura" class="btn btn-primary btn-sm" @click="guardarTasacion"
+        :disabled="guardando || eliminando">
         <i :class="tasacionData ? 'bi bi-check-circle me-1' : 'bi bi-save me-1'"></i>
         {{ guardando ? 'Guardando...' : (tasacionData ? 'Actualizar' : 'Guardar') }}
       </button>
@@ -282,7 +294,7 @@ const form = reactive({
   tasadorId: '',
   tasacionInformada: '',
   observaciones: '',
-  fecha:null
+  fecha: null
 })
 const formatearMonto = (valor) => {
   if (valor === null || valor === undefined || valor === '') return ''
@@ -494,7 +506,7 @@ const guardarTasacion = async () => {
 const eliminarTasacion = async () => {
   const tasacionId = props.tasacionData?.id
   if (!tasacionId || guardando.value || eliminando.value) return
- /*  if (!window.confirm('¿Está seguro de que desea eliminar esta tasación?')) return */
+  /*  if (!window.confirm('¿Está seguro de que desea eliminar esta tasación?')) return */
 
   eliminando.value = true
   try {
@@ -533,5 +545,3 @@ onMounted(() => {
   asesoresTasadores()
 })
 </script>
-
-

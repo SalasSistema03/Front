@@ -34,7 +34,7 @@
             <div class="col-md-10">
               <label for="comprobante" class="form-label">Comprobante</label>
               <input ref="comprobanteInput" type="file" class="form-control form-control-sm"
-                accept=".jpg,.jpeg,.pdf,application/pdf,image/jpeg" @change="manejarArchivo"
+                accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" @change="manejarArchivo"
                 :disabled="selectoresActivos === false || resPermiso2 === true" />
 
             </div>

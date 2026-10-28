@@ -478,7 +478,8 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitListadoTasaciones()">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitListadoTasaciones()"
+                  :disabled="!permisoTasaciones">
                   Listar
                 </button>
               </div>
@@ -765,6 +766,7 @@ const permisoConversacion = ref(false)
 const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 const permisoTiempoOfrecimiento = ref(false)
+const permisoTasaciones = ref(false)
 
 const tasaciones = ref([])
 const filtroCalleTasacion = ref('')
@@ -1140,13 +1142,14 @@ onMounted(async () => {
       permisoInformeNovedades.value = resNovedades?.data ?? false
       permisoTiempoOfrecimiento.value = resTiempoOfrecimiento?.data ?? false
     } else {
-      const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resConversacion] = await Promise.all([
+      const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resConversacion, resTasaciones] = await Promise.all([
         verificarPermiso('listarPropiedadesVenta'),
         verificarPermiso('listarOfrecimientoVenta'),
         verificarPermiso('listarPropietarioVenta'),
         verificarPermiso('listarDevolucionesVenta'),
         verificarPermiso('listarCriteriosPorFecha'),
         verificarPermiso('listarConversacionesVenta'),
+        verificarPermiso('listarTasaciones'),
       ])
       permiso.value = resPermiso?.data ?? false
       permisoOfrecimiento.value = resOfrecimiento?.data ?? false
@@ -1154,6 +1157,7 @@ onMounted(async () => {
       devolucionesVenta.value = resDev?.data ?? false
       permisoCriteriosPorFecha.value = resCriterios?.data ?? false
       permisoConversacion.value = resConversacion?.data ?? false
+      permisoTasaciones.value = resTasaciones?.data ?? false
     }
   } catch (error) {
     console.error('Error al obtener permisos:', error)

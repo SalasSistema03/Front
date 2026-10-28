@@ -1,15 +1,35 @@
 <template>
   <NavComponent />
-  <div class="row mx-2">
-    <div class="col-4">
-      <div class="card">
-        <div class="card-header d-flex align-items-center card-header-tasaciones" >
-          <i class="bi bi-funnel me-3"></i>
-          <p class="card-title pt-2">Filtro Tasaciones</p>
+  <div class="row mx-1">
+    <div class="col-5 ">
+      <div class="card card-alto-tasaciones">
+        <div class="card-header d-flex align-items-center justify-content-center card-header-tasaciones">
+          <div class="row w-100">
+            <div class="col-5 d-flex align-items-center">
+              <i class="bi bi-funnel mx-1"></i>
+              <p class="card-title pt-2">Filtro Tasaciones</p>
+            </div>
+            <div class="col-7 row align-items-center justify-content-center">
+              <div class="col-6 ">
+                <button type="button" class="btn btn-secondary btn-sm w-100" @click="abrirNuevaTasacion">
+                  <i class="bi bi-plus-circle me-1"></i>
+                  Nueva
+                </button>
+              </div>
+              <div class="col-md-6 ">
+                <button class="btn btn-outline-secondary btn-sm w-100 shadow-sm" @click="limpiarFiltros">
+                  <i class="bi bi-eraser"></i> Limpiar
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+
         </div>
         <div class="card-body">
-          <div class="row">
-            <div class="col-md-12 form-group position-relative">
+          <div class="row tasaciones-filtro">
+            <div class="col-md-5 form-group position-relative">
               <label for="filtro_calle">CALLE</label>
               <input type="text" id="filtro_calle" v-model="filtroCalle" @focus="mostrarSugerenciasCalle = true"
                 @blur="ocultarSugerenciasCalleConRetraso" autocomplete="off" placeholder="Buscar por calle o número..."
@@ -41,7 +61,7 @@
               </ul>
             </div>
 
-            <div class="col-md-5 form-group">
+            <div class="col-md-4 form-group">
               <label for="filtro_tasacion_informada">Tasacion Informada</label>
               <select id="filtro_tasacion_informada" v-model="filtroTasacionInformada"
                 class="form-control form-control-sm">
@@ -52,52 +72,35 @@
               </select>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
               <label for="fecha_inicio">Fecha desde</label>
               <input type="date" id="fecha_inicio" v-model="filtroFechaInicio" :max="filtroFechaFin || undefined"
                 class="form-control form-control-sm" />
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
               <label for="fecha_fin">Fecha hasta</label>
               <input type="date" id="fecha_fin" v-model="filtroFechaFin" :min="filtroFechaInicio || undefined"
                 class="form-control form-control-sm" />
             </div>
-            <div class="row">
-              <div class="col-7 mt-3">
-                <button type="button" class="btn btn-success btn-sm w-100" @click="abrirNuevaTasacion">
-                  <i class="bi bi-plus-circle me-1"></i>
-                  Nueva tasación
-                </button>
-              </div>
-              <!--  <div class="col-md-4 mt-3">
-                <button class="btn btn-primary w-100 btn-sm" @click="aplicarFiltros">
-                  Filtrar
-                </button>
-              </div> -->
-              <div class="col-md-4 mt-3">
-                <!-- <i class="bi bi-arrow-counterclockwise fs-5 text-secondary" role="button" title="Limpiar filtros"
-                  @click="limpiarFiltros"></i> -->
-                <button class="btn btn-outline-secondary btn-sm w-100 shadow-sm" @click="limpiarFiltros">
-                  <i class="bi bi-eraser"></i> Limpiar
-                </button>
-              </div>
-            </div>
+
+
+
           </div>
         </div>
       </div>
     </div>
-    <div class="col-8">
+    <div class="col-7">
       <div class="card card-alto-tasaciones">
         <div class="card-header d-flex align-items-center card-header-tasaciones">
           <i class="bi bi-info-circle me-3"></i>
           <p class="card-title pt-2">Informacion General</p>
         </div>
         <div class="card-body">
-          <div class="row g-2">
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+          <div class="row g-2 d-flex align-items-center justify-content-center">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-3">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >
+                <div class="text-muted text-truncate box-texto-tasaciones">
                   Tasaciones Totales
                 </div>
                 <div class="fw-bold fs-6">{{ metricas.totales }}</div>
@@ -105,31 +108,38 @@
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >Ingresos</div>
+                <div class="text-muted text-truncate box-texto-tasaciones">Ingresos</div>
                 <div class="fw-bold fs-6">{{ metricas.ingresos }}</div>
               </div>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >No Ingresados</div>
+                <div class="text-muted text-truncate box-texto-tasaciones">No Ingresados</div>
                 <div class="fw-bold fs-6">{{ metricas.noIngresados }}</div>
               </div>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >Venta</div>
+                <div class="text-muted text-truncate box-texto-tasaciones">Venta</div>
                 <div class="fw-bold fs-6">{{ metricas.venta }}</div>
               </div>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >Alquiler</div>
+                <div class="text-muted text-truncate box-texto-tasaciones">Alquiler</div>
                 <div class="fw-bold fs-6">{{ metricas.alquiler }}</div>
+              </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="border rounded p-1 bg-light text-center h-100">
+                <div class="text-muted text-truncate box-texto-tasaciones">Ingresados</div>
+                <div class="fw-bold fs-6">{{ metricas.porcentajeIngresados }}%</div>
               </div>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >
+                <div class="text-muted text-truncate box-texto-tasaciones">
                   No Ingresados
                 </div>
                 <div class="fw-bold fs-6">{{ metricas.porcentajeNoIngresados }}%</div>
@@ -137,21 +147,16 @@
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >Porcentaje</div>
-                <div class="fw-bold fs-6">{{ metricas.porcentajeIngresados }}%</div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-              <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >
+                <div class="text-muted text-truncate box-texto-tasaciones">
                   Tasaciones 2024
                 </div>
                 <div class="fw-bold fs-6">{{ metricas.anio2024 }}</div>
               </div>
             </div>
+
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >
+                <div class="text-muted text-truncate box-texto-tasaciones">
                   Tasaciones 2025
                 </div>
                 <div class="fw-bold fs-6">{{ metricas.anio2025 }}</div>
@@ -159,7 +164,7 @@
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="border rounded p-1 bg-light text-center h-100">
-                <div class="text-muted text-truncate box-texto-tasaciones" >Cancelados</div>
+                <div class="text-muted text-truncate box-texto-tasaciones">Cancelados</div>
                 <div class="fw-bold fs-6">{{ metricas.cancelados }}</div>
               </div>
             </div>
@@ -174,7 +179,7 @@
           <p class="card-title pt-2 mb-0">Listado de Tasaciones</p>
         </div>
         <div class="card-body ">
-          <div class="tabla-tasaciones" >
+          <div class="tabla-tasaciones">
             <table class="table table-striped table-hover proceso_reserva_table text-center align-middle">
               <thead>
                 <tr>
@@ -216,22 +221,12 @@
                   <td>{{ formatearTasacionInformada(tasacion.tasacion_informada_prop) }}</td>
                   <td>{{ tasacion.fecha ? formatearFecha(tasacion.fecha) : '-' }}</td>
                   <td>
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary btn-sm px-2 py-1 shadow-sm me-1"
-                      title="Editar tasación"
-                      aria-label="Editar tasación"
-                      @click="editarTasacion(tasacion)"
-                    >
+                    <button type="button" class="btn btn-outline-primary btn-sm px-2 py-1 shadow-sm me-1"
+                      title="Editar tasación" aria-label="Editar tasación" @click="editarTasacion(tasacion)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary btn-sm px-2 py-1 shadow-sm"
-                      title="Ver tasación"
-                      aria-label="Ver tasación"
-                      @click="verTasacion(tasacion)"
-                    >
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 shadow-sm"
+                      title="Ver tasación" aria-label="Ver tasación" @click="verTasacion(tasacion)">
                       <i class="bi bi-eye"></i>
                     </button>
                   </td>
@@ -248,8 +243,8 @@
       </div>
     </div>
   </div>
-  <ModalTasacionesPropiedad :show="mostrarModalCarga" :tasacion-data="tasacionAEditar"
-    :solo-lectura="modoSoloLectura" @close="cerrarModal" @tasacionCreada="traerTasaciones" />
+  <ModalTasacionesPropiedad :show="mostrarModalCarga" :tasacion-data="tasacionAEditar" :solo-lectura="modoSoloLectura"
+    @close="cerrarModal" @tasacionCreada="traerTasaciones" />
 </template>
 
 <script setup>
@@ -536,5 +531,3 @@ onMounted(() => {
   traerTasaciones()
 })
 </script>
-
-

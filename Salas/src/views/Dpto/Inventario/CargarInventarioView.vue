@@ -131,6 +131,7 @@
         <thead>
           <tr class="text-center">
             <th>Folio</th>
+            <th>Asesor</th>
             <th>Domicilio</th>
             <th>Estado</th>
             <th>Fecha Reserva</th>
@@ -145,7 +146,9 @@
             <!-- Folio -->
             <td>{{ item.propiedad?.folios?.[0]?.folio }}</td>
             <!-- Domicilio -->
+            <td>{{ item.asesor_usuario?.username }}</td>
             <td>
+
               <div> {{ item.propiedad?.calle?.name }} {{ item.propiedad?.numero_calle }} </div> <small
                 v-if="item.propiedad?.piso || item.propiedad?.departamento" class="text-muted"> <span
                   v-if="item.propiedad?.piso"> Piso {{ item.propiedad.piso }} </span> <span
