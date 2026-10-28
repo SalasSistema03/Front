@@ -227,6 +227,7 @@ import {
 import { reactive, ref, onMounted, watch } from 'vue'
 import { useLocalidades } from '../../../composables/atcl/useLocalidades'
 import { useCalleAutocomplete } from '../../../composables/atcl/useCalleAutocomplete'
+import { useCurrencyInput } from '../../../composables/useCurrencyInput'
 import { asesoresTasacion } from '@/Services/api/Atcl/Alquiler/Alquiler'
 
 const props = defineProps({
@@ -296,29 +297,11 @@ const form = reactive({
   observaciones: '',
   fecha: null
 })
-const formatearMonto = (valor) => {
-  if (valor === null || valor === undefined || valor === '') return ''
-  const numero = Number(valor)
-  return Number.isFinite(numero)
-    ? new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(numero)
-    : ''
-}
+const { formatearMonto, actualizarMonto: actualizarMontoInput } = useCurrencyInput()
 const actualizarMonto = (event, campo) => {
-  const input = event.target
-  const posicionCursor = input.selectionStart ?? input.value.length
-  const digitosAntesCursor = input.value.slice(0, posicionCursor).replace(/\D/g, '').length
-  const digitos = input.value.replace(/\D/g, '')
-  form[campo] = digitos ? Number(digitos) : null
-
-  const valorFormateado = formatearMonto(form[campo])
-  input.value = valorFormateado
-  let nuevaPosicionCursor = 0
-  let digitosContados = 0
-  while (nuevaPosicionCursor < valorFormateado.length && digitosContados < digitosAntesCursor) {
-    if (/\d/.test(valorFormateado[nuevaPosicionCursor])) digitosContados++
-    nuevaPosicionCursor++
-  }
-  input.setSelectionRange(nuevaPosicionCursor, nuevaPosicionCursor)
+  actualizarMontoInput(event, (valor) => {
+    form[campo] = valor
+  })
 }
 const TipoTasacion = ref(['Alquiler', 'Venta', 'Alquiler y Venta'])
 const bloquearTasacionVenta = ref(false)

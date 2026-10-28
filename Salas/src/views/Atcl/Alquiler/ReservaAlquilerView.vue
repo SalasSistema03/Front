@@ -108,7 +108,8 @@
                 <!-- <span class=" input-group-text" :class="monedaPrecioFolio">
                   {{ monedaPrecioFolio }}
                 </span> -->
-                <input type="text" class="form-control" v-model="precioFolio" :disabled="selectoresActivos === false">
+                <input type="text" inputmode="numeric" class="form-control" :value="formatearMonto(precioFolio)"
+                  :disabled="selectoresActivos === false" @input="actualizarPrecioFolio" />
               </div>
             </div>
           </div>
@@ -136,8 +137,9 @@
                 </div>
 
                 <div class="col-md-8">
-                  <input type="number" class="form-control form-control-sm" v-model="montoReserva"
-                    :disabled="selectoresActivos === false || resPermiso2 === true" />
+                  <input type="text" inputmode="numeric" class="form-control form-control-sm"
+                    :value="formatearMonto(montoReserva)" :disabled="selectoresActivos === false || resPermiso2 === true"
+                    @input="actualizarMontoReserva" />
                 </div>
               </div>
             </div>
@@ -265,7 +267,7 @@
             </div>
             <div class="col-md-4 form-group">
               <label>Monto</label>
-              <input type="text" v-model="montoReserva" disabled class="form-control form-control-sm">
+              <input type="text" :value="formatearMonto(montoReserva)" disabled class="form-control form-control-sm">
             </div>
             <div class="col-md-4 form-group">
               <button class="btn btn-primary btn-sm mt-4" @click="handleAceptarMonto"
@@ -340,6 +342,7 @@ import {
 import { getUser } from '@/Services/api/Usuario/userApi'
 import { getClientesTelefono } from '@/Services/api/Agenda/AgendaApi'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyInput } from '@/composables/useCurrencyInput'
 
 const btnNombre = 'listarAsesoresReserva'
 const btnNombrePagada = 'listarReservasIdentificadas'
@@ -393,6 +396,17 @@ const filtroPorMes = ref('Actual')
 const precioFolio = ref(null)
 const monedaPrecioFolio = ref(null)
 const mesesContrato = ref(null)
+const { formatearMonto, actualizarMonto: actualizarMontoInput } = useCurrencyInput()
+const actualizarMontoReserva = (event) => {
+  actualizarMontoInput(event, (valor) => {
+    montoReserva.value = valor
+  })
+}
+const actualizarPrecioFolio = (event) => {
+  actualizarMontoInput(event, (valor) => {
+    precioFolio.value = valor
+  })
+}
 //const aceptarMonto = ref(false)
 
 const abrirModalObservacion = (item) => {
@@ -705,11 +719,22 @@ const verificarPermisosAlquileres = async () => {
 //Logica de la documentacion
 const manejarArchivo = (event) => {
   const archivo = event.target.files[0] // Tomamos el primer archivo seleccionado
-  if (archivo) {
-    comprobante.value = archivo
-  } else {
+  if (!archivo) {
     comprobante.value = null
+    return
   }
+
+  const extension = archivo.name.split('.').pop()?.toLowerCase()
+  const extensionesPermitidas = ['pdf', 'jpg', 'jpeg', 'png']
+
+  if (!extensionesPermitidas.includes(extension)) {
+    showError('El comprobante debe ser un archivo PDF, JPG, JPEG o PNG')
+    comprobante.value = null
+    event.target.value = ''
+    return
+  }
+
+  comprobante.value = archivo
 }
 
 const resetComprobanteField = () => {
@@ -812,7 +837,17 @@ const reservar = async () => {
     listado(filtroPorEstado.value, filtroPorMes.value)
   } catch (error) {
     console.log(error)
-    showError('Error al realizar la reserva')
+    const data = error.response?.data
+    const erroresCampo =
+      data?.errors && typeof data.errors === 'object'
+        ? Object.values(data.errors).flat().filter(Boolean)
+        : []
+
+    if (erroresCampo.length) {
+      showError(erroresCampo.join(' '))
+    } else {
+      showError(data?.message || data?.error || 'Error al realizar la reserva')
+    }
   }
 }
 

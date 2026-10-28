@@ -132,6 +132,14 @@ export const useToast = () => {
     if (error.response && error.response.data) {
       const errorData = error.response.data
 
+      // Errores de validación por campo: { message, errors: { campo: [mensajes] } }
+      if (errorData.errors && typeof errorData.errors === 'object') {
+        const mensajes = Object.values(errorData.errors).flat().filter(Boolean)
+        if (mensajes.length) {
+          return showError(mensajes.join(' '))
+        }
+      }
+
       // Si el error tiene el formato { error: { field: [messages] } }
       if (errorData.error) {
         // Si errorData.error es un string, mostrarlo directamente
