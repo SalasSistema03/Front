@@ -70,8 +70,7 @@
         </div>
         <div class="col-md-2">
           <label class="form-label">Importe</label>
-          <input type="text" inputmode="numeric" class="form-control form-control-sm"
-            :value="formatearMonto(importe)" @input="actualizarImporte">
+          <input type="number" step="0.01" min="0" class="form-control form-control-sm" v-model="importe">
         </div>
         <div class="col-md-3 mt-2">
           <label class="form-label">Motivo de carga</label>
@@ -89,8 +88,7 @@
         </div>
         <div class="col-md-2 mt-2" v-if="props.impuesto === 'agua'">
           <label class="form-label">Importe</label>
-          <input type="text" inputmode="numeric" class="form-control form-control-sm"
-            :value="formatearMonto(importe2)" @input="actualizarImporte2">
+          <input type="number" step="0.01" min="0" class="form-control form-control-sm" v-model="importe2">
         </div>
       </div>
     </template>
@@ -108,11 +106,9 @@
 import { ref } from 'vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { useToast } from '@/composables/useToast'
-import { useCurrencyInput } from '@/composables/useCurrencyInput'
 import { cargaManual, cargaNuevoManual } from '@/Services/api/Impuestos/tgiApi'
 
 const { showError, showSuccess } = useToast()
-const { formatearMonto, actualizarMonto: actualizarMontoInput } = useCurrencyInput()
 
 const props = defineProps({
   show: {
@@ -140,18 +136,6 @@ const motivoCarga = ref('')
 
 const seleccionarImpuesto = (impuesto) => {
   impuestoSeleccionado.value = impuesto
-}
-
-const actualizarImporte = (event) => {
-  actualizarMontoInput(event, (valor) => {
-    importe.value = valor
-  })
-}
-
-const actualizarImporte2 = (event) => {
-  actualizarMontoInput(event, (valor) => {
-    importe2.value = valor
-  })
 }
 
 const buscarFolio = async () => {
