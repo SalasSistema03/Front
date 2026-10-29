@@ -2,10 +2,17 @@
   <div class="px-3">
     <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
-      <div v-if="props.impuesto !== 'epe'" class="col-auto">
-        <button class="btn btn-sm btn-primary" @click="actualizarPadron()" :disabled="!puedeActualizarPadron">
-          Actualizar Padrón {{ props.impuesto?.toUpperCase() }}
+      <div v-if="props.impuesto !== 'epe'" class="col-auto d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-primary" @click="actualizarPadron()"
+          :disabled="!puedeActualizarPadron || actualizandoPadron">
+          <span v-if="actualizandoPadron" class="spinner-border spinner-border-sm me-1" role="status"
+            aria-hidden="true"></span>
+          {{ actualizandoPadron ? 'Actualizando...' : `Actualizar Padrón ${props.impuesto?.toUpperCase()}` }}
         </button>
+        <span v-if="ultimoPeriodo" class="periodo-padron" :title="`Última actualización: ${formatDate(ultimoPeriodo)}`">
+          <i class="bi bi-calendar-check"></i>
+          Último período: <strong>{{ formatPeriod(ultimoPeriodo) }}</strong>
+        </span>
       </div>
 
       <form class="row mb-3" autocomplete="off">
@@ -156,23 +163,32 @@ const props = defineProps({
 })
 
 const { showError, showSuccess } = useToast()
-const { formatDate } = useDateFormatter()
+const { formatDate, formatPeriod } = useDateFormatter()
 const filtros = ref([])
 const search_all = ref(null)
 const search_folio = ref(null)
 const PadronCompleto = ref([])
 const puedeActualizarPadron = ref(true)
+const actualizandoPadron = ref(false)
+const ultimoPeriodo = ref(null)
 const selectedPadron = ref(null)
 const showModificarModal = ref(false)
 
 const actualizarPadron = async () => {
+  if (actualizandoPadron.value) return
+
+  actualizandoPadron.value = true
   try {
-    await actualizaPadron({ impuesto: props.impuesto })
-    //console.log(response);
+    const response = await actualizaPadron({ impuesto: props.impuesto })
+    if (response?.data?.ultimo_periodo) {
+      ultimoPeriodo.value = response.data.ultimo_periodo
+    }
     showSuccess('Padrón actualizado correctamente')
   } catch (error) {
     console.error(error)
     showError('Error al actualizar el padrón')
+  } finally {
+    actualizandoPadron.value = false
   }
 }
 
@@ -190,6 +206,7 @@ const filtrar = async () => {
     puedeActualizarPadron.value = Boolean(
       padron?.data?.botones?.[`actualizaPadron_${props.impuesto}`],
     )
+    ultimoPeriodo.value = padron?.data?.ultimo_periodo ?? null
     //console.log(padron)
     showSuccess('Padrón filtrado correctamente')
     return padron

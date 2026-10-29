@@ -21,6 +21,10 @@ const props = defineProps({
   impuesto:{
     type: String,
     required: true
+  },
+  motivo: {
+    type: String,
+    default: null
   }
 })
 
@@ -30,7 +34,8 @@ const generarPdf = async () => {
       broches: props.broches,
       anio: props.anio,
       mes: props.mes,
-      impuesto: props.impuesto
+      impuesto: props.impuesto,
+      motivo: props.motivo
     });
 
     const blob = new Blob([response.data], { type: 'application/pdf' })

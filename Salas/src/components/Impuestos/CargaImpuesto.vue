@@ -91,7 +91,7 @@
           v-model="codigo_barras" @keyup.enter="cargarCodigoBarra()" ref="codigoBarrasInput" />
       </div>
 
-      <div class="col-md-2 px-1 d-flex align-items-end justify-content-end" v-if="props.impuesto != 'api'">
+      <div class="col-md-2 px-1 d-flex align-items-end justify-content-end">
         <button type="button" class="btn btn-primary btn-sm" @click="openModalCargaManual()">
           Carga manual
         </button>
@@ -135,6 +135,18 @@
                 <i class="bi bi-file-earmark-pdf"></i> Exportar broches SP
               </button>
             </li>
+            <li>
+              <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos" target="_blank"
+                @click="exportarBrocheVencida">
+                <i class="bi bi-file-earmark-pdf"></i> Exportar broche vencida
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos" target="_blank"
+                @click="exportarBrochePorFuera">
+                <i class="bi bi-file-earmark-pdf"></i> Exportar broches por fuera
+              </button>
+            </li>
 
             <li>
               <button class="dropdown-item d-flex align-items-center gap-2 text-options-impuestos"
@@ -174,6 +186,7 @@
             <th>Vencimiento</th>
             <th>Bajado</th>
             <th>N° Broche</th>
+            <th>Motivo</th>
             <th>-</th>
           </tr>
         </thead>
@@ -186,8 +199,11 @@
                 {{ comp.empresa === 2 ? 'CAN ' : comp.empresa === 3 ? 'TRIB ' : '' }}{{ comp.folio
                 }}{{ index < parseCompartidos(item.compartidos).length - 1 ? ', ' : '' }} </span>
             </td>
-            <td>{{ item.padron?.partida }}</td>
-            <td v-if="props.impuesto != 'api'">{{ item.padron?.clave }}</td>
+            <td v-if="['tgi', 'agua', 'api'].includes(props.impuesto)">{{ item.padron?.partida }}</td>
+            <td v-if="props.impuesto === 'tgi'">{{ item.padron?.clave }}</td>
+            <td v-if="props.impuesto === 'agua'">{{ item.padron?.clave }}</td>
+            <td v-if="props.impuesto === 'gas'">{{ item.padron?.partida }}</td>
+            <td v-if="props.impuesto === 'gas'">{{ item.padron?.clave }}</td>
             <td>{{ item.padron?.administra }}</td>
             <td>{{ item.importe }}</td>
             <td v-if="props.impuesto === 'gas'">
@@ -197,6 +213,13 @@
             <td>{{ formatDate(item.fecha_vencimiento) }}</td>
             <td>{{ item.bajado }}</td>
             <td>{{ item.num_broche }}</td>
+            <td>
+              <span v-if="item.origen_carga" class="badge"
+                :class="item.origen_carga === 'VENCIDA' ? 'bg-warning text-dark' : item.origen_carga === 'FUERA_BROCHE' ? 'bg-info text-dark' : 'bg-secondary'">
+                {{ mostrarMotivo(item.origen_carga) }}
+              </span>
+              <span v-else>-</span>
+            </td>
             <td>
               <div class=" ">
                 <button class="btn btn-secondary btn-sm p-0" type="button" data-bs-toggle="dropdown"
@@ -236,6 +259,9 @@
 
   <BrochePdfSP ref="brochePdfSpRef" :broches="brochesDataSP" :anio="anio" :mes="mes" :impuesto="impuesto" />
 
+  <BrochePdf ref="brochePdfEspecialRef" :broches="brochesDataEspecial" :anio="anio" :mes="mes" :impuesto="impuesto"
+    :motivo="motivoEspecialExport" />
+
   <ModalModificarEstado :show="showModificarEstadoModal" @close="showModificarEstadoModal = false" :impuesto="impuesto"
     :padron="selectedEstadoItem" @success="filtrar"></ModalModificarEstado>
 
@@ -262,6 +288,7 @@ import { exportarFaltantes } from '@/Services/api/Impuestos/tgiApi'
 import { exportarBroches } from '@/Services/api/Impuestos/tgiApi'
 import { exportarBrochesSalas } from '@/Services/api/Impuestos/tgiApi'
 import { exportarBrochesSP } from '@/Services/api/Impuestos/tgiApi'
+import { exportarBrocheEspecial } from '@/Services/api/Impuestos/tgiApi'
 /* import { ModificarBajado } from '@/Services/api/Impuestos/tgiApi' */
 import ModalModificarEstado from '@/components/Impuestos/ModalImpuestos/ModalModificarEstado.vue'
 import { EliminarImpuesto } from '@/Services/api/Impuestos/tgiApi'
@@ -296,6 +323,9 @@ const brochePdfSalasRef = ref(null)
 const brochesDataSalas = ref([])
 const brochePdfSpRef = ref(null)
 const brochesDataSP = ref([])
+const brochePdfEspecialRef = ref(null)
+const brochesDataEspecial = ref([])
+const motivoEspecialExport = ref('VENCIDA')
 const showModificarEstadoModal = ref(false)
 const selectedEstadoItem = ref(null)
 
@@ -334,8 +364,16 @@ const filtrar = async () => {
 }
 
 const openModalCargaManual = () => {
-  props.impuesto
   showModificarModal.value = true
+}
+
+const mostrarMotivo = (origen) => {
+  const motivos = {
+    NORMAL: 'Normal',
+    VENCIDA: 'Vencida',
+    FUERA_BROCHE: 'Fuera de broche',
+  }
+  return motivos[origen] ?? origen
 }
 
 const ControlDeBroches = () => {
@@ -441,6 +479,35 @@ const exportarBrochesPdfSP = async () => {
     showError('Error al exportar broches')
   }
 }
+
+const exportarBrocheEspecialPdf = async (motivo) => {
+  if (mes.value === null || anio.value === null) {
+    showError('Seleccioná mes y año antes de exportar broches especiales')
+    return
+  }
+
+  const form = {
+    impuesto: props.impuesto,
+    mes: mes.value,
+    anio: anio.value,
+    motivo,
+  }
+  try {
+    const response = await exportarBrocheEspecial(form)
+    brochesDataEspecial.value = response.data.broches
+    motivoEspecialExport.value = motivo
+    await nextTick()
+    await brochePdfEspecialRef.value.generarPdf()
+    showSuccess('Exportación de broches exitosa')
+  } catch (error) {
+    console.error(error)
+    showError('Error al exportar broches especiales')
+  }
+}
+
+const exportarBrocheVencida = () => exportarBrocheEspecialPdf('VENCIDA')
+
+const exportarBrochePorFuera = () => exportarBrocheEspecialPdf('FUERA_BROCHE')
 
 const parseCompartidos = (compartidos) => {
   try {

@@ -59,16 +59,19 @@ const cargarBroches = async () => {
     const itemsValidos = (response.data ?? []).filter((x) => x?.num_broche)
 
     const agrupado = itemsValidos.reduce((acc, item) => {
-      const nombre = item.num_broche.split(' - ')[0]
-      if (!acc[nombre]) {
-        acc[nombre] = {
+      const esEspecial =
+        item.num_broche.startsWith('VENCIDAS') || item.num_broche.startsWith('FUERA BROCHE')
+      const nombre = esEspecial ? item.num_broche : item.num_broche.split(' - ')[0]
+      const clave = esEspecial ? item.num_broche : nombre
+      if (!acc[clave]) {
+        acc[clave] = {
           nombre,
           cantidad: 0,
           fecha_vencimiento: item.fecha_vencimiento,
           numero_broche: item.num_broche,
         }
       }
-      acc[nombre].cantidad += 1
+      acc[clave].cantidad += 1
       return acc
     }, {})
 

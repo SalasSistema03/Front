@@ -183,6 +183,30 @@ export const exportarBrochesSP = (data) => {
   })
 }
 
+export const armarBrocheEspecial = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/armar_broche_especial`, {
+    params: {
+      ...data,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const exportarBrocheEspecial = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/exportar_broche_especial`, {
+    params: {
+      ...data,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 /* export const ModificarBajado = (data) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/modificar_bajado`, {

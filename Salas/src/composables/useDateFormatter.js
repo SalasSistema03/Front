@@ -6,6 +6,17 @@ export const useDateFormatter = () => {
     return `${dia}/${mes}/${anio}` // Devuelve día/mes/año
   }
 
+  const formatPeriod = (fechaCompleta) => {
+    if (!fechaCompleta) return ''
+
+    const [fecha] = String(fechaCompleta).split(' ')
+    const [anio, mes] = fecha.split('-')
+
+    if (!anio || !mes) return ''
+
+    return `${mes}/${anio}`
+  }
+
   const formatDateForInput = (fechaCompleta) => {
     if (!fechaCompleta) return ''
 
@@ -33,6 +44,7 @@ export const useDateFormatter = () => {
 
   return {
     formatDate,
+    formatPeriod,
     formatDateForInput,
   }
 }
