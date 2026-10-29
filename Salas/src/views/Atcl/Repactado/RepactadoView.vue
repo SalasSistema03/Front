@@ -96,7 +96,7 @@
             <!--  <th>Nombre</th> -->
             <th>Estado</th>
             <!-- <th>Observaciones</th> -->
-            <th>Cierre</th>
+            <!-- <th>Cierre</th> -->
             <!-- <th>Plazo y Actualizacion Contrato</th> -->
             <th>Condicion</th>
             <!-- <th>Inicio Contrato</th>
@@ -128,7 +128,7 @@
             <td>{{ item.folio || '-' }}</td>
             <!-- <td>{{ item.cuentaCorriente || '-' }}</td> -->
             <td>{{ item.estado || '-' }}</td>
-            <td>{{ item.cierre || '-' }}</td>
+            <!-- <td>{{ item.cierre || '-' }}</td> -->
             <!-- <td>{{ item.plazoActualizacion || '-' }}</td> -->
             <td>{{ item.condicion || '-' }}</td>
             <!-- <td>{{ item.inicioContrato || '-' }}</td>

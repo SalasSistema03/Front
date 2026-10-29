@@ -285,7 +285,8 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitPropietariosAlquiler"
+                  :disabled="!permisoPropietarios">
                   Listar
                 </button>
               </div>
@@ -569,7 +570,8 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitCriteriosActivos()">
+                <button :disabled="!permisoCriteriosActivos" type="button" class="btn btn-sm btn-primary w-100 mt-2"
+                  @click="submitCriteriosActivos()">
                   Listar
                 </button>
               </div>
@@ -757,17 +759,18 @@ const personaSeleccionada = ref(null)
 const informacionMostrar = ref([])
 const estadosVenta = ref([])
 const asesores = ref([])
+
 const permisoOfrecimiento = ref(false)
 const propietariosVenta = ref(false)
 const propietariosAlquiler = ref(false)
 const devolucionesVenta = ref(false)
 const permisoCriteriosPorFecha = ref(false)
+const permisoCriteriosActivos = ref(false)
 const permisoConversacion = ref(false)
 const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 const permisoTiempoOfrecimiento = ref(false)
 const permisoTasaciones = ref(false)
-
 const tasaciones = ref([])
 const filtroCalleTasacion = ref('')
 const mostrarSugerenciasCalleTasacion = ref(false)
@@ -780,6 +783,10 @@ const opcionesTasacionInformada = [
   'Pasado, No Ingreso',
   'Pendiente',
 ]
+
+const permisoPropietarios = computed(() =>
+  props.sector === 'Alquiler' ? propietariosAlquiler.value : propietariosVenta.value
+)
 
 // === NUEVAS VARIABLES PARA EL FILTRO Y SELECCIÓN ===
 const filtroCampos = ref('')
@@ -1142,12 +1149,13 @@ onMounted(async () => {
       permisoInformeNovedades.value = resNovedades?.data ?? false
       permisoTiempoOfrecimiento.value = resTiempoOfrecimiento?.data ?? false
     } else {
-      const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resConversacion, resTasaciones] = await Promise.all([
+      const [resPermiso, resOfrecimiento, resPropVenta, resDev, resCriterios, resCriteriosActivos, resConversacion, resTasacione] = await Promise.all([
         verificarPermiso('listarPropiedadesVenta'),
         verificarPermiso('listarOfrecimientoVenta'),
         verificarPermiso('listarPropietarioVenta'),
         verificarPermiso('listarDevolucionesVenta'),
         verificarPermiso('listarCriteriosPorFecha'),
+        verificarPermiso('listarCriteriosActivos'),
         verificarPermiso('listarConversacionesVenta'),
         verificarPermiso('listarTasaciones'),
       ])
@@ -1156,8 +1164,9 @@ onMounted(async () => {
       propietariosVenta.value = resPropVenta?.data ?? false
       devolucionesVenta.value = resDev?.data ?? false
       permisoCriteriosPorFecha.value = resCriterios?.data ?? false
+      permisoCriteriosActivos.value = resCriteriosActivos?.data ?? false
       permisoConversacion.value = resConversacion?.data ?? false
-      permisoTasaciones.value = resTasaciones?.data ?? false
+      permisoTasaciones.value = resTasacione?.data ?? false
     }
   } catch (error) {
     console.error('Error al obtener permisos:', error)
