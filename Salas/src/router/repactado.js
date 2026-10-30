@@ -8,6 +8,15 @@ const routesImpuestos = [
       requiresAuth: true,
     },
   },
+  {
+    path: '/tasacion_repactado',
+    alias: '/tasacion_repactado',
+    name: 'tasacion_repactado',
+    component: () => import('../views/Contratos/Repactado/TasacionRepactadoView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  }
 
 
 ]
