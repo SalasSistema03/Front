@@ -8,7 +8,7 @@
     <template v-else>
       <div class="chat-cabecera">
         <i class="bi bi-chat-dots"></i>
-        <span>Conversación del repactado</span>
+        <!--  <span>Conversación del repactado</span> -->
         <span class="ms-auto fw-normal text-muted small">{{ mensajes.length }} mensajes</span>
       </div>
 
@@ -25,7 +25,8 @@
       <div v-else ref="areaChat" class="chat-area">
         <div v-for="mensaje in mensajes" :key="mensaje.id"
           :class="['chat-fila', mensaje.tipo_persona === 'propietario' ? 'chat-fila-izquierda' : 'chat-fila-derecha']">
-          <div :class="['chat-burbuja', mensaje.tipo_persona === 'propietario' ? 'chat-propietario' : 'chat-inquilino']">
+          <div
+            :class="['chat-burbuja', mensaje.tipo_persona === 'propietario' ? 'chat-propietario' : 'chat-inquilino']">
             <div class="chat-autor">{{ etiqueta(mensaje.tipo_persona) }}</div>
             <div class="chat-texto">{{ mensaje.mensaje }}</div>
             <div class="chat-hora">{{ formatearFechaHora(mensaje.fecha_hora) }}</div>
@@ -33,26 +34,24 @@
         </div>
       </div>
 
-      <div v-if="!soloLectura" class="card border-0 shadow-sm p-3 mt-3">
-        <div class="row g-2 align-items-end">
-          <div class="col-md-3">
-            <label for="rep-chat-quien" class="form-label small fw-bold mb-1">Quién lo dijo</label>
+      <div v-if="!soloLectura" class="chat-form  border-0 shadow-sm p-2 mt-2">
+        <div class="row g-2 align-items-center">
+          <div class="col-2">
             <select id="rep-chat-quien" class="form-select form-select-sm" v-model="form.tipoPersona"
-              :disabled="guardando">
+              :disabled="guardando" aria-label="Quién lo dijo">
               <option value="propietario">Propietario</option>
               <option value="inquilino">Inquilino</option>
             </select>
           </div>
-          <div class="col-md-9">
-            <label for="rep-chat-mensaje" class="form-label small fw-bold mb-1">Mensaje</label>
-            <textarea id="rep-chat-mensaje" rows="2" class="form-control form-control-sm" v-model="form.mensaje"
-              :disabled="guardando" placeholder="Escriba el mensaje"></textarea>
+          <div class="col-7">
+            <textarea id="rep-chat-mensaje" rows="1" class="form-control form-control-sm" v-model="form.mensaje"
+              :disabled="guardando" placeholder="Escriba el mensaje" aria-label="Mensaje"></textarea>
           </div>
-          <div class="col-12 text-end">
+          <div class="col-1 d-grid">
             <button type="button" class="btn btn-primary btn-sm" @click="agregarMensaje"
-              :disabled="!puedeEnviar || guardando">
-              <i class="bi bi-send me-1"></i>
-              {{ guardando ? 'Guardando...' : 'Agregar mensaje' }}
+              :disabled="!puedeEnviar || guardando" title="Agregar mensaje">
+              <i class="bi bi-send"></i>
+              <!--  <span class="d-block small">{{ guardando ? '...' : 'Enviar' }}</span> -->
             </button>
           </div>
         </div>
@@ -151,4 +150,9 @@ watch(
   },
   { immediate: true }
 )
+
+// Cuando el elemento del chat aparece en el DOM (v-else monta el ref), bajar al último mensaje
+watch(areaChat, (el) => {
+  if (el) irAlUltimo()
+})
 </script>
