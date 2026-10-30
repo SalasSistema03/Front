@@ -11,7 +11,22 @@
         <i class="bi bi-exclamation-triangle me-1"></i>{{ errorGuardado }}
       </div>
 
-      <div class="row tasaciones-body-scroll">
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+          <button type="button" class="nav-link" :class="{ active: tabActiva === 'datos' }"
+            @click="tabActiva = 'datos'">
+            <i class="bi bi-card-text me-1"></i>Datos
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="nav-link" :class="{ active: tabActiva === 'conversacion' }"
+            @click="tabActiva = 'conversacion'">
+            <i class="bi bi-chat-dots me-1"></i>Conversación
+          </button>
+        </li>
+      </ul>
+
+      <div v-show="tabActiva === 'datos'" class="row tasaciones-body-scroll">
         <div class="contrato-seccion-header">
           <i class="bi bi-diagram-3"></i>
           <span>DATOS DEL CONTRATO</span>
@@ -173,6 +188,11 @@
             :disabled="soloLectura" autocomplete="off" />
         </div>
       </div>
+
+      <div v-show="tabActiva === 'conversacion'" class="tasaciones-body-scroll">
+        <ConversacionRepactado :repactado-id="repactadoData?.id ?? null" :activa="tabActiva === 'conversacion'"
+          :solo-lectura="soloLectura" />
+      </div>
     </template>
 
     <template #footer>
@@ -192,6 +212,7 @@
 import BaseModal from '@/components/base/BaseModal.vue'
 import { computed, reactive, ref, watch } from 'vue'
 import { getEstadosRepactado, updateRepactado } from '@/Services/api/Contrato/Repactado.js'
+import ConversacionRepactado from '@/components/Atcl/Repactado/ConversacionRepactado.vue'
 
 const props = defineProps({
   show: {
@@ -215,6 +236,7 @@ const opcionesSituacion = ['Nuevo', 'Prop Retira', 'Prorroga', 'Reingresa']
 const opcionesCuentaCorriente = ['Muy Buena', 'Buena', 'Mala', 'Deudor']
 
 const estados = ref([])
+const tabActiva = ref('datos')
 const guardando = ref(false)
 const errorGuardado = ref('')
 
@@ -344,6 +366,7 @@ watch(
   async (isShown) => {
     if (!isShown) return
 
+    tabActiva.value = 'datos'
     errorGuardado.value = ''
     await cargarEstados()
 

@@ -41,3 +41,21 @@ export const updateRepactado = (payload) => {
   })
 }
 
+export const obtenerConversacionRepactado = (id) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/repactado/${id}/conversacion`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const guardarMensajeConversacionRepactado = (id, data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/repactado/${id}/conversacion`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
