@@ -234,6 +234,15 @@ export const GenerarPdfListadoPropiedad = (data) => {
 }
 
 
+export const ListarCriteriosActivos = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/broches/listado/criterios-activos`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 export const verificarPermiso = (botonNombre) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/verificaPermisoAsesor/${botonNombre}`, {

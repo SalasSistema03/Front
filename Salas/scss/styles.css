@@ -1297,6 +1297,11 @@
   border-radius: 0.25rem;
 }
 
+.tabla-criterio-activos {
+  max-height: 250px;
+  overflow: auto;
+}
+
 .proceso_reserva_tabla_contenedor {
   height: 34vh;
   overflow-y: auto;

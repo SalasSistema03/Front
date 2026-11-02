@@ -54,12 +54,12 @@
           Listar Consultas Ingresadas por Fechas
         </div>
       </div>
-      <div>
+      <!-- <div>
         <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'conversaciones' ? 'btn-primary' : 'btn-light'"
           @click="currentForm = 'conversaciones'" v-if="sector === 'Venta'">
           Listar Conversaciones
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="right-panel col-9">
@@ -546,22 +546,24 @@
               </div>
               <div class="form-group col-md-3 px-1">
                 <label class="form-label">Dormitorio</label>
-                <input type="number" class="form-control form-control-sm"
+                <input type="number" placeholder="3 Dorm" class="form-control form-control-sm"
                   v-model="formCriterios.cantidad_dormitorios" />
               </div>
               <div class="form-group col-md-3">
                 <label class="form-group">Precio Minimo</label>
-                <input type="number" class="form-control form-control-sm" placeholder="$"
-                  v-model="formCriterios.precio_minimo" />
+                <input type="text" inputmode="numeric" class="form-control form-control-sm" placeholder="$"
+                  :value="formatearMonto(formCriterios.precio_minimo)"
+                  @input="actualizarMontoCriterios($event, 'precio_minimo')" />
               </div>
               <div class="form-group col-md-3">
                 <label class="form-group">Precio Maximo</label>
-                <input type="number" class="form-control form-control-sm" placeholder="$"
-                  v-model="formCriterios.precio_maximo" />
+                <input type="text" inputmode="numeric" class="form-control form-control-sm" placeholder="$"
+                  :value="formatearMonto(formCriterios.precio_maximo)"
+                  @input="actualizarMontoCriterios($event, 'precio_maximo')" />
               </div>
               <div class="form-group col-md-3">
-                <label class="form-group">Estado</label>
-                <select class="form-select form-select-sm" v-model="formCriterios.estado">
+                <label class="form-group">Estado <span class="text-danger">*</span></label>
+                <select class="form-select form-select-sm" v-model="formCriterios.estado" required>
                   <option value="">Seleccione un estado</option>
                   <option value="Potable">Potable</option>
                   <option value="Medio">Medio</option>
@@ -570,11 +572,60 @@
               </div>
 
               <div class="col-md-12 mt-2">
-                <button :disabled="!permisoCriteriosActivos" type="button" class="btn btn-sm btn-primary w-100 mt-2"
-                  @click="submitCriteriosActivos()">
-                  Listar
+                <button :disabled="!permisoCriteriosActivos || criteriosCargando" type="button"
+                  class="btn btn-sm btn-primary w-100 mt-2" @click="submitCriteriosActivos()">
+                  {{ criteriosCargando ? 'Listando...' : 'Listar' }}
                 </button>
               </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-primary mx-2 mt-3" v-if="criteriosBuscado">
+
+          <div class="card-header bg-transparent border-primary d-flex justify-content-between align-items-center">
+            <label class="mb-0">Resultados de Criterios Activos</label>
+            <small class="text-muted">Total: {{ criteriosListado.length }}</small>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive tabla-criterio-activos">
+              <table class="table table-hover align-middle mb-0 proceso_reserva_table">
+                <thead class="listado_tabla_titulo">
+                  <tr class="text-center">
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Tipo Inmueble</th>
+                    <th>Categoría</th>
+                    <th>Zona</th>
+                    <th>Cant. Dormitorios</th>
+                    <th>Cochera</th>
+                    <th>Precio</th>
+                    <th class="text-center">Conversación</th>
+                  </tr>
+                </thead>
+                <tbody class="listado_tabla">
+                  <tr v-for="(fila, index) in criteriosListado" :key="index">
+                    <td>{{ fila.cliente }}</td>
+                    <td>{{ fila.telefono }}</td>
+                    <td>{{ fila.tipo_inmueble }}</td>
+                    <td>{{ fila.categoria }}</td>
+                    <td>{{ fila.zona }}</td>
+                    <td>{{ fila.cant_dormitorios }}</td>
+                    <td>{{ fila.cochera }}</td>
+                    <td>{{ fila.precio }}</td>
+                    <td class="text-center">
+                      <button type="button" class="btn btn-sm btn-outline-primary" :disabled="!permisoConversacion"
+                        @click="abrirConversacionCriterio(fila)">
+                        <i class="bi bi-chat-left-text-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr v-if="criteriosListado.length === 0">
+                    <td colspan="9" class="text-center text-muted">Sin resultados para los filtros seleccionados</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -630,7 +681,7 @@
         </div>
       </div>
 
-      <div v-if="currentForm === 'conversaciones'" class="form-section">
+      <!-- <div v-if="currentForm === 'conversaciones'" class="form-section">
         <div class="card border-primary mx-2">
           <div class="card-header bg-transparent border-primary">
             <label>Listar Conversaciones</label>
@@ -656,7 +707,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div v-if="currentForm === 'listado_ofrecimiento'" class="form-section">
         <div class="card border-primary mx-2">
@@ -706,10 +757,11 @@ import { ref, nextTick, onMounted, computed } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
-import { getEstadoAlquiler, verificarPermiso, getEstadoVenta } from '@/Services/api/Atcl/AtclApi'
+import { getEstadoAlquiler, verificarPermiso, getEstadoVenta, ListarCriteriosActivos } from '@/Services/api/Atcl/AtclApi'
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
 import { TasacionesActivas } from '@/Services/api/Atcl/Tasaciones/TasacionesApi'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyInput } from '@/composables/useCurrencyInput'
 import { getAsesor } from '@/Services/api/Atcl/AtclApi'
 import { isAdmin } from '../../../Services/business/auth'
 
@@ -1083,6 +1135,17 @@ const formListadoTasaciones = ref({
   pertenece: 'listadoTasaciones',
 })
 
+const criteriosListado = ref([])
+const criteriosCargando = ref(false)
+const criteriosBuscado = ref(false)
+
+const { formatearMonto, actualizarMonto: actualizarMontoInput } = useCurrencyInput()
+const actualizarMontoCriterios = (event, campo) => {
+  actualizarMontoInput(event, (valor) => {
+    formCriterios.value[campo] = valor
+  })
+}
+
 const formCriterios = ref({
   asesor_id: '',
   estado: '',
@@ -1290,13 +1353,26 @@ const submitListadoTasaciones = async () => {
 }
 
 const submitCriteriosActivos = async () => {
+  if (!formCriterios.value.estado) {
+    showError('Debe seleccionar un estado')
+    return
+  }
+
   formCriterios.value.zona_id = zonasSeleccionadas?.value ?? []
   formCriterios.value.tipo = inmueblesSeleccionados?.value ?? []
 
-  formActual.value = formCriterios.value
-  //console.log(formActual.value)
-  await nextTick()
-  listadoPropiedadRef.value?.generarPdf()
+  criteriosCargando.value = true
+  try {
+    const { data } = await ListarCriteriosActivos({ ...formCriterios.value })
+    criteriosListado.value = data?.data || []
+  } catch (error) {
+    console.error('Error al listar criterios activos:', error)
+    criteriosListado.value = []
+    showError('Error al obtener los criterios activos')
+  } finally {
+    criteriosBuscado.value = true
+    criteriosCargando.value = false
+  }
 }
 
 const submitConsultasIngresadas = async () => {
@@ -1311,6 +1387,19 @@ const submitConsultasIngresadas = async () => {
 
 const submitConversaciones = async () => {
   formActual.value = formConversaciones.value
+  await nextTick()
+  listadoPropiedadRef.value?.generarPdf()
+}
+
+// Genera el PDF de la conversación de un solo criterio (fila de la tabla de criterios activos).
+// Usa el mismo flujo que submitConversaciones, pero acotado por id_criterio_venta.
+const abrirConversacionCriterio = async (fila) => {
+  formActual.value = {
+    asesor_id: fila.asesor_id,
+    id_criterio_venta: fila.id_criterio_venta,
+    sector: props.sector,
+    pertenece: 'conversaciones',
+  }
   await nextTick()
   listadoPropiedadRef.value?.generarPdf()
 }
