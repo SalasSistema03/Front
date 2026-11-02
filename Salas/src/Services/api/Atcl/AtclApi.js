@@ -233,6 +233,15 @@ export const GenerarPdfListadoPropiedad = (data) => {
   })
 }
 
+export const ObtenerConversacionesCriterio = (data) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/broches/conversaciones/criterio`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 
 export const ListarCriteriosActivos = (data) => {
   const token = localStorage.getItem('token')

@@ -562,8 +562,8 @@
                   @input="actualizarMontoCriterios($event, 'precio_maximo')" />
               </div>
               <div class="form-group col-md-3">
-                <label class="form-group">Estado <span class="text-danger">*</span></label>
-                <select class="form-select form-select-sm" v-model="formCriterios.estado" required>
+                <label class="form-group">Estado</label>
+                <select class="form-select form-select-sm" v-model="formCriterios.estado">
                   <option value="">Seleccione un estado</option>
                   <option value="Potable">Potable</option>
                   <option value="Medio">Medio</option>
@@ -748,6 +748,8 @@
       </div>
 
       <ListadoPropiedadPdf ref="listadoPropiedadRef" :formData="formActual" />
+      <ModalListadoConversaciones :show="mostrarModalConversaciones" :fila="filaConversacionSeleccionada"
+        @close="mostrarModalConversaciones = false" />
     </div>
   </div>
 </template>
@@ -756,6 +758,7 @@
 import { ref, nextTick, onMounted, computed } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
+import ModalListadoConversaciones from '@/components/Atcl/Listado/ModalListadoConversaciones.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
 import { getEstadoAlquiler, verificarPermiso, getEstadoVenta, ListarCriteriosActivos } from '@/Services/api/Atcl/AtclApi'
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
@@ -801,6 +804,8 @@ const currentForm = ref('propiedades_alquiler')
 const estados = ref([])
 
 const listadoPropiedadRef = ref(null)
+const mostrarModalConversaciones = ref(false)
+const filaConversacionSeleccionada = ref(null)
 const camposSeleccionados = ref([])
 const permiso = ref(false)
 const formActual = ref({})
@@ -1353,11 +1358,6 @@ const submitListadoTasaciones = async () => {
 }
 
 const submitCriteriosActivos = async () => {
-  if (!formCriterios.value.estado) {
-    showError('Debe seleccionar un estado')
-    return
-  }
-
   formCriterios.value.zona_id = zonasSeleccionadas?.value ?? []
   formCriterios.value.tipo = inmueblesSeleccionados?.value ?? []
 
@@ -1391,17 +1391,13 @@ const submitConversaciones = async () => {
   listadoPropiedadRef.value?.generarPdf()
 }
 
-// Genera el PDF de la conversación de un solo criterio (fila de la tabla de criterios activos).
-// Usa el mismo flujo que submitConversaciones, pero acotado por id_criterio_venta.
-const abrirConversacionCriterio = async (fila) => {
-  formActual.value = {
-    asesor_id: fila.asesor_id,
-    id_criterio_venta: fila.id_criterio_venta,
+// Abre el modal con la conversación de un solo criterio (fila de la tabla de criterios activos).
+const abrirConversacionCriterio = (fila) => {
+  filaConversacionSeleccionada.value = {
+    ...fila,
     sector: props.sector,
-    pertenece: 'conversaciones',
   }
-  await nextTick()
-  listadoPropiedadRef.value?.generarPdf()
+  mostrarModalConversaciones.value = true
 }
 
 const submitTiempoOfrecimiento = async () => {
