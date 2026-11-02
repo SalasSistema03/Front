@@ -8,8 +8,7 @@
     <template v-else>
       <div class="chat-cabecera">
         <i class="bi bi-chat-dots"></i>
-        <!--  <span>Conversación del repactado</span> -->
-        <span class="ms-auto fw-normal text-muted small">{{ mensajes.length }} mensajes</span>
+        <span class="ms-auto fw-normal small">{{ mensajes.length }} mensajes</span>
       </div>
 
       <div v-if="cargando" class="chat-area chat-estado">
@@ -23,40 +22,37 @@
         No hay mensajes cargados.
       </div>
       <div v-else ref="areaChat" class="chat-area">
-        <div v-for="mensaje in mensajes" :key="mensaje.id"
-          :class="['chat-fila', mensaje.tipo_persona === 'propietario' ? 'chat-fila-izquierda' : 'chat-fila-derecha']">
-          <div
-            :class="['chat-burbuja', mensaje.tipo_persona === 'propietario' ? 'chat-propietario' : 'chat-inquilino']">
-            <div class="chat-autor">{{ etiqueta(mensaje.tipo_persona) }}</div>
-            <div class="chat-texto">{{ mensaje.mensaje }}</div>
-            <div class="chat-hora">{{ formatearFechaHora(mensaje.fecha_hora) }}</div>
+        <template v-for="item in itemsChat" :key="item.key">
+          <div v-if="item.tipo === 'dia'" class="chat-dia">
+            <span>{{ item.etiqueta }}</span>
           </div>
-        </div>
+          <div v-else
+            :class="['chat-fila', item.tipoPersona === 'propietario' ? 'chat-fila-izquierda' : 'chat-fila-derecha', { 'chat-fila-inicio': item.inicioGrupo }]">
+            <div
+              :class="['chat-burbuja', item.tipoPersona === 'propietario' ? 'chat-propietario' : 'chat-inquilino', { 'chat-cola': item.inicioGrupo }]">
+              <div v-if="item.inicioGrupo" class="chat-autor">{{ etiqueta(item.tipoPersona) }}</div>
+              <div class="chat-texto">{{ item.mensaje }}</div>
+              <div class="chat-hora">{{ item.hora }}</div>
+            </div>
+          </div>
+        </template>
       </div>
 
-      <div v-if="!soloLectura" class="chat-form  border-0 shadow-sm p-2 mt-2">
-        <div class="row g-2 align-items-center">
-          <div class="col-2">
-            <select id="rep-chat-quien" class="form-select form-select-sm" v-model="form.tipoPersona"
-              :disabled="guardando" aria-label="Quién lo dijo">
-              <option value="propietario">Propietario</option>
-              <option value="inquilino">Inquilino</option>
-            </select>
-          </div>
-          <div class="col-7">
-            <textarea id="rep-chat-mensaje" rows="1" class="form-control form-control-sm" v-model="form.mensaje"
-              :disabled="guardando" placeholder="Escriba el mensaje" aria-label="Mensaje"></textarea>
-          </div>
-          <div class="col-1 d-grid">
-            <button type="button" class="btn btn-primary btn-sm" @click="agregarMensaje"
-              :disabled="!puedeEnviar || guardando" title="Agregar mensaje">
-              <i class="bi bi-send"></i>
-              <!--  <span class="d-block small">{{ guardando ? '...' : 'Enviar' }}</span> -->
-            </button>
-          </div>
-        </div>
-        <div v-if="errorForm" class="alert alert-danger py-1 px-2 mt-2 mb-0 small" role="alert">{{ errorForm }}</div>
+      <div v-if="!soloLectura" class="chat-form mt-2">
+        <select id="rep-chat-quien" class="form-select form-select-sm chat-quien" v-model="form.tipoPersona"
+          :disabled="guardando" aria-label="Quién lo dijo">
+          <option value="propietario">Propietario</option>
+          <option value="inquilino">Inquilino</option>
+        </select>
+        <textarea id="rep-chat-mensaje" rows="1" class="form-control form-control-sm chat-input" v-model="form.mensaje"
+          :disabled="guardando" placeholder="Escriba un mensaje" aria-label="Mensaje"
+          @keydown.enter.exact.prevent="agregarMensaje"></textarea>
+        <button type="button" class="chat-enviar" @click="agregarMensaje" :disabled="!puedeEnviar || guardando"
+          title="Enviar mensaje" aria-label="Enviar mensaje">
+          <i class="bi bi-send-fill"></i>
+        </button>
       </div>
+      <div v-if="errorForm" class="alert alert-danger py-1 px-2 mt-2 mb-0 small" role="alert">{{ errorForm }}</div>
     </template>
   </div>
 </template>
@@ -90,13 +86,55 @@ const puedeEnviar = computed(() => form.mensaje.trim() !== '')
 
 const etiqueta = (tipo) => (tipo === 'propietario' ? 'Propietario' : 'Inquilino')
 
-// fecha_hora llega como "YYYY-MM-DD HH:mm:ss"; se formatea sin pasar por Date para evitar desfasajes de zona horaria
-const formatearFechaHora = (valor) => {
-  if (!valor) return ''
-  const [fecha, hora = ''] = String(valor).split(/[ T]/)
-  const [anio, mes, dia] = fecha.split('-')
-  return `${dia}/${mes}/${anio} ${hora.slice(0, 5)}`
+// fecha_hora llega como "YYYY-MM-DD HH:mm:ss"; se separa por texto para evitar desfasajes de zona horaria
+const partesFecha = (valor) => {
+  if (!valor) return { fecha: '', hora: '' }
+  const [fechaIso, hora = ''] = String(valor).split(/[ T]/)
+  const [anio, mes, dia] = fechaIso.split('-')
+  return { fecha: `${dia}/${mes}/${anio}`, hora: hora.slice(0, 5) }
 }
+
+const formatoFecha = (d) =>
+  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
+
+// Separador de día: "Hoy", "Ayer" o la fecha completa
+const etiquetaDia = (fecha) => {
+  const ahora = new Date()
+  const ayer = new Date(ahora)
+  ayer.setDate(ahora.getDate() - 1)
+  if (fecha === formatoFecha(ahora)) return 'Hoy'
+  if (fecha === formatoFecha(ayer)) return 'Ayer'
+  return fecha
+}
+
+// Intercala separadores de día y marca el primer mensaje de cada tanda del mismo autor
+const itemsChat = computed(() => {
+  const items = []
+  let diaAnterior = null
+  let autorAnterior = null
+
+  mensajes.value.forEach((m) => {
+    const { fecha, hora } = partesFecha(m.fecha_hora)
+
+    if (fecha !== diaAnterior) {
+      items.push({ tipo: 'dia', key: `dia-${fecha}`, etiqueta: etiquetaDia(fecha) })
+      diaAnterior = fecha
+      autorAnterior = null
+    }
+
+    items.push({
+      tipo: 'mensaje',
+      key: m.id,
+      tipoPersona: m.tipo_persona,
+      mensaje: m.mensaje,
+      hora,
+      inicioGrupo: m.tipo_persona !== autorAnterior,
+    })
+    autorAnterior = m.tipo_persona
+  })
+
+  return items
+})
 
 // Como en WhatsApp, el chat siempre muestra el último mensaje
 const irAlUltimo = () => {
