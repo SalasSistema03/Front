@@ -89,14 +89,29 @@
                   @click="seleccionarPropiedad(propiedad)">
                   <div style="font-size: 0.65rem;">
                     {{ propiedad.cod_alquiler }} - {{ propiedad.calle }} {{ propiedad.numero }}
+                    {{ propiedad.piso ? ' P' + propiedad.piso : '' }}{{ propiedad.departamento ? ' Dpto ' + propiedad.departamento : '' }}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 position-relative">
               <label for="direccion" class="form-label">Direccion</label>
-              <input type="text" class="form-control form-control-sm" id="direccion" v-model="direccion" disabled
-                readonly />
+              <input type="text" class="form-control form-control-sm" id="direccion" autocomplete="off"
+                :value="direccion" @input="onDireccionInput"
+                @focus="mostrandoResultadosDireccion = resultadosDirecciones.length > 0"
+                :disabled="selectoresActivos === false || resPermiso2 === true" placeholder="Calle y número" />
+              <div v-if="mostrandoResultadosDireccion && resultadosDirecciones.length > 0"
+                class="position-absolute bg-white border border-top-0 rounded-bottom shadow-sm m-0 p-0"
+                style="z-index: 1000; max-height: 240px; overflow-y: auto; left: 0; right: 0">
+                <div v-for="propiedad in resultadosDirecciones" :key="propiedad.id"
+                  class="px-2 py-1 dropdown-item-custom" style="cursor: pointer;"
+                  @click="seleccionarPropiedad(propiedad)">
+                  <div style="font-size: 0.65rem;">
+                    {{ propiedad.cod_alquiler }} - {{ propiedad.calle }} {{ propiedad.numero }}
+                    {{ propiedad.piso ? ' P' + propiedad.piso : '' }}{{ propiedad.departamento ? ' Dpto ' + propiedad.departamento : '' }}
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-md-3">
               <label for="folio" class="form-label">Folio</label>
@@ -368,6 +383,10 @@ const mostrandoResultadosPropiedad = ref(false)
 const ignorarWatchCodigo = ref(false)
 let timeoutBusquedaPropiedad = null
 let ultimaBusquedaPropiedadId = 0
+const resultadosDirecciones = ref([])
+const mostrandoResultadosDireccion = ref(false)
+let timeoutBusquedaDireccion = null
+let ultimaBusquedaDireccionId = 0
 const telefono = ref('')
 const nombreCliente = ref('')
 const idCliente = ref('')
@@ -489,7 +508,69 @@ const buscarPropiedadPorCodigo = async () => {
   }
 }
 
+// Borra la propiedad elegida (código, folio, precio) sin tocar el texto de Dirección
+const limpiarPropiedadSeleccionada = () => {
+  idPropiedad.value = ''
+  if (codigo.value !== '') {
+    // Se ignora el watch de codigo para que no borre lo que el usuario está escribiendo en Dirección
+    ignorarWatchCodigo.value = true
+    codigo.value = ''
+  }
+  folio.value = ''
+  precioFolio.value = null
+  monedaPrecioFolio.value = null
+  resultadosPropiedades.value = []
+  mostrandoResultadosPropiedad.value = false
+}
+
+// Se ejecuta solo cuando el usuario escribe en Dirección (no al asignar el valor por código)
+const onDireccionInput = (event) => {
+  const valor = event.target.value
+  direccion.value = valor
+  // Mientras se escribe, la propiedad elegida anterior deja de ser válida
+  limpiarPropiedadSeleccionada()
+  clearTimeout(timeoutBusquedaDireccion)
+
+  if (valor.trim().length >= 3) {
+    timeoutBusquedaDireccion = setTimeout(() => {
+      buscarPropiedadPorDireccion()
+    }, 300)
+  } else {
+    resultadosDirecciones.value = []
+    mostrandoResultadosDireccion.value = false
+  }
+}
+
+const buscarPropiedadPorDireccion = async () => {
+  const query = String(direccion.value).trim()
+
+  if (!query) {
+    resultadosDirecciones.value = []
+    mostrandoResultadosDireccion.value = false
+    return
+  }
+
+  const busquedaId = ++ultimaBusquedaDireccionId
+
+  try {
+    const response = await buscarPropiedadPorCodigoAlquiler(query)
+
+    if (busquedaId !== ultimaBusquedaDireccionId) return
+    if (String(direccion.value).trim() !== query) return
+
+    resultadosDirecciones.value = Array.isArray(response.data) ? response.data : []
+    mostrandoResultadosDireccion.value = resultadosDirecciones.value.length > 0
+  } catch (error) {
+    console.log(error)
+    resultadosDirecciones.value = []
+    mostrandoResultadosDireccion.value = false
+  }
+}
+
 const seleccionarPropiedad = (propiedad) => {
+  clearTimeout(timeoutBusquedaDireccion)
+  resultadosDirecciones.value = []
+  mostrandoResultadosDireccion.value = false
 
   //console.log('propiedad', propiedad)
   ignorarWatchCodigo.value = true
@@ -547,6 +628,8 @@ watch(codigo, (nuevoValor) => {
   }
 
   clearTimeout(timeoutBusquedaPropiedad)
+  // Si el usuario escribe a mano, la propiedad seleccionada anterior deja de ser válida
+  idPropiedad.value = ''
   const valorLimpio = typeof nuevoValor === 'string' ? nuevoValor.trim() : ''
 
   if (valorLimpio.length >= 1) {
@@ -769,6 +852,9 @@ const resetForm = () => {
   habilitarCambioEstado.value = false
   resultadosPropiedades.value = []
   mostrandoResultadosPropiedad.value = false
+  resultadosDirecciones.value = []
+  mostrandoResultadosDireccion.value = false
+  clearTimeout(timeoutBusquedaDireccion)
   resultadosClientes.value = []
   mostrandoResultadosClientes.value = false
   ignorarWatchCodigo.value = false
@@ -817,6 +903,10 @@ const reservar = async () => {
   }
   if (formData.get('codigo') === '') {
     showError('El codigo es obligatorio')
+    return
+  }
+  if (!idPropiedad.value) {
+    showError('Seleccione una propiedad de la lista')
     return
   }
   if (formData.get('montoReserva') === '') {

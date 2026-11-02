@@ -1088,6 +1088,27 @@
   text-align: center;
 }
 
+.periodo-padron {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vh;
+  padding: 0.35vh 1vh;
+  border: 1px solid rgba(0, 85, 185, 0.35);
+  border-radius: 2vh;
+  background-color: rgba(0, 85, 185, 0.07);
+  color: rgb(0, 85, 185);
+  font-size: 1.8vh;
+  white-space: nowrap;
+}
+.periodo-padron .bi {
+  font-size: 2vh;
+  color: rgb(0, 85, 185);
+}
+.periodo-padron strong {
+  font-size: 1.9vh;
+  color: rgb(0, 85, 185);
+}
+
 .contenedor-tabla-impuestos {
   height: 57vh;
   overflow-y: auto;
@@ -1504,6 +1525,200 @@
   max-height: 65vh;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.chat-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px 10px 0 0;
+  background-color: rgba(0, 175, 154, 0.22);
+  color: #1f2d3d;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.chat-cabecera .bi {
+  color: rgba(0, 32.2, 28.336, 0.96);
+  font-size: 1rem;
+}
+
+.chat-area {
+  height: 300px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  border: 1px solid #dfe7ea;
+  border-top: 0;
+  border-bottom: 0;
+  background-color: #eef6f5;
+  background-image: radial-gradient(rgba(0, 85, 185, 0.07) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.chat-estado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-dia {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 10px;
+}
+
+.chat-dia span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #54656f;
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.chat-fila {
+  display: flex;
+  margin-bottom: 2px;
+}
+
+.chat-fila-inicio {
+  margin-top: 8px;
+}
+
+.chat-fila-izquierda {
+  justify-content: flex-start;
+}
+
+.chat-fila-derecha {
+  justify-content: flex-end;
+}
+
+.chat-burbuja {
+  position: relative;
+  max-width: 72%;
+  min-width: 96px;
+  padding: 6px 9px 4px;
+  border-radius: 9px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  font-size: 0.87rem;
+  color: #111b21;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.chat-burbuja::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.chat-propietario {
+  background-color: #dcf5ef;
+}
+
+.chat-inquilino {
+  background-color: #dce9fb;
+}
+
+.chat-cola.chat-propietario {
+  border-top-left-radius: 0;
+}
+
+.chat-cola.chat-inquilino {
+  border-top-right-radius: 0;
+}
+
+.chat-cola.chat-propietario::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  border-style: solid;
+  border-width: 0 8px 8px 0;
+  border-color: transparent #dcf5ef transparent transparent;
+}
+
+.chat-cola.chat-inquilino::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  border-style: solid;
+  border-width: 0 0 8px 8px;
+  border-color: transparent transparent transparent #dce9fb;
+}
+
+.chat-autor {
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 1px;
+}
+
+.chat-propietario .chat-autor {
+  color: rgba(0, 32.2, 28.336, 0.96);
+}
+
+.chat-inquilino .chat-autor {
+  color: rgb(0, 85, 185);
+}
+
+.chat-hora {
+  float: right;
+  margin: 6px 0 0 10px;
+  font-size: 0.66rem;
+  color: #667781;
+  line-height: 1;
+}
+
+.chat-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #dfe7ea;
+  border-radius: 0 0 10px 10px;
+  background-color: #f0f2f5;
+}
+
+.chat-quien {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 130px;
+  border-radius: 9px;
+  font-size: 0.8rem;
+}
+
+.chat-input {
+  flex: 1 1 auto;
+  min-height: 36px;
+  max-height: 110px;
+  border-radius: 9px;
+  resize: none;
+  font-size: 0.87rem;
+}
+
+.chat-enviar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(0, 85, 185);
+  color: #fff;
+}
+
+.chat-enviar:hover:not(:disabled) {
+  background-color: rgb(0, 61.5675675676, 134);
+}
+
+.chat-enviar:disabled {
+  opacity: 0.5;
 }
 
 .contrato-seccion {

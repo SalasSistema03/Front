@@ -92,67 +92,35 @@
         <thead>
           <tr>
             <th>Folio</th>
-            <!-- <th>Cuenta Corriente</th> -->
-            <!--  <th>Nombre</th> -->
             <th>Estado</th>
-            <!-- <th>Observaciones</th> -->
-            <!-- <th>Cierre</th> -->
-            <!-- <th>Plazo y Actualizacion Contrato</th> -->
             <th>Condicion</th>
-            <!-- <th>Inicio Contrato</th>
-            <th>Vencimiento Contrato</th> -->
             <th>Situacion</th>
             <th>Apellido y Nombre</th>
             <th>Telefono Inq</th>
             <th>Direccion</th>
-            <!-- <th>Localidad</th> -->
             <th>Tipo</th>
-            <!-- <th>Comodidades</th> -->
             <th>Propietario</th>
             <th>Telefono</th>
-            <!--   <th>Viejo</th> -->
-            <!--  <th>C/ DOC</th> -->
-            <!-- <th>TOTAL</th> -->
-            <!-- <th>Nuevo</th> -->
-            <!--  <th>% 2º Año</th> -->
-            <!--  <th>Total 2º Año</th> -->
-            <!-- <th>Comentario Inquilino</th>
-            <th>Comentario Propietario</th> -->
-            <!--  <th>Aviso Prop</th> -->
-            <!-- <th>Gestor repactado</th> -->
             <th class="acciones-tasaciones">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in repactados" :key="item.id">
             <td>{{ item.folio || '-' }}</td>
-            <!-- <td>{{ item.cuentaCorriente || '-' }}</td> -->
             <td>{{ item.estado || '-' }}</td>
-            <!-- <td>{{ item.cierre || '-' }}</td> -->
-            <!-- <td>{{ item.plazoActualizacion || '-' }}</td> -->
             <td>{{ item.condicion || '-' }}</td>
-            <!-- <td>{{ item.inicioContrato || '-' }}</td>
-            <td>{{ item.vencimientoContrato || '-' }}</td> -->
             <td>{{ item.situacion || '-' }}</td>
             <td>{{ item.apellidoNombre || '-' }}</td>
             <td>{{ item.telefono || '-' }}</td>
             <td>{{ item.direccion || '-' }}</td>
-            <!-- <td>{{ item.localidad || '-' }}</td> -->
             <td>{{ item.tipo || '-' }}</td>
-            <!-- <td>{{ item.comodidades || '-' }}</td> -->
             <td>{{ item.propietario || '-' }}</td>
             <td>{{ item.telefonoPropietario || '-' }}</td>
-            <!-- <td>{{ item.viejo || '-' }}</td>
-            <td>{{ item.nuevo || '-' }}</td> -->
             <td>
               <button type="button" class="btn btn-outline-primary btn-sm px-2 py-1 shadow-sm me-1"
                 title="Editar repactado" aria-label="Editar repactado" @click="editarRepactado(item)">
                 <i class="bi bi-pencil-square"></i>
               </button>
-              <!--  <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 shadow-sm" title="Ver repactado"
-                aria-label="Ver repactado" @click="verRepactado(item)">
-                <i class="bi bi-eye"></i>
-              </button> -->
             </td>
           </tr>
           <tr v-if="repactados.length === 0">
