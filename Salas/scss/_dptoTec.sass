@@ -1,0 +1,90 @@
+@use 'colorSalas'
+$azulSalas: colorSalas.$azulSalas
+$verdeSalas: colorSalas.$verdeSalas
+$grisSalas: colorSalas.$grisSalas
+
+.dptoTec_fuente_realizados
+  font-size: 0.75rem
+.card-body_dptoTec
+  min-height: 13vh
+.form-group.busqueda_dptoTec
+  label
+    font-size: 2vh !important
+  select.form-control
+    height: 5vh !important
+    font-size: 1.8vh !important
+  input.form-control
+    height: 5vh !important
+    font-size: 1.8vh !important
+
+.dpto_recuadro_estados_total
+  background-color: $azulSalas !important
+  color: white !important
+  padding-left: 1vh !important
+  div
+    color: inherit !important
+  &:hover
+    color: $azulSalas !important
+    background-color: white !important
+    font-weight: bold !important
+    border-color: $azulSalas !important
+.dpto_recuadro_estados_realizados
+  background-color: $verdeSalas !important
+  padding-left: 1vh !important
+  color: white !important
+  div
+    color: inherit !important
+  &:hover
+    color: $verdeSalas !important
+    background-color: white !important
+    font-weight: bold !important
+    border-color: $verdeSalas !important
+.dpto_recuadro_estados_restantes
+  background-color: $grisSalas !important
+  padding-left: 1vh !important
+  color: white !important
+  div
+    color: inherit !important
+  &:hover
+    color: $grisSalas !important
+    background-color: white !important
+    font-weight: bold !important
+    border-color: $grisSalas !important
+.dpto_recuadro_usuarios
+  background-color: white !important
+  color: $azulSalas !important
+  padding-left: 1vh !important
+  div
+    color: inherit !important
+  &:hover
+    color: $verdeSalas !important
+    background-color: white !important
+    font-weight: bold !important
+    border-color: $azulSalas !important
+
+.dpto_boton_opciones
+  background-color: white !important
+  color: $azulSalas !important
+  border-color: $azulSalas !important
+  border-width: 1px !important
+  padding-left: 1vh !important
+  padding-right: 1vh !important
+  padding-top: 0.35vh !important
+  padding-bottom: 0.35vh !important
+  &:hover
+    color: white !important
+    background-color: $azulSalas !important
+    font-weight: bold !important
+    border-color: $azulSalas !important
+
+.proceso_dpto_tec_contenedor
+  overflow: auto
+  height: 59vh
+  thead
+    position: sticky
+    top: 0
+  tbody
+    overflow-y: auto
+    height: 45vh
+  table
+    height: fit-content
