@@ -101,6 +101,16 @@ export const subirDocumentoInventario = (formData) => {
   })
 }
 
+export const subirVideoInventario = (formData) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/dpto/inventario/videos`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
 export const eliminarDocumentoInventario = (id) => {
   const token = localStorage.getItem('token')
   return axios.delete(`${API_URL}/v1/documentosInventario/${id}`, {

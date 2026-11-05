@@ -200,6 +200,11 @@
                   <i class="bi bi-camera "></i>
                 </button>
 
+                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
+                  title="Videos" @click="abrirModalVideos(item)">
+                  <i class="bi bi-camera-reels"></i>
+                </button>
+
                 <!-- Documento Word: sube directo (sin modal). Un documento por reserva. -->
                 <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
                   :disabled="!tienePermisoCarga || subiendoDocId !== null" title="Cargar documento (.doc / .docx)"
@@ -225,6 +230,7 @@
     @close="cerrarModalInventario" @guardar="guardarModalInventario" :tienePermisoCarga="tienePermisoCarga" />
   <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
     @close="showModalObservacion = false" />
+  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos" :puede-editar="tienePermisoCarga" @close="showModalVideos = false" />
   <ModalCargaFotos modo="inventario" :id-proceso-propiedad="procesoFotos" :puede-editar="tienePermisoCarga" />
   <ModalDocumentosInventario :id-proceso-propiedad="procesoDocumentos" :puede-editar="tienePermisoCarga" />
   <!-- Input oculto: el botón de documentos abre el selector del sistema -->
@@ -249,6 +255,7 @@ import { verificarPermiso } from '@/Services/api/Atcl/AtclApi'
 import { useDateFormatter } from '@/composables/useDateFormatter'
 import { useToast } from '@/composables/useToast'
 import ModalCargaFotos from '@/components/Atcl/Propiedad/ModalCargaFotos.vue'
+import ModalCargaVideos from '@/components/Dpto/Inventario/Modales/ModalCargaVideos.vue'
 import ModalDocumentosInventario from '@/components/Dpto/Inventario/ModalDocumentosInventario.vue'
 const { mes, anio, obtenerAñoMenos3 } = useFiltroMesAnio()
 const resPermiso = ref(false)
@@ -336,9 +343,15 @@ const cerrarModalInventario = () => {
 }
 
 // Proceso de reserva cuyas fotos se muestran en el modal (fotos de inventario)
+const showModalVideos = ref(false)
 const procesoFotos = ref(null)
+const procesoVideos = ref(null)
 const seleccionarFotos = (item) => {
   procesoFotos.value = item.id
+}
+const abrirModalVideos = (item) => {
+  procesoVideos.value = item.id
+  showModalVideos.value = true
 }
 
 // ---- Documento Word de inventario (carga directa, un documento por reserva) ----

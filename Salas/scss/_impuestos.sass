@@ -99,6 +99,50 @@ $grisSalas: colorSalas.$grisSalas
       font-size: 2vh !important
       border: none !important
 
+// Letra más chica para datos secundarios de expensas (administrador y consorcio)
+.expensa_dato-secundario
+  font-size: 1.5vh !important
+
+// Anchos de columna para tabla de broches
+.expensa_col-direccion
+  max-width: 200px
+
+.expensa_col-admin
+  max-width: 160px
+
+.expensa_col-consorcio
+  max-width: 160px
+
+.expensa_col-fecha
+  min-width: 130px
+
+.expensa_col-periodo
+  min-width: 70px
+
+.expensa_col-anio
+  min-width: 70px
+
+// Botón de guardar más intuitivo (verde claro, cambia a verde oscuro al confirmar)
+.expensa_btn-guardar
+  background-color: #198754 !important
+  border-color: #198754 !important
+  color: white !important
+  transition: all 0.2s ease
+  &:hover:not(:disabled)
+    background-color: #157347 !important
+    border-color: #146c43 !important
+  &:disabled
+    background-color: #28a745 !important
+    border-color: #28a745 !important
+    opacity: 0.6
+    cursor: not-allowed
+
+.expensa_btn-guardado
+  background-color: #28a745 !important
+  border-color: #28a745 !important
+  color: white !important
+  cursor: default
+
 .tabla_armar_broche
 
   .titulo-resultados
@@ -124,3 +168,13 @@ $grisSalas: colorSalas.$grisSalas
 .contenedor-tabla-epe
   height: 70vh
   overflow-y: auto
+
+.textoPredictivoBrochExpensas
+  input
+    font-size: 1.5vh
+    height: 31px
+
+.textoPredictivoEdificioBrochExpensas
+  input
+    font-size: 1.5vh
+    height: 31px

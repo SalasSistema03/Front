@@ -25,24 +25,15 @@
 
                 <div class="col-md-3">
                     <label class="form-label x-small text-muted fw-bold mb-1">Edificio</label>
-                    <select class="form-select form-select-sm shadow-sm border-secondary-subtle"
-                        v-model="filtros.edificio">
-                        <option value="">Todos los edificios...</option>
-                        <option v-for="edif in edificios" :key="edif.id" :value="edif.id">
-                            {{ edif.nombre_consorcio }}
-                        </option>
-                    </select>
+                    <SelectPredictivo v-model="filtros.edificio" :items="edificios"
+                        label-key="nombre_consorcio" placeholder="Todos los edificios..."
+                        class="textoPredictivoEdificioBrochExpensas" />
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label x-small text-muted fw-bold mb-1">Administrador</label>
-                    <select class="form-select form-select-sm shadow-sm border-secondary-subtle"
-                        v-model="filtros.administrador">
-                        <option value="">Todos los administradores...</option>
-                        <option v-for="emp in empresas" :key="emp.id" :value="emp.id">
-                            {{ emp.nombre }}
-                        </option>
-                    </select>
+                    <SelectPredictivo v-model="filtros.administrador" :items="empresas"
+                        label-key="nombre" placeholder="Todos los administradores..."  class="textoPredictivoBrochExpensas"/>
                 </div>
 
                 <div class="col-md-2">
@@ -63,42 +54,51 @@
                         <tr style="position: sticky; top: 0; z-index: 1;">
                             <th class="text-center" style="width: 50px;">Folio</th>
                             <th class="text-start" style="min-width: 180px;">Dirección / Edificio</th>
+                            <th class="text-start" style="min-width: 140px;">Administrador</th>
+                            <th class="text-start" style="min-width: 140px;">Consorcio</th>
                             <th class="text-center text-nowrap" style="width: 120px;">Vencimiento</th>
                             <th class="text-center" style="width: 70px;">Período</th>
                             <th class="text-center" style="width: 70px;">Año</th>
                             <th class="text-center text-nowrap" style="width: 105px;">Extraordinaria</th>
                             <th class="text-center text-nowrap" style="width: 105px;">Ordinaria</th>
                             <th class="text-center text-nowrap" style="width: 110px;">Total</th>
-                            <th class="text-center" style="width: 50px;">Acción</th>
+                            <th class="text-center text-nowrap" style="width: 80px;">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-if="buscando">
-                            <td colspan="9" class="py-4 text-center text-muted">Buscando unidades...</td>
+                            <td colspan="11" class="py-4 text-center text-muted">Buscando unidades...</td>
                         </tr>
                         <tr v-else-if="unidadesEncontradas.length === 0">
-                            <td colspan="9" class="py-4 text-center text-muted">Use los filtros de arriba para buscar unidades.</td>
+                            <td colspan="11" class="py-4 text-center text-muted">Use los filtros de arriba para buscar unidades.</td>
                         </tr>
 
                         <tr v-else v-for="(unidad, index) in unidadesEncontradas" :key="unidad.id_unidad">
                             <td class="fw-bold text-center">{{ unidad.folio }}</td>
                             
-                            <td class="text-start lh-sm">
-                                <span class="d-block text-primary fw-semibold text-truncate" style="max-width: 200px;" :title="unidad.direccion_edificio + ' ' + unidad.altura_edificio">
+                            <td class="text-start lh-sm expensa_dato-secundario expensa_col-direccion">
+                                <span class="d-block text-primary fw-semibold text-truncate" :title="unidad.direccion_edificio + ' ' + unidad.altura_edificio">
                                     {{ unidad.direccion_edificio }} {{ unidad.altura_edificio }}
                                 </span>
-                                <span class="x-small text-muted">U: {{ unidad.unidad }} {{ unidad.piso }} {{ unidad.depto }}</span>
+                                <span class="x-small text-muted">U: {{ unidad.unidad }} P: {{ unidad.piso }} D: {{ unidad.depto }}</span>
                             </td>
 
-                            <td>
+                            <td class="text-start text-truncate expensa_dato-secundario expensa_col-admin" :title="unidad.nombre">
+                                {{ unidad.nombre || '-' }}
+                            </td>
+                            <td class="text-start text-truncate expensa_dato-secundario expensa_col-consorcio" :title="unidad.nombre_consorcio">
+                                {{ unidad.nombre_consorcio || '-' }}
+                            </td>
+
+                            <td class="expensa_col-fecha">
                                 <input type="date" class="form-control form-control-sm shadow-none px-1 text-center text-secondary"
                                     v-model="unidad.input_vencimiento">
                             </td>
-                            <td>
+                            <td class="expensa_col-periodo">
                                 <input type="text" class="form-control form-control-sm shadow-none px-1 text-center"
                                     v-model="unidad.input_periodo" placeholder="Mes">
                             </td>
-                            <td>
+                            <td class="expensa_col-anio">
                                 <input type="text" class="form-control form-control-sm shadow-none px-1 text-center"
                                     v-model="unidad.input_anio" placeholder="Año">
                             </td>
@@ -120,13 +120,16 @@
 
                             <td class="text-center">
                                 <button type="button"
-                                    class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center shadow-sm"
+                                    class="btn btn-sm d-inline-flex align-items-center justify-content-center shadow-sm"
+                                    :class="unidad._guardadoConExito ? 'btn-success text-white' : 'btn-outline-primary'"
                                     style="width: 30px; height: 30px; padding: 0; border-radius: 4px;"
-                                    @click="guardarFila(unidad)" :disabled="guardandoId === unidad.id_unidad"
-                                    title="Guardar">
+                                    @click="guardarFila(unidad)"
+                                    :disabled="guardandoId === unidad.id_unidad || unidad._guardadoConExito"
+                                    :title="unidad._guardadoConExito ? 'Broche cargado' : 'Guardar broche'"
+                                    :aria-label="unidad._guardadoConExito ? 'Broche cargado' : 'Guardar broche'">
                                     <span v-if="guardandoId === unidad.id_unidad"
-                                        class="spinner-border spinner-border-sm text-white"></span>
-                                    <i v-else class="bi bi-check2-circle text-white"
+                                        class="spinner-border spinner-border-sm text-primary"></span>
+                                    <i v-else :class="unidad._guardadoConExito ? 'bi bi-check2-circle text-white' : 'bi bi-save2'"
                                         style="font-size: 1.1rem;"></i>
                                 </button>
                             </td>
@@ -145,6 +148,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import BaseModal from '@/components/base/BaseModal.vue';
+import SelectPredictivo from '@/components/base/SelectPredictivo.vue';
 import { alertas } from '@/utils/alertas';
 import { buscarBrochesService, guardarBrocheService } from '@/Services/api/Impuestos/expensasApi.js';
 
@@ -269,6 +273,7 @@ const cerrarModal = () => {
 .table-scroll-container {
     max-height: 55vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* Estilo para marcar filas que ya se guardaron */
