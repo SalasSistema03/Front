@@ -49,7 +49,7 @@
 
         <div class="card shadow-sm">
             <div class="card-body p-0">
-                <div class="table-responsive table-scroll-container px-1">
+                <div class="table-responsive tabla-broches-principal-scroll px-1">
                     <table class="table table-hover table-striped mb-0 align-middle tabla-impuestos tabla-broches-principal">
                         <thead class="table-light">
                             <tr style="position: sticky; top: 0; z-index: 1;">

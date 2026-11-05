@@ -104,27 +104,30 @@ $grisSalas: colorSalas.$grisSalas
   font-size: 1.5vh !important
 
 // Estilos de la tabla principal de broches
+.tabla-broches-principal-scroll
+  max-height: 65vh
+  overflow-y: auto
+  overflow-x: hidden
+
 .tabla-broches-principal
-  min-width: 980px
-  font-size: 0.78rem
+  width: 100%
+  table-layout: fixed
+  font-size: 0.72rem
   th,
   td
-    white-space: nowrap
-    padding: 0.35rem 0.3rem
+    padding: 0.3rem 0.2rem
+    white-space: normal
+    overflow-wrap: anywhere
+  th
+    line-height: 1.1
   th:last-child,
   td:last-child
-    min-width: 82px
-
-.table-scroll-container
-  overflow-x: auto
-
-.table-scroll-container::-webkit-scrollbar
-  width: 6px
-  height: 6px
-
-.table-scroll-container::-webkit-scrollbar-thumb
-  background-color: #cbd5e1
-  border-radius: 10px
+    width: 9%
+    min-width: 72px
+  td:nth-child(3),
+  td:nth-child(4),
+  td:nth-child(7)
+    line-height: 1.1
 
 // Estilos de la tabla de carga de broches
 .tabla-broches-carga-scroll
