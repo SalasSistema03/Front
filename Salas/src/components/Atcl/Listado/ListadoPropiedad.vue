@@ -1257,7 +1257,7 @@ onMounted(async () => {
     //si el usuario es admin que saque el id_usuario:3 del asesores.value
     if (isUserAdmin.value === false && asesores.value.length > 0) {
       asesores.value = asesores.value.filter(
-        (a) => a.id_usuario !== 3 && a.id_usuario !== 4 && a.id_usuario !== 5 && a.id_usuario !== 18,
+        (a) =>  a.id_usuario !== 18,
       )
     }
   } catch (error) {
