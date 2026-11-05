@@ -141,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ModalRepactado from '../../../components/Atcl/Repactado/ModalRepactado.vue'
 import { useToast } from '@/composables/useToast'
@@ -164,6 +164,10 @@ const mesSeleccionado = ref(hoy.getMonth() + 1)
 const anioSeleccionado = ref(Math.min(Math.max(hoy.getFullYear(), ANIO_MINIMO), ANIO_MAXIMO))
 const empresaSeleccionada = ref('1')
 const folioSeleccionado = ref(null)
+
+onMounted(() => {
+  filtrarRepactado(folioSeleccionado.value, mesSeleccionado.value, anioSeleccionado.value, empresaSeleccionada.value)
+})
 
 const validarEmpresa = (empresa) => {
   const empresaNum = Number(empresa)

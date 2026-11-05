@@ -251,197 +251,6 @@
 
 
 
-  <!-- Modal Fotos -->
-  <div class="modal fade" id="modalFotos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="modalFotosLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen ">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalFotosLabel">Editar Fotos</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-flex justify-content-center row">
-
-          <!-- Subida local (sin impactar BD) -->
-          <div class="col-md-12 row align-items-star form-group mb-3">
-            <div class="col-md-2">
-              <label for="fotos" class="form-label">Seleccionar Fotos</label>
-            </div>
-            <div class="col-md-6 mb-2">
-              <input type="file" class="form-control" id="fotos" accept="image/jpeg, image/jpg" multiple
-                @change="agregarFotosPendientes">
-            </div>
-          </div>
-
-          <!-- Fotos pendientes (nuevas, no guardadas aún) -->
-          <div v-if="fotosPendientes.length" class="col-md-12 mb-3">
-            <h6 class="text-warning">⚠ Fotos nuevas</h6>
-            <div class="row g-1">
-              <div v-for="(foto, index) in fotosPendientes" :key="'pending-' + index" class="col-md-4">
-                <div class="card border-warning">
-                  <img :src="foto.preview" class="card-img-top img-thumbnail" style="height: 200px; object-fit: cover;"
-                    alt="Preview">
-                  <div class="card-body">
-                    <div class="row g-1">
-                      <div class="col-md-3">
-                        <input type="number" class="form-control form-control-sm" placeholder="Orden"
-                          v-model.number="foto.orden" @change="validarCambioOrden(foto)">
-                      </div>
-                      <div class="col-md-9">
-                        <textarea class="form-control form-control-sm" rows="1" placeholder="Comentario..."
-                          v-model="foto.comentario">
-                                            </textarea>
-                      </div>
-
-                      <div class="col-md-12 mt-1">
-                        <button type="button" class="btn btn-danger btn-sm w-100" @click="quitarFotoPendiente(index)">
-                          Quitar
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr>
-          </div>
-
-          <!-- Fotos ya guardadas en BD -->
-          <div class="row g-1 overflow-y-auto" style="max-height: 55vh;">
-            <div v-for="foto in fotosOrdenadas" :key="foto.id" class="col-md-4">
-              <div class="card">
-                <img :src="'http://10.10.10.191' + foto.url" class="card-img-top img-thumbnail"
-                  style="height: 200px; object-fit: cover;" alt="Imagen de propiedad">
-                <div class="card-body">
-                  <div class="row g-1 align-items-center">
-                    <div class="col-md-3">
-                      <input type="number" class="form-control form-control-sm" placeholder="Orden"
-                        v-model.number="foto.orden" @change="validarCambioOrden(foto)">
-                    </div>
-                    <div class="col-md-9">
-                      <textarea class="form-control form-control-sm" rows="1" placeholder="Comentario..."
-                        v-model="foto.notes" @change="validarCambioOrden(foto)">
-                                        </textarea>
-                    </div>
-                    <div class="col-md-12 d-flex justify-content-between">
-                      <small class="text-muted">Fecha cargado: {{ formatDate(foto.updated_at) }}</small>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" :id="'archivado-' + foto.id"
-                          :checked="foto.archivado === 1" @change="foto.archivado = $event.target.checked ? 1 : 0">
-                        <label class="form-check-label" :for="'archivado-' + foto.id">
-                          Archivado
-                        </label>
-                      </div>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                      <button type="button" class="btn btn-danger btn-sm w-100" @click="eliminarFotoExistente(foto.id)">
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Modal Documentacion -->
-  <div class="modal fade" id="modalDocumentacion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen ">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalDocumentacionLabel">Editar Documentación</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-flex justify-content-center row">
-
-          <!-- Subida local -->
-          <div class="col-md-12 row align-items-star form-group mb-3">
-            <div class="col-md-2">
-              <label for="documentos" class="form-label">Seleccionar Documentos</label>
-            </div>
-            <div class="col-md-6 mb-2">
-              <input type="file" class="form-control" id="documentos" accept="image/*,application/pdf" multiple
-                @change="agregarDocumentosPendientes">
-            </div>
-            <!-- <div class="col-md-3 mb-2">
-              <button type="button" class="btn btn-primary btn-sm w-100" @click="confirmarDocumentosPendientes">
-                Subir Documento
-              </button>
-            </div> -->
-          </div>
-
-          <!-- Documentos pendientes -->
-          <div v-if="documentosPendientes.length" class="col-md-12 mb-3">
-            <h6 class="text-warning">⚠ Documentos nuevos</h6>
-            <div class="row g-1">
-              <div v-for="(doc, index) in documentosPendientes" :key="'pending-doc-' + index" class="col-md-4">
-                <div class="card border-warning">
-
-                  <!-- Preview: PDF o imagen -->
-                  <div style="height: 200px; overflow: hidden;">
-                    <embed v-if="doc.esPdf" :src="doc.preview" class="w-100 h-100 border-0" type="application/pdf">
-                    <img v-else :src="doc.preview" class="w-100 h-100 img-thumbnail" style="object-fit: cover;">
-                  </div>
-
-                  <div class="card-body">
-                    <div class="row g-1">
-                      <div class="col-md-12">
-                        <textarea class="form-control form-control-sm" rows="1" placeholder="Comentario..."
-                          v-model="doc.comentario">
-                                            </textarea>
-                      </div>
-                      <div class="col-md-12 mt-1">
-                        <button type="button" class="btn btn-danger btn-sm w-100"
-                          @click="quitarDocumentoPendiente(index)">
-                          Quitar
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr>
-          </div>
-
-          <!-- Documentos ya guardados en BD -->
-          <div class="row g-1 overflow-y-auto" style="max-height: 55vh;">
-            <div v-for="documento in propiedad_update?.documentacion" :key="documento.id" class="col-md-4">
-              <div class="card">
-                <div style="height: 200px; overflow: hidden;">
-                  <embed v-if="documento.url.endsWith('.pdf')" :src="'http://10.10.10.191' + documento.url"
-                    class="w-100 h-100 border-0" type="application/pdf">
-                  <img v-else :src="'http://10.10.10.191' + documento.url" class="w-100 h-100 img-thumbnail"
-                    style="object-fit: cover;">
-                </div>
-                <div class="card-body">
-                  <div class="row g-1">
-                    <div class="col-md-12">
-                      <textarea class="form-control form-control-sm" rows="1" placeholder="Comentario..."
-                        v-model="documento.notes">
-                                        </textarea>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                      <button type="button" class="btn btn-danger btn-sm w-100"
-                        @click="eliminarDocumentoExistente(documento.id)">
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- Modal Videos -->
   <div class="modal fade" id="modalVideos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="modalVideosLabel" aria-hidden="true">
@@ -568,6 +377,12 @@
     @close="showModalPropietarios = false">
   </ModalPropiedadPropietario>
 
+  <!-- Modal Fotos: el estado vive en el componente; se consulta al guardar -->
+  <ModalCargaFotos v-if="propiedad_update" ref="modalFotos" :fotos="propiedad_update.fotos"></ModalCargaFotos>
+
+  <!-- Modal Documentacion: el estado vive en el componente; se consulta al guardar -->
+  <ModalCargaDocumentos v-if="propiedad_update" ref="modalDocumentos" :documentos="propiedad_update.documentacion"></ModalCargaDocumentos>
+
 </template>
 
 <script>
@@ -579,6 +394,8 @@ import ModalPropiedadVenta from '../../components/Atcl/Propiedad/ModalPropiedadV
 import ModalPropiedadAlquiler from '../../components/Atcl/Propiedad/ModalPropiedadAlquiler.vue'
 import ModalCondicionAlquiler from '../../components/Atcl/Propiedad/ModalCondicionAlquiler.vue'
 import ModalPropiedadPropietario from '../../components/Atcl/Propiedad/ModalPropiedadPropietario.vue'
+import ModalCargaFotos from '../../components/Atcl/Propiedad/ModalCargaFotos.vue'
+import ModalCargaDocumentos from '../../components/Atcl/Propiedad/ModalCargaDocumentos.vue'
 import { muestraPropiedad, actualizaPropiedad } from '../../Services/api/Atcl/AtclApi'
 import { useCalleAutocomplete } from '../../composables/atcl/useCalleAutocomplete'
 import { useInmuebles } from '../../composables/atcl/useInmuebles'
@@ -594,8 +411,7 @@ import { getUser } from '../../Services/api/Usuario/userApi'
 import { canSubmitPropertyUpdate } from '../../utils/propertyUpdateGuard'
 import {
   changedPropertyUpdateFields,
-  propertyUpdateFormState,
-  propertyUpdateValuesEqual
+  propertyUpdateFormState
 } from '../../utils/propertyUpdateChanges.js'
 
 // IMPORTAMOS LOCALIDADES Y LEAFLET
@@ -618,7 +434,7 @@ export default {
   name: 'PropiedadUpdateView',
   components: {
     NavComponent, ModalPropiedadComodidades, ModalPropiedadDescripcion, ModalPropiedadVenta,
-    ModalPropiedadAlquiler, ModalCondicionAlquiler, ModalPropiedadPropietario
+    ModalPropiedadAlquiler, ModalCondicionAlquiler, ModalPropiedadPropietario, ModalCargaFotos, ModalCargaDocumentos
   },
   setup() {
     const { callesFiltradas, mostrarSugerencias, calleSeleccionada, calleId, cargarCalles, filtrarCalles, seleccionarCalle, ocultarSugerencias, mostrarLista } = useCalleAutocomplete()
@@ -655,8 +471,6 @@ export default {
       ph: '', tipo_inmueble: '', id_zona: '', id_provincia: '',
       id_localidad: '', // NUEVO CAMPO LOCALIDAD
       cartel: '',
-      fotosPendientes: [], fotosEliminadas: [], fotosOriginales: [],
-      documentosPendientes: [], documentosEliminados: [], documentosOriginales: [],
       videosPendientes: [], videosEliminados: [], videosOriginales: [],
       propietariosNuevos: [], propietariosEliminados: [], propietariosModificados: [], propietariosOriginales: [],
       id: null,
@@ -687,16 +501,6 @@ export default {
     },
     canSubmitPropertyUpdate() {
       return canSubmitPropertyUpdate({ loading: this.loading, submitting: this.submitting, loadFailed: this.loadFailed, property: this.propiedad_update })
-    },
-    fotosOrdenadas() {
-      // (Mantener tu lógica original de fotos)
-      if (!this.propiedad_update || !this.propiedad_update.fotos) return [];
-      return [...this.propiedad_update.fotos].sort((a, b) => {
-        if (a.orden !== null && b.orden !== null) return a.orden - b.orden;
-        if (a.orden !== null) return -1;
-        if (b.orden !== null) return 1;
-        return a.id - b.id;
-      });
     }
   },
   methods: {
@@ -767,109 +571,6 @@ export default {
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit'
       })
-    },
-
-    // 2. Validar cuando cambia el orden de una foto
-    validarCambioOrden(fotoActual) {
-      const ordenesUsados = new Set()
-      const todasLasFotos = [
-        ...(this.propiedad_update?.fotos || []),
-        ...(this.fotosPendientes || [])
-      ]
-
-      for (const foto of todasLasFotos) {
-        if (foto !== fotoActual && foto.orden !== null && foto.orden !== undefined && foto.orden !== '') {
-          ordenesUsados.add(foto.orden)
-        }
-      }
-
-      if (fotoActual.orden !== null && fotoActual.orden !== undefined && fotoActual.orden !== '' && ordenesUsados.has(fotoActual.orden)) {
-        this.showError(`El número de orden ${fotoActual.orden} ya está siendo usado por otra foto`)
-        this.$nextTick(() => {
-          const original = this.fotosOriginales?.find(f => f.id === fotoActual.id)
-          fotoActual.orden = original?.orden ?? null
-        })
-      }
-    },
-
-    // 3. Validar que no haya números de orden duplicados
-    validarOrdenFotos() {
-      const ordenesUsados = new Set()
-
-      if (this.propiedad_update && this.propiedad_update.fotos) {
-        for (const foto of this.propiedad_update.fotos) {
-          if (foto.orden !== null && foto.orden !== undefined && foto.orden !== '') {
-            if (ordenesUsados.has(foto.orden)) {
-              return { valido: false, mensaje: `El número de orden ${foto.orden} está duplicado en las fotos existentes` }
-            }
-            ordenesUsados.add(foto.orden)
-          }
-        }
-      }
-
-      for (const foto of this.fotosPendientes) {
-        if (foto.orden !== null && foto.orden !== undefined && foto.orden !== '') {
-          if (ordenesUsados.has(foto.orden)) {
-            return { valido: false, mensaje: `El número de orden ${foto.orden} ya está siendo usado por otra foto` }
-          }
-          ordenesUsados.add(foto.orden)
-        }
-      }
-
-      return { valido: true }
-    },
-
-    // ==========================================
-    // MULTIMEDIA: FOTOS
-    // ==========================================
-    agregarFotosPendientes(event) {
-      const archivos = Array.from(event.target.files)
-      archivos.forEach(file => {
-        this.fotosPendientes.push({
-          file: file,
-          preview: URL.createObjectURL(file),
-          comentario: '',
-          orden: null,
-          archivado: 0 // Corrección agregada aquí
-        })
-      })
-      event.target.value = '' // Limpiar input
-    },
-    quitarFotoPendiente(index) {
-      URL.revokeObjectURL(this.fotosPendientes[index].preview) // liberar memoria
-      this.fotosPendientes.splice(index, 1)
-    },
-    eliminarFotoExistente(fotoId) {
-      if (!confirm('¿Eliminar esta foto?')) return
-      this.propiedad_update.fotos = this.propiedad_update.fotos.filter(f => f.id !== fotoId)
-      this.fotosEliminadas.push(fotoId)
-    },
-
-    // ==========================================
-    // MULTIMEDIA: DOCUMENTOS
-    // ==========================================
-    agregarDocumentosPendientes(event) {
-      const archivos = Array.from(event.target.files)
-      archivos.forEach(file => {
-        const esPdf = file.type === 'application/pdf'
-        this.documentosPendientes.push({
-          file,
-          preview: URL.createObjectURL(file),
-          esPdf,
-          nombre: file.name,
-          comentario: ''
-        })
-      })
-      event.target.value = ''
-    },
-    quitarDocumentoPendiente(index) {
-      URL.revokeObjectURL(this.documentosPendientes[index].preview)
-      this.documentosPendientes.splice(index, 1)
-    },
-    eliminarDocumentoExistente(docId) {
-      if (!confirm('¿Eliminar este documento?')) return
-      this.propiedad_update.documentacion = this.propiedad_update.documentacion.filter(d => d.id !== docId)
-      this.documentosEliminados.push(docId)
     },
 
     // ==========================================
@@ -1017,23 +718,6 @@ export default {
         this.calleSeleccionada = this.propiedad_update.calle?.name ?? ''
         this.calleId = this.originalForm.main.calle_id
 
-        // GUARDAMOS LOS ORIGINALES PARA COMPARAR DESPUÉS
-        if (response.data.data.fotos && Array.isArray(response.data.data.fotos)) {
-          this.fotosOriginales = response.data.data.fotos.map(f => ({
-            id: f.id,
-            orden: f.orden ?? '',
-            notes: f.notes ?? '',
-            archivado: f.archivado
-          }))
-        } else { this.fotosOriginales = [] }
-
-        if (response.data.data.documentacion && Array.isArray(response.data.data.documentacion)) {
-          this.documentosOriginales = response.data.data.documentacion.map(d => ({
-            id: d.id,
-            notes: d.notes ?? ''
-          }))
-        } else { this.documentosOriginales = [] }
-
         if (response.data.data.video && Array.isArray(response.data.data.video)) {
           this.videosOriginales = response.data.data.video.map(v => ({
             id: v.id,
@@ -1068,7 +752,7 @@ export default {
 
       this.submitting = true
       try {
-        const validacion = this.validarOrdenFotos ? this.validarOrdenFotos() : { valido: true }
+        const validacion = this.$refs.modalFotos?.validarOrden() ?? { valido: true }
         if (!validacion.valido) {
           this.showError(validacion.mensaje)
           this.submitting = false
@@ -1125,65 +809,40 @@ export default {
           formData.append('propietarios_modificados', JSON.stringify(this.propietariosModificados))
         }
 
-        // MULTIMEDIA FOTOS
-        if (this.propiedad_update?.fotos) {
-          const fotasModificadas = this.propiedad_update.fotos.filter(foto => {
-            const original = this.fotosOriginales.find(o => o.id === foto.id)
-            if (!original) return false
-            return Object.keys(changedPropertyUpdateFields(original, {
-              orden: foto.orden,
-              notes: foto.notes,
-              archivado: foto.archivado
-            })).length > 0
-          })
-          if (fotasModificadas.length > 0) {
-            const datos = fotasModificadas.map(f => ({
-              id: f.id,
-              ...changedPropertyUpdateFields(
-                this.fotosOriginales.find(o => o.id === f.id),
-                { orden: f.orden, notes: f.notes, archivado: f.archivado }
-              )
-            }))
-            formData.append('fotos_modificadas', JSON.stringify(datos))
-          }
+        // MULTIMEDIA FOTOS (cambios que expone ModalCargaFotos)
+        const cambiosFotos = this.$refs.modalFotos?.obtenerCambios() ?? { modificadas: [], pendientes: [], eliminadas: [] }
+
+        if (cambiosFotos.modificadas.length > 0) {
+          formData.append('fotos_modificadas', JSON.stringify(cambiosFotos.modificadas))
         }
 
-        if (this.fotosPendientes && this.fotosPendientes.length > 0) {
-          this.fotosPendientes.forEach((foto, index) => {
+        if (cambiosFotos.pendientes.length > 0) {
+          cambiosFotos.pendientes.forEach((foto, index) => {
             formData.append(`fotos_nuevas[${index}]`, foto.file)
           })
-          const metaData = this.fotosPendientes.map((f, index) => ({
+          const metaData = cambiosFotos.pendientes.map((f, index) => ({
             index: index, nombre: f.file.name, orden: f.orden ?? '', comentario: f.comentario ?? '', archivado: f.archivado ?? 0
           }))
           formData.append('fotos_nuevas_data', JSON.stringify(metaData))
         }
 
-        if (this.fotosEliminadas && this.fotosEliminadas.length > 0) {
-          formData.append('fotos_eliminadas', JSON.stringify(this.fotosEliminadas))
+        if (cambiosFotos.eliminadas.length > 0) {
+          formData.append('fotos_eliminadas', JSON.stringify(cambiosFotos.eliminadas))
         }
 
-        // MULTIMEDIA DOCUMENTOS
-        if (this.documentosPendientes && this.documentosPendientes.length > 0) {
-          this.documentosPendientes.forEach((doc, index) => { formData.append(`documentos_nuevos[${index}]`, doc.file) })
-          const metaData = this.documentosPendientes.map((d, index) => ({ index: index, nombre: d.file.name, comentario: d.comentario ?? '' }))
+        // MULTIMEDIA DOCUMENTOS (cambios que expone ModalCargaDocumentos)
+        const cambiosDocumentos = this.$refs.modalDocumentos?.obtenerCambios() ?? { modificadas: [], pendientes: [], eliminados: [] }
+
+        if (cambiosDocumentos.pendientes.length > 0) {
+          cambiosDocumentos.pendientes.forEach((doc, index) => { formData.append(`documentos_nuevos[${index}]`, doc.file) })
+          const metaData = cambiosDocumentos.pendientes.map((d, index) => ({ index: index, nombre: d.file.name, comentario: d.comentario ?? '' }))
           formData.append('documentos_nuevos_data', JSON.stringify(metaData))
         }
-        if (this.documentosEliminados && this.documentosEliminados.length > 0) {
-          formData.append('documentos_eliminados', JSON.stringify(this.documentosEliminados))
+        if (cambiosDocumentos.eliminados.length > 0) {
+          formData.append('documentos_eliminados', JSON.stringify(cambiosDocumentos.eliminados))
         }
-        if (this.propiedad_update?.documentacion) {
-          const docsModificados = this.propiedad_update.documentacion.filter(doc => {
-            const original = this.documentosOriginales.find(o => o.id === doc.id)
-            if (!original) return false
-            return !propertyUpdateValuesEqual(original.notes, doc.notes)
-          })
-          if (docsModificados.length > 0) {
-            const datos = docsModificados.map(d => ({
-              id: d.id,
-              ...changedPropertyUpdateFields(this.documentosOriginales.find(o => o.id === d.id), { notes: d.notes })
-            }))
-            formData.append('documentos_modificados', JSON.stringify(datos))
-          }
+        if (cambiosDocumentos.modificadas.length > 0) {
+          formData.append('documentos_modificados', JSON.stringify(cambiosDocumentos.modificadas))
         }
 
         // MULTIMEDIA VIDEOS

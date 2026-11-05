@@ -196,13 +196,31 @@
 
 
                 <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  data-bs-toggle="modal" data-bs-target="#modalFotos" title="Fotos">
+                  data-bs-toggle="modal" data-bs-target="#modalFotos" title="Fotos" @click="seleccionarFotos(item)">
                   <i class="bi bi-camera "></i>
                 </button>
 
                 <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  data-bs-toggle="modal" data-bs-target="#modalDocumentacion" title="Documentación">
-                  <i class="bi bi-file-earmark-pdf "></i>
+                  title="Cargar videos" @click="abrirModalVideos(item)">
+                  <i class="bi bi-camera-reels"></i>
+                </button>
+
+                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
+                  title="Ver videos" @click="abrirModalVisualizarVideos(item)">
+                  <i class="bi bi-play-btn"></i>
+                </button>
+
+                <!-- Documento Word: sube directo (sin modal). Un documento por reserva. -->
+                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
+                  :disabled="!tienePermisoCarga || subiendoDocId !== null" title="Cargar documento (.doc / .docx)"
+                  @click="elegirDocumento(item)">
+                  <i class="bi" :class="subiendoDocId === item.id ? 'bi-hourglass-split' : 'bi-upload'"></i>
+                </button>
+
+                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
+                  data-bs-toggle="modal" data-bs-target="#modalDocumentosInventario" title="Ver / descargar documento"
+                  @click="seleccionarDocumentos(item)">
+                  <i class="bi bi-eye"></i>
                 </button>
               </div>
             </td>
@@ -215,10 +233,15 @@
   </div>
   <ModalInventario v-if="showModalInventario" :show="showModalInventario" :inventario="inventarioSeleccionado"
     @close="cerrarModalInventario" @guardar="guardarModalInventario" :tienePermisoCarga="tienePermisoCarga" />
-  <!-- <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones"
-    :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" /> -->
   <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
     @close="showModalObservacion = false" />
+  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos" :puede-editar="tienePermisoCarga" @close="showModalVideos = false" @uploaded="videosCargados" />
+  <ModalVisualizarVideos v-if="showModalVisualizarVideos" :show="showModalVisualizarVideos" :id-proceso-propiedad="procesoVideosVisualizacion" :puede-editar="tienePermisoCarga" @close="showModalVisualizarVideos = false" />
+  <ModalCargaFotos modo="inventario" :id-proceso-propiedad="procesoFotos" :puede-editar="tienePermisoCarga" />
+  <ModalDocumentosInventario :id-proceso-propiedad="procesoDocumentos" :puede-editar="tienePermisoCarga" />
+  <!-- Input oculto: el botón de documentos abre el selector del sistema -->
+  <input ref="inputDocumento" type="file" accept=".doc,.docx" class="d-none" @change="onDocumentoSeleccionado">
+
 </template>
 <script setup>
 import NavComponent from '../../../components/NavComponent.vue'
@@ -228,6 +251,7 @@ import {
   ActualizarInventario,
   getEstadoDpto,
   getUsuariosDpto,
+  subirDocumentoInventario,
 } from '@/Services/api/Dpto/Inventario'
 import { ref, onMounted, watch, computed } from 'vue'
 import ModalObservacionAlquiler from '@/components/Atcl/Alquiler/ModalObservacionAlquiler.vue'
@@ -236,6 +260,10 @@ import { verificarPermiso } from '@/Services/api/Atcl/AtclApi'
 /* import ModalObservacionesInventario from '@/components/Dpto/Inventario/ModalObservacionesInventario.vue' */
 import { useDateFormatter } from '@/composables/useDateFormatter'
 import { useToast } from '@/composables/useToast'
+import ModalCargaFotos from '@/components/Atcl/Propiedad/ModalCargaFotos.vue'
+import ModalCargaVideos from '@/components/Dpto/Inventario/Modales/ModalCargaVideos.vue'
+import ModalVisualizarVideos from '@/components/Dpto/Inventario/Modales/ModalVisualizarVideos.vue'
+import ModalDocumentosInventario from '@/components/Dpto/Inventario/ModalDocumentosInventario.vue'
 const { mes, anio, obtenerAñoMenos3 } = useFiltroMesAnio()
 const resPermiso = ref(false)
 const historial = ref([])
@@ -319,6 +347,69 @@ const abrirModalInventario = (item) => {
 
 const cerrarModalInventario = () => {
   showModalInventario.value = false
+}
+
+// Proceso de reserva cuyas fotos se muestran en el modal (fotos de inventario)
+const showModalVideos = ref(false)
+const showModalVisualizarVideos = ref(false)
+const procesoFotos = ref(null)
+const procesoVideos = ref(null)
+const procesoVideosVisualizacion = ref(null)
+const seleccionarFotos = (item) => {
+  procesoFotos.value = item.id
+}
+const abrirModalVideos = (item) => {
+  procesoVideos.value = item.id
+  showModalVideos.value = true
+}
+const abrirModalVisualizarVideos = (item) => {
+  procesoVideosVisualizacion.value = item.id
+  showModalVisualizarVideos.value = true
+}
+const videosCargados = () => {
+  // La lista se carga al abrir el modal de visualización, por lo que no se mezclan ambos modales.
+}
+
+// ---- Documento Word de inventario (carga directa, un documento por reserva) ----
+const EXTENSIONES_WORD = ['doc', 'docx']
+const inputDocumento = ref(null)
+const procesoDocumento = ref(null) // id del proceso al que se sube el archivo elegido
+const procesoDocumentos = ref(null) // id del proceso cuya lista se muestra en el modal
+const subiendoDocId = ref(null)
+
+const seleccionarDocumentos = (item) => {
+  procesoDocumentos.value = item.id
+}
+
+const elegirDocumento = (item) => {
+  procesoDocumento.value = item.id
+  inputDocumento.value?.click()
+}
+
+const onDocumentoSeleccionado = async (event) => {
+  const archivo = event.target.files?.[0]
+  event.target.value = '' // permite volver a elegir el mismo archivo
+  if (!archivo || !procesoDocumento.value) return
+
+  const extension = archivo.name.split('.').pop()?.toLowerCase()
+  if (!EXTENSIONES_WORD.includes(extension)) {
+    showError('Solo se permiten archivos .doc o .docx')
+    return
+  }
+
+  const idProceso = procesoDocumento.value
+  subiendoDocId.value = idProceso
+  try {
+    const formData = new FormData()
+    formData.append('id_proceso_propiedad', idProceso)
+    formData.append('documento', archivo)
+    await subirDocumentoInventario(formData)
+    showSuccess('Documento cargado correctamente')
+  } catch (error) {
+    showError(error.response?.data?.message || 'Error al cargar el documento')
+  } finally {
+    subiendoDocId.value = null
+  }
 }
 
 const abrirModalObservacionesContrato = (item) => {
