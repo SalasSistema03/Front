@@ -43,12 +43,13 @@
           </div>
           <div class="col-md-8 mt-2">
             <label class="form-label x-small text-muted fw-bold mb-0">Consorcio/Edificio Asignado</label>
-            <select class="form-select form-select-sm border-primary-subtle shadow-sm" v-model="edificioSeleccionado">
-              <option value="" disabled>Seleccione un edificio...</option>
-              <option v-for="edificio in edificiosLista" :key="edificio.id" :value="String(edificio.id)">
-                {{ edificio.nombre_consorcio.toUpperCase() }} - {{ edificio.direccion }} {{ edificio.altura }}
-              </option>
-            </select>
+            <SelectPredictivo
+              v-model="edificioSeleccionado"
+              :items="edificiosPredictivos"
+              label-key="etiqueta"
+              placeholder="Escriba para buscar un consorcio o edificio..."
+              class="textoPredictivoEdificioUnidades"
+            />
           </div>
         </div>
 
@@ -165,8 +166,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import BaseModal from '@/components/base/BaseModal.vue';
+import SelectPredictivo from '@/components/base/SelectPredictivo.vue';
 import { alertas } from '@/utils/alertas';
 import { completarCargaUnidadesService, eliminarUnidadService } from '@/Services/api/Impuestos/expensasApi.js';
 
@@ -183,6 +185,11 @@ const guardando = ref(false);
 const estadoSys = ref('');
 const edificioSeleccionado = ref('');
 const padronesLocales = ref([]);
+
+const edificiosPredictivos = computed(() => props.edificiosLista.map(edificio => ({
+  ...edificio,
+  etiqueta: `${edificio.nombre_consorcio || ''} - ${edificio.direccion || ''} ${edificio.altura || ''}`.trim()
+})));
 
 // NUEVO: Variable para controlar la vista interna
 const modoComentario = ref(false);
