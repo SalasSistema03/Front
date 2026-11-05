@@ -103,6 +103,80 @@ $grisSalas: colorSalas.$grisSalas
 .expensa_dato-secundario
   font-size: 1.5vh !important
 
+// Estilos de la tabla principal de broches
+.tabla-broches-principal
+  min-width: 980px
+  font-size: 0.78rem
+  th,
+  td
+    white-space: nowrap
+    padding: 0.35rem 0.3rem
+  th:last-child,
+  td:last-child
+    min-width: 82px
+
+.table-scroll-container
+  overflow-x: auto
+
+.table-scroll-container::-webkit-scrollbar
+  width: 6px
+  height: 6px
+
+.table-scroll-container::-webkit-scrollbar-thumb
+  background-color: #cbd5e1
+  border-radius: 10px
+
+// Estilos de la tabla de carga de broches
+.tabla-broches-carga-scroll
+  max-height: 55vh
+  overflow-y: auto
+  overflow-x: hidden
+
+.tabla-broches-carga
+  width: 100%
+  table-layout: fixed
+  font-size: 0.76rem
+  th,
+  td
+    padding: 0.35rem 0.25rem
+  th
+    background-color: $azulSalas !important
+    color: white !important
+    font-weight: bold
+    white-space: normal
+    line-height: 1.1
+    &:nth-child(1)
+      width: 5%
+    &:nth-child(2)
+      width: 15%
+    &:nth-child(3)
+      width: 11%
+    &:nth-child(4)
+      width: 11%
+    &:nth-child(5)
+      width: 10%
+    &:nth-child(6)
+      width: 6%
+    &:nth-child(7)
+      width: 5%
+    &:nth-child(8)
+      width: 10%
+    &:nth-child(9)
+      width: 9%
+    &:nth-child(10)
+      width: 9%
+    &:nth-child(11)
+      width: 9%
+
+.x-small
+  font-size: 0.70rem
+  text-transform: uppercase
+  letter-spacing: 0.5px
+
+// Estilo para marcar filas ya guardadas
+.tabla-broches-carga tr:has(button:disabled)
+  opacity: 0.8
+
 // Anchos de columna para tabla de broches
 .expensa_col-direccion
   max-width: 200px

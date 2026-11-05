@@ -201,8 +201,13 @@
                 </button>
 
                 <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  title="Videos" @click="abrirModalVideos(item)">
+                  title="Cargar videos" @click="abrirModalVideos(item)">
                   <i class="bi bi-camera-reels"></i>
+                </button>
+
+                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
+                  title="Ver videos" @click="abrirModalVisualizarVideos(item)">
+                  <i class="bi bi-play-btn"></i>
                 </button>
 
                 <!-- Documento Word: sube directo (sin modal). Un documento por reserva. -->
@@ -230,7 +235,8 @@
     @close="cerrarModalInventario" @guardar="guardarModalInventario" :tienePermisoCarga="tienePermisoCarga" />
   <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
     @close="showModalObservacion = false" />
-  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos" :puede-editar="tienePermisoCarga" @close="showModalVideos = false" />
+  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos" :puede-editar="tienePermisoCarga" @close="showModalVideos = false" @uploaded="videosCargados" />
+  <ModalVisualizarVideos v-if="showModalVisualizarVideos" :show="showModalVisualizarVideos" :id-proceso-propiedad="procesoVideosVisualizacion" :puede-editar="tienePermisoCarga" @close="showModalVisualizarVideos = false" />
   <ModalCargaFotos modo="inventario" :id-proceso-propiedad="procesoFotos" :puede-editar="tienePermisoCarga" />
   <ModalDocumentosInventario :id-proceso-propiedad="procesoDocumentos" :puede-editar="tienePermisoCarga" />
   <!-- Input oculto: el botón de documentos abre el selector del sistema -->
@@ -256,6 +262,7 @@ import { useDateFormatter } from '@/composables/useDateFormatter'
 import { useToast } from '@/composables/useToast'
 import ModalCargaFotos from '@/components/Atcl/Propiedad/ModalCargaFotos.vue'
 import ModalCargaVideos from '@/components/Dpto/Inventario/Modales/ModalCargaVideos.vue'
+import ModalVisualizarVideos from '@/components/Dpto/Inventario/Modales/ModalVisualizarVideos.vue'
 import ModalDocumentosInventario from '@/components/Dpto/Inventario/ModalDocumentosInventario.vue'
 const { mes, anio, obtenerAñoMenos3 } = useFiltroMesAnio()
 const resPermiso = ref(false)
@@ -344,14 +351,23 @@ const cerrarModalInventario = () => {
 
 // Proceso de reserva cuyas fotos se muestran en el modal (fotos de inventario)
 const showModalVideos = ref(false)
+const showModalVisualizarVideos = ref(false)
 const procesoFotos = ref(null)
 const procesoVideos = ref(null)
+const procesoVideosVisualizacion = ref(null)
 const seleccionarFotos = (item) => {
   procesoFotos.value = item.id
 }
 const abrirModalVideos = (item) => {
   procesoVideos.value = item.id
   showModalVideos.value = true
+}
+const abrirModalVisualizarVideos = (item) => {
+  procesoVideosVisualizacion.value = item.id
+  showModalVisualizarVideos.value = true
+}
+const videosCargados = () => {
+  // La lista se carga al abrir el modal de visualización, por lo que no se mezclan ambos modales.
 }
 
 // ---- Documento Word de inventario (carga directa, un documento por reserva) ----

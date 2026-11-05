@@ -111,6 +111,24 @@ export const subirVideoInventario = (formData) => {
   })
 }
 
+export const getVideosInventario = (id_proceso_propiedad) => {
+  const token = localStorage.getItem('token')
+  return axios.get(`${API_URL}/v1/dpto/inventario/videos/${id_proceso_propiedad}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const eliminarVideoInventario = (id) => {
+  const token = localStorage.getItem('token')
+  return axios.delete(`${API_URL}/v1/dpto/inventario/videos/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 export const eliminarDocumentoInventario = (id) => {
   const token = localStorage.getItem('token')
   return axios.delete(`${API_URL}/v1/documentosInventario/${id}`, {

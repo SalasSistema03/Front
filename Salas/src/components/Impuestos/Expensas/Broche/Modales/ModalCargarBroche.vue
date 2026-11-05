@@ -47,22 +47,21 @@
 
             <hr class="text-muted my-2">
 
-            <div class="table-responsive table-scroll-container">
-                <table class="table table-sm table-hover table-striped mb-0 align-middle tabla-impuestos"
-                    style="font-size: 0.82rem;">
+            <div class="table-responsive tabla-broches-carga-scroll">
+                <table class="table table-sm table-hover table-striped mb-0 align-middle tabla-broches-carga">
                     <thead class="table-light text-secondary">
                         <tr style="position: sticky; top: 0; z-index: 1;">
-                            <th class="text-center" style="width: 50px;">Folio</th>
-                            <th class="text-start" style="min-width: 180px;">Dirección / Edificio</th>
-                            <th class="text-start" style="min-width: 140px;">Administrador</th>
-                            <th class="text-start" style="min-width: 140px;">Consorcio</th>
-                            <th class="text-center text-nowrap" style="width: 120px;">Vencimiento</th>
-                            <th class="text-center" style="width: 70px;">Período</th>
-                            <th class="text-center" style="width: 70px;">Año</th>
-                            <th class="text-center text-nowrap" style="width: 105px;">Extraordinaria</th>
-                            <th class="text-center text-nowrap" style="width: 105px;">Ordinaria</th>
-                            <th class="text-center text-nowrap" style="width: 110px;">Total</th>
-                            <th class="text-center text-nowrap" style="width: 80px;">Acción</th>
+                            <th class="text-center">Folio</th>
+                            <th class="text-start">Dirección / Edificio</th>
+                            <th class="text-start">Administrador</th>
+                            <th class="text-start">Consorcio</th>
+                            <th class="text-center text-nowrap">Vencimiento</th>
+                            <th class="text-center">Período</th>
+                            <th class="text-center">Año</th>
+                            <th class="text-center text-nowrap">Extraordinaria</th>
+                            <th class="text-center text-nowrap">Ordinaria</th>
+                            <th class="text-center text-nowrap">Total</th>
+                            <th class="text-center text-nowrap">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -262,22 +261,3 @@ const cerrarModal = () => {
     emit('close');
 };
 </script>
-
-<style scoped>
-.x-small {
-    font-size: 0.70rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.table-scroll-container {
-    max-height: 55vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-/* Estilo para marcar filas que ya se guardaron */
-tr:has(button:disabled) {
-    opacity: 0.8;
-}
-</style>
