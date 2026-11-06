@@ -1,4 +1,4 @@
-<template>
+/<template>
     <BaseModal :show="show" size="lg" @close="cerrarModal" title="Carga de Videos de Inventario">
         <template #body>
             <div class="mb-3">

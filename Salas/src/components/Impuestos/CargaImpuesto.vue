@@ -11,21 +11,21 @@
       <div class="col-md-1 px-1">
         <label for="mes" class="form-label mb-1">Mes</label>
         <input type="number" v-model="mes" class="form-control form-control-sm" placeholder="Mes" min="1" max="12"
-          autocomplete="off" />
+          autocomplete="off" @keyup.enter="filtrar()" />
       </div>
 
       <!-- Año (4 dígitos) -->
       <div class="col-md-1 px-1">
         <label for="anio" class="form-label mb-1">Año</label>
         <input type="number" v-model="anio" class="form-control form-control-sm" placeholder="Año"
-          oninput="this.value = this.value.slice(0, 4)" autocomplete="off" />
+          oninput="this.value = this.value.slice(0, 4)" autocomplete="off" @keyup.enter="filtrar()" />
       </div>
 
       <!-- Folio (hasta 8 números) -->
       <div class="col-md-2 px-1">
         <label for="folio" class="form-label mb-1">Folio</label>
         <input type="number" v-model="folio" class="form-control form-control-sm" placeholder="Folio" maxlength="8"
-          pattern="\d{1,8}" title="Máximo 8 números" autocomplete="off" />
+          pattern="\d{1,8}" title="Máximo 8 números" autocomplete="off" @keyup.enter="filtrar()" />
       </div>
 
       <!-- Partida / Clave (hasta 15 números) -->
@@ -33,25 +33,25 @@
         <div v-if="props.impuesto === 'tgi'">
           <label for="busqueda" class="form-label mb-1">Partida / Clave</label>
           <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida / Clave"
-            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off" />
+            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off" @keyup.enter="filtrar()" />
         </div>
 
         <div v-if="props.impuesto === 'agua'">
           <label for="busqueda" class="form-label mb-1">Partida / Punto</label>
           <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida / Punto"
-            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off" />
+            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off" @keyup.enter="filtrar()" />
         </div>
 
         <div v-if="props.impuesto === 'gas'">
           <label for="busqueda" class="form-label mb-1">Persona / Cliente</label>
           <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Persona / Cliente"
-            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off" />
+            maxlength="15" pattern="\d{1,15}" title="Máximo 15 números" autocomplete="off" @keyup.enter="filtrar()" />
         </div>
 
         <div v-if="props.impuesto === 'api'">
           <label for="busqueda" class="form-label mb-1">Partida </label>
           <input type="number" v-model="busqueda" class="form-control form-control-sm" placeholder="Partida"
-            maxlength="17" pattern="\d{1,17}" title="Máximo 17 números" autocomplete="off" />
+            maxlength="17" pattern="\d{1,17}" title="Máximo 17 números" autocomplete="off" @keyup.enter="filtrar()" />
         </div>
       </div>
 
@@ -269,7 +269,7 @@
     :impuesto="props.impuesto" :mes="mes" :anio="anio" :dia="dia"></ModalArmarBroche>
 
   <ModalControlBroches :show="showControlBroches" @close="showControlBroches = false" @success="filtrar"
-    :impuesto="props.impuesto">
+    :impuesto="props.impuesto" :mes="mes" :anio="anio">
   </ModalControlBroches>
 </template>
 <script setup>
@@ -377,6 +377,10 @@ const mostrarMotivo = (origen) => {
 }
 
 const ControlDeBroches = () => {
+  if (mes.value === null || mes.value === '' || anio.value === null || anio.value === '') {
+    showError('Seleccioná mes y año antes de controlar broches')
+    return
+  }
   showControlBroches.value = true
 }
 
