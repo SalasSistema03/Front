@@ -39,6 +39,11 @@
           @click="currentForm = 'listado_tasaciones'" v-if="sector === 'Venta'">
           Listar Tasaciones
         </div>
+
+        <div class="btn w-100 btn-sm mb-2" :class="currentForm === 'listado_captadores' ? 'btn-primary' : 'btn-light'"
+          @click="currentForm = 'listado_captadores'" v-if="sector === 'Venta'">
+          Listar Captadores
+        </div>
       </div>
       <h5 class="mb-4" v-if="sector === 'Venta'">Listados Asesores</h5>
       <div>
@@ -172,7 +177,7 @@
                   placeholder="Cant. Dormitorios" />
               </div>
 
-              <div class="col-md-6 mt-2">
+              <div class="col-md-3 mt-2">
                 <label class="form-label" for="orden">Ordenar por</label>
                 <select id="orden" class="form-control form-control-sm" v-model="formPropiedades.orden">
                   <option value="">Sin orden</option>
@@ -184,6 +189,16 @@
                   <option value="calle">Calle</option>
                   <option value="codigo">Código</option>
                   <option value="autorizacion">Autorizacion</option>
+                </select>
+              </div>
+
+              <div class="col-md-3 mt-2">
+                <label class="form-label" for="captador">Captador</label>
+                <select id="captador" class="form-control form-control-sm" v-model="formPropiedades.captador">
+                  <option value="">Todos los captadores</option>
+                  <option v-for="captador in captadoresSector" :key="captador.id" :value="captador.id">
+                    {{ captador.nombre }}
+                  </option>
                 </select>
               </div>
 
@@ -489,6 +504,103 @@
         </div>
       </div>
 
+      <div v-if="currentForm === 'listado_captadores'" class="form-section">
+        <div class="card border-primary mx-2">
+          <div class="card-header bg-transparent border-primary">
+            <label>Listar Captadores</label>
+          </div>
+          <div class="card-body text-primary form-group">
+            <div class="row">
+              <div class="col-md-4 p-1">
+                <label class="form-label">Operación</label>
+                <select class="form-control form-control-sm" v-model="tipoCaptadores">
+                  <option value="venta">Venta</option>
+                  <option value="alquiler">Alquiler</option>
+                </select>
+              </div>
+
+              <div class="col-md-12 mt-2">
+                <button type="button" class="btn btn-sm btn-primary w-100 mt-2" @click="submitListadoCaptadores()"
+                  :disabled="!permiso || captadoresCargando">
+                  {{ captadoresCargando ? 'Listando...' : 'Listar' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-primary mx-2 mt-3" v-if="captadoresBuscado">
+          <div class="card-header bg-transparent border-primary d-flex justify-content-between align-items-center">
+            <label class="mb-0">Captadores de {{ tipoCaptadores === 'venta' ? 'Venta' : 'Alquiler' }}</label>
+            <small class="text-muted">Total: {{ captadoresListado.length }}</small>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0 proceso_reserva_table">
+                <thead class="listado_tabla_titulo">
+                  <tr class="text-center">
+                    <th>Captador</th>
+                    <th>Propiedades</th>
+                  </tr>
+                </thead>
+                <tbody class="listado_tabla">
+                  <tr v-for="captador in captadoresListado" :key="captador.captador_id" class="cursor-pointer"
+                    :class="{ 'table-primary': captadorSeleccionado?.captador_id === captador.captador_id }"
+                    @click="seleccionarCaptador(captador)">
+                    <td>{{ captador.captador }}</td>
+                    <td class="text-center">{{ captador.total }}</td>
+                  </tr>
+                  <tr v-if="captadoresListado.length === 0">
+                    <td colspan="2" class="text-center text-muted">Sin resultados para la operación seleccionada</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-primary mx-2 mt-3" v-if="captadorSeleccionado">
+          <div class="card-header bg-transparent border-primary d-flex justify-content-between align-items-center">
+            <label class="mb-0">Propiedades de {{ captadorSeleccionado.captador }}</label>
+            <small class="text-muted">Total: {{ captadorSeleccionado.propiedades.length }}</small>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0 proceso_reserva_table">
+                <thead class="listado_tabla_titulo">
+                  <tr class="text-center">
+                    <th>Código</th>
+                    <th>Calle</th>
+                    <th>Número</th>
+                    <th>Piso</th>
+                    <th>Depto</th>
+                    <th>Zona</th>
+                    <th>Tipo Inmueble</th>
+                    <th>Dormitorios</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                  </tr>
+                </thead>
+                <tbody class="listado_tabla">
+                  <tr v-for="propiedad in captadorSeleccionado.propiedades" :key="propiedad.id">
+                    <td>{{ propiedad.codigo }}</td>
+                    <td>{{ propiedad.calle }}</td>
+                    <td>{{ propiedad.numero }}</td>
+                    <td>{{ propiedad.piso }}</td>
+                    <td>{{ propiedad.departamento }}</td>
+                    <td>{{ propiedad.zona }}</td>
+                    <td>{{ propiedad.tipo_inmueble }}</td>
+                    <td>{{ propiedad.cantidad_dormitorios }}</td>
+                    <td>{{ propiedad.estado }}</td>
+                    <td>{{ propiedad.precio }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div v-if="currentForm === 'criterios_activos'" class="form-section">
         <div class="card border-primary mx-2">
           <div class="card-header bg-transparent border-primary">
@@ -760,7 +872,7 @@ import NavComponent from '../../../components/NavComponent.vue'
 import ListadoPropiedadPdf from '../../../components/Atcl/Listado/ListadoPropiedadPdf.vue'
 import ModalListadoConversaciones from '@/components/Atcl/Listado/ModalListadoConversaciones.vue'
 import { usePropiedadBusqueda } from '../../../composables/atcl/usePropiedadBusqueda'
-import { getEstadoAlquiler, verificarPermiso, getEstadoVenta, ListarCriteriosActivos } from '@/Services/api/Atcl/AtclApi'
+import { getEstadoAlquiler, verificarPermiso, getEstadoVenta, ListarCriteriosActivos, ListarCaptadores } from '@/Services/api/Atcl/AtclApi'
 import { PropietariosActivos } from '@/Services/api/Atcl/Listados/ListadoApi'
 import { TasacionesActivas } from '@/Services/api/Atcl/Tasaciones/TasacionesApi'
 import { useToast } from '@/composables/useToast'
@@ -828,6 +940,11 @@ const permisoInformeNovedades = ref(false)
 const isUserAdmin = ref(false)
 const permisoTiempoOfrecimiento = ref(false)
 const permisoTasaciones = ref(false)
+const tipoCaptadores = ref('venta')
+const captadoresListado = ref([])
+const captadoresCargando = ref(false)
+const captadoresBuscado = ref(false)
+const captadorSeleccionado = ref(null)
 const tasaciones = ref([])
 const filtroCalleTasacion = ref('')
 const mostrarSugerenciasCalleTasacion = ref(false)
@@ -1094,6 +1211,7 @@ const formPropiedades = ref({
   sector: props.sector,
   cartel: '',
   cant_dorm: '',
+  captador: '',
 })
 
 const formTiempoOfrecimiento = ref({
@@ -1194,9 +1312,22 @@ const cargarTasaciones = async () => {
   }
 }
 
+const captadoresSector = ref([])
+
+const cargarCaptadoresSector = async () => {
+  try {
+    const { data } = await ListarCaptadores({ tipo: props.sector === 'Alquiler' ? 'alquiler' : 'venta' })
+    captadoresSector.value = (data?.data || []).map((c) => ({ id: c.captador_id, nombre: c.captador }))
+  } catch (error) {
+    console.error('Error al cargar captadores del sector:', error)
+  }
+}
+
 // Carga de datos inicial
 // cuando carga el componente trae estados, propietarios, permisos y asesores
 onMounted(async () => {
+  cargarCaptadoresSector()
+
   try {
     isUserAdmin.value = await isAdmin()
   } catch (error) {
@@ -1373,6 +1504,26 @@ const submitCriteriosActivos = async () => {
     criteriosBuscado.value = true
     criteriosCargando.value = false
   }
+}
+
+const submitListadoCaptadores = async () => {
+  captadoresCargando.value = true
+  captadorSeleccionado.value = null
+  try {
+    const { data } = await ListarCaptadores({ tipo: tipoCaptadores.value })
+    captadoresListado.value = data?.data || []
+  } catch (error) {
+    console.error('Error al listar captadores:', error)
+    captadoresListado.value = []
+    showError('Error al obtener los captadores')
+  } finally {
+    captadoresBuscado.value = true
+    captadoresCargando.value = false
+  }
+}
+
+const seleccionarCaptador = (captador) => {
+  captadorSeleccionado.value = captador
 }
 
 const submitConsultasIngresadas = async () => {
