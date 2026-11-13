@@ -183,6 +183,12 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                   <li>
+                    <label for="file-upload-{{ item.id }}" class="dropdown-item small">{{ item.propiedad?.calle?.name }}
+                      {{
+                        item.propiedad?.numero_calle }}</label>
+
+                  </li>
+                  <li>
                     <button type="button" class="dropdown-item small" @click="abrirModalInventario(item)">
                       <i class="bi bi-pencil-square me-1"></i> Editar
                     </button>
@@ -192,36 +198,52 @@
                       <i class="bi bi-chat-text me-1"></i> Observaciones
                     </button>
                   </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" data-bs-toggle="modal"
+                      data-bs-target="#modalFotos" title="Fotos" @click="seleccionarFotos(item)">
+                      <i class="bi bi-camera "></i> Fotos
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" title="Cargar videos"
+                      @click="abrirModalVideos(item)">
+                      <i class="bi bi-camera-reels"></i> Videos
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" title="Ver videos"
+                      @click="abrirModalVisualizarVideos(item)">
+                      <i class="bi bi-play-btn"></i> Ver Videos
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small"
+                      :disabled="!tienePermisoCarga || subiendoDocId !== null" title="Cargar documento (.doc / .docx)"
+                      @click="elegirDocumento(item)">
+                      <i class="bi" :class="subiendoDocId === item.id ? 'bi-hourglass-split' : 'bi-upload'"></i>
+                      Documento
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" data-bs-toggle="modal"
+                      data-bs-target="#modalDocumentosInventario" title="Ver / descargar documento"
+                      @click="seleccionarDocumentos(item)">
+                      <i class="bi bi-eye"></i> Ver documento
+                    </button>
+                  </li>
                 </ul>
 
 
-                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  data-bs-toggle="modal" data-bs-target="#modalFotos" title="Fotos" @click="seleccionarFotos(item)">
-                  <i class="bi bi-camera "></i>
-                </button>
 
-                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  title="Cargar videos" @click="abrirModalVideos(item)">
-                  <i class="bi bi-camera-reels"></i>
-                </button>
 
-                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  title="Ver videos" @click="abrirModalVisualizarVideos(item)">
-                  <i class="bi bi-play-btn"></i>
-                </button>
+
+
+
 
                 <!-- Documento Word: sube directo (sin modal). Un documento por reserva. -->
-                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  :disabled="!tienePermisoCarga || subiendoDocId !== null" title="Cargar documento (.doc / .docx)"
-                  @click="elegirDocumento(item)">
-                  <i class="bi" :class="subiendoDocId === item.id ? 'bi-hourglass-split' : 'bi-upload'"></i>
-                </button>
 
-                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones"
-                  data-bs-toggle="modal" data-bs-target="#modalDocumentosInventario" title="Ver / descargar documento"
-                  @click="seleccionarDocumentos(item)">
-                  <i class="bi bi-eye"></i>
-                </button>
+
+
               </div>
             </td>
           </tr>
@@ -235,8 +257,11 @@
     @close="cerrarModalInventario" @guardar="guardarModalInventario" :tienePermisoCarga="tienePermisoCarga" />
   <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
     @close="showModalObservacion = false" />
-  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos" :puede-editar="tienePermisoCarga" @close="showModalVideos = false" @uploaded="videosCargados" />
-  <ModalVisualizarVideos v-if="showModalVisualizarVideos" :show="showModalVisualizarVideos" :id-proceso-propiedad="procesoVideosVisualizacion" :puede-editar="tienePermisoCarga" @close="showModalVisualizarVideos = false" />
+  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos"
+    :puede-editar="tienePermisoCarga" @close="showModalVideos = false" @uploaded="videosCargados" />
+  <ModalVisualizarVideos v-if="showModalVisualizarVideos" :show="showModalVisualizarVideos"
+    :id-proceso-propiedad="procesoVideosVisualizacion" :puede-editar="tienePermisoCarga"
+    @close="showModalVisualizarVideos = false" />
   <ModalCargaFotos modo="inventario" :id-proceso-propiedad="procesoFotos" :puede-editar="tienePermisoCarga" />
   <ModalDocumentosInventario :id-proceso-propiedad="procesoDocumentos" :puede-editar="tienePermisoCarga" />
   <!-- Input oculto: el botón de documentos abre el selector del sistema -->

@@ -154,7 +154,12 @@ const fotosOrdenadas = computed(() => {
   })
 })
 
-const listaExistentes = computed(() => (esInventario.value ? fotosInventario.value : fotosOrdenadas.value))
+const listaExistentes = computed(() => {
+  const lista = esInventario.value ? fotosInventario.value : fotosOrdenadas.value
+  console.log('listaExistentes:', lista)
+  console.log('URLs resueltas con urlImagen:', lista.map(f => ({ id: f.id, url_bd: f.url, url_final: urlImagen(f.url) })))
+  return lista
+})
 
 function inicializar(fotos) {
   const lista = fotos || []
