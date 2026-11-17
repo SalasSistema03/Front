@@ -201,9 +201,18 @@
                   </option>
                 </select>
               </div>
+              <div class="col-md-2 mt-2">
+                <label class="form-label" for="llave">Llave</label>
+                <select id="llave" class="form-control form-control-sm" v-model="formPropiedades.llave">
+                  <option value="">Todos</option>
+                  <option value="s">Si</option>
+                  <option value="no">No</option>
+
+                </select>
+              </div>
 
               <!-- ======== MEJORA DEL BOTÓN INFORMACIÓN A MOSTRAR ======== -->
-              <div class="col-md-6 mt-2">
+              <div class="col-md-4 mt-2">
                 <label class="form-label">Información a mostrar</label>
                 <div class="dropdown w-100">
                   <button class="form-control form-control-sm text-start dropdown-toggle listar_boton_selector"
@@ -1136,6 +1145,8 @@ if (props.sector === 'Alquiler') {
     { key: 'inmueble', label: 'Inmueble' },
     { key: 'estado', label: 'Estado' },
     { key: 'precio', label: 'Precio' },
+    { key: 'llave', label: 'Llave' },
+    { key: 'comentarioLlave', label: 'Comentario Llave' },
     { key: 'cartel', label: 'Cartel' },
     { key: 'comentarioCartel', label: 'Comentario Cartel' },
     { key: 'foto', label: 'Foto' },
@@ -1172,6 +1183,7 @@ if (props.sector === 'Alquiler') {
     { key: 'clausula venta', label: 'Clausula Venta' },
     { key: 'descripcion', label: 'Descripcion' },
     { key: 'llave', label: 'LLave' },
+    { key: 'comentarioLlave', label: 'Comentario Llave' },
     { key: 'autorizacion', label: 'Autorizacion' },
     { key: 'compartida', label: 'Compartida' },
     { key: 'reel', label: 'Reel' },
@@ -1210,6 +1222,7 @@ const formPropiedades = ref({
   informacionMostrar: [],
   sector: props.sector,
   cartel: '',
+  llave: '',
   cant_dorm: '',
   captador: '',
 })
