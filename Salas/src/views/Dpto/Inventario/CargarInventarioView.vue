@@ -5,12 +5,12 @@
 
     <div class="row ">
       <!-- Filtro -->
-      <div class="mb-3 col-md-6">
+      <div class="m-0 p-0 col-md-4 ">
         <div class="card ">
-          <div class="card-header "> <strong>Filtros de búsqueda</strong> </div>
-          <div class="card-body">
+          <div class="card-header p-0"> <strong>Filtros de búsqueda</strong> </div>
+          <div class="card-body card-body_dptoTec p-1 m-0">
             <div class="row">
-              <div class="col-md-3 form-group">
+              <div class="col-md-3 form-group busqueda_dptoTec ps-3 pe-1">
                 <label>Mes</label>
                 <select v-model="mes" class="form-control form-control-sm">
                   <option value="">Todos</option>
@@ -29,14 +29,14 @@
                 </select>
               </div>
 
-              <div class="col-md-2 form-group">
+              <div class="col-md-2 form-group busqueda_dptoTec px-1">
                 <label>Año</label>
                 <select v-model="anio" class="form-control form-control-sm">
                   <option v-for="año in obtenerAñoMenos3()" :key="año" :value="año">{{ año }}</option>
                 </select>
               </div>
 
-              <div class="col-md-3 form-group">
+              <div class="col-md-3 form-group busqueda_dptoTec px-1">
                 <label for="">Estado</label>
                 <select v-model="filtroEstado" class="form-control form-control-sm">
                   <option value="">Todos</option>
@@ -46,7 +46,7 @@
                 </select>
               </div>
 
-              <div class="col-md-2 form-group">
+              <div class="col-md-2 form-group busqueda_dptoTec px-1">
                 <label for="">Usuario</label>
                 <select v-model="filtroAsesor" class="form-control form-control-sm">
                   <option value="">Todos</option>
@@ -56,7 +56,7 @@
                 </select>
               </div>
 
-              <div class="col-md-2 form-group">
+              <div class="col-md-2 form-group busqueda_dptoTec ps-1 pe-3">
                 <label for="">Folio</label>
                 <input type="text" placeholder="Buscar" v-model="folio" class="form-control form-control-sm" />
               </div>
@@ -64,14 +64,14 @@
           </div>
         </div>
       </div>
-      <div class="mb-3 col-md-6 ">
+      <div class="m-0 px-1 col-md-4 ">
         <div class="card">
-          <div class="card-header "> <strong>Inventarios realizados por usuario</strong> </div>
-          <div class="card-body">
-            <div v-if="usuariosDpto.length" class="row g-2">
-              <div v-for="asesor in usuariosDpto" :key="asesor.id" class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="border rounded p-1 bg-light text-center h-100">
-                  <div class="text-muted text-truncate" style="font-size: 0.75rem;" :title="asesor.username"> {{
+          <div class="card-header p-0"> <strong>Realizados por usuario</strong> </div>
+          <div class="card-body card-body_dptoTec p-1 m-0">
+            <div v-if="usuariosDpto.length" class="d-flex flex-wrap g-1 pt-2">
+              <div v-for="asesor in usuariosDpto" :key="asesor.id" class="flex-grow-1 px-1">
+                <div class="border rounded p-1 dpto_recuadro_usuarios text-center h-100">
+                  <div class="text-muted text-truncate dptoTec_fuente_realizados" :title="asesor.username"> {{
                     asesor.username }} </div>
                   <div class="fw-bold fs-6"> {{ inventariosPorAsesor[asesor.id] ?? 0 }} </div>
                 </div>
@@ -83,37 +83,36 @@
           </div>
         </div>
       </div>
-    </div>
 
 
-    <div class="row ">
 
-      <div class="mb-3 col-md-6">
+
+      <div class="m-0 p-0 col-md-4">
         <div class="card">
 
 
-          <div class="card-header"><strong>Total Inventarios</strong></div>
-          <div class="card-body">
+          <div class="card-header p-0"><strong>Total Inventarios</strong></div>
+          <div class="card-body card-body_dptoTec p-1 m-0">
             <!-- Resultados -->
-            <div class="row g-2 text-center">
+            <div class="d-flex flex-wrap g-1 pt-2">
               <!-- Total -->
-              <div class="col-4">
-                <div class="border rounded p-1 bg-light h-100">
-                  <div class="text-muted" style="font-size: 0.75rem;"> Total </div>
+              <div class="col-4 flex-grow-1 px-1 text-center">
+                <div class="border rounded p-1 dpto_recuadro_estados_total h-100 ">
+                  <div class="text-muted dptoTec_fuente_realizados"> Total </div>
                   <div class="fw-bold fs-6"> {{ totalInventarios }} </div>
                 </div>
               </div>
               <!-- Realizados -->
-              <div class="col-4">
-                <div class="border rounded p-1 bg-light h-100">
-                  <div class="text-muted" style="font-size: 0.75rem;"> Realizados </div>
+              <div class="col-4 flex-grow-1 px-1 text-center">
+                <div class="border rounded p-1 dpto_recuadro_estados_realizados h-100">
+                  <div class="text-muted dptoTec_fuente_realizados"> Realizados </div>
                   <div class="fw-bold fs-6"> {{ inventariosRealizados }} </div>
                 </div>
               </div>
               <!-- Restantes -->
-              <div class="col-4">
-                <div class="border rounded p-1 bg-light h-100">
-                  <div class="text-muted" style="font-size: 0.75rem;"> Restantes </div>
+              <div class="col-4 flex-grow-1 px-1 text-center">
+                <div class="border rounded p-1 dpto_recuadro_estados_restantes h-100">
+                  <div class="text-muted dptoTec_fuente_realizados"> Restantes </div>
                   <div class="fw-bold fs-6"> {{ inventariosRestantes }} </div>
                 </div>
               </div>
@@ -126,7 +125,7 @@
 
 
     <!-- Tabla -->
-    <div class="proceso_reserva_tabla_contenedor mt-2">
+    <div class="proceso_dpto_tec_contenedor mt-2">
       <table class="table table-striped table-hover proceso_reserva_table">
         <thead>
           <tr class="text-center">
@@ -175,24 +174,76 @@
 
 
             <!-- Acciones -->
-            <td>
-              <div class=" ">
-                <button class="btn btn-secondary btn-sm p-0" type="button" data-bs-toggle="dropdown"
-                  aria-expanded="false" title="Acciones">
+            <td class="p-1 text-center text-nowrap" style="width: 1%">
+              <div class="d-inline-flex align-items-center gap-1">
+
+                <button class="btn btn-outline-primary btn-sm px-2 py-0 shadow-sm dpto_boton_opciones" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false" title="Más opciones">
                   <i class="bi bi-three-dots-vertical"></i>
                 </button>
-                <ul class="dropdown-menu lista-mas-opciones-impuestos">
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                   <li>
-                    <button type="button" class="dropdown-item text-options-impuestos_lista"
-                      @click="abrirModalInventario(item)">
-                      Editar
+                    <label for="file-upload-{{ item.id }}" class="dropdown-item small">{{ item.propiedad?.calle?.name }}
+                      {{
+                        item.propiedad?.numero_calle }}</label>
+
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" @click="abrirModalInventario(item)">
+                      <i class="bi bi-pencil-square me-1"></i> Editar
                     </button>
-                    <button type="button" class="dropdown-item text-options-impuestos_lista"
-                      @click="abrirModalObservacionesContrato(item)">
-                      Observaciones
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" @click="abrirModalObservacionesContrato(item)">
+                      <i class="bi bi-chat-text me-1"></i> Observaciones
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" data-bs-toggle="modal"
+                      data-bs-target="#modalFotos" title="Fotos" @click="seleccionarFotos(item)">
+                      <i class="bi bi-camera "></i> Fotos
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" title="Cargar videos"
+                      @click="abrirModalVideos(item)">
+                      <i class="bi bi-camera-reels"></i> Videos
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" title="Ver videos"
+                      @click="abrirModalVisualizarVideos(item)">
+                      <i class="bi bi-play-btn"></i> Ver Videos
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small"
+                      :disabled="!tienePermisoCarga || subiendoDocId !== null" title="Cargar documento (.doc / .docx)"
+                      @click="elegirDocumento(item)">
+                      <i class="bi" :class="subiendoDocId === item.id ? 'bi-hourglass-split' : 'bi-upload'"></i>
+                      Documento
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item small" data-bs-toggle="modal"
+                      data-bs-target="#modalDocumentosInventario" title="Ver / descargar documento"
+                      @click="seleccionarDocumentos(item)">
+                      <i class="bi bi-eye"></i> Ver documento
                     </button>
                   </li>
                 </ul>
+
+
+
+
+
+
+
+
+                <!-- Documento Word: sube directo (sin modal). Un documento por reserva. -->
+
+
+
               </div>
             </td>
           </tr>
@@ -204,10 +255,18 @@
   </div>
   <ModalInventario v-if="showModalInventario" :show="showModalInventario" :inventario="inventarioSeleccionado"
     @close="cerrarModalInventario" @guardar="guardarModalInventario" :tienePermisoCarga="tienePermisoCarga" />
-  <!-- <ModalObservacionesInventario v-if="showModalObservaciones" :show="showModalObservaciones"
-    :inventario="inventarioSeleccionado" @close="cerrarModalObservaciones" /> -->
   <ModalObservacionAlquiler :show="showModalObservacion" :observacion="observacionActual" :sector="sector"
     @close="showModalObservacion = false" />
+  <ModalCargaVideos v-if="showModalVideos" :show="showModalVideos" :id-proceso-propiedad="procesoVideos"
+    :puede-editar="tienePermisoCarga" @close="showModalVideos = false" @uploaded="videosCargados" />
+  <ModalVisualizarVideos v-if="showModalVisualizarVideos" :show="showModalVisualizarVideos"
+    :id-proceso-propiedad="procesoVideosVisualizacion" :puede-editar="tienePermisoCarga"
+    @close="showModalVisualizarVideos = false" />
+  <ModalCargaFotos modo="inventario" :id-proceso-propiedad="procesoFotos" :puede-editar="tienePermisoCarga" />
+  <ModalDocumentosInventario :id-proceso-propiedad="procesoDocumentos" :puede-editar="tienePermisoCarga" />
+  <!-- Input oculto: el botón de documentos abre el selector del sistema -->
+  <input ref="inputDocumento" type="file" accept=".doc,.docx" class="d-none" @change="onDocumentoSeleccionado">
+
 </template>
 <script setup>
 import NavComponent from '../../../components/NavComponent.vue'
@@ -217,6 +276,7 @@ import {
   ActualizarInventario,
   getEstadoDpto,
   getUsuariosDpto,
+  subirDocumentoInventario,
 } from '@/Services/api/Dpto/Inventario'
 import { ref, onMounted, watch, computed } from 'vue'
 import ModalObservacionAlquiler from '@/components/Atcl/Alquiler/ModalObservacionAlquiler.vue'
@@ -225,6 +285,10 @@ import { verificarPermiso } from '@/Services/api/Atcl/AtclApi'
 /* import ModalObservacionesInventario from '@/components/Dpto/Inventario/ModalObservacionesInventario.vue' */
 import { useDateFormatter } from '@/composables/useDateFormatter'
 import { useToast } from '@/composables/useToast'
+import ModalCargaFotos from '@/components/Atcl/Propiedad/ModalCargaFotos.vue'
+import ModalCargaVideos from '@/components/Dpto/Inventario/Modales/ModalCargaVideos.vue'
+import ModalVisualizarVideos from '@/components/Dpto/Inventario/Modales/ModalVisualizarVideos.vue'
+import ModalDocumentosInventario from '@/components/Dpto/Inventario/ModalDocumentosInventario.vue'
 const { mes, anio, obtenerAñoMenos3 } = useFiltroMesAnio()
 const resPermiso = ref(false)
 const historial = ref([])
@@ -308,6 +372,69 @@ const abrirModalInventario = (item) => {
 
 const cerrarModalInventario = () => {
   showModalInventario.value = false
+}
+
+// Proceso de reserva cuyas fotos se muestran en el modal (fotos de inventario)
+const showModalVideos = ref(false)
+const showModalVisualizarVideos = ref(false)
+const procesoFotos = ref(null)
+const procesoVideos = ref(null)
+const procesoVideosVisualizacion = ref(null)
+const seleccionarFotos = (item) => {
+  procesoFotos.value = item.id
+}
+const abrirModalVideos = (item) => {
+  procesoVideos.value = item.id
+  showModalVideos.value = true
+}
+const abrirModalVisualizarVideos = (item) => {
+  procesoVideosVisualizacion.value = item.id
+  showModalVisualizarVideos.value = true
+}
+const videosCargados = () => {
+  // La lista se carga al abrir el modal de visualización, por lo que no se mezclan ambos modales.
+}
+
+// ---- Documento Word de inventario (carga directa, un documento por reserva) ----
+const EXTENSIONES_WORD = ['doc', 'docx']
+const inputDocumento = ref(null)
+const procesoDocumento = ref(null) // id del proceso al que se sube el archivo elegido
+const procesoDocumentos = ref(null) // id del proceso cuya lista se muestra en el modal
+const subiendoDocId = ref(null)
+
+const seleccionarDocumentos = (item) => {
+  procesoDocumentos.value = item.id
+}
+
+const elegirDocumento = (item) => {
+  procesoDocumento.value = item.id
+  inputDocumento.value?.click()
+}
+
+const onDocumentoSeleccionado = async (event) => {
+  const archivo = event.target.files?.[0]
+  event.target.value = '' // permite volver a elegir el mismo archivo
+  if (!archivo || !procesoDocumento.value) return
+
+  const extension = archivo.name.split('.').pop()?.toLowerCase()
+  if (!EXTENSIONES_WORD.includes(extension)) {
+    showError('Solo se permiten archivos .doc o .docx')
+    return
+  }
+
+  const idProceso = procesoDocumento.value
+  subiendoDocId.value = idProceso
+  try {
+    const formData = new FormData()
+    formData.append('id_proceso_propiedad', idProceso)
+    formData.append('documento', archivo)
+    await subirDocumentoInventario(formData)
+    showSuccess('Documento cargado correctamente')
+  } catch (error) {
+    showError(error.response?.data?.message || 'Error al cargar el documento')
+  } finally {
+    subiendoDocId.value = null
+  }
 }
 
 const abrirModalObservacionesContrato = (item) => {

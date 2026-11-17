@@ -49,9 +49,8 @@
 
         <div class="card shadow-sm">
             <div class="card-body p-0">
-                <div class="table-responsive table-scroll-container px-1">
-                    <table class="table table-hover table-striped mb-0 align-middle tabla-impuestos"
-                        style="font-size: 0.85rem;">
+                <div class="table-responsive tabla-broches-principal-scroll px-1">
+                    <table class="table table-hover table-striped mb-0 align-middle tabla-impuestos tabla-broches-principal">
                         <thead class="table-light">
                             <tr style="position: sticky; top: 0; z-index: 1;">
                                 <th>Folio</th>
@@ -247,26 +246,3 @@ onMounted(() => {
     obtenerBroches();
 });
 </script>
-
-<style scoped>
-.x-small {
-    font-size: 0.70rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.table-scroll-container {
-    max-height: 65vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.table-scroll-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
-    border-radius: 10px;
-}
-</style>

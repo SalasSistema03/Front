@@ -88,49 +88,50 @@
       <p>Listado de Repactado</p>
     </div>
     <div class="card-body">
-      <table id="tablaRepactado" class="table table-striped table-hover proceso_reserva_table text-center align-middle">
-        <thead>
-          <tr>
-            <th>Folio</th>
-            <th>Estado</th>
-            <th>Condicion</th>
-            <th>Situacion</th>
-            <th>Apellido y Nombre</th>
-            <th>Telefono Inq</th>
-            <th>Direccion</th>
-            <th>Tipo</th>
-            <th>Propietario</th>
-            <th>Telefono</th>
-            <th class="acciones-tasaciones">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in repactados" :key="item.id">
-            <td>{{ item.folio || '-' }}</td>
-            <td>{{ item.estado || '-' }}</td>
-            <td>{{ item.condicion || '-' }}</td>
-            <td>{{ item.situacion || '-' }}</td>
-            <td>{{ item.apellidoNombre || '-' }}</td>
-            <td>{{ item.telefono || '-' }}</td>
-            <td>{{ item.direccion || '-' }}</td>
-            <td>{{ item.tipo || '-' }}</td>
-            <td>{{ item.propietario || '-' }}</td>
-            <td>{{ item.telefonoPropietario || '-' }}</td>
-            <td>
-              <button type="button" class="btn btn-outline-primary btn-sm px-2 py-1 shadow-sm me-1"
-                title="Editar repactado" aria-label="Editar repactado" @click="editarRepactado(item)">
-                <i class="bi bi-pencil-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr v-if="repactados.length === 0">
-            <td colspan="13" class="text-muted py-3">
-              No se encontraron registros de repactado.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+      <div class="table-responsive repactado_tabla_contenedor">
+        <table id="tablaRepactado" class="table table-striped table-hover proceso_reserva_table text-center align-middle">
+          <thead>
+            <tr>
+              <th>Folio</th>
+              <th>Estado</th>
+              <th>Condicion</th>
+              <th>Situacion</th>
+              <th>Apellido y Nombre</th>
+              <th>Telefono Inq</th>
+              <th>Direccion</th>
+              <th>Tipo</th>
+              <th>Propietario</th>
+              <th>Telefono</th>
+              <th class="acciones-tasaciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in repactados" :key="item.id">
+              <td>{{ item.folio || '-' }}</td>
+              <td>{{ item.estado || '-' }}</td>
+              <td>{{ item.condicion || '-' }}</td>
+              <td>{{ item.situacion || '-' }}</td>
+              <td>{{ item.apellidoNombre || '-' }}</td>
+              <td>{{ item.telefono || '-' }}</td>
+              <td>{{ item.direccion || '-' }}</td>
+              <td>{{ item.tipo || '-' }}</td>
+              <td>{{ item.propietario || '-' }}</td>
+              <td>{{ item.telefonoPropietario || '-' }}</td>
+              <td>
+                <button type="button" class="btn btn-outline-primary btn-sm px-2 py-1 shadow-sm me-1"
+                  title="Editar repactado" aria-label="Editar repactado" @click="editarRepactado(item)">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </td>
+            </tr>
+            <tr v-if="repactados.length === 0">
+              <td colspan="13" class="text-muted py-3">
+                No se encontraron registros de repactado.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </div>
@@ -141,7 +142,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import NavComponent from '../../../components/NavComponent.vue'
 import ModalRepactado from '../../../components/Atcl/Repactado/ModalRepactado.vue'
 import { useToast } from '@/composables/useToast'
@@ -164,6 +165,10 @@ const mesSeleccionado = ref(hoy.getMonth() + 1)
 const anioSeleccionado = ref(Math.min(Math.max(hoy.getFullYear(), ANIO_MINIMO), ANIO_MAXIMO))
 const empresaSeleccionada = ref('1')
 const folioSeleccionado = ref(null)
+
+onMounted(() => {
+  filtrarRepactado(folioSeleccionado.value, mesSeleccionado.value, anioSeleccionado.value, empresaSeleccionada.value)
+})
 
 const validarEmpresa = (empresa) => {
   const empresaNum = Number(empresa)

@@ -588,18 +588,17 @@ watch(() => telefono.value, async (nuevoValor) => {
   const digits = String(nuevoValor).replace(/\D/g, '')
   if (digits.length >= 10) {
     //console.log('Se ingresaron 10 dígitos:', digits)
-    try {
+    isClienteNuevo.value = true
+    nombre.value = ''
+    ingreso_seleccionado.value = ''
+    observaciones.value = ''
+    id_asesor.value = ''
+    listaCriterios.value = []
+    propiedadesAsignadas.value = []
 
+    try {
       const response = await getClientePorTelefono(telefono.value)
       const cliente = response.data.cliente
-
-      // Limpiar los datos previamente cargados
-      nombre.value = ''
-      ingreso_seleccionado.value = ''
-      observaciones.value = ''
-      id_asesor.value = ''
-      listaCriterios.value = []
-      propiedadesAsignadas.value = []
 
       if (cliente) {
         isClienteNuevo.value = false
@@ -632,7 +631,9 @@ watch(() => telefono.value, async (nuevoValor) => {
         isClienteNuevo.value = true
       }
     } catch (error) {
-      console.error('Error al buscar cliente por teléfono:', error)
+      if (error.response?.status !== 404) {
+        console.error('Error al buscar cliente por teléfono:', error)
+      }
     }
     //buscarClientePorTelefono(digits)
   } else {

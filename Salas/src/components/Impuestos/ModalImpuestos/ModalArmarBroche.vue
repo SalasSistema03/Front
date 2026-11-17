@@ -92,7 +92,7 @@
                   >
                     <label class="form-label">Resultado</label>
                   </div>
-                  <ul class="list-group" style="max-height: 120px; overflow-y: auto">
+                  <ul class="list-group" style="max-height: 75px; overflow-y: auto">
                     <li
                       class="list-group-item fw-bold text-muted"
                       v-for="(broche, index) in resultado_broche"

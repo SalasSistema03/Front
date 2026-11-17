@@ -42,6 +42,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  anio: {
+    type: [Number, String],
+    default: null,
+  },
+  mes: {
+    type: [Number, String],
+    default: null,
+  },
 })
 
 const emit = defineEmits(['close', 'success'])
@@ -53,6 +61,8 @@ const cargarBroches = async () => {
   try {
     const form = {
       impuesto: props.impuesto,
+      anio: props.anio,
+      mes: props.mes,
     }
     const response = await ObtenerBrochesSinControlar(form)
     //console.log(response)
@@ -91,6 +101,8 @@ const onBajado = async (item) => {
       fecha_vencimiento: item.fecha_vencimiento,
       impuesto: props.impuesto,
       numero_broche: item.numero_broche,
+      anio: props.anio,
+      mes: props.mes,
     })
     showSuccess('Broche bajado correctamente')
     emit('success')
@@ -109,6 +121,8 @@ const onRechazar = async (item) => {
       fecha_vencimiento: item.fecha_vencimiento,
       impuesto: props.impuesto,
       numero_broche: item.numero_broche,
+      anio: props.anio,
+      mes: props.mes,
     })
     showSuccess('Broche rechazado correctamente')
     emit('success')

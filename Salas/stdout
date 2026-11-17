@@ -1,0 +1,2287 @@
+@charset "UTF-8";
+.login-form-container {
+  width: 100%;
+  max-width: 350px;
+  min-height: 400px;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-form-group-custom {
+  width: 100%;
+}
+
+.login-btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+}
+
+.login-alert-sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  margin-bottom: 0;
+  margin-top: 0.5rem;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.login-form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+/* .login-form-container
+ * */
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 0px 6px rgba(0, 175, 154, 0.96);
+}
+
+.navbar-dropdown-submenu {
+  position: relative;
+  font-size: 12px;
+}
+
+.navbar-dropdown-menu {
+  min-width: 20px;
+  padding: 0.1rem 0;
+  border: 1px solid rgb(0, 85, 185);
+}
+.navbar-dropdown-menu .bi {
+  color: rgba(0, 175, 154, 0.96);
+  margin-right: 0.5vh;
+}
+.navbar-dropdown-menu a {
+  color: rgb(0, 85, 185) !important;
+  background-color: rgba(255, 255, 255, 0);
+}
+.navbar-dropdown-menu a:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  background-color: rgba(0, 72, 145, 0);
+}
+.navbar-dropdown-menu a:hover:hover .bi {
+  color: rgb(0, 85, 185);
+  transition: all 0.3s;
+  font-size: 13px;
+}
+
+.navbar-dropdown-submenu-content {
+  font-size: 11px;
+  color: rgb(0, 85, 185) !important;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+  display: none;
+  min-width: 10px;
+  background-color: #ffffff;
+  border: 1px solid rgb(0, 85, 185);
+  /* box-shadow: 0 0rem 0.5rem $azulSalas */
+  z-index: 1000;
+}
+
+.navbar-dropdown-submenu-content.show {
+  display: block;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 991.98px) {
+  .navbar-dropdown-submenu-content {
+    position: static;
+    left: auto;
+    margin-top: 0;
+    border: none;
+    box-shadow: none;
+    background-color: #f8f9fa;
+  }
+  .navbar-dropdown-submenu-content .navbar-dropdown-submenu-content .dropdown-item {
+    padding-left: 2rem;
+  }
+}
+.dropdown-item {
+  color: rgb(0, 85, 185);
+  transition: all 0.3s ease-in-out;
+  background-color: rgba(249, 249, 249, 0);
+}
+.dropdown-item:hover {
+  color: rgba(0, 175, 154, 0.96);
+  background-color: rgba(249, 249, 249, 0);
+  transform: scale(1.1);
+}
+
+.navbar-dropdown-arrow {
+  margin-left: 0.5rem;
+  transform: rotate(0deg);
+  transition: transform 0.2s;
+  color: rgb(0, 85, 185) !important;
+}
+
+.navbar-dropdown-submenu:hover .navbar-dropdown-arrow,
+.dropdown-toggle[aria-expanded=true] + .navbar-dropdown-arrow {
+  transform: rotate(90deg);
+}
+
+.navbar-item_menu {
+  font-weight: 550 !important;
+  font-size: 13px !important;
+  color: rgb(0, 85, 185) !important;
+}
+.navbar-item_menu .bi {
+  color: rgba(110, 190, 255, 0.6352941176);
+  font-size: 15px;
+}
+.navbar-item_menu:hover .bi {
+  color: rgb(0, 85, 185);
+}
+.navbar-item_menu:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.navbar-item_menu:hover:focus {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+
+#navbar_contenedor_logo {
+  padding: 0 !important;
+  height: inherit !important;
+}
+#navbar_contenedor_logo img {
+  width: 11vh !important;
+}
+
+/* #navbar_logo_nav
+ * height: 40px */
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.navbar-admin {
+  font-size: 13px !important;
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+.navbar-admin:hover {
+  color: white !important;
+  background-color: rgb(0, 85, 185) !important;
+  border-radius: 10px !important;
+}
+
+.navbar-admin_dropdown {
+  position: relative;
+  transform: translateY(-12%) translateX(-5%) !important;
+  font-size: 14px !important;
+  padding: 0.5rem 1rem !important;
+}
+
+.navbar-notificaciones {
+  font-size: 13px !important;
+  color: rgb(0, 85, 185) !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+.navbar-notificaciones:hover {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+  border-radius: 10px !important;
+}
+.navbar-notificaciones:hover .navbar-notificaciones-contador {
+  color: white !important;
+  background-color: rgb(0, 85, 185) !important;
+  border-radius: 10px !important;
+}
+.navbar-notificaciones .navbar-notificaciones-contador {
+  position: absolute;
+  top: 0.1vh;
+  margin-left: 0vh;
+  color: rgb(0, 85, 185);
+  background-color: white;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 10px !important;
+  padding-left: 0.7vh;
+  padding-right: 0.7vh;
+  min-width: 2.5vh;
+  font-size: 1.6vh !important;
+}
+
+.navbar-notificaciones_dropdown a {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: inline-block;
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+.navbar-notificaciones_dropdown {
+  position: relative;
+  transform: translateY(-12%) translateX(-5%) !important;
+  font-size: 12px !important;
+  padding: 0.3rem 0.3rem !important;
+  width: 27vh;
+}
+.navbar-notificaciones_dropdown i {
+  color: black;
+}
+.navbar-notificaciones_dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.navbar-notificaciones_dropdown .navbar-notificacion-nombre {
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+.navbar-notificaciones_dropdown .navbar-notificacion-nombre .bi {
+  color: rgba(0, 175, 154, 0.96);
+  margin-right: 0.5vh;
+}
+.navbar-notificaciones_dropdown .navbar-notificacion-fecha {
+  font-size: 8px !important;
+}
+
+.register_permisos_menu {
+  font-size: 13px;
+}
+
+.permisos_menu_scrolleable {
+  height: 275px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 13px;
+}
+
+.card-header-pills .nav-item a {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.card-header-pills .nav-item .active {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+}
+
+.turnero_card_header_green {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+}
+
+.turnero_card_header_blue {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+}
+
+.turnero_table_turnos {
+  height: 30vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 12px;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 3px;
+}
+
+/* .turnero_table_scroll
+ *  overflow-y: auto
+ *  overflow-x: hidden
+ *  font-size: 12px */
+.turnero_table_turnos_sm {
+  font-size: 11px;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 3px;
+  height: 19.6vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.turnero_head_table {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.turnero_head_table tr th {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+}
+
+.turnero_select_option {
+  color: rgba(0, 175, 154, 0.96);
+  font-size: 12px;
+  border: 1px solid rgb(0, 85, 185);
+}
+
+.turnero_resaltado {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
+}
+.turnero_resaltado:hover {
+  color: rgb(0, 85, 185) !important;
+}
+
+.turnosTitulosMostrar {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: white !important;
+  background-color: rgb(0, 85, 185) !important;
+  border-radius: 8px;
+}
+
+.mostrarTurnosPublicidad {
+  height: 83vh;
+  width: auto;
+  border-radius: 15px;
+}
+.mostrarTurnosPublicidad video {
+  max-height: 83vh;
+  border-radius: 20px;
+  border: 3px solid white;
+}
+
+.turnosMostrar {
+  font-size: 14vh !important;
+  font-weight: bold !important;
+  background-color: white !important;
+  border-radius: 8px;
+}
+
+.atcl_contenedor_busqueda_propiedad {
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 8px;
+}
+
+.atcl_contenedor_tabla {
+  width: 100%;
+  max-height: 48vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.atcl_tabla_busqueda_propiedad {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  min-width: 100%;
+}
+.atcl_tabla_busqueda_propiedad thead tr th {
+  background-color: rgb(0, 85, 185);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 0.8rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.atcl_tabla_busqueda_propiedad tbody tr td {
+  height: 50px;
+  font-size: 0.6rem;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile-specific: force horizontal scroll instead of squeezing columns */
+@media (max-width: 767px) {
+  .atcl_contenedor_tabla {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+  .atcl_tabla_busqueda_propiedad {
+    min-width: 1200px;
+    table-layout: auto;
+    font-size: 0.9rem;
+  }
+  .atcl_tabla_busqueda_propiedad thead th,
+  .atcl_tabla_busqueda_propiedad tbody td {
+    white-space: nowrap;
+    min-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+/* Optional: make the scrollbar slightly larger/visible on webkit browsers */
+.atcl_contenedor_tabla::-webkit-scrollbar {
+  height: 10px;
+}
+
+.atcl_contenedor_tabla::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_alquilada {
+  color: red !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_en_alquiler {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_pendiente {
+  color: orange !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_reset {
+  color: rgb(0, 85, 185) !important;
+}
+
+.atcl_tabla_busqueda_propiedad_estados_en_alquiler_compartido {
+  color: rgba(0, 175, 154, 0.5) !important;
+}
+
+/* carga de propiedad */
+.atcl_cargar_multimedia_tamaño {
+  height: 40vh !important;
+}
+
+.carousel-control-prev-icon {
+  background-color: rgb(0, 85, 185) !important;
+  border-radius: 50%;
+}
+
+.carousel-control-next-icon {
+  background-color: rgb(0, 85, 185) !important;
+  border-radius: 50%;
+}
+
+.atcl_foto_modal_high {
+  height: 80vh !important;
+  overflow-y: auto !important;
+}
+
+.atcl_contenedor_foto_tamaño {
+  height: 60vh !important;
+  object-fit: cover;
+}
+
+.atcl_cargar_foto_tamaño {
+  height: 20vh !important;
+  max-width: 35vh !important;
+  object-fit: cover;
+}
+
+.atcl_tabla_propietarios {
+  border-collapse: collapse !important;
+}
+
+.atcl_tabla_propietarios thead tr th {
+  background-color: rgb(0, 85, 185) !important;
+  color: red !important;
+  /* ajustar el ancho maximo de las columnas */
+}
+
+.atcl_tabla_propietarios thead tr th {
+  background-color: rgb(0, 85, 185) !important;
+  color: red !important;
+  /* ajustar el ancho maximo de las columnas */
+}
+
+.atcl_calle_desplegable {
+  color: red !important;
+}
+
+.atcl_modal_header {
+  background-color: white;
+  color: rgb(0, 85, 185);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 0.8rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.atcl_card_body {
+  height: 19.5rem !important;
+}
+
+.atcl_card_body_panel_fotos_documentos_videos {
+  height: 19.5rem !important;
+}
+
+.agenda_barra_lateral {
+  font-size: 1rem !important;
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 175, 154, 0.96) !important;
+}
+.agenda_barra_lateral input {
+  margin-top: 0.5rem;
+}
+.agenda_barra_lateral {
+  color: white;
+  border: none;
+}
+.agenda_barra_lateral::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.agenda_tabla .tabla-scroll-container {
+  overflow-y: auto;
+  height: 80vh;
+  border-radius: 8px;
+  border: 1px solid rgb(0, 85, 185);
+  margin-bottom: 1rem;
+}
+.agenda_tabla thead tr th {
+  background-color: rgb(0, 85, 185);
+  border: 1px solid rgb(0, 85, 185);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 1rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.agenda_tabla tbody tr td {
+  border-left: 1px solid rgb(0, 85, 185);
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.agenda_tabla tbody tr td button {
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem;
+}
+
+.agenda_modal {
+  overflow-y: auto;
+}
+.agenda_modal .form-control {
+  background-color: rgba(0, 72, 145, 0);
+  color: red;
+}
+.agenda_modal .form-select {
+  background-color: rgba(0, 72, 145, 0);
+  color: blue;
+}
+.agenda_modal .form-control:focus {
+  background-color: rgba(0, 72, 145, 0);
+  color: green;
+}
+.agenda_modal .form-select:focus {
+  background-color: rgba(0, 72, 145, 0);
+  color: orange;
+}
+
+.agenda_tabla_general {
+  height: 19vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-bottom: 1px solid rgb(0, 85, 185) !important;
+}
+
+.agenda_titulo_tabla_modal {
+  font-size: 0.6rem !important;
+}
+.agenda_titulo_tabla_modal th {
+  position: sticky !important;
+  top: 0;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  padding: 0rem 0;
+}
+
+.agenda_cuerpo_tabla_modal {
+  font-size: 0.6rem !important;
+}
+.agenda_cuerpo_tabla_modal td {
+  padding: 0.2rem 0;
+}
+
+.agenda_desplegable_busqueda {
+  z-index: 1000;
+  max-height: 40vh;
+  overflow-y: auto;
+  max-width: 47vw;
+}
+.agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad {
+  font-size: 0.7rem !important;
+}
+.agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad:hover {
+  background-color: rgb(0, 85, 185);
+  color: white !important;
+}
+.agenda_desplegable_busqueda .agenda_desplegable_busqueda_propiedad .estado_activa {
+  font-size: 0.5rem !important;
+}
+
+.agenda_ancho_tabla_hora {
+  /* ancho */
+  width: 15vh !important;
+}
+
+.agenda-noseleccionada {
+  min-width: 7vh;
+  width: 7vh;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  color: black !important;
+  height: 10vh;
+}
+.agenda-noseleccionada:hover {
+  border: 1px solid rgb(0, 85, 185) !important;
+}
+.agenda-noseleccionada {
+  /* .texto-agenda
+  * width: 7vh
+  * font-size: 2.9vh !important
+  * word-wrap: break-word
+  * word-break: break-word
+  * white-space: normal
+  * display: inline-block */
+}
+
+.agenda-seleccionada {
+  padding: 0;
+  margin: 0;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  height: 10vh;
+  min-width: 7vh;
+}
+.agenda-seleccionada:hover {
+  background-color: rgb(0%, 24.1441441441%, 52.5490196078%) !important;
+}
+.agenda-seleccionada .texto-agenda {
+  min-width: 7vh;
+  max-width: 7vh;
+  font-size: 2vh !important;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: inline-block;
+}
+.agenda-seleccionada .texto-agenda .texto-agenda-content {
+  font-size: 1.3vh !important;
+  min-width: 17vh;
+}
+.agenda-seleccionada .texto-agenda-logo {
+  min-width: 7vh;
+  font-size: 4vh;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: inline-block;
+}
+
+.agenda_listado_card_header {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  font-size: 1.7rem !important;
+}
+
+.agenda_listado_card_body {
+  background-color: white !important;
+  color: black !important;
+  font-size: 0.6rem !important;
+}
+
+.tabla_clientes {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+  max-height: 25.5vh;
+  border: 1px solid white;
+}
+.tabla_clientes table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.65rem;
+}
+.tabla_clientes table thead th {
+  background-color: rgb(0, 85, 185) !important;
+  color: white;
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+}
+.tabla_clientes table tbody button {
+  font-size: 0.7rem;
+}
+
+.card-header-cliente {
+  background-color: rgb(0, 85, 185) !important;
+  color: white;
+  height: 2.5rem;
+}
+
+.card-body-cliente-datos {
+  max-height: 33vh !important;
+}
+
+.card-body-cliente {
+  height: 27vh;
+}
+
+.barra-asesores {
+  border-right: 1px solid rgb(0, 85, 185);
+  height: 30.2rem;
+}
+.barra-asesores .tipo-potabiliadad-asesores {
+  color: red;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.barra-asesores .selector_potabilidad-asesores button {
+  font-size: 0.7rem !important;
+  color: rgb(0, 85, 185) !important;
+  background-color: white !important;
+}
+.barra-asesores .selector_potabilidad-asesores i {
+  color: rgb(0, 85, 185);
+  font-size: 0.7rem !important;
+}
+.barra-asesores .selector_potabilidad-asesores .texto-seleccionado {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+}
+.barra-asesores .lista-contacto-asesores {
+  border-radius: 5px !important;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+  color: red !important;
+  height: 24rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.barra-asesores .lista-contacto-asesores .nombre-contacto-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+}
+.barra-asesores .lista-contacto-asesores .nombre-contacto-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.barra-asesores .lista-contacto-asesores .telefono-contacto-asesores {
+  font-size: 0.6rem;
+  text-align: left;
+  color: black !important;
+}
+.barra-asesores .lista-contacto-asesores .fecha-contacto-asesores {
+  font-size: 0.5rem;
+  text-align: right;
+  color: black !important;
+}
+.barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+}
+.barra-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  text-align: right;
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+}
+.barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+  font-size: 0.6rem;
+  margin-right: 0.5rem;
+}
+.barra-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  text-align: left;
+  font-size: 0.5rem;
+  margin-right: 0.5rem;
+}
+.barra-asesores .lista-contacto-asesores .pertenece-inmobiliaria-asesores {
+  font-size: 0.6rem !important;
+  text-align: center;
+  border-radius: 5px !important;
+  box-shadow: 0 0 0px rgb(0, 85, 185) !important;
+  background-color: rgb(72.5490196078%, 85.1616322205%, 100%) !important;
+  color: black;
+}
+.barra-asesores .titulo-columna-asesores {
+  font-size: 0.8rem;
+  color: rgb(0, 85, 185) !important;
+  border-bottom: 1px solid rgb(0, 85, 185);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.barra-asesores .creterio-asesores {
+  font-size: 0.8rem;
+  border-bottom: 1px solid #cccccc;
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  /* box-shadow: 0 0 3px $azulSalas !important */
+}
+.barra-asesores .creterio-asesores .criterio-titulos-asesores {
+  font-weight: 700;
+  font-size: 0.5rem;
+  color: rgb(0, 85, 185);
+}
+.barra-asesores .creterio-asesores .criterio-texto-asesores {
+  font-size: 0.65rem;
+  color: rgb(0, 85, 185);
+}
+.barra-asesores .creterio-asesores .boton-editar-criterio-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+}
+.barra-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+}
+
+.conversacion_asesores {
+  font-size: 0.7rem;
+}
+
+.contenedor_conversacion_asesores {
+  height: 23rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.contenedor_conversacion_asesores .conversacion_asesores_devolcucion {
+  font-size: 0.7rem;
+  color: black;
+  font-weight: 700;
+}
+.contenedor_conversacion_asesores .btn-light-conversacion-asesores {
+  font-size: 0.6rem !important;
+  height: 1rem !important;
+  border: 1px solid rgb(0, 85, 185) !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  border-radius: 5px !important;
+  margin-left: 0.5rem !important;
+  padding: 0rem 0.3rem !important;
+  cursor: pointer !important;
+}
+.contenedor_conversacion_asesores .btn-light-conversacion-asesores:hover {
+  border-color: rgba(0, 175, 154, 0.96) !important;
+  background-color: white !important;
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.contenedor_conversacion_asesores .mensaje-resaltado {
+  box-shadow: 0px -5px 9px rgb(86.5490196078%, 92.729199788%, 100%) inset !important;
+}
+
+.btn-adds-conversacion-asesores {
+  font-size: 0.8rem !important;
+  border: 1px solid rgb(0, 85, 185) !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  border-radius: 25px !important;
+  cursor: pointer !important;
+}
+.btn-adds-conversacion-asesores:hover {
+  border-color: rgb(0%, 10.3603603604%, 22.5490196078%) !important;
+  background-color: rgb(0%, 24.1441441441%, 52.5490196078%) !important;
+  color: white !important;
+}
+
+.lista-codigos-asesores {
+  height: 27rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.lista-codigos-asesores .codigos-ofrecido-asesores {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.55rem;
+  border: 0px solid rgba(0, 175, 154, 0.96) !important;
+  background-color: transparent !important;
+  border-radius: 10px !important;
+}
+.lista-codigos-asesores .codigos-ofrecido-asesores:hover {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+}
+.lista-codigos-asesores .codigos-muestra-asesores {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.55rem;
+  border: 0px solid rgb(0, 85, 185) !important;
+  background-color: transparent !important;
+  border-radius: 10px !important;
+}
+.lista-codigos-asesores .codigos-muestra-asesores:hover {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+}
+.lista-codigos-asesores .codigos-consultado-asesores {
+  color: grey !important;
+  font-size: 0.55rem;
+  border-radius: 10px !important;
+  border: 0px solid grey !important;
+  background-color: transparent !important;
+}
+.lista-codigos-asesores .codigos-consultado-asesores:hover {
+  background-color: grey !important;
+  color: white !important;
+}
+
+.boton_debolucion_asesores {
+  font-size: 0.6rem !important;
+  height: 1rem !important;
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  border-radius: 5px !important;
+  margin-left: 0.5rem !important;
+  padding: 0rem 0.3rem !important;
+}
+.boton_debolucion_asesores:hover {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  color: white !important;
+}
+
+.list-group-item-asesores {
+  border-bottom: 1px solid #dee2e6 !important;
+  padding-bottom: 1rem !important;
+}
+
+.seleccionAsesores {
+  /* background-color: lighten($azulSalas, 60%) !important */
+  box-shadow: 0px -10px 9px rgb(86.5490196078%, 92.729199788%, 100%) inset !important;
+  color: white !important;
+  border-radius: 10px !important;
+  border: 0px solid !important;
+  border-bottom: 1px solid rgb(0, 85, 185) !important;
+}
+
+.barras-asesores {
+  height: 30.2rem;
+  border: 1px solid rgb(0, 85, 185);
+  border-radius: 10px;
+}
+.barras-asesores .tipo-potabiliadad-asesores {
+  color: red;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.barras-asesores .selector_potabilidad-asesores button {
+  font-size: 0.7rem !important;
+  color: rgb(0, 85, 185) !important;
+  background-color: white !important;
+}
+.barras-asesores .selector_potabilidad-asesores i {
+  color: rgb(0, 85, 185);
+  font-size: 0.7rem !important;
+}
+.barras-asesores .selector_potabilidad-asesores .texto-seleccionado {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+}
+.barras-asesores .lista-contacto-asesores {
+  border-radius: 5px !important;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.7rem !important;
+  color: red !important;
+  height: 24rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.barras-asesores .lista-contacto-asesores .nombre-contacto-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+}
+.barras-asesores .lista-contacto-asesores .nombre-contacto-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.barras-asesores .lista-contacto-asesores .telefono-contacto-asesores {
+  font-size: 0.6rem;
+  text-align: left;
+  color: black !important;
+}
+.barras-asesores .lista-contacto-asesores .fecha-contacto-asesores {
+  font-size: 0.5rem;
+  text-align: right;
+  color: black !important;
+}
+.barras-asesores .lista-contacto-asesores .boton-editar-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+}
+.barras-asesores .lista-contacto-asesores .boton-editar-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  text-align: right;
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+}
+.barras-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: left;
+  font-size: 0.6rem;
+  margin-right: 0.5rem;
+}
+.barras-asesores .lista-contacto-asesores .boton-whatsapp-clientes-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  text-align: left;
+  font-size: 0.5rem;
+  margin-right: 0.5rem;
+}
+.barras-asesores .lista-contacto-asesores .pertenece-inmobiliaria-asesores {
+  font-size: 0.6rem !important;
+  text-align: center;
+  border-radius: 5px !important;
+  box-shadow: 0 0 0px rgb(0, 85, 185) !important;
+  background-color: rgb(72.5490196078%, 85.1616322205%, 100%) !important;
+  color: black;
+}
+.barras-asesores .titulo-columna-asesores {
+  font-size: 0.8rem;
+  color: rgb(0, 85, 185) !important;
+  border-bottom: 1px solid rgb(0, 85, 185);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.barras-asesores .creterio-asesores {
+  font-size: 0.8rem;
+  border-bottom: 1px solid #cccccc;
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  /* box-shadow: 0 0 3px $azulSalas !important */
+}
+.barras-asesores .creterio-asesores .criterio-titulos-asesores {
+  font-weight: 700;
+  font-size: 0.5rem;
+  color: rgb(0, 85, 185);
+}
+.barras-asesores .creterio-asesores .criterio-texto-asesores {
+  font-size: 0.65rem;
+  color: rgb(0, 85, 185);
+}
+.barras-asesores .creterio-asesores .boton-editar-criterio-asesores {
+  color: rgb(0, 85, 185) !important;
+  text-align: right;
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+}
+.barras-asesores .creterio-asesores .boton-editar-criterio-asesores:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+}
+
+.titulo-impuestos {
+  font-size: 2.5vh;
+  color: rgb(0, 85, 185);
+  text-align: center;
+}
+
+.periodo-padron {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vh;
+  padding: 0.35vh 1vh;
+  border: 1px solid rgba(0, 85, 185, 0.35);
+  border-radius: 2vh;
+  background-color: rgba(0, 85, 185, 0.07);
+  color: rgb(0, 85, 185);
+  font-size: 1.8vh;
+  white-space: nowrap;
+}
+.periodo-padron .bi {
+  font-size: 2vh;
+  color: rgb(0, 85, 185);
+}
+.periodo-padron strong {
+  font-size: 1.9vh;
+  color: rgb(0, 85, 185);
+}
+
+.contenedor-tabla-impuestos {
+  height: 57vh;
+  overflow-y: auto;
+}
+
+.tabla-modifica-carga-impuestos {
+  max-height: 27vh !important;
+  min-height: 10vh !important;
+}
+.tabla-modifica-carga-impuestos button {
+  font-size: 2vh;
+}
+
+.tabla-impuestos th {
+  background-color: rgb(0, 85, 185);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 2.5vh;
+  position: sticky;
+  top: 0;
+  padding: 0.5vh;
+}
+.tabla-impuestos th .bi {
+  font-size: 2.5vh !important;
+  color: white !important;
+}
+.tabla-impuestos td {
+  border-left: 1px solid rgb(0, 85, 185);
+  border-right: 1px solid rgb(0, 85, 185);
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  font-size: 2vh;
+  padding: 0.36vh !important;
+}
+.tabla-impuestos td .bi {
+  font-size: 2.5vh !important;
+  color: rgb(0, 85, 185) !important;
+}
+.tabla-impuestos button {
+  font-weight: bold;
+  padding-left: 0.6vh;
+  padding-right: 0.6vh;
+  padding-top: 0.3vh;
+  padding-bottom: 0.3vh;
+}
+.tabla-impuestos button:hover {
+  background-color: rgba(110, 190, 255, 0.6352941176) !important;
+  border: 1px solid rgba(110, 190, 255, 0.6352941176) !important;
+}
+
+.listado-mas-opciones-impuestos {
+  width: 30vh;
+  height: auto;
+  border: 1px solid rgb(0, 85, 185);
+}
+.listado-mas-opciones-impuestos .text-options-impuestos {
+  color: rgb(0, 85, 185);
+  font-size: 2vh;
+}
+.listado-mas-opciones-impuestos .text-options-impuestos:hover {
+  color: rgba(0, 175, 154, 0.96);
+  background-color: transparent;
+}
+.listado-mas-opciones-impuestos .text-options-impuestos:hover .bi {
+  font-size: 2.5vh;
+  color: rgb(0, 85, 185);
+}
+
+.lista-mas-opciones-impuestos {
+  width: 25vh !important;
+  max-height: 15vh;
+  border: 1px solid rgb(0, 85, 185);
+}
+.lista-mas-opciones-impuestos .text-options-impuestos_lista {
+  color: rgb(0, 85, 185);
+  font-size: 2vh;
+}
+.lista-mas-opciones-impuestos .text-options-impuestos_lista:hover {
+  padding-left: 2vh !important;
+  color: rgba(0, 175, 154, 0.96) !important;
+  background-color: transparent !important;
+  font-size: 2vh !important;
+  border: none !important;
+}
+
+.expensa_dato-secundario {
+  font-size: 1.5vh !important;
+}
+
+.tabla-broches-principal-scroll {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tabla-broches-principal {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.7rem;
+}
+.tabla-broches-principal th,
+.tabla-broches-principal td {
+  padding: 0.25rem 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+.tabla-broches-principal th {
+  font-size: 0.82rem;
+  overflow: visible;
+  text-overflow: clip;
+}
+.tabla-broches-principal th:nth-child(1),
+.tabla-broches-principal td:nth-child(1) {
+  width: 5%;
+}
+.tabla-broches-principal th:nth-child(2),
+.tabla-broches-principal td:nth-child(2) {
+  width: 4%;
+}
+.tabla-broches-principal th:nth-child(3),
+.tabla-broches-principal td:nth-child(3) {
+  width: 10%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(4),
+.tabla-broches-principal td:nth-child(4) {
+  width: 12%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(5),
+.tabla-broches-principal td:nth-child(5) {
+  width: 6%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(6),
+.tabla-broches-principal td:nth-child(6) {
+  width: 6%;
+}
+.tabla-broches-principal th:nth-child(7),
+.tabla-broches-principal td:nth-child(7) {
+  width: 13%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(8),
+.tabla-broches-principal td:nth-child(8) {
+  width: 8%;
+}
+.tabla-broches-principal th:nth-child(9),
+.tabla-broches-principal td:nth-child(9) {
+  width: 7%;
+}
+.tabla-broches-principal th:nth-child(10),
+.tabla-broches-principal td:nth-child(10),
+.tabla-broches-principal th:nth-child(11),
+.tabla-broches-principal td:nth-child(11),
+.tabla-broches-principal th:nth-child(12),
+.tabla-broches-principal td:nth-child(12) {
+  width: 7%;
+}
+.tabla-broches-principal th:nth-child(13),
+.tabla-broches-principal td:nth-child(13) {
+  width: 5%;
+}
+.tabla-broches-principal th:last-child,
+.tabla-broches-principal td:last-child {
+  width: 8%;
+  min-width: 72px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.tabla-broches-carga-scroll {
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tabla-broches-carga {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.76rem;
+}
+.tabla-broches-carga th,
+.tabla-broches-carga td {
+  padding: 0.35rem 0.25rem;
+}
+.tabla-broches-carga th {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  font-weight: bold;
+  white-space: normal;
+  line-height: 1.1;
+}
+.tabla-broches-carga th:nth-child(1) {
+  width: 5%;
+}
+.tabla-broches-carga th:nth-child(2) {
+  width: 15%;
+}
+.tabla-broches-carga th:nth-child(3) {
+  width: 11%;
+}
+.tabla-broches-carga th:nth-child(4) {
+  width: 11%;
+}
+.tabla-broches-carga th:nth-child(5) {
+  width: 10%;
+}
+.tabla-broches-carga th:nth-child(6) {
+  width: 6%;
+}
+.tabla-broches-carga th:nth-child(7) {
+  width: 5%;
+}
+.tabla-broches-carga th:nth-child(8) {
+  width: 10%;
+}
+.tabla-broches-carga th:nth-child(9) {
+  width: 9%;
+}
+.tabla-broches-carga th:nth-child(10) {
+  width: 9%;
+}
+.tabla-broches-carga th:nth-child(11) {
+  width: 9%;
+}
+
+.x-small {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-broches-carga tr:has(button:disabled) {
+  opacity: 0.8;
+}
+
+.expensa_col-direccion {
+  max-width: 200px;
+}
+
+.expensa_col-admin {
+  max-width: 160px;
+}
+
+.expensa_col-consorcio {
+  max-width: 160px;
+}
+
+.expensa_col-fecha {
+  min-width: 130px;
+}
+
+.expensa_col-periodo {
+  min-width: 70px;
+}
+
+.expensa_col-anio {
+  min-width: 70px;
+}
+
+.expensa_btn-guardar {
+  background-color: #198754 !important;
+  border-color: #198754 !important;
+  color: white !important;
+  transition: all 0.2s ease;
+}
+.expensa_btn-guardar:hover:not(:disabled) {
+  background-color: #157347 !important;
+  border-color: #146c43 !important;
+}
+.expensa_btn-guardar:disabled {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.expensa_btn-guardado {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
+  cursor: default;
+}
+
+.tabla_armar_broche .titulo-resultados {
+  background-color: rgb(0, 85, 185) !important;
+  height: 5vh;
+}
+.tabla_armar_broche .titulo-resultados label {
+  color: white !important;
+  max-height: 30vh;
+  overflow-y: auto;
+  font-size: 2vh;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-check:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.modal-control-impuesto {
+  max-height: 40vh !important;
+  overflow-y: scroll;
+}
+
+.contenedor-tabla-epe {
+  height: 70vh;
+  overflow-y: auto;
+}
+
+.textoPredictivoBrochExpensas input {
+  font-size: 1.5vh;
+  height: 31px;
+}
+
+.textoPredictivoEdificioBrochExpensas input,
+.textoPredictivoEdificioUnidades input {
+  font-size: 1.5vh;
+  height: 31px;
+}
+
+.home-card-all {
+  width: 45vw !important;
+  height: 45vh;
+}
+
+.card-header-home {
+  background-color: rgb(0, 85, 185) !important;
+  color: white;
+  border-bottom: 1px solid rgba(0, 175, 154, 0.96);
+  font-weight: 600;
+}
+
+.card-body-home {
+  font-size: 10px;
+  height: 35vh;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.card-body-home th {
+  background-color: white;
+  color: rgb(0, 85, 185);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-home thead tr th {
+  border-bottom: 2px solid rgba(0, 175, 154, 0.96);
+}
+.table-home tbody tr td {
+  height: 1rem;
+  max-width: 13rem;
+}
+
+.alerta-agenda-home {
+  color: rgb(0, 85, 185);
+  font-weight: 600;
+}
+
+.listar_boton_selector {
+  text-align: center;
+  border-radius: 5px !important;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.8rem !important;
+}
+
+/* Mejora el botón selector */
+.listar_boton_selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listar_boton_selector .badge {
+  font-size: 0.7rem;
+}
+
+/* Checkboxes más grandes y con mejor contraste */
+.campo-checkbox {
+  width: 1.1em;
+  height: 1.1em;
+  margin-top: 0.15em;
+}
+
+/* Hover en los items del dropdown */
+.dropdown-menu .form-check:hover {
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+.tabla-criterio-activos {
+  max-height: 250px;
+  overflow: auto;
+}
+
+.proceso_reserva_tabla_contenedor {
+  height: 34vh;
+  overflow-y: auto;
+}
+
+.proceso_reserva_tabla_contenedor_contrato {
+  height: auto;
+  overflow-y: auto;
+}
+
+.proceso_reserva_tabla_contenedor_obserbaciones {
+  height: 47vh;
+  overflow-y: auto;
+}
+
+.repactado_tabla_contenedor {
+  max-height: 55vh;
+  overflow: auto;
+}
+
+.tasacion-repactado-page {
+  padding-top: 0.75rem;
+}
+
+.tasacion-repactado-heading {
+  color: rgb(0, 85, 185);
+}
+.tasacion-repactado-heading h1 {
+  font-weight: 700;
+}
+
+.tasacion-repactado-heading-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 85, 185, 0.1);
+  font-size: 1.25rem;
+}
+
+.tasacion-repactado-field .form-label {
+  margin-bottom: 0.25rem;
+  color: #5c6773;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.tasacion-repactado-field .form-control {
+  min-height: 36px;
+  background-color: #f7f9fb;
+}
+.tasacion-repactado-field .form-control::placeholder {
+  color: #8a939d;
+  opacity: 1;
+}
+
+.tasacion-repactado-action {
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.tasacion-repactado-value-card {
+  border-top: 3px solid transparent;
+}
+.tasacion-repactado-value-card--venta {
+  border-top-color: rgb(0, 85, 185);
+}
+.tasacion-repactado-value-card--alquiler {
+  border-top-color: rgba(0, 175, 154, 0.96);
+}
+
+.tasacion-repactado-empty-state {
+  display: flex;
+  min-height: 130px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #6c757d;
+  text-align: center;
+}
+.tasacion-repactado-empty-state i {
+  color: rgb(0, 85, 185);
+  font-size: 1.75rem;
+}
+
+.proceso_reserva_table th {
+  color: white;
+  background-color: rgb(0, 85, 185);
+  font-weight: bold;
+  font-size: 1.7vh;
+  position: sticky;
+  top: 0;
+  padding: 0.5vh;
+  white-space: nowrap;
+}
+.proceso_reserva_table td {
+  border-left: 1px solid rgb(0, 85, 185);
+  border-right: 1px solid rgb(0, 85, 185);
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  font-size: 1.7vh;
+  padding: 0.15vh !important;
+}
+.proceso_reserva_table button {
+  font-size: 9px;
+}
+
+.cuadromapabusquedamap {
+  height: 82vh !important;
+}
+
+.cuadromapabusqueda .card-body {
+  height: 82vh !important;
+}
+
+.icono-transparente,
+.icono-operacion {
+  background: transparent;
+  border: none;
+}
+
+.icono-operacion svg {
+  width: 22px;
+  height: 42px;
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.45));
+}
+.icono-operacion:hover svg {
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.75));
+  transform: scale(1.15);
+}
+
+.pin-forma {
+  stroke: white;
+  stroke-width: 1.5px;
+}
+
+.pin-numero {
+  color: white;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  border: 3px solid white;
+  box-shadow: 0 10px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pin-grupo:hover .pin-numero {
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.75));
+  transform: scale(1.15);
+}
+
+.pin-grupo-resumen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.pin-grupo .pin-numero {
+  border: 2px solid #495057;
+  background-color: white;
+  color: #212529;
+}
+
+.pin-estados {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  width: max-content;
+}
+
+.pin-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 25px;
+  height: 16px;
+  padding: 0 3px;
+  border: 1px solid white;
+  border-radius: 9px;
+  background: white;
+  color: #212529;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.55);
+}
+
+.pin-estado-color {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+}
+
+.pin-estado.pin-venta .pin-estado-color {
+  background-color: rgb(0, 85, 185);
+}
+
+.pin-estado.pin-alquiler .pin-estado-color {
+  background-color: rgba(0, 175, 154, 0.96);
+}
+
+.pin-estado.pin-ambas .pin-estado-color {
+  background-color: rgb(40.1960784314%, 40.1960784314%, 40.1960784314%);
+}
+
+.pin-estado.pin-venta-alquilada .pin-estado-color {
+  background-color: lightgrey;
+}
+
+.pin-venta .pin-forma {
+  fill: rgb(0, 85, 185);
+}
+.pin-venta .pin-numero {
+  background-color: rgb(0, 85, 185);
+}
+
+.leyenda-pin.pin-venta {
+  background-color: rgb(0, 85, 185);
+}
+
+.pin-alquiler .pin-forma {
+  fill: rgba(0, 175, 154, 0.96);
+}
+.pin-alquiler .pin-numero {
+  background-color: rgba(0, 175, 154, 0.96);
+}
+
+.leyenda-pin.pin-alquiler {
+  background-color: rgba(0, 175, 154, 0.96);
+}
+
+.pin-ambas .pin-forma {
+  fill: rgb(40.1960784314%, 40.1960784314%, 40.1960784314%);
+}
+.pin-ambas .pin-numero {
+  background-color: rgb(40.1960784314%, 40.1960784314%, 40.1960784314%);
+}
+
+.leyenda-pin.pin-ambas {
+  background-color: rgb(40.1960784314%, 40.1960784314%, 40.1960784314%);
+}
+
+.pin-venta-alquilada .pin-forma {
+  fill: lightgrey;
+}
+.pin-venta-alquilada .pin-numero {
+  background-color: lightgrey;
+}
+
+.leyenda-pin.pin-venta-alquilada {
+  background-color: lightgrey;
+}
+
+.leyenda-operaciones {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px 11px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  font-size: 0.78rem;
+}
+.leyenda-operaciones span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.leyenda-pin {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+}
+
+.tasaciones-body-scroll {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.chat-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px 10px 0 0;
+  background-color: rgba(0, 175, 154, 0.22);
+  color: #1f2d3d;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.chat-cabecera .bi {
+  color: rgba(0%, 12.6274509804%, 11.1121568627%, 0.96);
+  font-size: 1rem;
+}
+
+.chat-area {
+  height: 300px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  border: 1px solid #dfe7ea;
+  border-top: 0;
+  border-bottom: 0;
+  background-color: #eef6f5;
+  background-image: radial-gradient(rgba(0, 85, 185, 0.07) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.chat-estado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-dia {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 10px;
+}
+
+.chat-dia span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #54656f;
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.chat-fila {
+  display: flex;
+  margin-bottom: 2px;
+}
+
+.chat-fila-inicio {
+  margin-top: 8px;
+}
+
+.chat-fila-izquierda {
+  justify-content: flex-start;
+}
+
+.chat-fila-derecha {
+  justify-content: flex-end;
+}
+
+.chat-burbuja {
+  position: relative;
+  max-width: 72%;
+  min-width: 96px;
+  padding: 6px 9px 4px;
+  border-radius: 9px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  font-size: 0.87rem;
+  color: #111b21;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.chat-burbuja::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.chat-propietario {
+  background-color: #dcf5ef;
+}
+
+.chat-inquilino {
+  background-color: #dce9fb;
+}
+
+.chat-cola.chat-propietario {
+  border-top-left-radius: 0;
+}
+
+.chat-cola.chat-inquilino {
+  border-top-right-radius: 0;
+}
+
+.chat-cola.chat-propietario::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  border-style: solid;
+  border-width: 0 8px 8px 0;
+  border-color: transparent #dcf5ef transparent transparent;
+}
+
+.chat-cola.chat-inquilino::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  border-style: solid;
+  border-width: 0 0 8px 8px;
+  border-color: transparent transparent transparent #dce9fb;
+}
+
+.chat-autor {
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 1px;
+}
+
+.chat-propietario .chat-autor {
+  color: rgba(0%, 12.6274509804%, 11.1121568627%, 0.96);
+}
+
+.chat-inquilino .chat-autor {
+  color: rgb(0, 85, 185);
+}
+
+.chat-hora {
+  float: right;
+  margin: 6px 0 0 10px;
+  font-size: 0.66rem;
+  color: #667781;
+  line-height: 1;
+}
+
+.chat-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #dfe7ea;
+  border-radius: 0 0 10px 10px;
+  background-color: #f0f2f5;
+}
+
+.chat-quien {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 130px;
+  border-radius: 9px;
+  font-size: 0.8rem;
+}
+
+.chat-input {
+  flex: 1 1 auto;
+  min-height: 36px;
+  max-height: 110px;
+  border-radius: 9px;
+  resize: none;
+  font-size: 0.87rem;
+}
+
+.chat-enviar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(0, 85, 185);
+  color: #fff;
+}
+
+.chat-enviar:hover:not(:disabled) {
+  background-color: rgb(0%, 24.1441441441%, 52.5490196078%);
+}
+
+.chat-enviar:disabled {
+  opacity: 0.5;
+}
+
+.contrato-seccion {
+  margin-bottom: 18px;
+}
+
+.contrato-seccion:last-child {
+  margin-bottom: 0;
+}
+
+.contrato-seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--bs-primary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 5px;
+  margin-bottom: 12px;
+}
+
+.contrato-seccion-header i {
+  font-size: 13px;
+}
+
+.card-alto-tasaciones {
+  min-height: 35vh;
+}
+
+.box-texto-tasaciones {
+  font-size: 0.75rem;
+}
+
+#filtro_calle {
+  font-size: 0.4rem;
+}
+
+.tabla-tasaciones {
+  overflow-y: auto;
+  height: 180px;
+}
+
+.acciones-tasaciones {
+  width: 70px;
+}
+
+.sugerencias-predictivo {
+  z-index: 1050;
+  max-height: 220px;
+  overflow-y: auto;
+  top: 100%;
+  left: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.sugerencias-propietario {
+  z-index: 1055;
+  max-height: 200px;
+  overflow-y: auto;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+}
+
+.tasaciones-filtro input.form-control {
+  font-size: 1.7vh !important;
+  height: 5.4vh !important;
+}
+.tasaciones-filtro select.form-control {
+  font-size: 2vh !important;
+  height: 5.4vh !important;
+}
+
+.dptoTec_fuente_realizados {
+  font-size: 0.75rem;
+}
+
+.card-body_dptoTec {
+  min-height: 13vh;
+}
+
+.form-group.busqueda_dptoTec label {
+  font-size: 2vh !important;
+}
+.form-group.busqueda_dptoTec select.form-control {
+  height: 5vh !important;
+  font-size: 1.8vh !important;
+}
+.form-group.busqueda_dptoTec input.form-control {
+  height: 5vh !important;
+  font-size: 1.8vh !important;
+}
+
+.dpto_recuadro_estados_total {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  padding-left: 1vh !important;
+}
+.dpto_recuadro_estados_total div {
+  color: inherit !important;
+}
+.dpto_recuadro_estados_total:hover {
+  color: rgb(0, 85, 185) !important;
+  background-color: white !important;
+  font-weight: bold !important;
+  border-color: rgb(0, 85, 185) !important;
+}
+
+.dpto_recuadro_estados_realizados {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  padding-left: 1vh !important;
+  color: white !important;
+}
+.dpto_recuadro_estados_realizados div {
+  color: inherit !important;
+}
+.dpto_recuadro_estados_realizados:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  background-color: white !important;
+  font-weight: bold !important;
+  border-color: rgba(0, 175, 154, 0.96) !important;
+}
+
+.dpto_recuadro_estados_restantes {
+  background-color: rgba(110, 190, 255, 0.6352941176) !important;
+  padding-left: 1vh !important;
+  color: white !important;
+}
+.dpto_recuadro_estados_restantes div {
+  color: inherit !important;
+}
+.dpto_recuadro_estados_restantes:hover {
+  color: rgba(110, 190, 255, 0.6352941176) !important;
+  background-color: white !important;
+  font-weight: bold !important;
+  border-color: rgba(110, 190, 255, 0.6352941176) !important;
+}
+
+.dpto_recuadro_usuarios {
+  background-color: white !important;
+  color: rgb(0, 85, 185) !important;
+  padding-left: 1vh !important;
+}
+.dpto_recuadro_usuarios div {
+  color: inherit !important;
+}
+.dpto_recuadro_usuarios:hover {
+  color: rgba(0, 175, 154, 0.96) !important;
+  background-color: white !important;
+  font-weight: bold !important;
+  border-color: rgb(0, 85, 185) !important;
+}
+
+.dpto_boton_opciones {
+  background-color: white !important;
+  color: rgb(0, 85, 185) !important;
+  border-color: rgb(0, 85, 185) !important;
+  border-width: 1px !important;
+  padding-left: 1vh !important;
+  padding-right: 1vh !important;
+  padding-top: 0.35vh !important;
+  padding-bottom: 0.35vh !important;
+}
+.dpto_boton_opciones:hover {
+  color: white !important;
+  background-color: rgb(0, 85, 185) !important;
+  font-weight: bold !important;
+  border-color: rgb(0, 85, 185) !important;
+}
+
+.proceso_dpto_tec_contenedor {
+  overflow: auto;
+  height: 59vh;
+}
+.proceso_dpto_tec_contenedor thead {
+  position: sticky;
+  top: 0;
+}
+.proceso_dpto_tec_contenedor tbody {
+  overflow-y: auto;
+  height: 45vh;
+}
+.proceso_dpto_tec_contenedor table {
+  height: fit-content;
+}
+
+.btn-thirdButton {
+  background-color: rgb(0, 85, 185) !important;
+  border-color: rgb(0, 85, 185) !important;
+}
+.btn-thirdButton:hover {
+  background-color: rgb(0%, 24.1441441441%, 52.5490196078%) !important;
+  border-color: rgb(0%, 24.1441441441%, 52.5490196078%) !important;
+}
+
+.btn-secondary {
+  background-color: rgba(0, 175, 154, 0.96) !important;
+  border-color: rgba(0, 175, 154, 0.96) !important;
+}
+.btn-secondary:hover {
+  background-color: rgba(0%, 48.6274509804%, 42.7921568627%, 0.96) !important;
+  border-color: rgba(0%, 48.6274509804%, 42.7921568627%, 0.96) !important;
+}
+
+.btn-light {
+  border-color: rgba(0, 175, 154, 0.96) !important;
+  color: rgba(0, 175, 154, 0.96) !important;
+}
+.btn-light:hover {
+  border: 1px solid rgb(0, 85, 185) !important;
+  color: rgb(0, 85, 185) !important;
+}
+
+.form-group {
+  text-align: center;
+}
+.form-group label {
+  color: rgb(0, 85, 185) !important;
+  font-size: 0.8rem !important;
+  font-weight: bold !important;
+}
+.form-group input, .form-group select, .form-group textarea {
+  /* border: 2px solid $azulSalas !important */
+  border-radius: 5px !important;
+  box-shadow: 0 0 3px rgb(0, 85, 185) !important;
+  font-size: 0.8rem !important;
+}
+.form-group select option {
+  color: rgb(0, 85, 185) !important;
+}
+
+.busqueda-select {
+  color: rgb(0, 85, 185) !important;
+  z-index: 1000;
+  max-height: 60vh;
+  max-width: 60vh;
+  overflow-y: auto;
+  font-size: 0.75rem !important;
+  border: 0.5px solid gray !important;
+}
+
+.card {
+  border: 1px solid rgb(0, 85, 185) !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.card .card-header {
+  background-color: white;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  max-height: 39px;
+}
+
+.modal-lg {
+  max-width: 90% !important;
+}
+
+.modal {
+  max-width: 100% !important;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.text-primary {
+  color: rgb(0, 85, 185) !important;
+}
+
+.btn-thirdButton {
+  background-color: rgba(110, 190, 255, 0.6352941176) !important;
+  border-color: rgba(110, 190, 255, 0.6352941176) !important;
+}
+.btn-thirdButton:hover {
+  background-color: rgb(0%, 24.1441441441%, 52.5490196078%) !important;
+}
