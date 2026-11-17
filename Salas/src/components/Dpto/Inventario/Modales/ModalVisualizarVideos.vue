@@ -22,9 +22,9 @@
               Tu navegador no permite reproducir este video.
             </video>
             <div class="card-body d-flex justify-content-between align-items-center gap-2">
-              <small class="text-muted">{{ formatDate(video.created_at) }}</small>
-              <button type="button" class="btn btn-outline-danger btn-sm" :disabled="!puedeEditar || eliminandoId === video.id"
-                @click="eliminar(video)">
+              <!-- <small class="text-muted">{{ formatDate(video.created_at) }}</small> -->
+              <button type="button" class="btn btn-outline-danger btn-sm w-100"
+                :disabled="!puedeEditar || eliminandoId === video.id" @click="eliminar(video)">
                 <i class="bi" :class="eliminandoId === video.id ? 'bi-hourglass-split' : 'bi-trash'"></i>
                 {{ eliminandoId === video.id ? 'Eliminando...' : 'Eliminar' }}
               </button>
