@@ -1200,6 +1200,157 @@
   font-size: 1.5vh !important;
 }
 
+.tabla-broches-principal-scroll {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tabla-broches-principal {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.7rem;
+}
+.tabla-broches-principal th,
+.tabla-broches-principal td {
+  padding: 0.25rem 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+.tabla-broches-principal th {
+  font-size: 0.82rem;
+  overflow: visible;
+  text-overflow: clip;
+}
+.tabla-broches-principal th:nth-child(1),
+.tabla-broches-principal td:nth-child(1) {
+  width: 5%;
+}
+.tabla-broches-principal th:nth-child(2),
+.tabla-broches-principal td:nth-child(2) {
+  width: 4%;
+}
+.tabla-broches-principal th:nth-child(3),
+.tabla-broches-principal td:nth-child(3) {
+  width: 10%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(4),
+.tabla-broches-principal td:nth-child(4) {
+  width: 12%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(5),
+.tabla-broches-principal td:nth-child(5) {
+  width: 6%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(6),
+.tabla-broches-principal td:nth-child(6) {
+  width: 6%;
+}
+.tabla-broches-principal th:nth-child(7),
+.tabla-broches-principal td:nth-child(7) {
+  width: 13%;
+  font-size: 0.62rem;
+}
+.tabla-broches-principal th:nth-child(8),
+.tabla-broches-principal td:nth-child(8) {
+  width: 8%;
+}
+.tabla-broches-principal th:nth-child(9),
+.tabla-broches-principal td:nth-child(9) {
+  width: 7%;
+}
+.tabla-broches-principal th:nth-child(10),
+.tabla-broches-principal td:nth-child(10),
+.tabla-broches-principal th:nth-child(11),
+.tabla-broches-principal td:nth-child(11),
+.tabla-broches-principal th:nth-child(12),
+.tabla-broches-principal td:nth-child(12) {
+  width: 7%;
+}
+.tabla-broches-principal th:nth-child(13),
+.tabla-broches-principal td:nth-child(13) {
+  width: 5%;
+}
+.tabla-broches-principal th:last-child,
+.tabla-broches-principal td:last-child {
+  width: 8%;
+  min-width: 72px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.tabla-broches-carga-scroll {
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tabla-broches-carga {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.76rem;
+}
+.tabla-broches-carga th,
+.tabla-broches-carga td {
+  padding: 0.35rem 0.25rem;
+}
+.tabla-broches-carga th {
+  background-color: rgb(0, 85, 185) !important;
+  color: white !important;
+  font-weight: bold;
+  white-space: normal;
+  line-height: 1.1;
+}
+.tabla-broches-carga th:nth-child(1) {
+  width: 5%;
+}
+.tabla-broches-carga th:nth-child(2) {
+  width: 15%;
+}
+.tabla-broches-carga th:nth-child(3) {
+  width: 11%;
+}
+.tabla-broches-carga th:nth-child(4) {
+  width: 11%;
+}
+.tabla-broches-carga th:nth-child(5) {
+  width: 10%;
+}
+.tabla-broches-carga th:nth-child(6) {
+  width: 6%;
+}
+.tabla-broches-carga th:nth-child(7) {
+  width: 5%;
+}
+.tabla-broches-carga th:nth-child(8) {
+  width: 10%;
+}
+.tabla-broches-carga th:nth-child(9) {
+  width: 9%;
+}
+.tabla-broches-carga th:nth-child(10) {
+  width: 9%;
+}
+.tabla-broches-carga th:nth-child(11) {
+  width: 9%;
+}
+
+.x-small {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-broches-carga tr:has(button:disabled) {
+  opacity: 0.8;
+}
+
 .expensa_col-direccion {
   max-width: 200px;
 }
@@ -1283,7 +1434,8 @@
   height: 31px;
 }
 
-.textoPredictivoEdificioBrochExpensas input {
+.textoPredictivoEdificioBrochExpensas input,
+.textoPredictivoEdificioUnidades input {
   font-size: 1.5vh;
   height: 31px;
 }
@@ -1377,6 +1529,152 @@
 .proceso_reserva_tabla_contenedor_obserbaciones {
   height: 47vh;
   overflow-y: auto;
+}
+
+.repactado_tabla_contenedor {
+  max-height: 47vh;
+  overflow: auto;
+}
+
+.tasacion-repactado-page {
+  padding-top: 0.75rem;
+}
+
+.tasacion-repactado-heading {
+  color: rgb(0, 85, 185);
+}
+.tasacion-repactado-heading h1 {
+  font-weight: 700;
+}
+
+.tasacion-repactado-heading-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 85, 185, 0.1);
+  font-size: 1.25rem;
+}
+
+.tasacion-repactado-field .form-label {
+  margin-bottom: 0.25rem;
+  color: #5c6773;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.tasacion-repactado-field input {
+  font-size: 0.8rem;
+}
+.tasacion-repactado-field select {
+  font-size: 0.8rem;
+}
+.tasacion-repactado-field .form-control {
+  min-height: 36px;
+  background-color: #f7f9fb;
+}
+.tasacion-repactado-field .form-control.form-control-sm {
+  min-height: 31px;
+}
+.tasacion-repactado-field .form-control::-moz-placeholder {
+  color: #8a939d;
+  opacity: 1;
+}
+.tasacion-repactado-field .form-control::placeholder {
+  color: #8a939d;
+  opacity: 1;
+}
+
+.tasacion-repactado-list-empty {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #6c757d;
+  text-align: center;
+}
+.tasacion-repactado-list-empty i {
+  color: rgb(0, 85, 185);
+  font-size: 2rem;
+}
+
+.tasacion-repactado-modal-body {
+  max-height: 68vh;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+.tasacion-repactado-modal-body .tasacion_obserbaciones_modal {
+  font-size: 0.6rem;
+}
+.tasacion-repactado-modal-body input {
+  font-size: 0.7rem;
+}
+
+.tasacion-repactado-subtitle {
+  margin-bottom: 0.5rem;
+  color: rgb(0, 85, 185);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.tasacion-repactado-media-card {
+  min-height: 100%;
+}
+
+.tasacion-repactado-media-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.tasacion-repactado-media-tabs .nav-link {
+  padding: 0.4rem 0.55rem;
+  white-space: nowrap;
+  font-size: 0.78rem;
+}
+
+.tasacion-repactado-media-content {
+  height: 330px;
+  overflow-y: auto;
+  padding-top: 0.5rem;
+}
+
+.tasacion-repactado-photo img {
+  display: block;
+  width: 100%;
+  height: 270px;
+  border-radius: 0.35rem;
+  background-color: #212529;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.tasacion-repactado-media-list {
+  height: 100%;
+  overflow-y: auto;
+}
+.tasacion-repactado-media-list video {
+  max-height: 260px;
+}
+
+.tasacion-repactado-media-empty {
+  display: flex;
+  height: 100%;
+  min-height: 180px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+.tasacion-repactado-media-empty i {
+  color: rgb(0, 85, 185);
+  font-size: 1.75rem;
+}
+
+.tasacion-repactado-currency {
+  max-width: 90px;
 }
 
 .proceso_reserva_table th {
@@ -1813,10 +2111,6 @@
   font-size: 13px;
 }
 
-.card-header-tasaciones {
-  max-height: 39px;
-}
-
 .card-alto-tasaciones {
   min-height: 35vh;
 }
@@ -2046,6 +2340,7 @@
   margin: 0;
   text-align: center;
   font-weight: bold;
+  max-height: 39px;
 }
 
 .modal-lg {

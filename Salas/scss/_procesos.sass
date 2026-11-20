@@ -15,7 +15,7 @@ $grisSalas: colorSalas.$grisSalas
   overflow-y: auto
 
 .repactado_tabla_contenedor
-  max-height: 55vh
+  max-height: 47vh
   overflow: auto
 
 .tasacion-repactado-page
@@ -42,31 +42,24 @@ $grisSalas: colorSalas.$grisSalas
     color: #5c6773
     font-size: 0.8rem
     font-weight: 600
-
+  input
+    font-size: 0.8rem
+  select
+    font-size: 0.8rem
   .form-control
     min-height: 36px
     background-color: #f7f9fb
+
+    &.form-control-sm
+      min-height: 31px
 
     &::placeholder
       color: #8a939d
       opacity: 1
 
-.tasacion-repactado-action
-  min-height: 44px
-  font-weight: 600
-
-.tasacion-repactado-value-card
-  border-top: 3px solid transparent
-
-  &--venta
-    border-top-color: $azulSalas
-
-  &--alquiler
-    border-top-color: $verdeSalas
-
-.tasacion-repactado-empty-state
+.tasacion-repactado-list-empty
   display: flex
-  min-height: 130px
+  min-height: 220px
   flex-direction: column
   align-items: center
   justify-content: center
@@ -76,7 +69,74 @@ $grisSalas: colorSalas.$grisSalas
 
   i
     color: $azulSalas
+    font-size: 2rem
+
+.tasacion-repactado-modal-body
+  
+  max-height: 68vh
+  overflow-y: auto
+  padding-right: 0.2rem
+  .tasacion_obserbaciones_modal
+    font-size: 0.6rem
+  input
+    font-size: 0.7rem
+
+.tasacion-repactado-subtitle
+  margin-bottom: 0.5rem
+  color: $azulSalas
+  font-size: 0.85rem
+  font-weight: 700
+
+.tasacion-repactado-media-card
+  min-height: 100%
+
+.tasacion-repactado-media-tabs
+  flex-wrap: nowrap
+  overflow-x: auto
+
+  .nav-link
+    padding: 0.4rem 0.55rem
+    white-space: nowrap
+    font-size: 0.78rem
+
+.tasacion-repactado-media-content
+  height: 330px
+  overflow-y: auto
+  padding-top: 0.5rem
+
+.tasacion-repactado-photo
+  img
+    display: block
+    width: 100%
+    height: 270px
+    border-radius: 0.35rem
+    background-color: #212529
+    object-fit: contain
+
+.tasacion-repactado-media-list
+  height: 100%
+  overflow-y: auto
+
+  video
+    max-height: 260px
+
+.tasacion-repactado-media-empty
+  display: flex
+  height: 100%
+  min-height: 180px
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 0.5rem
+  color: #6c757d
+  font-size: 0.9rem
+
+  i
+    color: $azulSalas
     font-size: 1.75rem
+
+.tasacion-repactado-currency
+  max-width: 90px
 
 .proceso_reserva_table
 

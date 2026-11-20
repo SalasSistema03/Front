@@ -13,10 +13,10 @@ export const getRepactadoMes = (mes, anio, empresa) => {
   })
 }
 
-export const getRepactadoFiltrado = (folio, mes, anio, empresa) => {
+export const getRepactadoFiltrado = (folio, mes, anio, empresa, filtros = {}) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/getRepactadoFiltrado`, {
-    params: { folio, mes, anio, empresa },
+    params: { folio, mes, anio, empresa, ...filtros },
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -35,6 +35,15 @@ export const getEstadosRepactado = () => {
 export const updateRepactado = (payload) => {
   const token = localStorage.getItem('token')
   return axios.put(`${API_URL}/v1/updateRepactado`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const guardarTasacionRepactado = (payload) => {
+  const token = localStorage.getItem('token')
+  return axios.post(`${API_URL}/v1/guardarTasacionRepactado`, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
