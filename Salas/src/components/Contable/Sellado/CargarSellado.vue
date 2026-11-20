@@ -335,11 +335,11 @@ const handleSubmit = async () => {
 
 };
 
-const guardarRegistro = async () => {
+const guardarRegistro = async (resultadoEditado) => {
   try {
     const payload = {
       ...form.value,
-      resultado: resultado.value?.data // aquí combinamos form + resultado
+      resultado: resultadoEditado
     };
     await guardarResultadoService(payload);
 

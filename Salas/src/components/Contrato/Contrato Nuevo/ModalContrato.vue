@@ -199,7 +199,6 @@
                 v-model="form.monto"
                 class="form-control form-control-sm"
                 min="0"
-                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
 
@@ -212,7 +211,6 @@
                 v-model="form.chojas"
                 class="form-control form-control-sm"
                 min="0"
-                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
 
@@ -220,7 +218,7 @@
             <div class="col-md-2 form-group">
               <label class="form-label"> Informe </label>
 
-              <select v-model="form.informe" class="form-select form-select-sm" :disabled="String(form.bloqueado) === '1'">
+              <select v-model="form.informe" class="form-select form-select-sm">
                 <option value="">Seleccionar</option>
                 <option value="SI">SI</option>
                 <option value="NO">NO</option>
@@ -236,7 +234,6 @@
                 v-model="form.CantInforme"
                 class="form-control form-control-sm"
                 min="0"
-                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
 
@@ -244,7 +241,7 @@
             <div class="col-md-2 form-group">
               <label class="form-label"> Tipo de Contrato </label>
 
-              <select v-model="form.tipo_contrato" class="form-select form-select-sm" :disabled="String(form.bloqueado) === '1'">
+              <select v-model="form.tipo_contrato" class="form-select form-select-sm">
                 <option value="">Seleccionar</option>
                 <option value="Vivienda">Vivienda</option>
                 <option value="Comercio">Comercio</option>
@@ -256,7 +253,7 @@
             <div class="col-md-2 form-group">
               <label class="form-label"> Inquilino / Propietario </label>
 
-              <select v-model="form.inquilino_propietario" class="form-select form-select-sm" :disabled="String(form.bloqueado) === '1'">
+              <select v-model="form.inquilino_propietario" class="form-select form-select-sm">
                 <option value="">Seleccionar</option>
                 <option value="NO">NO</option>
                 <option value="SI">SI</option>
@@ -270,7 +267,6 @@
                 type="date"
                 v-model="form.fecha_inicio_contrato"
                 class="form-control form-control-sm"
-                :disabled="String(form.bloqueado) === '1'"
               />
             </div>
           </div>
@@ -338,6 +334,17 @@ const normalizarFecha = (valor) => {
   return formatDateForInput(valor) || ''
 }
 
+const normalizarInforme = (valor) => {
+  if (valor === 1 || String(valor).toUpperCase() === 'SI') return 'SI'
+  if (valor === 0 || String(valor).toUpperCase() === 'NO') return 'NO'
+  return valor ?? ''
+}
+
+const normalizarTipoContrato = (valor) => {
+  const tipos = { 1: 'Vivienda', 2: 'Comercio', 3: 'Cochera' }
+  return tipos[valor] ?? valor ?? ''
+}
+
 /* const getUsuarioOptionValue = (usuario) => {
   if (!usuario) return ''
   if (typeof usuario === 'object') {
@@ -350,63 +357,31 @@ const getFormFromContrato = (contrato) => {
   const hc = contrato?.historial_estado_contrato
   const meses = contrato?.meses_contrato
   const precio_alquiler = contrato?.precio_alquiler
-  let folio = []
-  folio = contrato?.propiedad?.folios ?? []
-  let monto_documento = contrato?.registro_sellado?.monto_documento
-  let monto_contrato = contrato?.registro_sellado?.monto_contrato
-  let chojas = contrato?.registro_sellado?.hojas
-  let informe = contrato?.registro_sellado?.informe
-  let CantInforme = contrato?.registro_sellado?.cantidad_informes
-  let tipo_contrato = contrato?.registro_sellado?.tipo_contrato
-  let inquilino_propietario = contrato?.registro_sellado?.inq_prop
-  let fecha_inventario = contrato?.historial_estado_dpto?.fecha_inventario
+  const sellado = contrato?.registro_sellado
 
-  //console.log('aaaaa', contrato)
-  //console.log(contrato)
-  const bloqueado = contrato?.registro_sellado?.mostrar
-  //console.log(bloqueado)
-  //console.log('registroSellado', registro_sellado)
-  //console.log('historial_estado_contrato', contrato)
-
-  if (hc) {
-    return {
-      id_estado: hc.id_estado || '',
-      fecha_inventario: normalizarFecha(fecha_inventario) ?? '',
-      fecha_comercial_presenta_carpeta: normalizarFecha(hc.fecha_comercial_presenta_carpeta),
-      fecha_preaprobada: normalizarFecha(hc.fecha_preaprobada),
-      fecha_reserva: normalizarFecha(hc?.fecha_reserva ?? contrato?.fecha_reserva),
-      gastos_administrativos: hc.gastos_administrativos || '',
-      fecha_firma_contrato: normalizarFecha(hc.fecha_firma_contrato),
-      fecha_autorizacion: normalizarFecha(hc.fecha_autorizacion),
-      fecha_inicio_contrato: normalizarFecha(contrato.registro_sellado?.fecha_inicio),
-      fecha_finalizacion_firma_cobro: normalizarFecha(hc.fecha_finalizacion_firma_cobro),
-      cant_meses: meses || '',
-      precio_alquiler: precio_alquiler || '',
-      folio: folio || '',
-      monto: monto_documento || '',
-      monto_contrato: monto_contrato || '',
-      chojas: chojas || '',
-      informe: informe || '',
-      CantInforme: CantInforme || '',
-      tipo_contrato: tipo_contrato || '',
-      inquilino_propietario: inquilino_propietario || '',
-      bloqueado: bloqueado,
-      cuotas: hc.cuotas_ga || '',
-    }
-  }
   return {
-    id_estado: '',
-    fecha_inventario: '',
-    fecha_comercial_presenta_carpeta: '',
-    fecha_preaprobada: '',
-    fecha_reserva: '',
-    gastos_administrativos: '',
-    fecha_firma_contrato: '',
-    fecha_autorizacion: '',
-    fecha_inicio_contrato: '',
-    fecha_finalizacion_firma_cobro: '',
-    observaciones: '',
-    bloqueado: null,
+    id_estado: hc?.id_estado ?? '',
+    fecha_inventario: normalizarFecha(contrato?.historial_estado_dpto?.fecha_inventario),
+    fecha_comercial_presenta_carpeta: normalizarFecha(hc?.fecha_comercial_presenta_carpeta),
+    fecha_preaprobada: normalizarFecha(hc?.fecha_preaprobada),
+    fecha_reserva: normalizarFecha(hc?.fecha_reserva ?? contrato?.fecha_reserva),
+    gastos_administrativos: hc?.gastos_administrativos ?? sellado?.gasto_administrativo ?? '',
+    fecha_firma_contrato: normalizarFecha(hc?.fecha_firma_contrato),
+    fecha_autorizacion: normalizarFecha(hc?.fecha_autorizacion),
+    fecha_inicio_contrato: normalizarFecha(sellado?.fecha_inicio),
+    fecha_finalizacion_firma_cobro: normalizarFecha(hc?.fecha_finalizacion_firma_cobro),
+    cant_meses: meses ?? sellado?.cantidad_meses ?? '',
+    precio_alquiler: precio_alquiler ?? sellado?.monto_alquiler_comercial ?? '',
+    folio: contrato?.propiedad?.folios ?? [],
+    monto: sellado?.monto_documento ?? '',
+    monto_contrato: sellado?.monto_contrato ?? '',
+    chojas: sellado?.hojas ?? '',
+    informe: normalizarInforme(sellado?.informe),
+    CantInforme: sellado?.cantidad_informes ?? '',
+    tipo_contrato: normalizarTipoContrato(sellado?.tipo_contrato),
+    inquilino_propietario: normalizarInforme(sellado?.inq_prop),
+    cuotas: hc?.cuotas_ga ?? '',
+    observaciones: hc?.observaciones ?? '',
   }
 }
 
