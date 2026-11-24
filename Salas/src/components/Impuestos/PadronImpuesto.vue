@@ -3,8 +3,34 @@
     <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
     <div class="row form-group">
       <div v-if="props.impuesto !== 'epe'" class="col-auto d-flex align-items-center gap-2">
+        <div v-if="requierePeriodo" class="d-flex align-items-end gap-2">
+          <div>
+            <label :for="`periodo-anio-${props.impuesto}`" class="form-label mb-0">Año</label>
+            <input
+              :id="`periodo-anio-${props.impuesto}`"
+              v-model.number="anioPadron"
+              type="number"
+              class="form-control form-control-sm w-auto"
+              min="1900"
+              max="9999"
+              :disabled="!puedeActualizarPadron || actualizandoPadron"
+            />
+          </div>
+          <div>
+            <label :for="`periodo-mes-${props.impuesto}`" class="form-label mb-0">Mes</label>
+            <input
+              :id="`periodo-mes-${props.impuesto}`"
+              v-model.number="mesPadron"
+              type="number"
+              class="form-control form-control-sm w-auto"
+              min="1"
+              max="12"
+              :disabled="!puedeActualizarPadron || actualizandoPadron"
+            />
+          </div>
+        </div>
         <button class="btn btn-sm btn-primary" @click="actualizarPadron()"
-          :disabled="!puedeActualizarPadron || actualizandoPadron">
+          :disabled="!puedeActualizarPadron || actualizandoPadron || !periodoValido">
           <span v-if="actualizandoPadron" class="spinner-border spinner-border-sm me-1" role="status"
             aria-hidden="true"></span>
           {{ actualizandoPadron ? 'Actualizando...' : `Actualizar Padrón ${props.impuesto?.toUpperCase()}` }}
@@ -151,7 +177,7 @@
 <script setup>
 import { useToast } from '@/composables/useToast'
 import { useDateFormatter } from '@/composables/useDateFormatter'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { actualizaPadron, getPadron } from '@/Services/api/Impuestos/tgiApi'
 import ModalModificarPadron from './ModalImpuestos/ModalModificarPadron.vue'
 
@@ -173,17 +199,42 @@ const actualizandoPadron = ref(false)
 const ultimoPeriodo = ref(null)
 const selectedPadron = ref(null)
 const showModificarModal = ref(false)
+const requierePeriodo = computed(() => ['tgi', 'api'].includes(props.impuesto))
+const hoy = new Date()
+const anioPadron = ref(hoy.getFullYear())
+const mesPadron = ref(hoy.getMonth() + 1)
+const periodoValido = computed(() => {
+  if (!requierePeriodo.value) return true
+
+  return (
+    Number.isInteger(anioPadron.value) &&
+    anioPadron.value >= 1900 &&
+    anioPadron.value <= 9999 &&
+    Number.isInteger(mesPadron.value) &&
+    mesPadron.value >= 1 &&
+    mesPadron.value <= 12
+  )
+})
 
 const actualizarPadron = async () => {
   if (actualizandoPadron.value) return
 
+  if (!periodoValido.value) {
+    showError('Ingresá un año válido y un mes entre 1 y 12')
+    return
+  }
+
   actualizandoPadron.value = true
   try {
-    const response = await actualizaPadron({ impuesto: props.impuesto })
+    const periodo = requierePeriodo.value
+      ? { anio: anioPadron.value, mes: mesPadron.value }
+      : {}
+    const response = await actualizaPadron({ impuesto: props.impuesto, ...periodo })
     if (response?.data?.ultimo_periodo) {
       ultimoPeriodo.value = response.data.ultimo_periodo
     }
     showSuccess('Padrón actualizado correctamente')
+    await filtrar(false)
   } catch (error) {
     console.error(error)
     showError('Error al actualizar el padrón')
@@ -192,7 +243,7 @@ const actualizarPadron = async () => {
   }
 }
 
-const filtrar = async () => {
+const filtrar = async (mostrarConfirmacion = true) => {
   const form = {
     impuesto: props.impuesto,
     filtros: filtros.value,
@@ -208,7 +259,9 @@ const filtrar = async () => {
     )
     ultimoPeriodo.value = padron?.data?.ultimo_periodo ?? null
     //console.log(padron)
-    showSuccess('Padrón filtrado correctamente')
+    if (mostrarConfirmacion) {
+      showSuccess('Padrón filtrado correctamente')
+    }
     return padron
   } catch (error) {
     console.log(error)

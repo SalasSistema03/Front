@@ -5,6 +5,10 @@ const API_URL = import.meta.env.VITE_API_AUTH_URL
 export const actualizaPadron = (data) => {
   const token = localStorage.getItem('token')
   return axios.get(`${API_URL}/v1/actualizar_padron/${data.impuesto}`, {
+    params: {
+      anio: data.anio,
+      mes: data.mes,
+    },
     headers: {
       Authorization: `Bearer ${token}`,
     },
