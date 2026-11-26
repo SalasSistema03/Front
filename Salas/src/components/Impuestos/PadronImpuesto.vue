@@ -1,22 +1,24 @@
 <template>
   <div class="px-3">
-    <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
-    <div class="row form-group">
-      <div v-if="props.impuesto !== 'epe'" class="col-auto d-flex align-items-center gap-2">
-        <div v-if="requierePeriodo" class="d-flex align-items-end gap-2">
-          <div>
-            <label :for="`periodo-anio-${props.impuesto}`" class="form-label mb-0">Año</label>
-            <input
-              :id="`periodo-anio-${props.impuesto}`"
-              v-model.number="anioPadron"
-              type="number"
-              class="form-control form-control-sm w-auto"
-              min="1900"
-              max="9999"
-              :disabled="!puedeActualizarPadron || actualizandoPadron"
-            />
-          </div>
-          <div>
+    <div class="row  d-flex align-items-center justify-content-between">
+
+      <div
+        v-if="ultimoPeriodo"
+        class="periodo-padron col-2 d-flex align-items-center justify-content-center"
+        :title="`Última actualización: ${formatDate(ultimoPeriodo)}`"
+      >
+        <i class="bi bi-calendar-check"></i>
+        Período: <strong>{{ formatPeriod(ultimoPeriodo) }}</strong>
+      </div>
+      <div class="col-10">
+         <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
+      </div>
+    </div>
+   
+    <div class="row form-group mb-2 d-flex align-items-end justify-content-center">
+      <div v-if="props.impuesto !== 'epe'" class="col-4 row p-0">
+        <div v-if="requierePeriodo" class="col-6 row ">
+          <div class="col-6 ">
             <label :for="`periodo-mes-${props.impuesto}`" class="form-label mb-0">Mes</label>
             <input
               :id="`periodo-mes-${props.impuesto}`"
@@ -28,93 +30,196 @@
               :disabled="!puedeActualizarPadron || actualizandoPadron"
             />
           </div>
+          <div class="col-6">
+            <label :for="`periodo-anio-${props.impuesto}`" class="form-label mb-0">Año</label>
+            <input
+              :id="`periodo-anio-${props.impuesto}`"
+              v-model.number="anioPadron"
+              type="number"
+              class="form-control form-control-sm w-auto"
+              min="1900"
+              max="9999"
+              :disabled="!puedeActualizarPadron || actualizandoPadron"
+            />
+          </div>
         </div>
-        <button class="btn btn-sm btn-primary" @click="actualizarPadron()"
-          :disabled="!puedeActualizarPadron || actualizandoPadron || !periodoValido">
-          <span v-if="actualizandoPadron" class="spinner-border spinner-border-sm me-1" role="status"
-            aria-hidden="true"></span>
-          {{ actualizandoPadron ? 'Actualizando...' : `Actualizar Padrón ${props.impuesto?.toUpperCase()}` }}
-        </button>
-        <span v-if="ultimoPeriodo" class="periodo-padron" :title="`Última actualización: ${formatDate(ultimoPeriodo)}`">
-          <i class="bi bi-calendar-check"></i>
-          Último período: <strong>{{ formatPeriod(ultimoPeriodo) }}</strong>
-        </span>
+        <div class="col-6 d-flex align-items-end justify-content-center">
+          <button
+            class="btn btn-sm btn-primary w-100"
+            @click="actualizarPadron()"
+            :disabled="!puedeActualizarPadron || actualizandoPadron || !periodoValido"
+          >
+            <span
+              v-if="actualizandoPadron"
+              class="spinner-border spinner-border-sm me-1"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            {{
+              actualizandoPadron ? 'Actualizando...' : `Actualizar ${props.impuesto?.toUpperCase()}`
+            }}
+          </button>
+        </div>
       </div>
 
-      <form class="row mb-3" autocomplete="off">
+      <form class="col-8 row " autocomplete="off">
         <!-- Input que filtra solo por FOLIO -->
-        <div class="col-md-2 px-1">
-          <label class="form-label">Folio</label>
-          <input type="text" class="form-control form-control-sm" placeholder="Buscar por folio..."
-            v-model="search_folio" />
+        <div class="col-md-2">
+          <label class="form-label mb-0">Folio</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Buscar por folio..."
+            v-model="search_folio"
+          />
         </div>
 
         <!-- Input que filtra por todo menos por FOLIO -->
         <div class="col-md-4">
-          <label class="form-label" v-if="props.impuesto === 'tgi'">Partida/Clave</label>
-          <label class="form-label" v-if="props.impuesto === 'agua'">Partida/Punto</label>
-          <label class="form-label" v-if="props.impuesto === 'gas'">Persona/Cliente</label>
-          <label class="form-label" v-if="props.impuesto === 'api'">Partida</label>
-          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, clave..."
-            v-model="search_all" v-if="props.impuesto === 'tgi'" />
-          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida, punto..."
-            v-model="search_all" v-if="props.impuesto === 'agua'" />
-          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, persona, cliente..."
-            v-model="search_all" v-if="props.impuesto === 'gas'" />
-          <input type="text" class="form-control form-control-sm" placeholder="Buscar por calle, partida..."
-            v-model="search_all" v-if="props.impuesto === 'api'" />
+          <label class="form-label mb-0" v-if="props.impuesto === 'tgi'">Partida/Clave</label>
+          <label class="form-label mb-0" v-if="props.impuesto === 'agua'">Partida/Punto</label>
+          <label class="form-label mb-0" v-if="props.impuesto === 'gas'">Persona/Cliente</label>
+          <label class="form-label mb-0" v-if="props.impuesto === 'api'">Partida</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Buscar por calle, partida, clave..."
+            v-model="search_all"
+            v-if="props.impuesto === 'tgi'"
+          />
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Buscar por calle, partida, punto..."
+            v-model="search_all"
+            v-if="props.impuesto === 'agua'"
+          />
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Buscar por calle, persona, cliente..."
+            v-model="search_all"
+            v-if="props.impuesto === 'gas'"
+          />
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Buscar por calle, partida..."
+            v-model="search_all"
+            v-if="props.impuesto === 'api'"
+          />
         </div>
 
         <div class="col-md-3 d-flex align-items-end justify-content-center">
-          <button class="btn btn-secondary dropdown-toggle w-100 btn-sm   " type="button" data-bs-toggle="dropdown"
-            data-bs-auto-close="outside" aria-expanded="false">
+          <button
+            class="btn btn-secondary dropdown-toggle w-100 btn-sm"
+            type="button"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="outside"
+            aria-expanded="false"
+          >
             Filtrar opciones
           </button>
           <div class="dropdown-menu p-3" style="min-width: 25px">
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-activo" value="ACTIVO"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="filtro-activo">Activos</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-activo"
+                value="ACTIVO"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-activo"
+                >Activos</label
+              >
             </div>
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-inactivo" value="INACTIVO"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="filtro-inactivo">Inactivos</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-inactivo"
+                value="INACTIVO"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-inactivo"
+                >Inactivos</label
+              >
             </div>
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-pendiente" value="PENDIENTE"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="filtro-pendiente">Pendientes</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-pendiente"
+                value="PENDIENTE"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-pendiente"
+                >Pendientes</label
+              >
             </div>
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-modificado" value="MODIFICADO"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none"
-                for="filtro-modificado">Modificados</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-modificado"
+                value="MODIFICADO"
+                v-model="filtros"
+              />
+              <label
+                class="form-check-label cursor-pointer user-select-none"
+                for="filtro-modificado"
+                >Modificados</label
+              >
             </div>
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-l" value="L"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="filtro-l">Adm inmobiliario</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-l"
+                value="L"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-l"
+                >Adm inmobiliario</label
+              >
             </div>
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-p" value="P"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="filtro-p">Adm propietario</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-p"
+                value="P"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-p"
+                >Adm propietario</label
+              >
             </div>
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="filtro-i" value="I"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="filtro-i">Adm inquilino</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="filtro-i"
+                value="I"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="filtro-i"
+                >Adm inquilino</label
+              >
             </div>
 
             <div class="form-check cursor-pointer">
-              <input class="form-check-input cursor-pointer" type="checkbox" id="Seguir_pagando" value="SEGUIR-PAGANDO"
-                v-model="filtros" />
-              <label class="form-check-label cursor-pointer user-select-none" for="Seguir_pagando">Seguir
-                pagando</label>
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                id="Seguir_pagando"
+                value="SEGUIR-PAGANDO"
+                v-model="filtros"
+              />
+              <label class="form-check-label cursor-pointer user-select-none" for="Seguir_pagando"
+                >Seguir pagando</label
+              >
             </div>
-
           </div>
         </div>
 
@@ -132,9 +237,11 @@
           <tr>
             <th>Folio</th>
             <th>Calle</th>
-            <th v-if="
-              props.impuesto === 'tgi' || props.impuesto === 'agua' || props.impuesto === 'api'
-            ">
+            <th
+              v-if="
+                props.impuesto === 'tgi' || props.impuesto === 'agua' || props.impuesto === 'api'
+              "
+            >
               Partida
             </th>
 
@@ -150,8 +257,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="padron in PadronCompleto?.original?.data" :key="padron.id"
-            :class="{ 'table-danger': padron.estado === 'INACTIVO' }">
+          <tr
+            v-for="padron in PadronCompleto?.original?.data"
+            :key="padron.id"
+            :class="{ 'table-danger': padron.estado === 'INACTIVO' }"
+          >
             <td>{{ padron.folio }}</td>
             <td>{{ padron.calle }}</td>
             <td>{{ padron.partida }}</td>
@@ -161,7 +271,11 @@
             <td>{{ formatDate(padron.comienza) }}</td>
             <td>{{ formatDate(padron.rescicion) }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-primary" @click="openModalModificar(padron)">
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                @click="openModalModificar(padron)"
+              >
                 Modificar
               </button>
             </td>
@@ -171,8 +285,13 @@
     </div>
   </div>
 
-  <ModalModificarPadron :show="showModificarModal" :padron="selectedPadron" :impuesto="props.impuesto"
-    @close="closeModalModificar" @success="handleSuccess" />
+  <ModalModificarPadron
+    :show="showModificarModal"
+    :padron="selectedPadron"
+    :impuesto="props.impuesto"
+    @close="closeModalModificar"
+    @success="handleSuccess"
+  />
 </template>
 <script setup>
 import { useToast } from '@/composables/useToast'
@@ -226,9 +345,7 @@ const actualizarPadron = async () => {
 
   actualizandoPadron.value = true
   try {
-    const periodo = requierePeriodo.value
-      ? { anio: anioPadron.value, mes: mesPadron.value }
-      : {}
+    const periodo = requierePeriodo.value ? { anio: anioPadron.value, mes: mesPadron.value } : {}
     const response = await actualizaPadron({ impuesto: props.impuesto, ...periodo })
     if (response?.data?.ultimo_periodo) {
       ultimoPeriodo.value = response.data.ultimo_periodo
