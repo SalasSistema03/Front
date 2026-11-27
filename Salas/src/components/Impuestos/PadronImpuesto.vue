@@ -9,7 +9,7 @@
       >
         <i class="bi bi-calendar-check"></i>
         Período: <strong>{{ formatPeriod(ultimoPeriodo) }}</strong>
-      </div>
+      </div> 
       <div class="col-10">
          <h1 class="titulo-impuestos">Padron {{ props.impuesto?.toUpperCase() }}</h1>
       </div>

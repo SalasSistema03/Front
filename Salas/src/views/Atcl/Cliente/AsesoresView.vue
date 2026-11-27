@@ -361,8 +361,9 @@
           class="titulo-columna-asesores d-flex justify-content-center align-content-center"
           v-else
         >
-          {{ criterioSeleccionado.tipo_inmueble.inmueble }} | ZONA:
-          {{ criterioSeleccionado.zona.name }} | DORM: {{ criterioSeleccionado.cant_dormitorios }} |
+          {{ criterioSeleccionado.tipo_inmueble?.inmueble || 'Tipo no especificado' }} | ZONA:
+          {{ criterioSeleccionado.zona?.name || 'No especificada' }} | DORM:
+          {{ criterioSeleccionado.cant_dormitorios }} |
           COCHERA: {{ criterioSeleccionado.cochera }}
         </div>
 
