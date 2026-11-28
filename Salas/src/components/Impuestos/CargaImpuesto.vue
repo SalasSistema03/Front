@@ -185,6 +185,7 @@
             <th v-if="props.impuesto === 'gas'">Periodo</th>
             <th>Vencimiento</th>
             <th>Bajado</th>
+            <th>Estado</th>
             <th>N° Broche</th>
             <th>Motivo</th>
             <th>-</th>
@@ -212,6 +213,9 @@
             </td>
             <td>{{ formatDate(item.fecha_vencimiento) }}</td>
             <td>{{ item.bajado }}</td>
+            <td :class="estadoItemClass(item)">
+              {{ obtenerEstado(item) }}
+            </td>
             <td>{{ item.num_broche }}</td>
             <td>
               <span v-if="item.origen_carga" class="badge"
@@ -374,6 +378,22 @@ const mostrarMotivo = (origen) => {
     FUERA_BROCHE: 'Fuera de broche',
   }
   return motivos[origen] ?? origen
+}
+
+const obtenerEstado = (item) => {
+  if (item.estado) {
+    return item.estado
+  }
+  const compartidos = parseCompartidos(item.compartidos)
+  const conFolio = compartidos.find((c) => c.folio)
+  return conFolio?.estado || '-'
+}
+
+const estadoItemClass = (item) => {
+  const estado = obtenerEstado(item)
+  if (estado === 'ACTIVO') return 'text-success fw-bold'
+  if (estado === 'INACTIVO') return 'text-danger fw-bold'
+  return 'text-muted'
 }
 
 const ControlDeBroches = () => {

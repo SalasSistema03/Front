@@ -37,6 +37,7 @@ describe('PadronImpuesto', () => {
     mocks.getPadron.mockResolvedValue({
       data: {
         resultado: { original: { data: [] } },
+        ultimo_periodo: '2025-11-01',
         botones: {
           actualizaPadron_tgi: true,
           actualizaPadron_api: true,
@@ -71,27 +72,42 @@ describe('PadronImpuesto', () => {
     expect(wrapper.text()).toContain('Mes')
   })
 
-  it('envía año y mes al actualizar el padrón TGI y vuelve a cargarlo', async () => {
-    await mountComponent('tgi')
-    mocks.getPadron.mockClear()
+  it.each(['tgi', 'api'])('muestra el período guardado para %s', async (impuesto) => {
+    await mountComponent(impuesto)
 
-    const inputs = wrapper.findAll('input[type="number"]')
-    await inputs[0].setValue('2025')
-    await inputs[1].setValue('10')
+    expect(wrapper.find('.periodo-padron').text()).toContain('2025-11-01')
+  })
+
+  it.each(['tgi', 'api'])('envía y muestra el período seleccionado para %s', async (impuesto) => {
+    await mountComponent(impuesto)
+    mocks.getPadron.mockClear()
+    mocks.getPadron.mockResolvedValue({
+      data: {
+        resultado: { original: { data: [] } },
+        botones: { [`actualizaPadron_${impuesto}`]: true },
+        ultimo_periodo: '2025-10-01',
+      },
+    })
+    mocks.actualizaPadron.mockResolvedValue({ data: { ultimo_periodo: '2025-10-01' } })
+
+    await wrapper.find(`#periodo-anio-${impuesto}`).setValue('2025')
+    await wrapper.find(`#periodo-mes-${impuesto}`).setValue('10')
     await wrapper.find('button.btn.btn-sm.btn-primary').trigger('click')
     await flushPromises()
 
     expect(mocks.actualizaPadron).toHaveBeenCalledWith({
-      impuesto: 'tgi',
+      impuesto,
       anio: 2025,
       mes: 10,
     })
     expect(mocks.getPadron).toHaveBeenCalledTimes(1)
+    expect(wrapper.find('.periodo-padron').text()).toContain('2025-10-01')
   })
 
-  it('no muestra los inputs de período para otros impuestos', async () => {
-    await mountComponent('agua')
+  it.each(['agua', 'gas'])('no muestra período ni inputs para %s', async (impuesto) => {
+    await mountComponent(impuesto)
 
     expect(wrapper.findAll('input[type="number"]')).toHaveLength(0)
+    expect(wrapper.find('.periodo-padron').exists()).toBe(false)
   })
 })

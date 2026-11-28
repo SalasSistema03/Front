@@ -3,7 +3,7 @@
     <div class="row  d-flex align-items-center justify-content-between">
 
       <div
-        v-if="ultimoPeriodo"
+        v-if="requierePeriodo && ultimoPeriodo"
         class="periodo-padron col-2 d-flex align-items-center justify-content-center"
         :title="`Última actualización: ${formatDate(ultimoPeriodo)}`"
       >
